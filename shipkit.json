@@ -1,0 +1,22 @@
+{
+  "templateName": "worker-simple",
+  "version": "1.0.1",
+  "generatedAt": "2025-12-23T02:13:50.288Z",
+  "cliVersion": "3.1.2",
+  "description": "Audio/video transcription app with Trigger.dev background job processing and AI summaries",
+  "features": [
+    "supabase-auth",
+    "supabase-storage",
+    "drizzle-orm",
+    "next-app-router",
+    "trigger-dev-workers",
+    "openai-whisper",
+    "tailwind-ui",
+    "admin-panel"
+  ],
+  "changelog": {
+    "1.0.0": "Initial release as worker-simple template",
+    "1.0.1": "Enhanced documentation and simplified template configuration"
+  },
+  "generatedBy": "shipkit-ai"
+}
