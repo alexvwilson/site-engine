@@ -11,18 +11,22 @@ import type {
 export function regenerateThemeOutput(data: ThemeData): ThemeData {
   return {
     ...data,
-    cssVariables: generateCSSVariables(data.colors, data.typography),
+    cssVariables: generateCSSVariables(data.colors, data.darkColors, data.typography),
     tailwindExtends: generateTailwindExtends(data),
   };
 }
 
 /**
  * Generate CSS custom properties string from theme data.
+ * Includes both light and dark mode variables.
  */
 function generateCSSVariables(
   colors: ColorPalette,
+  darkColors: ColorPalette | undefined,
   typography: TypographySettings
 ): string {
+  const dark = darkColors || generateDefaultDarkPalette(colors);
+
   return `:root {
   --color-primary: ${colors.primary};
   --color-secondary: ${colors.secondary};
@@ -34,6 +38,17 @@ function generateCSSVariables(
   --color-border: ${colors.border};
   --font-heading: "${typography.headingFont.family}", sans-serif;
   --font-body: "${typography.bodyFont.family}", sans-serif;
+}
+
+.dark {
+  --color-primary: ${dark.primary};
+  --color-secondary: ${dark.secondary};
+  --color-accent: ${dark.accent};
+  --color-background: ${dark.background};
+  --color-foreground: ${dark.foreground};
+  --color-muted: ${dark.muted};
+  --color-muted-foreground: ${dark.mutedForeground};
+  --color-border: ${dark.border};
 }`;
 }
 
@@ -59,5 +74,23 @@ function generateTailwindExtends(data: ThemeData): Record<string, unknown> {
     borderRadius: {
       DEFAULT: data.components.button.borderRadius,
     },
+  };
+}
+
+/**
+ * Generate a default dark palette from a light palette.
+ * Used when darkColors is not provided.
+ */
+export function generateDefaultDarkPalette(lightColors: ColorPalette): ColorPalette {
+  return {
+    primary: lightColors.primary, // Keep brand color
+    secondary: lightColors.secondary,
+    accent: lightColors.accent,
+    background: "#0A0A0B", // Dark background
+    foreground: "#FAFAFA", // Light text
+    muted: "#18181B", // Slightly lighter than background
+    mutedForeground: "#A1A1AA", // Muted text
+    border: "#27272A", // Dark border
+    rationale: "Auto-generated dark mode palette",
   };
 }

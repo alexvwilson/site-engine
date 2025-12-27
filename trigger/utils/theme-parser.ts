@@ -188,6 +188,7 @@ export const componentStylesSchema = z.object({
  */
 export const themeDataSchema = z.object({
   colors: colorPaletteSchema,
+  darkColors: colorPaletteSchema.optional(),
   typography: typographySettingsSchema,
   components: componentStylesSchema,
   tailwindExtends: z.record(z.string(), z.unknown()).default({}),
@@ -203,6 +204,7 @@ export const themeDataSchema = z.object({
  */
 export const quickGenerateResponseSchema = z.object({
   colors: colorPaletteSchema,
+  darkColors: colorPaletteSchema.optional(),
   typography: typographySettingsSchema,
   components: componentStylesSchema,
 });
@@ -251,6 +253,7 @@ export function parseQuickGenerateResponse(
 
   return {
     colors: parsed.colors,
+    darkColors: parsed.darkColors,
     typography: parsed.typography,
     components: parsed.components,
     tailwindExtends: {},

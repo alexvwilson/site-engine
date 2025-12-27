@@ -11,7 +11,9 @@ import { pages } from "@/lib/drizzle/schema/pages";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, gt, gte, sql } from "drizzle-orm";
 import { getDefaultContent } from "@/lib/section-defaults";
-import type { SectionContent } from "@/lib/section-types";
+import type { SectionContent, HeaderContent } from "@/lib/section-types";
+import { getSiteById } from "@/lib/queries/sites";
+import { getPagesBySite } from "@/lib/queries/pages";
 
 export interface ActionResult {
   success: boolean;
@@ -57,6 +59,36 @@ async function getNextPosition(pageId: string): Promise<number> {
 }
 
 /**
+ * Build header content using actual site name and page navigation
+ */
+async function getHeaderContentWithSiteData(
+  siteId: string,
+  userId: string
+): Promise<HeaderContent> {
+  const site = await getSiteById(siteId, userId);
+  if (!site) {
+    return getDefaultContent("header") as HeaderContent;
+  }
+
+  const sitePages = await getPagesBySite(siteId, userId);
+
+  const links = sitePages.map((page) => ({
+    label: page.title,
+    url: page.is_home
+      ? `/sites/${site.slug}`
+      : `/sites/${site.slug}/${page.slug}`,
+  }));
+
+  return {
+    siteName: site.name,
+    logoUrl: "",
+    links,
+    ctaText: "",
+    ctaUrl: "",
+  };
+}
+
+/**
  * Add a new section to a page
  */
 export async function addSection(
@@ -87,7 +119,11 @@ export async function addSection(
       );
   }
 
-  const defaultContent = getDefaultContent(blockType);
+  // For header blocks, populate with actual site name and page navigation
+  const content: SectionContent =
+    blockType === "header" && ownership.siteId
+      ? await getHeaderContentWithSiteData(ownership.siteId, userId)
+      : getDefaultContent(blockType);
 
   const [section] = await db
     .insert(sections)
@@ -95,7 +131,7 @@ export async function addSection(
       page_id: pageId,
       user_id: userId,
       block_type: blockType,
-      content: defaultContent,
+      content,
       position: targetPosition,
     })
     .returning({ id: sections.id });

@@ -5,6 +5,9 @@ import { users } from "./users";
 export const SITE_STATUSES = ["draft", "published"] as const;
 export type SiteStatus = (typeof SITE_STATUSES)[number];
 
+export const COLOR_MODES = ["light", "dark", "system", "user_choice"] as const;
+export type ColorMode = (typeof COLOR_MODES)[number];
+
 export const sites = pgTable(
   "sites",
   {
@@ -26,6 +29,7 @@ export const sites = pgTable(
     custom_domain: text("custom_domain").unique(),
     meta_title: text("meta_title"),
     meta_description: text("meta_description"),
+    color_mode: text("color_mode", { enum: COLOR_MODES }).notNull().default("light"),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

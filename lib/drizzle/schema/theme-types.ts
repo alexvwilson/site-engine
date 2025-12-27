@@ -217,8 +217,10 @@ export interface ComponentStyles {
  * Contains all generated styles plus output formats.
  */
 export interface ThemeData {
-  /** Color palette */
+  /** Color palette (light mode) */
   colors: ColorPalette;
+  /** Dark mode color palette (optional for backwards compatibility) */
+  darkColors?: ColorPalette;
   /** Typography settings */
   typography: TypographySettings;
   /** Component styles */

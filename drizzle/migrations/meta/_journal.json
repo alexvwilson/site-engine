@@ -64,6 +64,13 @@
       "when": 1766797734479,
       "tag": "0008_public_chamber",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1766859755281,
+      "tag": "0009_white_agent_zero",
+      "breakpoints": true
     }
   ]
 }

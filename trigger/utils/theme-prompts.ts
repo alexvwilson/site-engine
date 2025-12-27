@@ -61,12 +61,12 @@ Use CSS values (rem, px) and ensure consistency across components.`;
 
 const QUICK_GENERATE_SYSTEM_PROMPT = `${BASE_SYSTEM_PROMPT}
 
-You are generating a complete theme including colors, typography, and component styles in a single response.
+You are generating a complete theme including colors (both light and dark modes), typography, and component styles in a single response.
 
 Available heading fonts: ${HEADING_FONTS.slice(0, 15).join(", ")}
 Available body fonts: ${BODY_FONTS.slice(0, 15).join(", ")}
 
-Create a cohesive design system that works as a unified whole.`;
+Create a cohesive design system that works as a unified whole. Generate BOTH light mode and dark mode color palettes that complement each other while maintaining the brand identity.`;
 
 // ============================================================================
 // User Prompt Builders
@@ -244,7 +244,7 @@ export function buildQuickGeneratePrompt(requirements: ThemeRequirements): {
 
 ${formatRequirements(requirements)}
 
-Create a cohesive design system including colors, typography, and component styles.
+Create a cohesive design system including BOTH light and dark mode color palettes, typography, and component styles.
 
 Respond with JSON in this exact format:
 {
@@ -257,7 +257,18 @@ Respond with JSON in this exact format:
     "muted": "#HEXCODE",
     "mutedForeground": "#HEXCODE",
     "border": "#HEXCODE",
-    "rationale": "Color palette explanation..."
+    "rationale": "Light mode color palette explanation..."
+  },
+  "darkColors": {
+    "primary": "#HEXCODE",
+    "secondary": "#HEXCODE",
+    "accent": "#HEXCODE",
+    "background": "#HEXCODE",
+    "foreground": "#HEXCODE",
+    "muted": "#HEXCODE",
+    "mutedForeground": "#HEXCODE",
+    "border": "#HEXCODE",
+    "rationale": "Dark mode color palette explanation..."
   },
   "typography": {
     "headingFont": {
@@ -314,6 +325,13 @@ Respond with JSON in this exact format:
     "rationale": "Component styles explanation..."
   }
 }
+
+Guidelines for dark mode colors:
+- Background should be dark (e.g., #0A0A0A to #1A1A2E)
+- Foreground (text) should be light (e.g., #F5F5F5 to #FFFFFF)
+- Primary/accent colors may need to be brighter/more saturated for visibility on dark backgrounds
+- Muted backgrounds should be slightly lighter than main background
+- Maintain brand identity across both modes
 
 Replace #PRIMARY, #SECONDARY, #BORDER, #FOREGROUND with actual hex color codes you generate.`;
 

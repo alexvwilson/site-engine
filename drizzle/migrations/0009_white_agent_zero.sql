@@ -1,0 +1,1 @@
+ALTER TABLE "sites" ADD COLUMN "color_mode" text DEFAULT 'light' NOT NULL;
