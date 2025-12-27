@@ -180,6 +180,25 @@ _No items currently in P1_
 
 ## Completed Features
 
+### 4. Preview Mode Toggle for Light/Dark Testing ✅ 2025-12-27
+
+**Problem:** While light/dark mode works on published sites, there was no way to test both modes in the editor preview.
+
+**Solution Implemented:**
+- [x] Added light/dark toggle to preview page (alongside device toggle)
+- [x] Preview respects the toggle regardless of site's color_mode setting
+- [x] Uses scoped CSS variables to avoid conflicts with admin app styles
+- [x] Falls back to auto-generated dark palette if theme doesn't have darkColors
+
+**Task Document:** `ai_docs/tasks/015_preview_color_mode_toggle.md`
+**Files Created:**
+- `components/preview/ColorModePreviewToggle.tsx` - Sun/Moon toggle button for preview
+
+**Files Modified:**
+- `components/preview/PreviewFrame.tsx` - Added PreviewThemeStyles, color mode state, toggle integration
+
+---
+
 ### 3. Light/Dark Mode Support ✅ 2025-12-27
 
 **Problem:** Sites were only rendered in light mode. Users wanted control over appearance.
@@ -260,4 +279,4 @@ _No items currently in P1_
 
 ---
 
-**Last Updated:** 2025-12-27 (Light/Dark Mode Support completed)
+**Last Updated:** 2025-12-27 (Preview Mode Toggle for Light/Dark Testing completed)

@@ -5,6 +5,8 @@ import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import { PageRenderer } from "@/components/render/PageRenderer";
 import { DeviceToggle, type DeviceType } from "./DeviceToggle";
+import { ColorModePreviewToggle, type PreviewColorMode } from "./ColorModePreviewToggle";
+import { generateDefaultDarkPalette } from "@/lib/theme-utils";
 import { cn } from "@/lib/utils";
 
 const DEVICE_WIDTHS: Record<DeviceType, string> = {
@@ -18,11 +20,45 @@ interface PreviewFrameProps {
   theme: ThemeData | null;
 }
 
+/**
+ * Generates scoped CSS variables for the preview container.
+ * Uses unique class selectors to avoid conflicts with admin app styles.
+ */
+function PreviewThemeStyles({
+  theme,
+  colorMode
+}: {
+  theme: ThemeData;
+  colorMode: PreviewColorMode;
+}): React.ReactElement {
+  const lightColors = theme.colors;
+  const darkColors = theme.darkColors || generateDefaultDarkPalette(lightColors);
+  const colors = colorMode === "dark" ? darkColors : lightColors;
+
+  const css = `
+    .preview-container {
+      --color-primary: ${colors.primary};
+      --color-secondary: ${colors.secondary};
+      --color-accent: ${colors.accent};
+      --color-background: ${colors.background};
+      --color-foreground: ${colors.foreground};
+      --color-muted: ${colors.muted};
+      --color-muted-foreground: ${colors.mutedForeground};
+      --color-border: ${colors.border};
+      --font-heading: "${theme.typography.headingFont.family}", sans-serif;
+      --font-body: "${theme.typography.bodyFont.family}", sans-serif;
+    }
+  `;
+
+  return <style dangerouslySetInnerHTML={{ __html: css }} />;
+}
+
 export function PreviewFrame({
   sections,
   theme,
 }: PreviewFrameProps) {
   const [device, setDevice] = useState<DeviceType>("desktop");
+  const [colorMode, setColorMode] = useState<PreviewColorMode>("light");
 
   if (!theme) {
     return (
@@ -42,20 +78,24 @@ export function PreviewFrame({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-center py-4 border-b bg-background">
+      <PreviewThemeStyles theme={theme} colorMode={colorMode} />
+
+      <div className="flex justify-center gap-4 py-4 border-b bg-background">
         <DeviceToggle device={device} onChange={setDevice} />
+        <ColorModePreviewToggle colorMode={colorMode} onChange={setColorMode} />
       </div>
 
       <div className="flex-1 flex justify-center overflow-auto p-4 bg-muted/30">
         <div
           className={cn(
-            "bg-white shadow-lg transition-all duration-300 overflow-auto",
+            "preview-container shadow-lg transition-all duration-300 overflow-auto",
             device !== "desktop" && "border rounded-lg"
           )}
           style={{
             width: DEVICE_WIDTHS[device],
             maxWidth: "100%",
             minHeight: device === "desktop" ? "100%" : "auto",
+            backgroundColor: "var(--color-background)",
           }}
         >
           <PageRenderer sections={sections} theme={theme} />
