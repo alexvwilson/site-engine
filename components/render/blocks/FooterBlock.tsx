@@ -12,8 +12,8 @@ export function FooterBlock({ content, theme }: FooterBlockProps) {
     <footer
       className="py-8 px-6"
       style={{
-        backgroundColor: theme.colors.foreground,
-        color: theme.colors.background,
+        backgroundColor: "var(--color-foreground)",
+        color: "var(--color-background)",
       }}
     >
       <div className="max-w-6xl mx-auto">

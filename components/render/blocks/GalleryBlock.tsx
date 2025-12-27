@@ -15,10 +15,10 @@ export function GalleryBlock({
     return (
       <section
         className="py-12 px-6"
-        style={{ backgroundColor: theme.colors.background }}
+        style={{ backgroundColor: "var(--color-background)" }}
       >
         <div className="max-w-6xl mx-auto text-center">
-          <p style={{ color: theme.colors.mutedForeground }}>
+          <p style={{ color: "var(--color-muted-foreground)" }}>
             No images in gallery
           </p>
         </div>
@@ -29,7 +29,7 @@ export function GalleryBlock({
   return (
     <section
       className="py-12 px-6"
-      style={{ backgroundColor: theme.colors.background }}
+      style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="max-w-6xl mx-auto">
         <div
@@ -62,7 +62,7 @@ export function GalleryBlock({
                   className="p-3"
                   style={{
                     ...getSmallStyles(theme),
-                    backgroundColor: theme.colors.muted,
+                    backgroundColor: "var(--color-muted)",
                   }}
                 >
                   {image.caption}

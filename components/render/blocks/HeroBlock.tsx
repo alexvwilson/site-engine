@@ -19,7 +19,7 @@ export function HeroBlock({ content, theme }: HeroBlockProps) {
     <section
       className="relative min-h-[400px] flex items-center justify-center py-20 px-6"
       style={{
-        backgroundColor: hasBackgroundImage ? undefined : theme.colors.muted,
+        backgroundColor: hasBackgroundImage ? undefined : "var(--color-muted)",
         backgroundImage: hasBackgroundImage
           ? `url(${content.backgroundImage})`
           : undefined,
@@ -38,7 +38,7 @@ export function HeroBlock({ content, theme }: HeroBlockProps) {
         <h1
           style={{
             ...getHeadingStyles(theme, "h1"),
-            color: hasBackgroundImage ? "#FFFFFF" : theme.colors.foreground,
+            color: hasBackgroundImage ? "#FFFFFF" : "var(--color-foreground)",
           }}
         >
           {content.heading}
@@ -52,7 +52,7 @@ export function HeroBlock({ content, theme }: HeroBlockProps) {
               fontSize: theme.typography.scale.h4,
               color: hasBackgroundImage
                 ? "rgba(255,255,255,0.9)"
-                : theme.colors.mutedForeground,
+                : "var(--color-muted-foreground)",
             }}
           >
             {content.subheading}

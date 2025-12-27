@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/drizzle/db";
-import { sites } from "@/lib/drizzle/schema/sites";
+import { sites, type ColorMode, COLOR_MODES } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, ne } from "drizzle-orm";
 
@@ -225,6 +225,7 @@ export interface UpdateSiteSettingsData {
   customDomain?: string | null;
   metaTitle?: string | null;
   metaDescription?: string | null;
+  colorMode?: ColorMode;
 }
 
 /**
@@ -292,16 +293,19 @@ export async function updateSiteSettings(
   if (data.metaDescription !== undefined) {
     updateData.meta_description = data.metaDescription?.trim() || null;
   }
+  if (data.colorMode !== undefined && COLOR_MODES.includes(data.colorMode)) {
+    updateData.color_mode = data.colorMode;
+  }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));
 
-  revalidatePath("/app");
-  revalidatePath(`/app/sites/${siteId}`);
+  revalidatePath("/app", "page");
+  revalidatePath(`/app/sites/${siteId}`, "page");
 
-  // Revalidate public site routes
-  revalidatePath(`/sites/${existing.slug}`);
+  // Revalidate public site routes - use "layout" type to invalidate all pages under the site
+  revalidatePath(`/sites/${existing.slug}`, "layout");
   if (data.slug && data.slug !== existing.slug) {
-    revalidatePath(`/sites/${data.slug}`);
+    revalidatePath(`/sites/${data.slug}`, "layout");
   }
 
   return { success: true };

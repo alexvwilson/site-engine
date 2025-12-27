@@ -20,7 +20,7 @@ export function ContactBlock({
   return (
     <section
       className="py-16 px-6"
-      style={{ backgroundColor: theme.colors.muted }}
+      style={{ backgroundColor: "var(--color-muted)" }}
     >
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
@@ -30,7 +30,7 @@ export function ContactBlock({
               className="mt-4"
               style={{
                 ...getBodyStyles(theme),
-                color: theme.colors.mutedForeground,
+                color: "var(--color-muted-foreground)",
               }}
             >
               {content.description}
@@ -51,7 +51,7 @@ export function ContactBlock({
                 >
                   {field.label}
                   {field.required && (
-                    <span style={{ color: theme.colors.primary }}> *</span>
+                    <span style={{ color: "var(--color-primary)" }}> *</span>
                   )}
                 </label>
                 {field.type === "textarea" ? (
@@ -87,7 +87,7 @@ export function ContactBlock({
               className="text-center mt-2"
               style={{
                 fontSize: theme.typography.scale.small,
-                color: theme.colors.mutedForeground,
+                color: "var(--color-muted-foreground)",
               }}
             >
               Form is display-only in preview mode

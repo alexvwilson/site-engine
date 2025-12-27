@@ -21,10 +21,10 @@ export function TestimonialsBlock({
     return (
       <section
         className="py-16 px-6"
-        style={{ backgroundColor: theme.colors.background }}
+        style={{ backgroundColor: "var(--color-background)" }}
       >
         <div className="max-w-6xl mx-auto text-center">
-          <p style={{ color: theme.colors.mutedForeground }}>
+          <p style={{ color: "var(--color-muted-foreground)" }}>
             No testimonials added
           </p>
         </div>
@@ -35,7 +35,7 @@ export function TestimonialsBlock({
   return (
     <section
       className="py-16 px-6"
-      style={{ backgroundColor: theme.colors.background }}
+      style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="max-w-6xl mx-auto">
         <div
@@ -59,7 +59,7 @@ export function TestimonialsBlock({
               <Quote
                 className="mb-4 opacity-20"
                 size={32}
-                style={{ color: theme.colors.primary }}
+                style={{ color: "var(--color-primary)" }}
               />
               <blockquote
                 className="flex-1 mb-6"
@@ -81,7 +81,7 @@ export function TestimonialsBlock({
                 ) : (
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center text-white font-semibold"
-                    style={{ backgroundColor: theme.colors.primary }}
+                    style={{ backgroundColor: "var(--color-primary)" }}
                   >
                     {testimonial.author.charAt(0).toUpperCase()}
                   </div>

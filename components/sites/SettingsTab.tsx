@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2 } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { updateSiteSettings } from "@/app/actions/sites";
-import type { Site } from "@/lib/drizzle/schema/sites";
+import type { Site, ColorMode } from "@/lib/drizzle/schema/sites";
 
 interface SettingsTabProps {
   site: Site;
@@ -30,13 +37,15 @@ export function SettingsTab({ site }: SettingsTabProps) {
   const [metaDescription, setMetaDescription] = useState(
     site.meta_description || ""
   );
+  const [colorMode, setColorMode] = useState<ColorMode>(site.color_mode);
 
   // Track if any changes have been made
   const hasChanges =
     slug !== site.slug ||
     customDomain !== (site.custom_domain || "") ||
     metaTitle !== (site.meta_title || "") ||
-    metaDescription !== (site.meta_description || "");
+    metaDescription !== (site.meta_description || "") ||
+    colorMode !== site.color_mode;
 
   // Validate slug format
   const slugError =
@@ -52,6 +61,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
     setCustomDomain(site.custom_domain || "");
     setMetaTitle(site.meta_title || "");
     setMetaDescription(site.meta_description || "");
+    setColorMode(site.color_mode);
   }, [site]);
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -75,6 +85,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
         metaDescription !== (site.meta_description || "")
           ? metaDescription || null
           : undefined,
+      colorMode: colorMode !== site.color_mode ? colorMode : undefined,
     });
     setLoading(false);
 
@@ -217,6 +228,45 @@ export function SettingsTab({ site }: SettingsTabProps) {
             <p className="text-xs text-green-700">{publicUrl}</p>
             <p className="text-sm text-muted-foreground line-clamp-2">
               {metaDescription || site.description || "No description set"}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Appearance Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Palette className="h-5 w-5" />
+            Appearance
+          </CardTitle>
+          <CardDescription>
+            Control how your site looks for visitors
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="colorMode">Color Mode</Label>
+            <Select
+              value={colorMode}
+              onValueChange={(value) => setColorMode(value as ColorMode)}
+              disabled={loading}
+            >
+              <SelectTrigger className="w-full max-w-xs" id="colorMode">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Always Light</SelectItem>
+                <SelectItem value="dark">Always Dark</SelectItem>
+                <SelectItem value="system">Follow System Preference</SelectItem>
+                <SelectItem value="user_choice">Let Visitors Choose</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              {colorMode === "light" && "Your site will always display in light mode."}
+              {colorMode === "dark" && "Your site will always display in dark mode."}
+              {colorMode === "system" && "Your site will follow the visitor's system preference (light or dark)."}
+              {colorMode === "user_choice" && "Visitors can toggle between light and dark mode with a button on your site."}
             </p>
           </div>
         </CardContent>

@@ -12,8 +12,8 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
     <header
       className="sticky top-0 z-50 w-full border-b"
       style={{
-        backgroundColor: theme.colors.background,
-        borderColor: theme.colors.border,
+        backgroundColor: "var(--color-background)",
+        borderColor: "var(--color-border)",
       }}
     >
       <div className="max-w-6xl mx-auto px-6">
@@ -29,10 +29,10 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
             )}
             <span
               style={{
-                fontFamily: theme.typography.headingFont.family,
+                fontFamily: "var(--font-heading)",
                 fontSize: theme.typography.scale.body,
                 fontWeight: 600,
-                color: theme.colors.foreground,
+                color: "var(--color-foreground)",
               }}
             >
               {content.siteName}
@@ -49,8 +49,8 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
                   className="hover:opacity-70 transition-opacity"
                   style={{
                     ...getLinkStyles(theme),
-                    color: theme.colors.foreground,
-                    fontFamily: theme.typography.bodyFont.family,
+                    color: "var(--color-foreground)",
+                    fontFamily: "var(--font-body)",
                     fontSize: theme.typography.scale.small,
                     fontWeight: 500,
                   }}
@@ -75,7 +75,7 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
           {/* Mobile Menu Button (visual only - no JS interaction in server component) */}
           <button
             className="md:hidden p-2 hover:opacity-70 transition-opacity"
-            style={{ color: theme.colors.foreground }}
+            style={{ color: "var(--color-foreground)" }}
             aria-label="Open menu"
           >
             <svg

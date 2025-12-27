@@ -11,7 +11,7 @@ export function ImageBlock({ content, theme }: ImageBlockProps) {
   return (
     <section
       className="py-12 px-6"
-      style={{ backgroundColor: theme.colors.background }}
+      style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="max-w-4xl mx-auto">
         <figure
@@ -32,7 +32,7 @@ export function ImageBlock({ content, theme }: ImageBlockProps) {
               className="p-4"
               style={{
                 ...getSmallStyles(theme),
-                backgroundColor: theme.colors.muted,
+                backgroundColor: "var(--color-muted)",
               }}
             >
               {content.caption}

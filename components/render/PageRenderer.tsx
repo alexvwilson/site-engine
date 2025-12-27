@@ -18,7 +18,7 @@ export function PageRenderer({
         className="min-h-screen flex items-center justify-center"
         style={getPageStyles(theme)}
       >
-        <p style={{ color: theme.colors.mutedForeground }}>
+        <p style={{ color: "var(--color-muted-foreground)" }}>
           No sections added yet. Go back to the editor to add content.
         </p>
       </div>

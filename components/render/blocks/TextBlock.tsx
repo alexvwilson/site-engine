@@ -11,7 +11,7 @@ export function TextBlock({ content, theme }: TextBlockProps) {
   return (
     <section
       className="py-12 px-6"
-      style={{ backgroundColor: theme.colors.background }}
+      style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="max-w-3xl mx-auto">
         <div

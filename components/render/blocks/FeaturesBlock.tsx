@@ -20,10 +20,10 @@ export function FeaturesBlock({
     return (
       <section
         className="py-16 px-6"
-        style={{ backgroundColor: theme.colors.muted }}
+        style={{ backgroundColor: "var(--color-muted)" }}
       >
         <div className="max-w-6xl mx-auto text-center">
-          <p style={{ color: theme.colors.mutedForeground }}>
+          <p style={{ color: "var(--color-muted-foreground)" }}>
             No features added
           </p>
         </div>
@@ -34,7 +34,7 @@ export function FeaturesBlock({
   return (
     <section
       className="py-16 px-6"
-      style={{ backgroundColor: theme.colors.muted }}
+      style={{ backgroundColor: "var(--color-muted)" }}
     >
       <div className="max-w-6xl mx-auto">
         <div
@@ -57,7 +57,7 @@ export function FeaturesBlock({
             >
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mb-4"
-                style={{ backgroundColor: theme.colors.primary }}
+                style={{ backgroundColor: "var(--color-primary)" }}
               >
                 <Icon name={feature.icon} className="text-white" size={28} />
               </div>
@@ -72,7 +72,7 @@ export function FeaturesBlock({
               <p
                 style={{
                   ...getBodyStyles(theme),
-                  color: theme.colors.mutedForeground,
+                  color: "var(--color-muted-foreground)",
                 }}
               >
                 {feature.description}

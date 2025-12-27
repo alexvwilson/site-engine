@@ -3,14 +3,15 @@ import type { CSSProperties } from "react";
 
 /**
  * Generate inline styles for primary buttons
+ * Uses CSS variables for colors to support light/dark mode switching
  */
 export function getButtonStyles(theme: ThemeData): CSSProperties {
   return {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: "var(--color-primary)",
     color: "#FFFFFF",
     borderRadius: theme.components.button.borderRadius,
     padding: `${theme.components.button.paddingY} ${theme.components.button.paddingX}`,
-    fontFamily: theme.typography.bodyFont.family,
+    fontFamily: "var(--font-body)",
     fontWeight: 500,
     display: "inline-block",
     textDecoration: "none",
@@ -25,14 +26,14 @@ export function getButtonStyles(theme: ThemeData): CSSProperties {
 export function getOutlineButtonStyles(theme: ThemeData): CSSProperties {
   return {
     backgroundColor: "transparent",
-    color: theme.colors.primary,
+    color: "var(--color-primary)",
     borderRadius: theme.components.button.borderRadius,
     padding: `${theme.components.button.paddingY} ${theme.components.button.paddingX}`,
-    fontFamily: theme.typography.bodyFont.family,
+    fontFamily: "var(--font-body)",
     fontWeight: 500,
     display: "inline-block",
     textDecoration: "none",
-    border: `1px solid ${theme.colors.primary}`,
+    border: "1px solid var(--color-primary)",
     cursor: "pointer",
   };
 }
@@ -45,10 +46,10 @@ export function getHeadingStyles(
   level: "h1" | "h2" | "h3" | "h4"
 ): CSSProperties {
   return {
-    fontFamily: theme.typography.headingFont.family,
+    fontFamily: "var(--font-heading)",
     fontSize: theme.typography.scale[level],
     lineHeight: theme.typography.lineHeights.tight,
-    color: theme.colors.foreground,
+    color: "var(--color-foreground)",
     fontWeight: 600,
     margin: 0,
   };
@@ -59,10 +60,10 @@ export function getHeadingStyles(
  */
 export function getBodyStyles(theme: ThemeData): CSSProperties {
   return {
-    fontFamily: theme.typography.bodyFont.family,
+    fontFamily: "var(--font-body)",
     fontSize: theme.typography.scale.body,
     lineHeight: theme.typography.lineHeights.normal,
-    color: theme.colors.foreground,
+    color: "var(--color-foreground)",
   };
 }
 
@@ -71,10 +72,10 @@ export function getBodyStyles(theme: ThemeData): CSSProperties {
  */
 export function getSmallStyles(theme: ThemeData): CSSProperties {
   return {
-    fontFamily: theme.typography.bodyFont.family,
+    fontFamily: "var(--font-body)",
     fontSize: theme.typography.scale.small,
     lineHeight: theme.typography.lineHeights.normal,
-    color: theme.colors.mutedForeground,
+    color: "var(--color-muted-foreground)",
   };
 }
 
@@ -83,11 +84,11 @@ export function getSmallStyles(theme: ThemeData): CSSProperties {
  */
 export function getCardStyles(theme: ThemeData): CSSProperties {
   return {
-    backgroundColor: theme.colors.background,
+    backgroundColor: "var(--color-background)",
     borderRadius: theme.components.card.borderRadius,
     padding: theme.components.card.padding,
     boxShadow: theme.components.card.shadow,
-    border: `1px solid ${theme.colors.border}`,
+    border: "1px solid var(--color-border)",
   };
 }
 
@@ -96,13 +97,13 @@ export function getCardStyles(theme: ThemeData): CSSProperties {
  */
 export function getInputStyles(theme: ThemeData): CSSProperties {
   return {
-    backgroundColor: theme.colors.background,
+    backgroundColor: "var(--color-background)",
     borderRadius: theme.components.input.borderRadius,
     padding: theme.components.input.padding,
-    border: `1px solid ${theme.colors.border}`,
-    fontFamily: theme.typography.bodyFont.family,
+    border: "1px solid var(--color-border)",
+    fontFamily: "var(--font-body)",
     fontSize: theme.typography.scale.body,
-    color: theme.colors.foreground,
+    color: "var(--color-foreground)",
     width: "100%",
   };
 }
@@ -112,11 +113,11 @@ export function getInputStyles(theme: ThemeData): CSSProperties {
  */
 export function getBadgeStyles(theme: ThemeData): CSSProperties {
   return {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: "var(--color-primary)",
     color: "#FFFFFF",
     borderRadius: theme.components.badge.borderRadius,
     padding: theme.components.badge.padding,
-    fontFamily: theme.typography.bodyFont.family,
+    fontFamily: "var(--font-body)",
     fontSize: theme.typography.scale.small,
     fontWeight: 500,
     display: "inline-block",
@@ -128,9 +129,9 @@ export function getBadgeStyles(theme: ThemeData): CSSProperties {
  */
 export function getPageStyles(theme: ThemeData): CSSProperties {
   return {
-    backgroundColor: theme.colors.background,
-    color: theme.colors.foreground,
-    fontFamily: theme.typography.bodyFont.family,
+    backgroundColor: "var(--color-background)",
+    color: "var(--color-foreground)",
+    fontFamily: "var(--font-body)",
   };
 }
 
@@ -139,8 +140,8 @@ export function getPageStyles(theme: ThemeData): CSSProperties {
  */
 export function getMutedSectionStyles(theme: ThemeData): CSSProperties {
   return {
-    backgroundColor: theme.colors.muted,
-    color: theme.colors.foreground,
+    backgroundColor: "var(--color-muted)",
+    color: "var(--color-foreground)",
   };
 }
 
@@ -149,7 +150,7 @@ export function getMutedSectionStyles(theme: ThemeData): CSSProperties {
  */
 export function getLinkStyles(theme: ThemeData): CSSProperties {
   return {
-    color: theme.colors.primary,
+    color: "var(--color-primary)",
     textDecoration: "none",
   };
 }

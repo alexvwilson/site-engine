@@ -15,7 +15,7 @@ export function CTABlock({ content, theme }: CTABlockProps) {
   return (
     <section
       className="py-20 px-6"
-      style={{ backgroundColor: theme.colors.primary }}
+      style={{ backgroundColor: "var(--color-primary)" }}
     >
       <div className="max-w-3xl mx-auto text-center">
         <h2
@@ -46,7 +46,7 @@ export function CTABlock({ content, theme }: CTABlockProps) {
             style={{
               ...getButtonStyles(theme),
               backgroundColor: "#FFFFFF",
-              color: theme.colors.primary,
+              color: "var(--color-primary)",
             }}
           >
             {content.buttonText}
