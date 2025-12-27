@@ -2,15 +2,22 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ImageUpload } from "@/components/editor/ImageUpload";
 import type { ImageContent } from "@/lib/section-types";
 
 interface ImageEditorProps {
   content: ImageContent;
   onChange: (content: ImageContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
-export function ImageEditor({ content, onChange, disabled }: ImageEditorProps) {
+export function ImageEditor({
+  content,
+  onChange,
+  disabled,
+  siteId,
+}: ImageEditorProps) {
   const handleChange = (field: keyof ImageContent, value: string): void => {
     onChange({ ...content, [field]: value });
   };
@@ -18,31 +25,14 @@ export function ImageEditor({ content, onChange, disabled }: ImageEditorProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="image-src">Image URL</Label>
-        <Input
-          id="image-src"
+        <Label>Image</Label>
+        <ImageUpload
           value={content.src}
-          onChange={(e) => handleChange("src", e.target.value)}
-          placeholder="https://example.com/image.jpg"
+          onChange={(url) => handleChange("src", url)}
+          siteId={siteId}
           disabled={disabled}
         />
-        <p className="text-xs text-muted-foreground">
-          Image upload will be available in a future update
-        </p>
       </div>
-
-      {content.src && (
-        <div className="border rounded-lg p-2 bg-muted/50">
-          <img
-            src={content.src}
-            alt={content.alt || "Preview"}
-            className="max-h-48 mx-auto object-contain rounded"
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = "none";
-            }}
-          />
-        </div>
-      )}
 
       <div className="space-y-2">
         <Label htmlFor="image-alt">Alt Text</Label>

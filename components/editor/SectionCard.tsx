@@ -32,9 +32,10 @@ import { cn } from "@/lib/utils";
 
 interface SectionCardProps {
   section: Section;
+  siteId: string;
 }
 
-export function SectionCard({ section }: SectionCardProps) {
+export function SectionCard({ section, siteId }: SectionCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -184,7 +185,7 @@ export function SectionCard({ section }: SectionCardProps) {
       {/* Content Editor */}
       {isExpanded && (
         <div className="p-4">
-          <SectionEditor section={section} />
+          <SectionEditor section={section} siteId={siteId} />
         </div>
       )}
     </div>

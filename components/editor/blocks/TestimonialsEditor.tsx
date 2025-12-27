@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/editor/ImageUpload";
 import type { TestimonialsContent, Testimonial } from "@/lib/section-types";
 
 interface TestimonialsEditorProps {
   content: TestimonialsContent;
   onChange: (content: TestimonialsContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 const DEFAULT_TESTIMONIAL: Testimonial = {
@@ -20,7 +22,12 @@ const DEFAULT_TESTIMONIAL: Testimonial = {
   avatar: "",
 };
 
-export function TestimonialsEditor({ content, onChange, disabled }: TestimonialsEditorProps) {
+export function TestimonialsEditor({
+  content,
+  onChange,
+  disabled,
+  siteId,
+}: TestimonialsEditorProps) {
   const handleTestimonialChange = (
     index: number,
     field: keyof Testimonial,
@@ -100,13 +107,13 @@ export function TestimonialsEditor({ content, onChange, disabled }: Testimonials
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`testimonial-${index}-avatar`}>Avatar URL (optional)</Label>
-            <Input
-              id={`testimonial-${index}-avatar`}
+            <Label>Avatar (optional)</Label>
+            <ImageUpload
               value={testimonial.avatar ?? ""}
-              onChange={(e) => handleTestimonialChange(index, "avatar", e.target.value)}
-              placeholder="https://example.com/avatar.jpg"
+              onChange={(url) => handleTestimonialChange(index, "avatar", url)}
+              siteId={siteId}
               disabled={disabled}
+              placeholder="Drag & drop an avatar"
             />
           </div>
         </div>

@@ -4,12 +4,14 @@ import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/editor/ImageUpload";
 import type { HeaderContent, NavLink } from "@/lib/section-types";
 
 interface HeaderEditorProps {
   content: HeaderContent;
   onChange: (content: HeaderContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 const DEFAULT_LINK: NavLink = {
@@ -17,7 +19,12 @@ const DEFAULT_LINK: NavLink = {
   url: "#",
 };
 
-export function HeaderEditor({ content, onChange, disabled }: HeaderEditorProps) {
+export function HeaderEditor({
+  content,
+  onChange,
+  disabled,
+  siteId,
+}: HeaderEditorProps) {
   const handleFieldChange = (field: keyof HeaderContent, value: string): void => {
     onChange({ ...content, [field]: value });
   };
@@ -46,28 +53,26 @@ export function HeaderEditor({ content, onChange, disabled }: HeaderEditorProps)
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="header-siteName">Site Name</Label>
-          <Input
-            id="header-siteName"
-            value={content.siteName}
-            onChange={(e) => handleFieldChange("siteName", e.target.value)}
-            placeholder="Your Site Name"
-            disabled={disabled}
-          />
-        </div>
+      <div className="space-y-2">
+        <Label htmlFor="header-siteName">Site Name</Label>
+        <Input
+          id="header-siteName"
+          value={content.siteName}
+          onChange={(e) => handleFieldChange("siteName", e.target.value)}
+          placeholder="Your Site Name"
+          disabled={disabled}
+        />
+      </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="header-logoUrl">Logo URL (optional)</Label>
-          <Input
-            id="header-logoUrl"
-            value={content.logoUrl || ""}
-            onChange={(e) => handleFieldChange("logoUrl", e.target.value)}
-            placeholder="https://example.com/logo.png"
-            disabled={disabled}
-          />
-        </div>
+      <div className="space-y-2">
+        <Label>Logo (optional)</Label>
+        <ImageUpload
+          value={content.logoUrl || ""}
+          onChange={(url) => handleFieldChange("logoUrl", url)}
+          siteId={siteId}
+          disabled={disabled}
+          placeholder="Drag & drop your logo"
+        />
       </div>
 
       <div className="space-y-4">

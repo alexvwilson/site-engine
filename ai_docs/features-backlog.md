@@ -22,23 +22,6 @@ _No items currently in P1_
 
 ## P2 - Medium Priority
 
-### 3. Image Upload (Supabase Storage)
-
-**Problem:** Images require external URLs. Users want to upload directly.
-
-**Current State:** All image fields accept URLs only. Supabase storage config deferred.
-
-**Requirements:**
-- [ ] Configure Supabase storage bucket
-- [ ] Build upload component with drag-and-drop
-- [ ] Image optimization/resizing
-- [ ] Progress indicator during upload
-- [ ] Replace URL inputs with upload + URL option
-
-**Complexity:** Medium
-
----
-
 ### 4. Undo/Redo for Section Edits
 
 **Problem:** No way to revert accidental changes to section content.
@@ -161,6 +144,42 @@ _No items currently in P1_
 ---
 
 ## Completed Features
+
+### 6. Image Upload (Supabase Storage) ✅ 2025-12-27
+
+**Problem:** Images required external URLs. Users wanted to upload directly.
+
+**Solution Implemented:**
+- [x] Reusable ImageUpload component with drag-and-drop
+- [x] Click to browse functionality
+- [x] Upload progress indicator
+- [x] Tab toggle between Upload and URL modes
+- [x] Image preview after upload with remove button
+- [x] Server action with file type and size validation
+- [x] Files organized by userId/siteId in Supabase Storage
+- [x] Integrated into all 5 image editors (Image, Hero, Gallery, Header, Testimonials)
+
+**Task Document:** `ai_docs/tasks/017_image_upload_supabase_storage.md`
+**Files Created:**
+- `app/actions/storage.ts` - Upload/delete server actions
+- `components/editor/ImageUpload.tsx` - Drag-drop upload component
+
+**Files Modified:**
+- `components/editor/SectionEditor.tsx` - Added siteId to editorProps
+- `components/editor/SectionsList.tsx` - Pass siteId prop
+- `components/editor/SectionCard.tsx` - Pass siteId prop
+- `components/editor/blocks/ImageEditor.tsx` - Use ImageUpload
+- `components/editor/blocks/HeroEditor.tsx` - Use ImageUpload for background
+- `components/editor/blocks/GalleryEditor.tsx` - Use ImageUpload per image
+- `components/editor/blocks/HeaderEditor.tsx` - Use ImageUpload for logo
+- `components/editor/blocks/TestimonialsEditor.tsx` - Use ImageUpload for avatars
+
+**Supabase Configuration Required:**
+- Storage bucket with image mime types allowed
+- RLS policy for authenticated uploads
+- Public read access policy
+
+---
 
 ### 5. Rich Text Editor for Text Sections ✅ 2025-12-27
 
@@ -286,4 +305,4 @@ _No items currently in P1_
 
 ---
 
-**Last Updated:** 2025-12-27 (Rich Text Editor for Text Sections completed)
+**Last Updated:** 2025-12-27 (Image Upload completed)

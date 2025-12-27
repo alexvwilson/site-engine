@@ -10,6 +10,7 @@ interface FooterEditorProps {
   content: FooterContent;
   onChange: (content: FooterContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 const DEFAULT_LINK: FooterLink = {

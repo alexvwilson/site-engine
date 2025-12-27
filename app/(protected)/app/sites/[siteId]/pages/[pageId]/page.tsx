@@ -45,7 +45,7 @@ export default async function PageEditorPage({ params }: PageEditorProps) {
       <EditorHeader page={page} siteId={siteId} />
       <div className="flex-1 overflow-auto">
         <div className="container max-w-4xl mx-auto px-4 py-8">
-          <SectionsList sections={sections} pageId={pageId} />
+          <SectionsList sections={sections} pageId={pageId} siteId={siteId} />
           <div className="mt-6 flex justify-center gap-3">
             <LayoutSuggestionModal pageId={pageId} siteId={siteId} />
             <BlockPicker pageId={pageId} siteId={siteId} />

@@ -19,9 +19,10 @@ import { useAutoSave } from "@/hooks/useAutoSave";
 
 interface SectionEditorProps {
   section: Section;
+  siteId: string;
 }
 
-export function SectionEditor({ section }: SectionEditorProps) {
+export function SectionEditor({ section, siteId }: SectionEditorProps) {
   const [content, setContent] = useState<SectionContent>(
     section.content as SectionContent
   );
@@ -50,6 +51,7 @@ export function SectionEditor({ section }: SectionEditorProps) {
     content,
     onChange: handleContentChange,
     disabled: saveStatus === "saving",
+    siteId,
   };
 
   return (

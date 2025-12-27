@@ -24,9 +24,10 @@ import { FileText } from "lucide-react";
 interface SectionsListProps {
   sections: Section[];
   pageId: string;
+  siteId: string;
 }
 
-export function SectionsList({ sections, pageId }: SectionsListProps) {
+export function SectionsList({ sections, pageId, siteId }: SectionsListProps) {
   const [isPending, startTransition] = useTransition();
 
   const sensors = useSensors(
@@ -93,7 +94,7 @@ export function SectionsList({ sections, pageId }: SectionsListProps) {
       >
         <div className={`space-y-4 ${isPending ? "opacity-70" : ""}`}>
           {sections.map((section) => (
-            <SectionCard key={section.id} section={section} />
+            <SectionCard key={section.id} section={section} siteId={siteId} />
           ))}
         </div>
       </SortableContext>

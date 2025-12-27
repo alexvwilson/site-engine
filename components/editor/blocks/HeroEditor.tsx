@@ -3,15 +3,22 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/editor/ImageUpload";
 import type { HeroContent } from "@/lib/section-types";
 
 interface HeroEditorProps {
   content: HeroContent;
   onChange: (content: HeroContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
-export function HeroEditor({ content, onChange, disabled }: HeroEditorProps) {
+export function HeroEditor({
+  content,
+  onChange,
+  disabled,
+  siteId,
+}: HeroEditorProps) {
   const handleChange = (field: keyof HeroContent, value: string): void => {
     onChange({ ...content, [field]: value });
   };
@@ -66,17 +73,14 @@ export function HeroEditor({ content, onChange, disabled }: HeroEditorProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="hero-bg-image">Background Image URL (optional)</Label>
-        <Input
-          id="hero-bg-image"
+        <Label>Background Image (optional)</Label>
+        <ImageUpload
           value={content.backgroundImage ?? ""}
-          onChange={(e) => handleChange("backgroundImage", e.target.value)}
-          placeholder="https://example.com/image.jpg"
+          onChange={(url) => handleChange("backgroundImage", url)}
+          siteId={siteId}
           disabled={disabled}
+          placeholder="Drag & drop a background image"
         />
-        <p className="text-xs text-muted-foreground">
-          Image upload will be available in a future update
-        </p>
       </div>
     </div>
   );

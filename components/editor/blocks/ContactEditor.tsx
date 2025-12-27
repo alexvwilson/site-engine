@@ -19,6 +19,7 @@ interface ContactEditorProps {
   content: ContactContent;
   onChange: (content: ContactContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 const DEFAULT_FIELD: ContactField = {

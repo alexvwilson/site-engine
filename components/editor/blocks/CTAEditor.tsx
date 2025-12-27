@@ -9,6 +9,7 @@ interface CTAEditorProps {
   content: CTAContent;
   onChange: (content: CTAContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 export function CTAEditor({ content, onChange, disabled }: CTAEditorProps) {

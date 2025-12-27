@@ -4,12 +4,14 @@ import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { ImageUpload } from "@/components/editor/ImageUpload";
 import type { GalleryContent, GalleryImage } from "@/lib/section-types";
 
 interface GalleryEditorProps {
   content: GalleryContent;
   onChange: (content: GalleryContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 const DEFAULT_IMAGE: GalleryImage = {
@@ -18,7 +20,12 @@ const DEFAULT_IMAGE: GalleryImage = {
   caption: "",
 };
 
-export function GalleryEditor({ content, onChange, disabled }: GalleryEditorProps) {
+export function GalleryEditor({
+  content,
+  onChange,
+  disabled,
+  siteId,
+}: GalleryEditorProps) {
   const handleImageChange = (
     index: number,
     field: keyof GalleryImage,
@@ -68,28 +75,14 @@ export function GalleryEditor({ content, onChange, disabled }: GalleryEditorProp
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor={`gallery-${index}-src`}>Image URL</Label>
-            <Input
-              id={`gallery-${index}-src`}
+            <Label>Image</Label>
+            <ImageUpload
               value={image.src}
-              onChange={(e) => handleImageChange(index, "src", e.target.value)}
-              placeholder="https://example.com/image.jpg"
+              onChange={(url) => handleImageChange(index, "src", url)}
+              siteId={siteId}
               disabled={disabled}
             />
           </div>
-
-          {image.src && (
-            <div className="border rounded-lg p-2 bg-muted/50">
-              <img
-                src={image.src}
-                alt={image.alt || "Preview"}
-                className="max-h-32 mx-auto object-contain rounded"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-            </div>
-          )}
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
@@ -126,9 +119,6 @@ export function GalleryEditor({ content, onChange, disabled }: GalleryEditorProp
         <Plus className="h-4 w-4 mr-2" />
         Add Image
       </Button>
-      <p className="text-xs text-muted-foreground text-center">
-        Image upload will be available in a future update
-      </p>
     </div>
   );
 }

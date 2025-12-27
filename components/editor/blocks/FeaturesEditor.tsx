@@ -11,6 +11,7 @@ interface FeaturesEditorProps {
   content: FeaturesContent;
   onChange: (content: FeaturesContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 const DEFAULT_FEATURE: Feature = {

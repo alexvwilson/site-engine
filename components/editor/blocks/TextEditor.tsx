@@ -22,6 +22,7 @@ interface TextEditorProps {
   content: TextContent;
   onChange: (content: TextContent) => void;
   disabled?: boolean;
+  siteId: string;
 }
 
 export function TextEditor({ content, onChange, disabled }: TextEditorProps) {
