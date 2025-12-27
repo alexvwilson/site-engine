@@ -16,35 +16,7 @@
 
 ## P1 - High Priority
 
-### 1. Light/Dark Mode Support
-
-**Problem:** Sites are only rendered in light mode. Users want control over appearance.
-
-**Requirements:**
-- [ ] Site-level setting: Always Light / Always Dark / System Default / User Choice
-- [ ] If "User Choice": Add toggle component on published site
-- [ ] Theme schema needs dual color palettes (light + dark variants)
-- [ ] Preview should support testing both modes
-- [ ] CSS variables approach for runtime switching
-
-**Scope:**
-- Database: Add `color_mode` field to sites or themes table
-- Theme Schema: Add `darkColors` object alongside existing colors
-- AI Generation: Update prompts to generate both light and dark palettes
-- Renderer: Apply correct palette based on mode
-- Published Site: Conditional toggle component
-- Preview: Device toggle + mode toggle
-
-**Complexity:** Medium-High (touches many files)
-
-**Files Affected:**
-- `lib/drizzle/schema/sites.ts` or `themes.ts`
-- `trigger/utils/theme-prompts.ts`
-- `trigger/utils/theme-parser.ts`
-- `components/render/utilities/theme-styles.ts`
-- `components/render/PageRenderer.tsx`
-- New: `components/render/ColorModeToggle.tsx`
-- `app/(sites)/sites/[siteSlug]/layout.tsx`
+_No items currently in P1_
 
 ---
 
@@ -208,6 +180,37 @@
 
 ## Completed Features
 
+### 3. Light/Dark Mode Support ✅ 2025-12-27
+
+**Problem:** Sites were only rendered in light mode. Users wanted control over appearance.
+
+**Solution Implemented:**
+- [x] Site-level setting: Always Light / Always Dark / System Default / User Choice
+- [x] If "User Choice": Toggle component appears on published site (top-right corner)
+- [x] Theme schema supports dual color palettes (light + dark variants)
+- [x] CSS variables approach for runtime switching
+- [x] ColorModeScript prevents flash of wrong color mode on page load
+- [x] Auto-generates dark palette if AI doesn't provide one
+
+**Files Created:**
+- `components/render/ThemeStyles.tsx` - Injects CSS variables for theme colors
+- `components/render/ColorModeToggle.tsx` - Sun/Moon toggle button with localStorage persistence
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `color_mode` field
+- `lib/drizzle/schema/theme-types.ts` - Added optional `darkColors` to ThemeData
+- `trigger/utils/theme-prompts.ts` - Updated to request both light and dark palettes
+- `trigger/utils/theme-parser.ts` - Added darkColors parsing
+- `lib/theme-utils.ts` - Added `generateDefaultDarkPalette()` fallback
+- `components/render/utilities/theme-styles.ts` - Changed to use CSS variables
+- `components/render/blocks/*.tsx` - All blocks updated to use CSS variables
+- `components/sites/SettingsTab.tsx` - Added Appearance card with color mode selector
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Added ThemeStyles, ColorModeScript, ColorModeToggle
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Same as above
+- `app/actions/sites.ts` - Added colorMode to settings, improved revalidation
+
+---
+
 ### 2. Manual Theme Editing ✅ 2025-12-27
 
 **Problem:** Generated themes couldn't be manually adjusted. The "Duplicate Theme" feature was less useful without the ability to tweak the copy.
@@ -257,4 +260,4 @@
 
 ---
 
-**Last Updated:** 2025-12-27 (Manual Theme Editing completed)
+**Last Updated:** 2025-12-27 (Light/Dark Mode Support completed)
