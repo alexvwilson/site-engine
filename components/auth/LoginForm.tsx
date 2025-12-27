@@ -34,7 +34,7 @@ export function LoginForm({
       const result = await loginAction(email, password);
 
       if (result.success) {
-        router.push("/transcripts");
+        router.push("/app");
       } else {
         toast.error(result.error || "Login failed");
       }

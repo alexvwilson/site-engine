@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Skribo.ai - UI Theme Preview</title>
+    <title>Engine - UI Theme Preview</title>
     <style>
       * {
         margin: 0;
@@ -185,7 +185,7 @@
       }
 
       .variant-card.selected::before {
-        content: "✓ Selected";
+        content: "Selected";
         position: absolute;
         top: 8px;
         right: 8px;
@@ -384,10 +384,11 @@
       }
 
       /* CSS Variables for Each Theme Combination */
-      /* PRIMARY COLOR 1 - Light Variants */
+
+      /* PRIMARY COLOR 1 - AI Tech Violet (Cool) - YOUR PREFERENCE */
       .primary1-light1 {
-        /* SCHEME1_LIGHT1_VARS */
-        --primary: 310 75% 58%;
+        /* Pure White */
+        --primary: 265 85% 60%;
         --primary-foreground: 0 0% 98%;
         --background: 0 0% 100%;
         --foreground: 240 10% 3.9%;
@@ -396,17 +397,133 @@
         --border: 240 5.9% 90%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
-        --success: 140 75% 52%;
+        --success: 135 75% 50%;
         --success-foreground: 0 0% 98%;
-        --warning: 35 85% 60%;
+        --warning: 42 88% 56%;
         --warning-foreground: 240 10% 3.9%;
-        --destructive: 8 75% 54%;
+        --destructive: 358 82% 58%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary1-light2 {
-        /* SCHEME1_LIGHT2_VARS */
-        --primary: 310 75% 58%;
+        /* Cool Off-White */
+        --primary: 265 85% 60%;
+        --primary-foreground: 0 0% 98%;
+        --background: 220 15% 98%;
+        --foreground: 240 10% 3.9%;
+        --muted: 220 12% 93%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --border: 240 5.9% 90%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --success: 135 75% 50%;
+        --success-foreground: 0 0% 98%;
+        --warning: 42 88% 56%;
+        --warning-foreground: 240 10% 3.9%;
+        --destructive: 358 82% 58%;
+        --destructive-foreground: 0 0% 98%;
+      }
+
+      .primary1-light3 {
+        /* Subtle Brand Tint */
+        --primary: 265 85% 60%;
+        --primary-foreground: 0 0% 98%;
+        --background: 265 10% 97%;
+        --foreground: 240 10% 3.9%;
+        --muted: 265 12% 92%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --border: 265 14% 88%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --success: 135 75% 50%;
+        --success-foreground: 0 0% 98%;
+        --warning: 42 88% 56%;
+        --warning-foreground: 240 10% 3.9%;
+        --destructive: 358 82% 58%;
+        --destructive-foreground: 0 0% 98%;
+      }
+
+      /* PRIMARY COLOR 1 - Dark Variants */
+      .primary1-dark1 {
+        /* Pure Black */
+        --primary: 265 80% 65%;
+        --primary-foreground: 0 0% 98%;
+        --background: 0 0% 3%;
+        --foreground: 0 0% 98%;
+        --muted: 0 0% 8%;
+        --muted-foreground: 0 0% 70%;
+        --border: 0 0% 12%;
+        --card: 0 0% 5%;
+        --card-foreground: 0 0% 98%;
+        --success: 135 70% 55%;
+        --success-foreground: 0 0% 98%;
+        --warning: 42 83% 61%;
+        --warning-foreground: 0 0% 98%;
+        --destructive: 358 77% 63%;
+        --destructive-foreground: 0 0% 98%;
+      }
+
+      .primary1-dark2 {
+        /* Complementary Dark (Brand-Harmonized Violet) */
+        --primary: 265 80% 65%;
+        --primary-foreground: 0 0% 98%;
+        --background: 265 18% 8%;
+        --foreground: 0 0% 98%;
+        --muted: 265 14% 14%;
+        --muted-foreground: 265 8% 68%;
+        --border: 265 12% 18%;
+        --card: 265 16% 10%;
+        --card-foreground: 0 0% 98%;
+        --success: 135 70% 55%;
+        --success-foreground: 0 0% 98%;
+        --warning: 42 83% 61%;
+        --warning-foreground: 0 0% 98%;
+        --destructive: 358 77% 63%;
+        --destructive-foreground: 0 0% 98%;
+      }
+
+      .primary1-dark3 {
+        /* Premium Slate */
+        --primary: 265 80% 65%;
+        --primary-foreground: 0 0% 98%;
+        --background: 220 10% 10%;
+        --foreground: 0 0% 98%;
+        --muted: 220 8% 16%;
+        --muted-foreground: 220 5% 70%;
+        --border: 220 8% 20%;
+        --card: 220 10% 12%;
+        --card-foreground: 0 0% 98%;
+        --success: 135 70% 55%;
+        --success-foreground: 0 0% 98%;
+        --warning: 42 83% 61%;
+        --warning-foreground: 0 0% 98%;
+        --destructive: 358 77% 63%;
+        --destructive-foreground: 0 0% 98%;
+      }
+
+      /* PRIMARY COLOR 2 - Engine Forge Orange (Warm) */
+      .primary2-light1 {
+        /* Pure White Light */
+        --primary: 26 90% 54%;
+        --primary-foreground: 0 0% 98%;
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --border: 240 5.9% 90%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --success: 140 75% 48%;
+        --success-foreground: 0 0% 98%;
+        --warning: 35 90% 55%;
+        --warning-foreground: 240 10% 3.9%;
+        --destructive: 8 85% 56%;
+        --destructive-foreground: 0 0% 98%;
+      }
+
+      .primary2-light2 {
+        /* Warm Off-White */
+        --primary: 26 90% 54%;
         --primary-foreground: 0 0% 98%;
         --background: 30 20% 98%;
         --foreground: 240 10% 3.9%;
@@ -415,153 +532,37 @@
         --border: 240 5.9% 90%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
-        --success: 140 75% 52%;
+        --success: 140 75% 48%;
         --success-foreground: 0 0% 98%;
-        --warning: 35 85% 60%;
+        --warning: 35 90% 55%;
         --warning-foreground: 240 10% 3.9%;
-        --destructive: 8 75% 54%;
-        --destructive-foreground: 0 0% 98%;
-      }
-
-      .primary1-light3 {
-        /* SCHEME1_LIGHT3_VARS */
-        --primary: 310 75% 58%;
-        --primary-foreground: 0 0% 98%;
-        --background: 310 10% 97%;
-        --foreground: 240 10% 3.9%;
-        --muted: 310 14% 92%;
-        --muted-foreground: 240 3.8% 46.1%;
-        --border: 240 5.9% 90%;
-        --card: 0 0% 100%;
-        --card-foreground: 240 10% 3.9%;
-        --success: 140 75% 52%;
-        --success-foreground: 0 0% 98%;
-        --warning: 35 85% 60%;
-        --warning-foreground: 240 10% 3.9%;
-        --destructive: 8 75% 54%;
-        --destructive-foreground: 0 0% 98%;
-      }
-
-      /* PRIMARY COLOR 1 - Dark Variants */
-      .primary1-dark1 {
-        /* SCHEME1_DARK1_VARS - Pure Black */
-        --primary: 310 70% 63%;
-        --primary-foreground: 0 0% 98%;
-        --background: 0 0% 3%;
-        --foreground: 0 0% 98%;
-        --muted: 0 0% 8%;
-        --muted-foreground: 0 0% 70%;
-        --border: 0 0% 12%;
-        --card: 0 0% 5%;
-        --card-foreground: 0 0% 98%;
-        --success: 140 70% 57%;
-        --success-foreground: 0 0% 98%;
-        --warning: 35 80% 65%;
-        --warning-foreground: 0 0% 98%;
-        --destructive: 8 70% 59%;
-        --destructive-foreground: 0 0% 98%;
-      }
-
-      .primary1-dark2 {
-        /* SCHEME1_DARK2_VARS - Complementary Dark */
-        --primary: 310 70% 63%;
-        --primary-foreground: 0 0% 98%;
-        --background: 310 22% 7%;
-        --foreground: 0 0% 98%;
-        --muted: 310 16% 14%;
-        --muted-foreground: 310 8% 70%;
-        --border: 310 12% 18%;
-        --card: 310 22% 7%;
-        --card-foreground: 0 0% 98%;
-        --success: 140 70% 57%;
-        --success-foreground: 0 0% 98%;
-        --warning: 35 80% 65%;
-        --warning-foreground: 0 0% 98%;
-        --destructive: 8 70% 59%;
-        --destructive-foreground: 0 0% 98%;
-      }
-
-      .primary1-dark3 {
-        /* SCHEME1_DARK3_VARS - Premium Slate */
-        --primary: 310 70% 63%;
-        --primary-foreground: 0 0% 98%;
-        --background: 220 10% 10%;
-        --foreground: 0 0% 98%;
-        --muted: 220 8% 16%;
-        --muted-foreground: 220 5% 70%;
-        --border: 220 8% 20%;
-        --card: 220 10% 12%;
-        --card-foreground: 0 0% 98%;
-        --success: 140 70% 57%;
-        --success-foreground: 0 0% 98%;
-        --warning: 35 80% 65%;
-        --warning-foreground: 0 0% 98%;
-        --destructive: 8 70% 59%;
-        --destructive-foreground: 0 0% 98%;
-      }
-
-      /* PRIMARY COLOR 2 - Light Variants */
-      .primary2-light1 {
-        /* SCHEME2_LIGHT1_VARS */
-        --primary: 220 80% 58%;
-        --primary-foreground: 0 0% 98%;
-        --background: 0 0% 100%;
-        --foreground: 240 10% 3.9%;
-        --muted: 240 4.8% 95.9%;
-        --muted-foreground: 240 3.8% 46.1%;
-        --border: 240 5.9% 90%;
-        --card: 0 0% 100%;
-        --card-foreground: 240 10% 3.9%;
-        --success: 135 75% 50%;
-        --success-foreground: 0 0% 98%;
-        --warning: 42 85% 58%;
-        --warning-foreground: 240 10% 3.9%;
-        --destructive: 5 75% 55%;
-        --destructive-foreground: 0 0% 98%;
-      }
-
-      .primary2-light2 {
-        /* SCHEME2_LIGHT2_VARS */
-        --primary: 220 80% 58%;
-        --primary-foreground: 0 0% 98%;
-        --background: 220 15% 98%;
-        --foreground: 240 10% 3.9%;
-        --muted: 220 12% 93%;
-        --muted-foreground: 240 3.8% 46.1%;
-        --border: 240 5.9% 90%;
-        --card: 0 0% 100%;
-        --card-foreground: 240 10% 3.9%;
-        --success: 135 75% 50%;
-        --success-foreground: 0 0% 98%;
-        --warning: 42 85% 58%;
-        --warning-foreground: 240 10% 3.9%;
-        --destructive: 5 75% 55%;
+        --destructive: 8 85% 56%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary2-light3 {
-        /* SCHEME2_LIGHT3_VARS */
-        --primary: 220 80% 58%;
+        /* Brand Tint */
+        --primary: 26 90% 54%;
         --primary-foreground: 0 0% 98%;
-        --background: 220 10% 97%;
+        --background: 26 12% 97%;
         --foreground: 240 10% 3.9%;
-        --muted: 220 14% 92%;
+        --muted: 26 14% 92%;
         --muted-foreground: 240 3.8% 46.1%;
-        --border: 240 5.9% 90%;
+        --border: 26 16% 88%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
-        --success: 135 75% 50%;
+        --success: 140 75% 48%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 85% 58%;
+        --warning: 35 90% 55%;
         --warning-foreground: 240 10% 3.9%;
-        --destructive: 5 75% 55%;
+        --destructive: 8 85% 56%;
         --destructive-foreground: 0 0% 98%;
       }
 
       /* PRIMARY COLOR 2 - Dark Variants */
       .primary2-dark1 {
-        /* SCHEME2_DARK1_VARS - Pure Black */
-        --primary: 220 75% 63%;
+        /* Pure Black */
+        --primary: 26 85% 59%;
         --primary-foreground: 0 0% 98%;
         --background: 0 0% 3%;
         --foreground: 0 0% 98%;
@@ -570,36 +571,36 @@
         --border: 0 0% 12%;
         --card: 0 0% 5%;
         --card-foreground: 0 0% 98%;
-        --success: 135 70% 55%;
+        --success: 140 70% 53%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 80% 63%;
+        --warning: 35 85% 60%;
         --warning-foreground: 0 0% 98%;
-        --destructive: 5 70% 60%;
+        --destructive: 8 80% 61%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary2-dark2 {
-        /* SCHEME2_DARK2_VARS - Complementary Dark */
-        --primary: 220 75% 63%;
+        /* Complementary Dark (Brand-Harmonized) */
+        --primary: 26 85% 59%;
         --primary-foreground: 0 0% 98%;
-        --background: 220 16% 9%;
+        --background: 26 20% 8%;
         --foreground: 0 0% 98%;
-        --muted: 220 12% 16%;
-        --muted-foreground: 220 8% 70%;
-        --border: 220 10% 19%;
-        --card: 220 16% 9%;
+        --muted: 26 16% 14%;
+        --muted-foreground: 26 10% 68%;
+        --border: 26 14% 18%;
+        --card: 26 18% 10%;
         --card-foreground: 0 0% 98%;
-        --success: 135 70% 55%;
+        --success: 140 70% 53%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 80% 63%;
+        --warning: 35 85% 60%;
         --warning-foreground: 0 0% 98%;
-        --destructive: 5 70% 60%;
+        --destructive: 8 80% 61%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary2-dark3 {
-        /* SCHEME2_DARK3_VARS - Premium Slate */
-        --primary: 220 75% 63%;
+        /* Premium Slate */
+        --primary: 26 85% 59%;
         --primary-foreground: 0 0% 98%;
         --background: 220 10% 10%;
         --foreground: 0 0% 98%;
@@ -608,18 +609,18 @@
         --border: 220 8% 20%;
         --card: 220 10% 12%;
         --card-foreground: 0 0% 98%;
-        --success: 135 70% 55%;
+        --success: 140 70% 53%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 80% 63%;
+        --warning: 35 85% 60%;
         --warning-foreground: 0 0% 98%;
-        --destructive: 5 70% 60%;
+        --destructive: 8 80% 61%;
         --destructive-foreground: 0 0% 98%;
       }
 
-      /* PRIMARY COLOR 3 - Light Variants */
+      /* PRIMARY COLOR 3 - Professional Teal (Cool) */
       .primary3-light1 {
-        /* SCHEME3_LIGHT1_VARS */
-        --primary: 270 85% 60%;
+        /* Pure White */
+        --primary: 175 75% 42%;
         --primary-foreground: 0 0% 98%;
         --background: 0 0% 100%;
         --foreground: 240 10% 3.9%;
@@ -628,56 +629,56 @@
         --border: 240 5.9% 90%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
-        --success: 140 80% 52%;
+        --success: 130 72% 48%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 90% 58%;
+        --warning: 40 85% 54%;
         --warning-foreground: 240 10% 3.9%;
-        --destructive: 358 85% 60%;
+        --destructive: 356 78% 55%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary3-light2 {
-        /* SCHEME3_LIGHT2_VARS */
-        --primary: 270 85% 60%;
+        /* Cool Off-White */
+        --primary: 175 75% 42%;
         --primary-foreground: 0 0% 98%;
-        --background: 220 15% 98%;
+        --background: 180 12% 98%;
         --foreground: 240 10% 3.9%;
-        --muted: 220 12% 93%;
+        --muted: 180 10% 93%;
         --muted-foreground: 240 3.8% 46.1%;
         --border: 240 5.9% 90%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
-        --success: 140 80% 52%;
+        --success: 130 72% 48%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 90% 58%;
+        --warning: 40 85% 54%;
         --warning-foreground: 240 10% 3.9%;
-        --destructive: 358 85% 60%;
+        --destructive: 356 78% 55%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary3-light3 {
-        /* SCHEME3_LIGHT3_VARS */
-        --primary: 270 85% 60%;
+        /* Subtle Brand Tint */
+        --primary: 175 75% 42%;
         --primary-foreground: 0 0% 98%;
-        --background: 270 10% 97%;
+        --background: 175 10% 97%;
         --foreground: 240 10% 3.9%;
-        --muted: 270 14% 92%;
+        --muted: 175 12% 92%;
         --muted-foreground: 240 3.8% 46.1%;
-        --border: 240 5.9% 90%;
+        --border: 175 14% 88%;
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
-        --success: 140 80% 52%;
+        --success: 130 72% 48%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 90% 58%;
+        --warning: 40 85% 54%;
         --warning-foreground: 240 10% 3.9%;
-        --destructive: 358 85% 60%;
+        --destructive: 356 78% 55%;
         --destructive-foreground: 0 0% 98%;
       }
 
       /* PRIMARY COLOR 3 - Dark Variants */
       .primary3-dark1 {
-        /* SCHEME3_DARK1_VARS - Pure Black */
-        --primary: 270 80% 65%;
+        /* Pure Black */
+        --primary: 175 70% 47%;
         --primary-foreground: 0 0% 98%;
         --background: 0 0% 3%;
         --foreground: 0 0% 98%;
@@ -686,36 +687,36 @@
         --border: 0 0% 12%;
         --card: 0 0% 5%;
         --card-foreground: 0 0% 98%;
-        --success: 140 75% 57%;
+        --success: 130 67% 53%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 85% 63%;
+        --warning: 40 80% 59%;
         --warning-foreground: 0 0% 98%;
-        --destructive: 358 80% 65%;
+        --destructive: 356 73% 60%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary3-dark2 {
-        /* SCHEME3_DARK2_VARS - Complementary Dark */
-        --primary: 270 80% 65%;
+        /* Complementary Dark (Brand-Harmonized Teal) */
+        --primary: 175 70% 47%;
         --primary-foreground: 0 0% 98%;
-        --background: 270 18% 8%;
+        --background: 175 18% 8%;
         --foreground: 0 0% 98%;
-        --muted: 270 14% 15%;
-        --muted-foreground: 270 8% 70%;
-        --border: 270 12% 18%;
-        --card: 270 18% 8%;
+        --muted: 175 14% 14%;
+        --muted-foreground: 175 8% 68%;
+        --border: 175 12% 18%;
+        --card: 175 16% 10%;
         --card-foreground: 0 0% 98%;
-        --success: 140 75% 57%;
+        --success: 130 67% 53%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 85% 63%;
+        --warning: 40 80% 59%;
         --warning-foreground: 0 0% 98%;
-        --destructive: 358 80% 65%;
+        --destructive: 356 73% 60%;
         --destructive-foreground: 0 0% 98%;
       }
 
       .primary3-dark3 {
-        /* SCHEME3_DARK3_VARS - Premium Slate */
-        --primary: 270 80% 65%;
+        /* Premium Slate */
+        --primary: 175 70% 47%;
         --primary-foreground: 0 0% 98%;
         --background: 220 10% 10%;
         --foreground: 0 0% 98%;
@@ -724,11 +725,11 @@
         --border: 220 8% 20%;
         --card: 220 10% 12%;
         --card-foreground: 0 0% 98%;
-        --success: 140 75% 57%;
+        --success: 130 67% 53%;
         --success-foreground: 0 0% 98%;
-        --warning: 42 85% 63%;
+        --warning: 40 80% 59%;
         --warning-foreground: 0 0% 98%;
-        --destructive: 358 80% 65%;
+        --destructive: 356 73% 60%;
         --destructive-foreground: 0 0% 98%;
       }
     </style>
@@ -737,9 +738,9 @@
     <div class="container">
       <div class="header">
         <h1>Choose Your Brand Colors</h1>
-        <div class="subtitle">Skribo.ai</div>
+        <div class="subtitle">Engine - AI-Powered Site Builder</div>
         <div class="instructions">
-          👇 Select a primary color below, then choose your preferred light or
+          Select a primary color below, then choose your preferred light or
           dark mode variant. Each combination is instantly previewed with actual
           UI components.
         </div>
@@ -754,36 +755,36 @@
         >
           <div
             class="primary-preview"
-            style="background: hsl(310 75% 58%)"
+            style="background: hsl(265 85% 60%)"
           ></div>
-          <div class="primary-name">Creative Media Pink</div>
-          <div class="primary-description">Energetic and expressive for content creators who want to stand out</div>
+          <div class="primary-name">AI Tech Violet</div>
+          <div class="primary-description">Signals AI intelligence and cutting-edge innovation. Purple connotes sophistication and forward-thinking technology.</div>
         </div>
 
         <div class="primary-card" onclick="selectPrimary(2)" id="primary2-card">
           <div
             class="primary-preview"
-            style="background: hsl(220 80% 58%)"
+            style="background: hsl(26 90% 54%)"
           ></div>
-          <div class="primary-name">Professional Audio Blue</div>
-          <div class="primary-description">Trustworthy and reliable for established podcasters and producers</div>
+          <div class="primary-name">Engine Forge Orange</div>
+          <div class="primary-description">Industrial power and creation - warmth of molten metal, energy, and the forge metaphor. Differentiates from typical SaaS blues.</div>
         </div>
 
         <div class="primary-card" onclick="selectPrimary(3)" id="primary3-card">
           <div
             class="primary-preview"
-            style="background: hsl(270 85% 60%)"
+            style="background: hsl(175 75% 42%)"
           ></div>
-          <div class="primary-name">Tech Innovation Purple</div>
-          <div class="primary-description">AI-powered and cutting-edge for tech-savvy content creators</div>
+          <div class="primary-name">Professional Teal</div>
+          <div class="primary-description">Trust and reliability balanced with modernity. Professional without being boring - ideal for productivity tools.</div>
         </div>
       </div>
 
       <!-- Variant Selectors (One for Each Primary) -->
-      <!-- Primary 1 Variants -->
+      <!-- Primary 1 Variants - AI Tech Violet -->
       <div class="variant-selector active" id="primary1-variants">
         <div class="variant-section">
-          <h2>✨ Light Mode Variants</h2>
+          <h2>Light Mode Variants</h2>
           <div class="variant-grid">
             <div
               class="variant-card selected"
@@ -793,29 +794,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(0 0% 100%)"></div>
                 <div style="background: hsl(240 4.8% 95.9%)"></div>
-                <div style="background: hsl(310 75% 58%)"></div>
+                <div style="background: hsl(265 85% 60%)"></div>
               </div>
               <div class="variant-name">Pure White</div>
               <div class="variant-description">
                 Clean, modern minimalism with maximum contrast
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(310 75% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 75% 52%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(35 85% 60%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(8 75% 54%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(265 85% 60%)"></div>
+                <div class="color-chip" style="background: hsl(135 75% 50%)"></div>
+                <div class="color-chip" style="background: hsl(42 88% 56%)"></div>
+                <div class="color-chip" style="background: hsl(358 82% 58%)"></div>
               </div>
             </div>
 
@@ -825,31 +814,19 @@
               id="primary1-light2-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(30 20% 98%)"></div>
-                <div style="background: hsl(30 15% 93%)"></div>
-                <div style="background: hsl(310 75% 58%)"></div>
+                <div style="background: hsl(220 15% 98%)"></div>
+                <div style="background: hsl(220 12% 93%)"></div>
+                <div style="background: hsl(265 85% 60%)"></div>
               </div>
-              <div class="variant-name">Warm Off-White</div>
+              <div class="variant-name">Cool Off-White</div>
               <div class="variant-description">
-                Softer on eyes, subtle warmth for extended use
+                Softer on eyes with subtle cool undertones
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(310 75% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 75% 52%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(35 85% 60%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(8 75% 54%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(265 85% 60%)"></div>
+                <div class="color-chip" style="background: hsl(135 75% 50%)"></div>
+                <div class="color-chip" style="background: hsl(42 88% 56%)"></div>
+                <div class="color-chip" style="background: hsl(358 82% 58%)"></div>
               </div>
             </div>
 
@@ -859,38 +836,26 @@
               id="primary1-light3-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(310 10% 97%)"></div>
-                <div style="background: hsl(310 14% 92%)"></div>
-                <div style="background: hsl(310 75% 58%)"></div>
+                <div style="background: hsl(265 10% 97%)"></div>
+                <div style="background: hsl(265 12% 92%)"></div>
+                <div style="background: hsl(265 85% 60%)"></div>
               </div>
               <div class="variant-name">Subtle Brand Tint</div>
               <div class="variant-description">
-                Background echoes primary color for brand cohesion
+                Background echoes violet for brand cohesion
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(310 75% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 75% 52%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(35 85% 60%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(8 75% 54%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(265 85% 60%)"></div>
+                <div class="color-chip" style="background: hsl(135 75% 50%)"></div>
+                <div class="color-chip" style="background: hsl(42 88% 56%)"></div>
+                <div class="color-chip" style="background: hsl(358 82% 58%)"></div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="variant-section">
-          <h2>🌙 Dark Mode Variants</h2>
+          <h2>Dark Mode Variants</h2>
           <div class="variant-grid">
             <div
               class="variant-card"
@@ -900,31 +865,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(0 0% 3%)"></div>
                 <div style="background: hsl(0 0% 8%)"></div>
-                <div
-                  style="background: hsl(310 70% 63%)"
-                ></div>
+                <div style="background: hsl(265 80% 65%)"></div>
               </div>
               <div class="variant-name">Pure Black</div>
               <div class="variant-description">
                 Modern, high contrast, OLED-friendly true black
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(310 70% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 70% 57%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(35 80% 65%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(8 70% 59%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(265 80% 65%)"></div>
+                <div class="color-chip" style="background: hsl(135 70% 55%)"></div>
+                <div class="color-chip" style="background: hsl(42 83% 61%)"></div>
+                <div class="color-chip" style="background: hsl(358 77% 63%)"></div>
               </div>
             </div>
 
@@ -934,33 +885,19 @@
               id="primary1-dark2-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(310 22% 7%)"></div>
-                <div style="background: hsl(310 16% 14%)"></div>
-                <div
-                  style="background: hsl(310 70% 63%)"
-                ></div>
+                <div style="background: hsl(265 18% 8%)"></div>
+                <div style="background: hsl(265 14% 14%)"></div>
+                <div style="background: hsl(265 80% 65%)"></div>
               </div>
               <div class="variant-name">Complementary Dark</div>
               <div class="variant-description">
-                Brand-harmonized dark background with subtle tinting
+                Brand-harmonized dark with violet tinting
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(310 70% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 70% 57%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(35 80% 65%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(8 70% 59%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(265 80% 65%)"></div>
+                <div class="color-chip" style="background: hsl(135 70% 55%)"></div>
+                <div class="color-chip" style="background: hsl(42 83% 61%)"></div>
+                <div class="color-chip" style="background: hsl(358 77% 63%)"></div>
               </div>
             </div>
 
@@ -972,41 +909,27 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(220 10% 10%)"></div>
                 <div style="background: hsl(220 8% 16%)"></div>
-                <div
-                  style="background: hsl(310 70% 63%)"
-                ></div>
+                <div style="background: hsl(265 80% 65%)"></div>
               </div>
               <div class="variant-name">Premium Slate</div>
               <div class="variant-description">
                 Softer alternative to pure black, gentler on eyes
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(310 70% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 70% 57%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(35 80% 65%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(8 70% 59%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(265 80% 65%)"></div>
+                <div class="color-chip" style="background: hsl(135 70% 55%)"></div>
+                <div class="color-chip" style="background: hsl(42 83% 61%)"></div>
+                <div class="color-chip" style="background: hsl(358 77% 63%)"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Primary 2 Variants (Hidden by default) -->
+      <!-- Primary 2 Variants - Engine Forge Orange -->
       <div class="variant-selector" id="primary2-variants">
         <div class="variant-section">
-          <h2>✨ Light Mode Variants</h2>
+          <h2>Light Mode Variants</h2>
           <div class="variant-grid">
             <div
               class="variant-card"
@@ -1016,29 +939,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(0 0% 100%)"></div>
                 <div style="background: hsl(240 4.8% 95.9%)"></div>
-                <div style="background: hsl(220 80% 58%)"></div>
+                <div style="background: hsl(26 90% 54%)"></div>
               </div>
               <div class="variant-name">Pure White</div>
               <div class="variant-description">
                 Clean, modern minimalism with maximum contrast
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(220 80% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(135 75% 50%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 85% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(5 75% 55%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(26 90% 54%)"></div>
+                <div class="color-chip" style="background: hsl(140 75% 48%)"></div>
+                <div class="color-chip" style="background: hsl(35 90% 55%)"></div>
+                <div class="color-chip" style="background: hsl(8 85% 56%)"></div>
               </div>
             </div>
 
@@ -1048,31 +959,19 @@
               id="primary2-light2-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(220 15% 98%)"></div>
-                <div style="background: hsl(220 12% 93%)"></div>
-                <div style="background: hsl(220 80% 58%)"></div>
+                <div style="background: hsl(30 20% 98%)"></div>
+                <div style="background: hsl(30 15% 93%)"></div>
+                <div style="background: hsl(26 90% 54%)"></div>
               </div>
               <div class="variant-name">Warm Off-White</div>
               <div class="variant-description">
                 Softer on eyes, subtle warmth for extended use
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(220 80% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(135 75% 50%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 85% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(5 75% 55%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(26 90% 54%)"></div>
+                <div class="color-chip" style="background: hsl(140 75% 48%)"></div>
+                <div class="color-chip" style="background: hsl(35 90% 55%)"></div>
+                <div class="color-chip" style="background: hsl(8 85% 56%)"></div>
               </div>
             </div>
 
@@ -1082,38 +981,26 @@
               id="primary2-light3-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(220 10% 97%)"></div>
-                <div style="background: hsl(220 14% 92%)"></div>
-                <div style="background: hsl(220 80% 58%)"></div>
+                <div style="background: hsl(26 12% 97%)"></div>
+                <div style="background: hsl(26 14% 92%)"></div>
+                <div style="background: hsl(26 90% 54%)"></div>
               </div>
               <div class="variant-name">Subtle Brand Tint</div>
               <div class="variant-description">
-                Background echoes primary color for brand cohesion
+                Background echoes orange for brand cohesion
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(220 80% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(135 75% 50%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 85% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(5 75% 55%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(26 90% 54%)"></div>
+                <div class="color-chip" style="background: hsl(140 75% 48%)"></div>
+                <div class="color-chip" style="background: hsl(35 90% 55%)"></div>
+                <div class="color-chip" style="background: hsl(8 85% 56%)"></div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="variant-section">
-          <h2>🌙 Dark Mode Variants</h2>
+          <h2>Dark Mode Variants</h2>
           <div class="variant-grid">
             <div
               class="variant-card"
@@ -1123,31 +1010,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(0 0% 3%)"></div>
                 <div style="background: hsl(0 0% 8%)"></div>
-                <div
-                  style="background: hsl(220 75% 63%)"
-                ></div>
+                <div style="background: hsl(26 85% 59%)"></div>
               </div>
               <div class="variant-name">Pure Black</div>
               <div class="variant-description">
                 Modern, high contrast, OLED-friendly true black
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(220 75% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(135 70% 55%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 80% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(5 70% 60%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(26 85% 59%)"></div>
+                <div class="color-chip" style="background: hsl(140 70% 53%)"></div>
+                <div class="color-chip" style="background: hsl(35 85% 60%)"></div>
+                <div class="color-chip" style="background: hsl(8 80% 61%)"></div>
               </div>
             </div>
 
@@ -1157,33 +1030,19 @@
               id="primary2-dark2-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(220 16% 9%)"></div>
-                <div style="background: hsl(220 12% 16%)"></div>
-                <div
-                  style="background: hsl(220 75% 63%)"
-                ></div>
+                <div style="background: hsl(26 20% 8%)"></div>
+                <div style="background: hsl(26 16% 14%)"></div>
+                <div style="background: hsl(26 85% 59%)"></div>
               </div>
               <div class="variant-name">Complementary Dark</div>
               <div class="variant-description">
-                Brand-harmonized dark background with subtle tinting
+                Brand-harmonized dark with warm orange tinting
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(220 75% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(135 70% 55%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 80% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(5 70% 60%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(26 85% 59%)"></div>
+                <div class="color-chip" style="background: hsl(140 70% 53%)"></div>
+                <div class="color-chip" style="background: hsl(35 85% 60%)"></div>
+                <div class="color-chip" style="background: hsl(8 80% 61%)"></div>
               </div>
             </div>
 
@@ -1195,41 +1054,27 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(220 10% 10%)"></div>
                 <div style="background: hsl(220 8% 16%)"></div>
-                <div
-                  style="background: hsl(220 75% 63%)"
-                ></div>
+                <div style="background: hsl(26 85% 59%)"></div>
               </div>
               <div class="variant-name">Premium Slate</div>
               <div class="variant-description">
                 Softer alternative to pure black, gentler on eyes
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(220 75% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(135 70% 55%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 80% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(5 70% 60%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(26 85% 59%)"></div>
+                <div class="color-chip" style="background: hsl(140 70% 53%)"></div>
+                <div class="color-chip" style="background: hsl(35 85% 60%)"></div>
+                <div class="color-chip" style="background: hsl(8 80% 61%)"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Primary 3 Variants (Hidden by default) -->
+      <!-- Primary 3 Variants - Professional Teal -->
       <div class="variant-selector" id="primary3-variants">
         <div class="variant-section">
-          <h2>✨ Light Mode Variants</h2>
+          <h2>Light Mode Variants</h2>
           <div class="variant-grid">
             <div
               class="variant-card"
@@ -1239,29 +1084,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(0 0% 100%)"></div>
                 <div style="background: hsl(240 4.8% 95.9%)"></div>
-                <div style="background: hsl(270 85% 60%)"></div>
+                <div style="background: hsl(175 75% 42%)"></div>
               </div>
               <div class="variant-name">Pure White</div>
               <div class="variant-description">
                 Clean, modern minimalism with maximum contrast
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(270 85% 60%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 80% 52%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 90% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(358 85% 60%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(175 75% 42%)"></div>
+                <div class="color-chip" style="background: hsl(130 72% 48%)"></div>
+                <div class="color-chip" style="background: hsl(40 85% 54%)"></div>
+                <div class="color-chip" style="background: hsl(356 78% 55%)"></div>
               </div>
             </div>
 
@@ -1271,31 +1104,19 @@
               id="primary3-light2-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(220 15% 98%)"></div>
-                <div style="background: hsl(220 12% 93%)"></div>
-                <div style="background: hsl(270 85% 60%)"></div>
+                <div style="background: hsl(180 12% 98%)"></div>
+                <div style="background: hsl(180 10% 93%)"></div>
+                <div style="background: hsl(175 75% 42%)"></div>
               </div>
-              <div class="variant-name">Warm Off-White</div>
+              <div class="variant-name">Cool Off-White</div>
               <div class="variant-description">
-                Softer on eyes, subtle warmth for extended use
+                Softer on eyes with subtle cool teal undertones
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(270 85% 60%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 80% 52%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 90% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(358 85% 60%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(175 75% 42%)"></div>
+                <div class="color-chip" style="background: hsl(130 72% 48%)"></div>
+                <div class="color-chip" style="background: hsl(40 85% 54%)"></div>
+                <div class="color-chip" style="background: hsl(356 78% 55%)"></div>
               </div>
             </div>
 
@@ -1305,38 +1126,26 @@
               id="primary3-light3-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(270 10% 97%)"></div>
-                <div style="background: hsl(270 14% 92%)"></div>
-                <div style="background: hsl(270 85% 60%)"></div>
+                <div style="background: hsl(175 10% 97%)"></div>
+                <div style="background: hsl(175 12% 92%)"></div>
+                <div style="background: hsl(175 75% 42%)"></div>
               </div>
               <div class="variant-name">Subtle Brand Tint</div>
               <div class="variant-description">
-                Background echoes primary color for brand cohesion
+                Background echoes teal for brand cohesion
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(270 85% 60%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 80% 52%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 90% 58%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(358 85% 60%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(175 75% 42%)"></div>
+                <div class="color-chip" style="background: hsl(130 72% 48%)"></div>
+                <div class="color-chip" style="background: hsl(40 85% 54%)"></div>
+                <div class="color-chip" style="background: hsl(356 78% 55%)"></div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="variant-section">
-          <h2>🌙 Dark Mode Variants</h2>
+          <h2>Dark Mode Variants</h2>
           <div class="variant-grid">
             <div
               class="variant-card"
@@ -1346,31 +1155,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(0 0% 3%)"></div>
                 <div style="background: hsl(0 0% 8%)"></div>
-                <div
-                  style="background: hsl(270 80% 65%)"
-                ></div>
+                <div style="background: hsl(175 70% 47%)"></div>
               </div>
               <div class="variant-name">Pure Black</div>
               <div class="variant-description">
                 Modern, high contrast, OLED-friendly true black
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(270 80% 65%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 75% 57%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 85% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(358 80% 65%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(175 70% 47%)"></div>
+                <div class="color-chip" style="background: hsl(130 67% 53%)"></div>
+                <div class="color-chip" style="background: hsl(40 80% 59%)"></div>
+                <div class="color-chip" style="background: hsl(356 73% 60%)"></div>
               </div>
             </div>
 
@@ -1380,33 +1175,19 @@
               id="primary3-dark2-card"
             >
               <div class="variant-preview-bar">
-                <div style="background: hsl(270 18% 8%)"></div>
-                <div style="background: hsl(270 14% 15%)"></div>
-                <div
-                  style="background: hsl(270 80% 65%)"
-                ></div>
+                <div style="background: hsl(175 18% 8%)"></div>
+                <div style="background: hsl(175 14% 14%)"></div>
+                <div style="background: hsl(175 70% 47%)"></div>
               </div>
               <div class="variant-name">Complementary Dark</div>
               <div class="variant-description">
-                Brand-harmonized dark background with subtle tinting
+                Brand-harmonized dark with teal tinting
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(270 80% 65%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 75% 57%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 85% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(358 80% 65%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(175 70% 47%)"></div>
+                <div class="color-chip" style="background: hsl(130 67% 53%)"></div>
+                <div class="color-chip" style="background: hsl(40 80% 59%)"></div>
+                <div class="color-chip" style="background: hsl(356 73% 60%)"></div>
               </div>
             </div>
 
@@ -1418,31 +1199,17 @@
               <div class="variant-preview-bar">
                 <div style="background: hsl(220 10% 10%)"></div>
                 <div style="background: hsl(220 8% 16%)"></div>
-                <div
-                  style="background: hsl(270 80% 65%)"
-                ></div>
+                <div style="background: hsl(175 70% 47%)"></div>
               </div>
               <div class="variant-name">Premium Slate</div>
               <div class="variant-description">
                 Softer alternative to pure black, gentler on eyes
               </div>
               <div class="variant-colors">
-                <div
-                  class="color-chip"
-                  style="background: hsl(270 80% 65%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(140 75% 57%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(42 85% 63%)"
-                ></div>
-                <div
-                  class="color-chip"
-                  style="background: hsl(358 80% 65%)"
-                ></div>
+                <div class="color-chip" style="background: hsl(175 70% 47%)"></div>
+                <div class="color-chip" style="background: hsl(130 67% 53%)"></div>
+                <div class="color-chip" style="background: hsl(40 80% 59%)"></div>
+                <div class="color-chip" style="background: hsl(356 73% 60%)"></div>
               </div>
             </div>
           </div>
@@ -1482,7 +1249,7 @@
                 color: hsl(var(--success));
               "
             >
-              ✓ Success message
+              Success message
             </div>
             <div
               style="
@@ -1495,7 +1262,7 @@
                 color: hsl(var(--destructive));
               "
             >
-              ✗ Error message
+              Error message
             </div>
           </div>
         </div>
@@ -1504,7 +1271,7 @@
         <div class="chat-demo">
           <div class="chat-header">
             <h3 style="margin: 0; color: hsl(var(--foreground))">
-              Chat Application
+              Site Builder
             </h3>
             <div
               style="
@@ -1516,7 +1283,7 @@
                 font-weight: 500;
               "
             >
-              AI Model
+              AI Assistant
             </div>
           </div>
 
@@ -1534,7 +1301,7 @@
                   margin-bottom: 8px;
                 "
               >
-                💬 Chat
+                Sites
               </div>
               <div
                 style="
@@ -1544,7 +1311,7 @@
                   margin-bottom: 8px;
                 "
               >
-                📄 Documents
+                Templates
               </div>
               <div
                 style="
@@ -1553,24 +1320,22 @@
                   font-size: 0.9rem;
                 "
               >
-                🕒 History
+                Settings
               </div>
             </div>
 
             <div class="chat-messages">
               <div class="message message-user">
-                Can you help me choose colors for my app?
+                I need a landing page for my new product launch.
               </div>
               <div class="message message-ai">
-                I'd be happy to help! For a professional yet modern feel, I'd
-                recommend starting with a strategic approach.
+                I can help with that! Let me generate some layout options based on your product type. What industry is this for?
               </div>
               <div class="message message-user">
-                That makes sense. What about dark mode?
+                It's a SaaS productivity tool for remote teams.
               </div>
               <div class="message message-ai">
-                Great question! Notice how this interface adapts to your
-                selected theme variant.
+                Perfect! I'll create a modern, professional layout with hero section, feature highlights, and social proof. Ready to see the options?
               </div>
             </div>
           </div>
@@ -1621,7 +1386,7 @@
           .classList.add("selected");
       }
 
-      // Initialize with primary 1, light variant 1
+      // Initialize with primary 1 (AI Tech Violet), light variant 1
       selectVariant(1, "light1");
     </script>
   </body>

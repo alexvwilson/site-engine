@@ -90,10 +90,10 @@ export default function LegalPageWrapper({
               If you have any questions about this document, please contact us
               at{" "}
               <a
-                href="mailto:legal@shipkit.ai"
+                href="mailto:contact@headstring.com"
                 className="text-primary hover:underline font-medium"
               >
-                legal@shipkit.ai
+                contact@headstring.com
               </a>
             </p>
           </div>

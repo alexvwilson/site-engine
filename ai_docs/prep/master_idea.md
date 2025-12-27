@@ -1,107 +1,120 @@
-## Master Idea Document: Audio Transcriber SaaS
+## Master Idea Document
 
 ### End Goal
 
-My app helps **solo creators and podcasters** convert their **audio and video content into accurate, searchable transcripts** using **AI-powered transcription and summarization workflows built with Whisper, FFmpeg, and Trigger.dev**.
+My app helps **content managers and frequent website administrators** achieve **full control over their site's look, feel, and content with fast, easy updates** using **AI-powered theme generation and design assistance**.
 
 ### Specific Problem
 
-Creators and podcasters struggle because **transcribing their long-form content manually or through expensive tools is slow, inconsistent, and costly**, leading to **lost time, poor accessibility, and missed opportunities to repurpose content across platforms**.
+Content managers and website administrators are stuck because **existing website tools either require technical expertise (code, complex builders) or lock them into rigid templates with limited customization**, leading to **hours of frustration per update, dependency on developers for simple changes, and delayed content that hurts engagement and conversions**.
 
 ### All User Types
 
-#### Primary Users: Solo Creators & Podcasters
+#### Primary Users: Content Managers / Website Administrators
 
-- **Who:** Independent content creators, podcasters, and small YouTubers producing audio/video content weekly.
+- **Who:** Marketing team members, small business owners, or solo operators who update websites regularly (for this MVP: sole developer/user)
 - **Frustrations:**
-  - Manual transcription tools are time-consuming and error-prone.
-  - AI transcription services are expensive or lack integrations.
-  - No easy way to summarize, timestamp, or repurpose transcribed content.
-
+  - Stuck waiting on developers for design changes
+  - Current tools too complex or too limiting
+  - Updating content feels slow and clunky
 - **Urgent Goals:**
-  - Automatically transcribe uploaded media quickly and accurately.
-  - Receive structured, timestamped transcripts they can reuse.
-  - Save 5–10 hours weekly on manual editing and content preparation.
+  - Make site updates in minutes, not days
+  - Customize design without coding knowledge
+  - Maintain a professional, on-brand look independently
 
-#### System Administrators
+#### System Administrators _(future consideration)_
 
-- **Who:** Technical operators or the SaaS owner managing the platform.
+- **Who:** Technical leads or agency owners who manage the site engine platform itself
 - **Frustrations:**
-  - Hard to monitor background jobs and system costs.
-  - No easy control over queue performance and error handling.
-  - Difficulty tracking API and storage usage across users.
-
+  - No visibility into how sites are performing or being used
+  - Difficult to manage multiple client sites
+  - Hard to control costs or resource usage
 - **Urgent Goals:**
-  - Monitor job queues, costs, and errors in real time.
-  - Manage user tiers, quotas, and limits efficiently.
-  - Scale transcription performance automatically with demand.
+  - Monitor all sites from one dashboard
+  - Configure features and permissions per client/site
+  - Scale operations efficiently
 
 ### Business Model & Revenue Strategy
 
-**Model Type:** Subscription Tiers (SaaS)
-
-**Pricing Structure:**
-
-- **Free Tier:** 3 uploads/month, 15 minutes max per file, basic Whisper model.
-- **Creator Tier ($19/month):** 50 uploads/month, 60 minutes per file, faster processing queue.
-- **Pro Tier ($49/month):** Unlimited uploads, 120 minutes per file, advanced summarization and keyword extraction.
-
-**Revenue Rationale:** Creators saving 5–10 hours weekly on transcription and repurposing can easily justify a $20–50/month tool that automates this step.
+- **Model Type:** None (Personal-use MVP)
+- **Rationale:** This is a first attempt at the idea with a single user (the developer). No payment or subscription system needed for initial version.
+- **Future Consideration:** Subscription tiers if the tool proves valuable and is opened to other users.
 
 ### Core Functionalities by Role (MVP)
 
-- **Primary User (Creator/Podcaster)**
-  - Upload audio or video files (MP3, MP4, WAV, MOV).
-  - Trigger asynchronous background jobs for chunking and transcription.
-  - View real-time job progress (Queued → Processing → Completed).
-  - Download transcript in TXT, SRT, or VTT format.
-  - Automatically generate AI summaries and key topic highlights.
+- **Content Manager (Primary User)**
+  - Can create and manage multiple websites/pages
+  - Can edit page content quickly (text, images, layout)
+  - Can use AI to generate theme options and design elements
+  - Can use AI to get layout suggestions based on content description
+  - Can preview changes before publishing
+  - Can publish/unpublish pages and sites
+  - Can organize content with a simple structure (pages, sections, blocks)
 
-- **System Administrator**
-  - Monitor Trigger.dev job logs, retries, and failures.
-  - Configure processing quotas and rate limits per plan.
-  - Track Whisper API usage and cost metrics.
-  - Manage user subscriptions through Stripe.
+- **System/Background**
+  - Sites are rendered and served efficiently
+  - Theme/design assets are generated and stored (Tailwind CSS + shadcn/ui compatible)
+  - Content changes are saved and versioned
 
 ### Key User Stories
 
-#### Primary User Stories
+#### Content Manager
 
-1. **Automatic Transcription**
-   _As a creator,_ I want to upload a video and receive an AI-generated transcript, _so that_ I can easily edit and repurpose my content.
+1. **Create New Site**
+   _As a_ content manager,
+   _I want_ to create a new site with a few clicks,
+   _So that_ I can start building content immediately without setup friction.
 
-2. **Progress Tracking**
-   _As a podcaster,_ I want to see the status of my transcription jobs, _so that_ I know when they are completed.
+2. **AI Theme Generation**
+   _As a_ content manager,
+   _I want_ to describe my desired look/feel and have AI generate theme options,
+   _So that_ I get professional designs without needing design skills.
 
-3. **Summaries and Highlights**
-   _As a creator,_ I want an AI-generated summary of my transcript, _so that_ I can quickly extract show notes and social captions.
+3. **AI Layout Suggestions**
+   _As a_ content manager,
+   _I want_ to describe my content and get AI-recommended page layouts,
+   _So that_ I can structure content effectively without design expertise.
 
-4. **Transcript Export**
-   _As a creator,_ I want to download transcripts in multiple formats (TXT, SRT, VTT), _so that_ I can reuse them for subtitles or blog posts.
+4. **Edit Page Content**
+   _As a_ content manager,
+   _I want_ to edit text, images, and layout directly on a page,
+   _So that_ I can update content quickly without navigating complex menus.
 
-#### System/Background Stories
+5. **Preview Before Publish**
+   _As a_ content manager,
+   _I want_ to preview my changes across devices before publishing,
+   _So that_ I can catch issues before they go live.
 
-1. **Job Queue Management** — When a user uploads a file, Trigger.dev runs a job to process the file using FFmpeg, split it into segments, transcribe each, then merge results.
-2. **Cost Monitoring** — The system logs total transcription minutes and storage usage per user for quota enforcement.
-3. **Retry & Recovery** — Failed jobs are retried with exponential backoff and error reporting.
+6. **Publish/Unpublish**
+   _As a_ content manager,
+   _I want_ to publish or unpublish pages with one click,
+   _So that_ I control what's visible without delays.
 
-### Value-Adding Features (Advanced)
+#### System/Background
 
-- **Speaker Diarization:** Detect and label speakers automatically.
-  _Why relevant:_ Helps creators identify guests and improve transcript readability.
+1. **Theme Asset Generation** - When AI generates a theme, the system produces Tailwind CSS configurations and shadcn/ui-compatible component styles (following the existing Next.js 15 + Tailwind + shadcn/ui stack).
+2. **Content Auto-Save** - When content is edited, changes are automatically saved as drafts.
+3. **Site Rendering** - When a page is published, the system renders and serves it efficiently.
 
-- **AI-Powered Summaries:** Generate show notes and blog outlines.
-  _Why relevant:_ Increases perceived value by helping creators repurpose content faster.
+### Technical Constraints
 
-- **Auto-Timestamping:** Add timestamps aligned with FFmpeg output chunks.
-  _Why relevant:_ Makes transcripts easier to sync with video editors or subtitle tools.
+- **Stack:** Next.js 15 (App Router) with React 19
+- **Styling:** Tailwind CSS + shadcn/ui components
+- **Database:** Drizzle ORM with PostgreSQL
+- **Authentication:** Supabase
+- **Background Jobs:** Trigger.dev
+- **AI Integration:** OpenAI API for theme/layout generation
 
-- **Team Collaboration (Later Stage):** Allow assistants or editors to access transcripts.
-  _Why relevant:_ Future-proofing for small production teams.
+### Value-Adding Features
 
-- **API Access:** Provide REST endpoints for developers integrating transcription pipelines.
-  _Why relevant:_ Enables platform expansion or white-label licensing.
+#### MVP
 
----
+- **AI Layout Suggestions:** Describe content and get AI-recommended page layouts to structure pages effectively
 
-This Audio Transcriber SaaS serves as the **foundational ShipKit boilerplate** for future media-oriented apps. It demonstrates a real-world, revenue-ready implementation of **Next.js + Supabase + Trigger.dev + Whisper + FFmpeg** to teach durable, production-grade background workflows developers can extend into video shorts generators, meeting note apps, and more.
+#### Future Versions
+
+- **Version History:** Roll back content or design changes to previous states for safe experimentation
+- **Export/Backup:** Export sites as static files or backup configurations for data ownership
+- **Content Templates:** Save and reuse page/section templates across sites to reduce repetitive work
+- **Component Library Browser:** Browse and insert pre-styled shadcn/ui components directly
+- **Multi-Site Dashboard:** Manage all sites from one central view

@@ -5,14 +5,37 @@
  * This file is referenced in trigger.config.ts dirs: ["./trigger"]
  */
 
-// Export all tasks
-export { extractAudioTask } from "./tasks/extract-audio";
-export { chunkAudioTask } from "./tasks/chunk-audio";
-export { transcribeAudioTask } from "./tasks/transcribe-audio";
-export { generateAISummaryTask } from "./tasks/generate-ai-summary";
+// ============================================================================
+// Tasks
+// ============================================================================
 
-// Export utilities for use in other parts of the application
-export * from "./utils/ffmpeg";
-export * from "./utils/formats";
+// Theme generation tasks
+export * from "./tasks/generate-theme-quick";
+
+// Layout suggestion task
+export * from "./tasks/suggest-layout";
+
+// ============================================================================
+// Utilities
+// ============================================================================
+
+// OpenAI client singleton
 export * from "./utils/openai";
-export * from "./utils/prompts";
+
+// AI provider abstraction (structured output, multi-provider support)
+export * from "./utils/ai-providers";
+
+// Font list and validation
+export * from "./utils/font-list";
+
+// Theme parsing with Zod validation
+export * from "./utils/theme-parser";
+
+// Theme prompt templates
+export * from "./utils/theme-prompts";
+
+// Tailwind config and CSS variables generation
+export * from "./utils/tailwind-generator";
+
+// Layout suggestion prompts
+export * from "./utils/layout-prompts";

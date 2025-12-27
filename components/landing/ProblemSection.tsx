@@ -2,17 +2,17 @@ import { X, Check } from "lucide-react";
 
 export default function ProblemSection() {
   const problems = [
-    "Manual transcription takes 5-10 hours weekly",
-    "Expensive services drain creator budgets ($100+/month)",
-    "Inconsistent quality and formatting across tools",
-    "No easy way to repurpose content for social media",
+    "Waiting days for simple website updates",
+    "Expensive developer dependency for every change",
+    "Rigid templates that don't match your brand",
+    "No way to preview changes before going live",
   ];
 
   const solutions = [
-    "Automated AI transcription in minutes, not hours",
-    "Simple transcription service powered by AI",
-    "Consistent, industry-leading 95%+ accuracy with Whisper AI",
-    "AI-powered summaries and social captions included",
+    "Make changes instantly with visual editing",
+    "Full content control without any coding required",
+    "AI generates themes that match your brand perfectly",
+    "Preview on any device before publishing",
   ];
 
   return (
@@ -21,10 +21,10 @@ export default function ProblemSection() {
         {/* Section Header */}
         <div className="mb-12 text-center md:mb-16">
           <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
-            AI Transcriptions Made Simple
+            Website Building Made Simple
           </h2>
           <p className="mt-4 text-lg text-muted-foreground md:text-xl">
-            See how Skribo makes transcription effortless
+            See how Site Engine puts you in control
           </p>
         </div>
 
@@ -34,12 +34,11 @@ export default function ProblemSection() {
             <div className="space-y-6">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                  Stop Wasting Time on Manual Transcription
+                  Stop Waiting on Developers
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  Content creators lose hours every week to repetitive
-                  transcription work that steals time from actual content
-                  creation.
+                  Content managers spend too much time waiting for simple
+                  updates that should take minutes, not days.
                 </p>
               </div>
               <div className="space-y-3">
@@ -66,11 +65,11 @@ export default function ProblemSection() {
             <div className="space-y-6">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                  Start Transcribing Smarter with Skribo
+                  Start Building Smarter with Site Engine
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  Automate your transcription workflow with AI and reclaim 5-10
-                  hours weekly for what matters most.
+                  Take control of your website with AI-powered tools that make
+                  updates fast, easy, and stress-free.
                 </p>
               </div>
               <div className="space-y-3">

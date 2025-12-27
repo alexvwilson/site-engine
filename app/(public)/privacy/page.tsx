@@ -4,11 +4,11 @@ import { generateLegalMetadata } from "@/lib/metadata";
 import TableOfContents from "@/components/legal/TableOfContents";
 import LegalLayout from "@/components/legal/LegalLayout";
 
-const lastUpdated = "2025-06-30";
+const lastUpdated = "2025-12-25";
 
 export const metadata: Metadata = generateLegalMetadata(
   "Privacy Policy",
-  "Privacy Policy for ShipKit.ai - How we collect, use, and protect your personal information in compliance with GDPR and CCPA."
+  "Privacy Policy for Site Engine - How we collect, use, and protect your personal information in compliance with GDPR and CCPA."
 );
 
 const tocSections = [
@@ -33,16 +33,16 @@ export default function PrivacyPolicy() {
       <LegalPageWrapper
         title="Privacy Policy"
         lastUpdated={lastUpdated}
-        description="This Privacy Policy describes how ShipKit.ai collects, uses, and protects your personal information when you use our AI transcription service."
+        description="This Privacy Policy describes how Site Engine collects, uses, and protects your personal information when you use our AI-powered website builder."
       >
         <section id="introduction">
           <h2>1. Introduction</h2>
           <p>
-            ShipKit.ai (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
+            Headstring (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
             &ldquo;our&rdquo;) respects your privacy and is committed to
             protecting your personal information. This Privacy Policy explains
             how we collect, use, disclose, and safeguard your information when
-            you use our AI transcription service.
+            you use Site Engine, our AI-powered website builder.
           </p>
           <p>
             By using our Service, you consent to the collection and use of
@@ -102,10 +102,10 @@ export default function PrivacyPolicy() {
             <p className="text-sm text-muted-foreground">
               <strong>Contact our Data Protection Officer:</strong>{" "}
               <a
-                href="mailto:privacy@shipkit.ai"
+                href="mailto:contact@headstring.com"
                 className="text-primary hover:underline"
               >
-                privacy@shipkit.ai
+                contact@headstring.com
               </a>
             </p>
           </div>
@@ -177,13 +177,13 @@ export default function PrivacyPolicy() {
 
           <h3>3.1 Service Provision</h3>
           <ul>
-            <li>Provide and maintain our AI transcription service</li>
+            <li>Provide and maintain our AI-powered website builder</li>
             <li>
-              Process your uploaded audio and video files for transcription
+              Process your brand descriptions to generate themes and styles
             </li>
-            <li>Manage your account</li>
+            <li>Manage your account and website projects</li>
             <li>
-              Store and retrieve your transcripts and conversation history
+              Store and publish your website content and configurations
             </li>
           </ul>
 
@@ -197,11 +197,11 @@ export default function PrivacyPolicy() {
           <h3>3.3 Service Improvement</h3>
           <ul>
             <li>
-              Analyze usage patterns to improve transcription accuracy and user
+              Analyze usage patterns to improve theme generation and user
               experience
             </li>
             <li>Monitor service performance and reliability</li>
-            <li>Develop new transcription features and AI capabilities</li>
+            <li>Develop new website building features and AI capabilities</li>
           </ul>
 
           <h3>3.4 Legal and Security</h3>
@@ -231,8 +231,8 @@ export default function PrivacyPolicy() {
               storage and service delivery
             </li>
             <li>
-              <strong>AI Processing:</strong> OpenAI for transcription
-              processing via the Whisper API
+              <strong>AI Processing:</strong> OpenAI for AI-powered theme
+              generation and content assistance
             </li>
             <li>
               <strong>Hosting & Analytics:</strong> Cloud hosting and basic
@@ -244,13 +244,13 @@ export default function PrivacyPolicy() {
           <p>Our Service integrates with third-party AI providers:</p>
           <ul>
             <li>
-              <strong>OpenAI:</strong> For audio transcription via the Whisper
-              API and AI-powered features
+              <strong>OpenAI:</strong> For AI-powered theme generation and
+              content assistance features
             </li>
           </ul>
           <p>
-            These providers process your uploaded audio data to generate
-            transcriptions. We encourage you to review their privacy policies.
+            These providers process your brand descriptions and content to
+            generate themes. We encourage you to review their privacy policies.
           </p>
 
           <h3>4.3 Legal Requirements</h3>
@@ -286,12 +286,12 @@ export default function PrivacyPolicy() {
               account plus 30 days for backup purposes
             </li>
             <li>
-              <strong>Transcripts and Conversations:</strong> Until you delete
+              <strong>Website Content and Themes:</strong> Until you delete
               them or close your account
             </li>
             <li>
-              <strong>Uploaded Media Files:</strong> Stored securely until you
-              delete them or close your account
+              <strong>Published Websites:</strong> Stored securely until you
+              unpublish or close your account
             </li>
             <li>
               <strong>Usage Data:</strong> Basic usage patterns (anonymized)
@@ -392,7 +392,7 @@ export default function PrivacyPolicy() {
             </li>
             <li>
               <strong>Data Protection Officer:</strong> You can contact our DPO
-              at privacy@shipkit.ai
+              at contact@headstring.com
             </li>
             <li>
               <strong>Supervisory Authority:</strong> You have the right to
@@ -529,16 +529,7 @@ export default function PrivacyPolicy() {
           </p>
           <div className="bg-muted bg-opacity-30 p-4 rounded-lg border">
             <p>
-              <strong>Privacy Officer:</strong> privacy@shipkit.ai
-            </p>
-            <p>
-              <strong>General Contact:</strong> support@shipkit.ai
-            </p>
-            <p>
-              <strong>Address:</strong> [Your Company Address]
-            </p>
-            <p>
-              <strong>Phone:</strong> [Your Phone Number]
+              <strong>Email:</strong> contact@headstring.com
             </p>
           </div>
           <p>

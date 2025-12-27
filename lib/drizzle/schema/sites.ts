@@ -1,0 +1,40 @@
+import { pgTable, text, timestamp, uuid, index } from "drizzle-orm/pg-core";
+import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
+import { users } from "./users";
+
+export const SITE_STATUSES = ["draft", "published"] as const;
+export type SiteStatus = (typeof SITE_STATUSES)[number];
+
+export const sites = pgTable(
+  "sites",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    user_id: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    slug: text("slug").notNull().unique(),
+    status: text("status", { enum: SITE_STATUSES }).notNull().default("draft"),
+    created_at: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updated_at: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    published_at: timestamp("published_at", { withTimezone: true }),
+    custom_domain: text("custom_domain").unique(),
+    meta_title: text("meta_title"),
+    meta_description: text("meta_description"),
+  },
+  (t) => [
+    index("sites_user_id_idx").on(t.user_id),
+    index("sites_slug_idx").on(t.slug),
+    index("sites_status_idx").on(t.status),
+    index("sites_updated_at_idx").on(t.updated_at),
+    index("sites_custom_domain_idx").on(t.custom_domain),
+  ]
+);
+
+export type Site = InferSelectModel<typeof sites>;
+export type NewSite = InferInsertModel<typeof sites>;

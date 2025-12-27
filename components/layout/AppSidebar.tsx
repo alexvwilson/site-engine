@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -22,7 +23,7 @@ import {
   PanelLeftIcon,
   LogOut,
   BarChart3,
-  FileAudio,
+  LayoutDashboard,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -30,7 +31,9 @@ import { useUser } from "@/contexts/UserContext";
 import { isAdmin } from "@/lib/role-utils";
 import { Button } from "@/components/ui/button";
 import { SidebarThemeSwitcher } from "@/components/SidebarThemeSwitcher";
+import { SiteContextSidebar } from "@/components/layout/SiteContextSidebar";
 import { logoutAction } from "@/app/actions/auth";
+import { getSiteBasicInfo } from "@/app/actions/sites";
 import { toast } from "sonner";
 
 export default function AppSidebar() {
@@ -39,9 +42,25 @@ export default function AppSidebar() {
   const { open, isMobile, toggleSidebar } = useSidebar();
   const { id: userId, role: userRole } = useUser();
 
+  // Detect if we're in a site context
+  const siteMatch = pathname.match(/^\/app\/sites\/([^/]+)/);
+  const siteId = siteMatch?.[1] ?? null;
+  const [siteName, setSiteName] = useState<string | null>(null);
+
+  // Fetch site name when siteId changes
+  useEffect(() => {
+    if (siteId) {
+      getSiteBasicInfo(siteId).then((info) => {
+        setSiteName(info?.name ?? null);
+      });
+    } else {
+      setSiteName(null);
+    }
+  }, [siteId]);
+
   // Build navigation items based on user role
   const userNavItems = [
-    { href: "/transcripts", label: "Transcripts", icon: FileAudio },
+    { href: "/app", label: "Dashboard", icon: LayoutDashboard },
     { href: "/profile", label: "Profile", icon: User },
   ];
 
@@ -74,8 +93,8 @@ export default function AppSidebar() {
   const getLinkClasses = (href: string) => {
     let isActive = false;
 
-    if (href === "/transcripts") {
-      isActive = pathname.startsWith("/transcripts");
+    if (href === "/app") {
+      isActive = pathname.startsWith("/app");
     } else if (href === "/admin/dashboard") {
       isActive = pathname === "/admin/dashboard";
     } else {
@@ -133,45 +152,15 @@ export default function AppSidebar() {
         )}
       </SidebarHeader>
       <SidebarContent className="flex-grow p-2 flex flex-col">
-        {/* User Navigation */}
-        <SidebarGroup>
-          <SidebarMenu className="space-y-1">
-            {userNavItems.map((item) => (
-              <SidebarMenuItem
-                key={item.href}
-                className={cn(
-                  "flex justify-center",
-                  renderContentAsOpen && "px-2",
-                )}
-              >
-                <Link
-                  href={item.href}
-                  className={getLinkClasses(item.href)}
-                  onClick={handleNavClick}
-                >
-                  <item.icon
-                    className={cn(
-                      renderContentAsOpen ? "h-6 w-6 mr-3" : "h-5 w-5",
-                    )}
-                  />
-                  {renderContentAsOpen && <span>{item.label}</span>}
-                </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
-
-        {/* Admin Navigation - only shown for admins */}
-        {isAdmin(userRole) && (
+        {/* Site Context Navigation - shown when inside a site */}
+        {siteId && siteName ? (
+          <SiteContextSidebar siteId={siteId} siteName={siteName} />
+        ) : (
           <>
-            {renderContentAsOpen && (
-              <div className="px-4 py-2">
-                <div className="border-t dark:border-muted" />
-              </div>
-            )}
+            {/* User Navigation */}
             <SidebarGroup>
               <SidebarMenu className="space-y-1">
-                {adminNavItems.map((item) => (
+                {userNavItems.map((item) => (
                   <SidebarMenuItem
                     key={item.href}
                     className={cn(
@@ -195,6 +184,43 @@ export default function AppSidebar() {
                 ))}
               </SidebarMenu>
             </SidebarGroup>
+
+            {/* Admin Navigation - only shown for admins */}
+            {isAdmin(userRole) && (
+              <>
+                {renderContentAsOpen && (
+                  <div className="px-4 py-2">
+                    <div className="border-t dark:border-muted" />
+                  </div>
+                )}
+                <SidebarGroup>
+                  <SidebarMenu className="space-y-1">
+                    {adminNavItems.map((item) => (
+                      <SidebarMenuItem
+                        key={item.href}
+                        className={cn(
+                          "flex justify-center",
+                          renderContentAsOpen && "px-2",
+                        )}
+                      >
+                        <Link
+                          href={item.href}
+                          className={getLinkClasses(item.href)}
+                          onClick={handleNavClick}
+                        >
+                          <item.icon
+                            className={cn(
+                              renderContentAsOpen ? "h-6 w-6 mr-3" : "h-5 w-5",
+                            )}
+                          />
+                          {renderContentAsOpen && <span>{item.label}</span>}
+                        </Link>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroup>
+              </>
+            )}
           </>
         )}
 

@@ -33,7 +33,7 @@ export function UpdatePasswordForm({
 
       if (result.success) {
         toast.success("Password updated successfully!");
-        router.push("/transcripts");
+        router.push("/app");
       } else {
         toast.error(result.error || "Failed to update password");
       }

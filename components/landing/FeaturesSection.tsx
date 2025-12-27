@@ -1,42 +1,30 @@
-import { Sparkles, FileText, Brain, Clock, Zap, Shield } from "lucide-react";
+import { Sparkles, Layout, Eye, Rocket } from "lucide-react";
 
 export default function FeaturesSection() {
   const features = [
     {
       icon: Sparkles,
-      title: "AI-Powered Accuracy",
+      title: "AI Theme Generation",
       description:
-        "Industry-leading transcription powered by OpenAI Whisper API with automatic language detection and 95%+ accuracy.",
+        "Describe your brand in words and let AI create a unique, cohesive theme with colors, typography, and component styles.",
     },
     {
-      icon: FileText,
-      title: "Multiple Export Formats",
+      icon: Layout,
+      title: "Visual Page Editor",
       description:
-        "Download transcripts in TXT, SRT, VTT, JSON, and verbose JSON formats for any workflow or video editor.",
+        "Drag-and-drop sections, edit content inline, and see changes instantly. No coding required.",
     },
     {
-      icon: Brain,
-      title: "AI Summaries",
+      icon: Eye,
+      title: "Instant Preview",
       description:
-        "GPT-5 generates show notes, key highlights, and platform-optimized social media captions automatically.",
+        "Preview your pages on desktop, tablet, and mobile before publishing. What you see is what your visitors get.",
     },
     {
-      icon: Clock,
-      title: "Word-Level Timestamps",
+      icon: Rocket,
+      title: "One-Click Publishing",
       description:
-        "Precise synchronization with word-level timestamps for video editing and subtitle creation.",
-    },
-    {
-      icon: Zap,
-      title: "Fast Processing",
-      description:
-        "Real-time progress tracking with typical processing time of 0.3x file duration. 30-minute file transcribed in ~9 minutes.",
-    },
-    {
-      icon: Shield,
-      title: "Secure Storage",
-      description:
-        "Enterprise-grade encryption for all files stored in Supabase with automatic deletion options for privacy.",
+        "When you're ready, publish to your custom domain with a single click. Your changes go live instantly.",
     },
   ];
 
@@ -45,15 +33,15 @@ export default function FeaturesSection() {
       <div className="container mx-auto max-w-7xl px-4">
         <div className="text-center space-y-4 mb-12 md:mb-16">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
-            Everything You Need to Transcribe Faster
+            Everything You Need to Build Faster
           </h2>
           <p className="text-lg text-muted-foreground md:text-xl max-w-3xl mx-auto">
-            Professional transcription features powered by AI, designed for
-            creators who value their time.
+            Professional website tools powered by AI, designed for content
+            managers who value their time.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2">
           {features.map((feature, index) => (
             <FeatureCard key={feature.title} {...feature} index={index} />
           ))}
@@ -79,9 +67,7 @@ function FeatureCard({
     "animate-fade-in-delay-1",
     "animate-fade-in-delay-2",
     "animate-fade-in-delay-3",
-    "animate-fade-in-delay-1",
-    "animate-fade-in-delay-2",
-  ][index % 6];
+  ][index % 4];
 
   return (
     <div

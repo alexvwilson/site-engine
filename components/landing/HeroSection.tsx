@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Palette, LayoutGrid, Monitor, Rocket } from "lucide-react";
 import Link from "next/link";
 
 export default function HeroSection() {
@@ -13,18 +13,18 @@ export default function HeroSection() {
           {/* Left Column: Content */}
           <div className="space-y-6">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl">
-              Fast, Affordable Transcriptions and Summaries
+              Build Beautiful Websites Without Code
             </h1>
             <p className="text-lg text-muted-foreground sm:text-xl md:text-xl lg:text-2xl">
-              Transcripts and summaries for your podcasts, meetings, and
-              interviews. Fast, accurate, and affordable.
+              AI-powered theme generation and intuitive content management for
+              creators and businesses.
             </p>
             <p className="text-base text-muted-foreground sm:text-lg md:text-xl lg:text-xl">
-              Perfect for podcasters, creators, and content teams.
+              Create stunning pages in minutes, not days.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button size="lg" asChild>
-                <Link href="/sign-up">Start Transcribing Free</Link>
+                <Link href="/auth/sign-up">Get Started</Link>
               </Button>
             </div>
           </div>
@@ -40,10 +40,10 @@ export default function HeroSection() {
 }
 
 const DEMO_STEPS = [
-  { id: 1, label: "Upload", duration: 2000 },
-  { id: 2, label: "Transcribe", duration: 2000 },
-  { id: 3, label: "Review", duration: 2500 },
-  { id: 4, label: "Export", duration: 2500 },
+  { id: 1, label: "Design", duration: 2000 },
+  { id: 2, label: "Build", duration: 2000 },
+  { id: 3, label: "Preview", duration: 2500 },
+  { id: 4, label: "Publish", duration: 2500 },
 ];
 
 function DemoPreview() {
@@ -105,150 +105,133 @@ function DemoPreview() {
         </div>
       </div>
 
-      {/* Step 1: Upload */}
+      {/* Step 1: Design - AI Theme Generation */}
       {currentStep === 1 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-8 animate-fade-in">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-            <Upload className="h-10 w-10 text-primary" strokeWidth={2.5} />
+            <Palette className="h-10 w-10 text-primary" strokeWidth={2.5} />
           </div>
           <h3 className="mb-3 text-2xl font-bold text-foreground sm:text-3xl md:text-3xl lg:text-4xl">
-            Upload Your Audio
+            Describe Your Brand
           </h3>
           <p className="text-center text-base text-muted-foreground sm:text-lg md:text-lg lg:text-xl">
-            Drop your podcast, interview, or meeting recording
+            Tell AI about your style and watch the magic happen
           </p>
           <div className="mt-6 rounded-lg border border-dashed border-primary/30 bg-primary/5 px-6 py-3">
             <p className="text-sm font-mono text-foreground sm:text-base md:text-base">
-              podcast_episode_42.mp3
+              &quot;Modern, minimal, professional...&quot;
             </p>
-            <p className="text-sm text-muted-foreground sm:text-sm md:text-base">45:23 duration</p>
+            <div className="mt-2 flex gap-2">
+              <span className="h-4 w-4 rounded-full bg-blue-500" />
+              <span className="h-4 w-4 rounded-full bg-slate-800" />
+              <span className="h-4 w-4 rounded-full bg-emerald-500" />
+            </div>
           </div>
         </div>
       )}
 
-      {/* Step 2: Transcribe */}
+      {/* Step 2: Build - Visual Editor */}
       {currentStep === 2 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-8 animate-fade-in">
           <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <LayoutGrid className="h-10 w-10 text-primary" strokeWidth={2.5} />
           </div>
           <h3 className="mb-3 text-2xl font-bold text-foreground sm:text-3xl md:text-3xl lg:text-4xl">
-            AI Transcription
+            Add Your Content
           </h3>
           <p className="text-center text-base text-muted-foreground sm:text-lg md:text-lg lg:text-xl">
-            Whisper AI converts speech to text with timestamps
+            Drag sections, edit text, upload images
           </p>
-          <div className="mt-6 w-full max-w-sm space-y-3">
-            <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-full animate-progress-sweep rounded-full bg-primary" />
+          <div className="mt-6 w-full max-w-sm space-y-2">
+            <div className="animate-slide-in-line-1 h-12 rounded-lg border border-border bg-muted/50 flex items-center px-4">
+              <span className="text-sm text-muted-foreground">Hero Section</span>
             </div>
-            <p className="text-center text-sm text-muted-foreground sm:text-base md:text-base">
-              Processing with AI...
-            </p>
+            <div className="animate-slide-in-line-2 h-12 rounded-lg border border-primary bg-primary/10 flex items-center px-4">
+              <span className="text-sm text-primary font-medium">+ Add Features</span>
+            </div>
+            <div className="animate-slide-in-line-3 h-12 rounded-lg border border-border bg-muted/50 flex items-center px-4">
+              <span className="text-sm text-muted-foreground">Contact Form</span>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Step 3: Review Transcript */}
+      {/* Step 3: Preview - Device Preview */}
       {currentStep === 3 && (
         <div className="absolute inset-0 flex flex-col px-6 pb-6 pt-20 md:px-8 md:pb-8 md:pt-24 animate-fade-in">
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-              <svg
-                className="h-5 w-5 text-primary"
-                fill="none"
-                strokeWidth={3}
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+              <Monitor className="h-5 w-5 text-primary" strokeWidth={2.5} />
             </div>
             <h3 className="text-xl font-bold text-foreground sm:text-2xl md:text-2xl lg:text-3xl">
-              Accurate Transcript
+              Preview Every Device
             </h3>
           </div>
           <p className="mb-4 text-sm text-muted-foreground sm:text-base md:text-base lg:text-lg">
-            Word-level timestamps ready for editing
+            See exactly how visitors will experience your site
           </p>
-          <div className="flex-1 space-y-3 overflow-hidden rounded-lg border border-border bg-muted/30 p-4">
-            <p className="animate-slide-in-line-1 font-mono text-sm text-foreground sm:text-base md:text-base lg:text-lg">
-              <span className="text-primary font-semibold">[00:00:00]</span>{" "}
-              Welcome to The Creator&apos;s Toolkit...
-            </p>
-            <p className="animate-slide-in-line-2 font-mono text-sm text-foreground sm:text-base md:text-base lg:text-lg">
-              <span className="text-primary font-semibold">[00:00:15]</span> Today
-              we&apos;re diving deep into AI-powered workflows...
-            </p>
-            <p className="animate-slide-in-line-3 font-mono text-sm text-foreground sm:text-base md:text-base lg:text-lg">
-              <span className="text-primary font-semibold">[00:00:32]</span> The
-              biggest challenge I hear from podcasters...
-            </p>
-            <p className="animate-slide-in-line-4 font-mono text-sm text-foreground/60 sm:text-base md:text-base lg:text-lg">
-              <span className="text-primary/60 font-semibold">[00:00:48]</span>{" "}
-              Let&apos;s talk about solutions that work...
-            </p>
+          <div className="flex-1 flex items-center justify-center gap-4">
+            <div className="animate-slide-in-line-1 w-32 h-48 rounded-lg border-2 border-primary bg-card shadow-lg flex flex-col">
+              <div className="h-6 border-b border-border bg-muted/50 rounded-t-lg" />
+              <div className="flex-1 p-2 space-y-1">
+                <div className="h-2 w-full bg-muted rounded" />
+                <div className="h-2 w-3/4 bg-muted rounded" />
+              </div>
+            </div>
+            <div className="animate-slide-in-line-2 w-20 h-36 rounded-lg border border-border bg-card shadow-md flex flex-col">
+              <div className="h-4 border-b border-border bg-muted/50 rounded-t-lg" />
+              <div className="flex-1 p-1.5 space-y-1">
+                <div className="h-1.5 w-full bg-muted rounded" />
+                <div className="h-1.5 w-3/4 bg-muted rounded" />
+              </div>
+            </div>
+            <div className="animate-slide-in-line-3 w-12 h-24 rounded-lg border border-border bg-card shadow-sm flex flex-col">
+              <div className="h-3 border-b border-border bg-muted/50 rounded-t-lg" />
+              <div className="flex-1 p-1 space-y-0.5">
+                <div className="h-1 w-full bg-muted rounded" />
+                <div className="h-1 w-3/4 bg-muted rounded" />
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Step 4: Export with AI Summary */}
+      {/* Step 4: Publish - Go Live */}
       {currentStep === 4 && (
         <div className="absolute inset-0 flex flex-col px-6 pb-6 pt-20 md:px-8 md:pb-8 md:pt-24 animate-fade-in">
           <div className="mb-4 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-              <svg
-                className="h-5 w-5 text-primary"
-                fill="none"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
-                />
-              </svg>
+              <Rocket className="h-5 w-5 text-primary" strokeWidth={2.5} />
             </div>
             <h3 className="text-xl font-bold text-foreground sm:text-2xl md:text-2xl lg:text-3xl">
-              AI Summary + Export
+              Publish Instantly
             </h3>
           </div>
           <p className="mb-4 text-sm text-muted-foreground sm:text-base md:text-base lg:text-lg">
-            Get show notes, highlights, and multiple formats
+            One click and your site is live on your custom domain
           </p>
           <div className="flex-1 space-y-3 overflow-hidden">
             <div className="animate-slide-in-line-1 rounded-lg border border-primary/20 bg-primary/5 p-4">
               <p className="mb-2 text-sm font-semibold text-primary sm:text-base md:text-base lg:text-lg">
-                Key Highlights
+                ✓ Site Published
               </p>
-              <ul className="space-y-1 text-sm text-muted-foreground sm:text-sm md:text-base lg:text-base">
-                <li>• AI-powered content workflows</li>
-                <li>• Time-saving strategies for creators</li>
-                <li>• Content repurposing techniques</li>
-              </ul>
+              <p className="text-sm text-muted-foreground font-mono">
+                yourbrand.com
+              </p>
             </div>
             <div className="animate-slide-in-line-2 rounded-lg border border-border bg-muted/30 p-4">
               <p className="mb-2 text-sm font-semibold text-foreground sm:text-base md:text-base lg:text-lg">
-                Export Formats
+                What&apos;s Included
               </p>
               <div className="flex flex-wrap gap-2">
                 <span className="rounded-md bg-primary/10 px-3 py-1 text-sm font-medium text-primary sm:text-sm md:text-base">
-                  TXT
+                  SSL
                 </span>
                 <span className="rounded-md bg-primary/10 px-3 py-1 text-sm font-medium text-primary sm:text-sm md:text-base">
-                  SRT
+                  CDN
                 </span>
                 <span className="rounded-md bg-primary/10 px-3 py-1 text-sm font-medium text-primary sm:text-sm md:text-base">
-                  VTT
-                </span>
-                <span className="rounded-md bg-primary/10 px-3 py-1 text-sm font-medium text-primary sm:text-sm md:text-base">
-                  JSON
+                  Analytics
                 </span>
               </div>
             </div>

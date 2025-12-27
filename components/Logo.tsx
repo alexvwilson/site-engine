@@ -16,14 +16,14 @@ export default function Logo({
     <div className={cn("flex items-center gap-2", className)}>
       <Image
         src="/logo.png"
-        alt="Skribo.ai"
+        alt="Site Engine"
         width={width}
         height={height}
         className="flex-shrink-0"
         priority
       />
       <span className="hidden sm:block text-2xl font-bold text-primary">
-        Skribo.ai
+        Site Engine
       </span>
     </div>
   );

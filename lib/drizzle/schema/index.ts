@@ -16,39 +16,55 @@
 export * from "./users";
 
 // ============================================================================
-// Transcription Core
+// Site Management
 // ============================================================================
 
 /**
- * Transcription Jobs - File upload and background processing tracking
- * Manages job status (pending/processing/completed/failed) and Trigger.dev integration
+ * Sites table - User-created websites
+ * Core entity for the Site Engine application
  */
-export * from "./transcription-jobs";
+export * from "./sites";
 
 /**
- * Transcripts - Completed transcription results in multiple formats
- * Stores plain text, SRT, VTT, JSON, and word-level timestamps
+ * Pages table - Individual pages within sites
+ * Each page belongs to one site and can be set as homepage
  */
-export * from "./transcripts";
+export * from "./pages";
+
+/**
+ * Sections table - Content blocks within pages
+ * Each section has a block type and JSONB content
+ */
+export * from "./sections";
+
+// ============================================================================
+// Theme Management
+// ============================================================================
+
+/**
+ * Theme types - TypeScript interfaces for theme data structures
+ * Used by theme generation jobs, saved themes, and frontend components
+ */
+export * from "./theme-types";
+
+/**
+ * Theme generation jobs table - Tracks AI theme generation progress
+ * Supports Quick Generate (single call) and Guided Generate (multi-stage)
+ */
+export * from "./theme-generation-jobs";
+
+/**
+ * Themes table - Saved theme versions per site
+ * Each site can have multiple themes with one active
+ */
+export * from "./themes";
 
 // ============================================================================
 // AI Features
 // ============================================================================
 
 /**
- * AI Summaries - Generated summaries of transcripts
- * Powered by AI models for quick transcript insights
+ * Layout suggestion jobs table - Tracks AI layout suggestion requests
+ * Users describe page purpose and receive section recommendations
  */
-export * from "./ai-summaries";
-
-/**
- * Transcript Conversations - Chat conversations about specific transcripts
- * Enables Q&A and discussion threads on transcription content
- */
-export * from "./transcript-conversations";
-
-/**
- * Transcript Messages - Individual messages within transcript conversations
- * Stores user and AI messages with model references
- */
-export * from "./transcript-messages";
+export * from "./layout-suggestion-jobs";

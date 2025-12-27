@@ -89,7 +89,7 @@ function getSuccessRedirect(customNext?: string | null): string {
   }
 
   // Default to main application
-  return "/transcripts";
+  return "/app";
 }
 
 // Determine redirect destination after successful email verification
@@ -107,8 +107,8 @@ function getVerificationRedirect(
     case "recovery":
       return "/auth/update-password"; // Password reset → update password form
     case "signup":
-      return "/transcripts"; // Email verification → main app
+      return "/app"; // Email verification → main app
     default:
-      return "/transcripts"; // Default to main app
+      return "/app"; // Default to main app
   }
 }

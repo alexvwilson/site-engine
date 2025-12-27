@@ -1,0 +1,211 @@
+import type { BlockType } from "@/lib/drizzle/schema/sections";
+
+/**
+ * Content type definitions for each section block type.
+ * These interfaces define the JSONB structure stored in the sections table.
+ */
+
+export interface NavLink {
+  label: string;
+  url: string;
+}
+
+export interface HeaderContent {
+  siteName: string;
+  logoUrl?: string;
+  links: NavLink[];
+  ctaText?: string;
+  ctaUrl?: string;
+}
+
+export interface HeroContent {
+  heading: string;
+  subheading: string;
+  ctaText: string;
+  ctaUrl: string;
+  backgroundImage?: string;
+}
+
+export interface TextContent {
+  body: string;
+}
+
+export interface ImageContent {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface GalleryImage {
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface GalleryContent {
+  images: GalleryImage[];
+}
+
+export interface Feature {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+export interface FeaturesContent {
+  features: Feature[];
+}
+
+export interface CTAContent {
+  heading: string;
+  description: string;
+  buttonText: string;
+  buttonUrl: string;
+}
+
+export interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+  avatar?: string;
+}
+
+export interface TestimonialsContent {
+  testimonials: Testimonial[];
+}
+
+export interface ContactField {
+  type: "text" | "email" | "textarea";
+  label: string;
+  required: boolean;
+}
+
+export interface ContactContent {
+  heading: string;
+  description: string;
+  fields: ContactField[];
+}
+
+export interface FooterLink {
+  label: string;
+  url: string;
+}
+
+export interface FooterContent {
+  copyright: string;
+  links: FooterLink[];
+}
+
+/**
+ * Union type of all possible section content types
+ */
+export type SectionContent =
+  | HeaderContent
+  | HeroContent
+  | TextContent
+  | ImageContent
+  | GalleryContent
+  | FeaturesContent
+  | CTAContent
+  | TestimonialsContent
+  | ContactContent
+  | FooterContent;
+
+/**
+ * Maps block type to its corresponding content interface
+ */
+export interface ContentTypeMap {
+  header: HeaderContent;
+  hero: HeroContent;
+  text: TextContent;
+  image: ImageContent;
+  gallery: GalleryContent;
+  features: FeaturesContent;
+  cta: CTAContent;
+  testimonials: TestimonialsContent;
+  contact: ContactContent;
+  footer: FooterContent;
+}
+
+/**
+ * Type-safe content accessor for a specific block type
+ */
+export function getTypedContent<T extends BlockType>(
+  blockType: T,
+  content: unknown
+): ContentTypeMap[T] {
+  return content as ContentTypeMap[T];
+}
+
+/**
+ * Block type display information
+ */
+export interface BlockTypeInfo {
+  type: BlockType;
+  label: string;
+  description: string;
+  icon: string;
+}
+
+export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
+  {
+    type: "header",
+    label: "Header",
+    description: "Site navigation with logo and links",
+    icon: "panel-top",
+  },
+  {
+    type: "hero",
+    label: "Hero",
+    description: "Large header section with heading, subheading, and CTA",
+    icon: "layout",
+  },
+  {
+    type: "text",
+    label: "Text",
+    description: "Rich text content block",
+    icon: "type",
+  },
+  {
+    type: "image",
+    label: "Image",
+    description: "Single image with caption",
+    icon: "image",
+  },
+  {
+    type: "gallery",
+    label: "Gallery",
+    description: "Grid of multiple images",
+    icon: "grid-3x3",
+  },
+  {
+    type: "features",
+    label: "Features",
+    description: "Feature cards with icons",
+    icon: "sparkles",
+  },
+  {
+    type: "cta",
+    label: "Call to Action",
+    description: "Conversion-focused section with button",
+    icon: "mouse-pointer-click",
+  },
+  {
+    type: "testimonials",
+    label: "Testimonials",
+    description: "Customer quotes and reviews",
+    icon: "quote",
+  },
+  {
+    type: "contact",
+    label: "Contact Form",
+    description: "Contact form with configurable fields",
+    icon: "mail",
+  },
+  {
+    type: "footer",
+    label: "Footer",
+    description: "Page footer with links and copyright",
+    icon: "panel-bottom",
+  },
+];

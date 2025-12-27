@@ -7,10 +7,10 @@ export default function CTASection() {
       <div className="container mx-auto max-w-4xl px-4 text-center">
         <div className="space-y-6">
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
-            Start Transcribing in Minutes
+            Start Building Your Website Today
           </h2>
           <p className="text-lg text-muted-foreground md:text-xl">
-            Join creators saving 5-10 hours weekly on transcription.
+            Join creators and businesses building beautiful sites without code.
           </p>
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Button size="lg" asChild>

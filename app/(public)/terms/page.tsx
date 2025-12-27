@@ -4,11 +4,11 @@ import { generateLegalMetadata } from "@/lib/metadata";
 import TableOfContents from "@/components/legal/TableOfContents";
 import LegalLayout from "@/components/legal/LegalLayout";
 
-const lastUpdated = "2025-06-30";
+const lastUpdated = "2025-12-25";
 
 export const metadata: Metadata = generateLegalMetadata(
   "Terms of Service",
-  "Terms of Service for ShipKit.ai - Audio and video transcription powered by OpenAI Whisper.",
+  "Terms of Service for Site Engine - AI-powered website builder by Headstring.",
 );
 
 const tocSections = [
@@ -33,13 +33,13 @@ export default function TermsOfService() {
       <LegalPageWrapper
         title="Terms of Service"
         lastUpdated={lastUpdated}
-        description="These Terms of Service govern your use of our ShipKit.ai, an AI transcription platform provideing audio and video transcription powered by OpenAI Whisper."
+        description="These Terms of Service govern your use of Site Engine, an AI-powered website builder operated by Headstring."
       >
         {/* Acceptance of Terms */}
         <section id="acceptance">
           <h2>1. Acceptance of Terms</h2>
           <p>
-            By accessing or using ShipKit.ai (&ldquo;Service&rdquo;), you agree
+            By accessing or using Site Engine (&ldquo;Service&rdquo;), you agree
             to be bound by these Terms of Service (&ldquo;Terms&rdquo;). If you
             disagree with any part of these terms, then you may not access the
             Service.
@@ -62,19 +62,19 @@ export default function TermsOfService() {
         <section id="description">
           <h2>2. Service Description</h2>
           <p>
-            Our service is an AI-powered transcription platform that provides:
+            Our service is an AI-powered website builder that provides:
           </p>
           <ul>
-            <li>Audio and video file transcription using OpenAI Whisper API</li>
-            <li>Multiple export formats (TXT, SRT, VTT, JSON)</li>
-            <li>AI-generated summaries of transcribed content</li>
-            <li>Conversation interface to ask questions about transcripts</li>
-            <li>Secure cloud storage for uploaded media files</li>
+            <li>AI-powered theme generation based on brand descriptions</li>
+            <li>Visual page editor with drag-and-drop sections</li>
+            <li>Real-time preview on desktop, tablet, and mobile devices</li>
+            <li>One-click publishing to custom domains</li>
+            <li>Secure cloud hosting for published websites</li>
           </ul>
           <p>
-            The Service allows users to upload audio and video files for
-            transcription, view and export transcripts in various formats, and
-            interact with AI features for content analysis.
+            The Service allows users to create and manage websites, design
+            custom themes using AI, build pages with visual editing tools, and
+            publish sites to the web.
           </p>
         </section>
 
@@ -183,7 +183,7 @@ export default function TermsOfService() {
           <h2>6. Intellectual Property Rights</h2>
           <p>
             The Service and its original content, features, and functionality
-            are owned by YourApp and are protected by international copyright,
+            are owned by Headstring and are protected by international copyright,
             trademark, patent, trade secret, and other intellectual property
             laws.
           </p>
@@ -289,7 +289,7 @@ export default function TermsOfService() {
           <h2>10. Limitation of Liability</h2>
           <p>
             To the maximum extent permitted by applicable law, in no event shall
-            ShipKit.ai be liable for any indirect, punitive, incidental,
+            Headstring be liable for any indirect, punitive, incidental,
             special, consequential, or exemplary damages, including without
             limitation damages for loss of profits, goodwill, use, data, or
             other intangible losses.
@@ -311,7 +311,7 @@ export default function TermsOfService() {
         <section id="indemnification">
           <h2>11. Indemnification</h2>
           <p>
-            You agree to defend, indemnify, and hold harmless ShipKit.ai and its
+            You agree to defend, indemnify, and hold harmless Headstring and its
             officers, directors, employees, and agents from and against any and
             all claims, damages, obligations, losses, liabilities, costs, and
             expenses (including attorney&rsquo;s fees) arising from:
@@ -340,7 +340,7 @@ export default function TermsOfService() {
             the American Arbitration Association.
           </p>
           <p>
-            You and ShipKit.ai agree that any dispute resolution proceedings
+            You and Headstring agree that any dispute resolution proceedings
             will be conducted only on an individual basis and not in a class,
             consolidated, or representative action.
           </p>
@@ -361,13 +361,7 @@ export default function TermsOfService() {
           </p>
           <div className="bg-muted bg-opacity-30 p-4 rounded-lg border">
             <p>
-              <strong>Email:</strong> legal@shipkit.ai
-            </p>
-            <p>
-              <strong>Address:</strong> [Your Company Address]
-            </p>
-            <p>
-              <strong>Phone:</strong> [Your Phone Number]
+              <strong>Email:</strong> contact@headstring.com
             </p>
           </div>
           <p className="text-sm text-muted-foreground mt-4">

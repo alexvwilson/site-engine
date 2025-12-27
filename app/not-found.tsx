@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FileAudio, Home } from "lucide-react";
+import { LayoutDashboard, Home } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -9,7 +9,7 @@ export default function NotFound() {
         {/* Icon and illustration */}
         <div className="space-y-4">
           <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center">
-            <FileAudio className="w-10 h-10 text-primary" />
+            <LayoutDashboard className="w-10 h-10 text-primary" />
           </div>
 
           {/* 404 Message */}
@@ -28,9 +28,9 @@ export default function NotFound() {
         {/* Action buttons */}
         <div className="space-y-4">
           <Button asChild className="w-full" size="lg">
-            <Link href="/transcripts">
-              <FileAudio className="w-4 h-4" />
-              View Transcripts
+            <Link href="/app">
+              <LayoutDashboard className="w-4 h-4" />
+              Go to Dashboard
             </Link>
           </Button>
 
@@ -45,7 +45,7 @@ export default function NotFound() {
         {/* Additional help text */}
         <div className="pt-4 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            Need help? Contact our support team or check your transcript history.
+            Need help? Contact our support team.
           </p>
         </div>
       </div>

@@ -4,57 +4,57 @@
 /* Configure Tailwind v4 to use class-based dark mode */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Base color definitions - Light Mode */
+/* Base color definitions - Light Mode (Subtle Brand Tint) */
 :root {
   /* Color System - Background */
-  --background: hsl(0 0% 100%);
+  --background: hsl(265 10% 97%);
   --foreground: hsl(240 10% 3.9%);
-  --card: hsl(210 20% 98%);
+  --card: hsl(0 0% 100%);
   --card-foreground: hsl(240 10% 3.9%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(240 10% 3.9%);
 
-  /* Color System - Primary Brand */
-  --primary: hsl(310 75% 58%);
+  /* Color System - Primary Brand (AI Tech Violet) */
+  --primary: hsl(265 85% 60%);
   --primary-foreground: hsl(0 0% 98%);
 
   /* Color System - Secondary & Muted */
-  --secondary: hsl(240 4.8% 95.9%);
+  --secondary: hsl(265 12% 92%);
   --secondary-foreground: hsl(240 5.9% 10%);
-  --muted: hsl(240 4.8% 95.9%);
+  --muted: hsl(265 12% 92%);
   --muted-foreground: hsl(240 3.8% 46.1%);
-  --accent: hsl(240 4.8% 95.9%);
+  --accent: hsl(265 12% 92%);
   --accent-foreground: hsl(240 5.9% 10%);
 
   /* Color System - Semantic */
   --success: hsl(135 75% 50%);
   --success-foreground: hsl(0 0% 98%);
-  --warning: hsl(38 85% 58%);
+  --warning: hsl(42 88% 56%);
   --warning-foreground: hsl(240 10% 3.9%);
-  --destructive: hsl(8 75% 54%);
+  --destructive: hsl(358 82% 58%);
   --destructive-foreground: hsl(0 0% 98%);
 
   /* Color System - Borders & Inputs */
-  --border: hsl(240 5.9% 90%);
-  --input: hsl(240 5.9% 90%);
-  --ring: hsl(310 75% 58%);
+  --border: hsl(265 14% 88%);
+  --input: hsl(265 14% 88%);
+  --ring: hsl(265 85% 60%);
 
   /* Color System - Charts */
-  --chart-1: hsl(310 75% 58%);
+  --chart-1: hsl(265 85% 60%);
   --chart-2: hsl(135 75% 50%);
   --chart-3: hsl(180 75% 45%);
-  --chart-4: hsl(38 85% 58%);
-  --chart-5: hsl(8 75% 54%);
+  --chart-4: hsl(42 88% 56%);
+  --chart-5: hsl(358 82% 58%);
 
   /* Color System - Sidebar */
-  --sidebar: hsl(210 20% 98%);
+  --sidebar: hsl(265 10% 97%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary: hsl(265 85% 60%);
   --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(240 4.8% 92%);
+  --sidebar-accent: hsl(265 12% 92%);
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(310 75% 58%);
+  --sidebar-border: hsl(265 14% 88%);
+  --sidebar-ring: hsl(265 85% 60%);
 
   /* Border Radius System */
   --radius: 0.5rem;
@@ -63,55 +63,56 @@
   --radius-sm: calc(var(--radius) - 4px);
 }
 
-/* Dark mode color overrides - responds to .dark class */
+/* Dark mode color overrides - responds to .dark class (Premium Slate) */
 :root:where(.dark, .dark *) {
   /* Dark Mode Color Overrides */
-  --background: hsl(222 47% 11%);
+  --background: hsl(220 10% 10%);
   --foreground: hsl(0 0% 98%);
-  --card: hsl(217 28% 17%);
+  --card: hsl(220 10% 12%);
   --card-foreground: hsl(0 0% 98%);
-  --popover: hsl(217 28% 17%);
+  --popover: hsl(220 10% 12%);
   --popover-foreground: hsl(0 0% 98%);
 
-  --primary: hsl(310 70% 63%);
+  /* Primary Brand (AI Tech Violet - adjusted for dark) */
+  --primary: hsl(265 80% 65%);
   --primary-foreground: hsl(0 0% 98%);
 
-  --secondary: hsl(222 10% 18%);
+  --secondary: hsl(220 8% 16%);
   --secondary-foreground: hsl(0 0% 98%);
-  --muted: hsl(222 10% 18%);
-  --muted-foreground: hsl(222 8% 64%);
-  --accent: hsl(222 10% 18%);
+  --muted: hsl(220 8% 16%);
+  --muted-foreground: hsl(220 5% 70%);
+  --accent: hsl(220 8% 16%);
   --accent-foreground: hsl(0 0% 98%);
 
   --success: hsl(135 70% 55%);
   --success-foreground: hsl(0 0% 98%);
-  --warning: hsl(38 80% 63%);
+  --warning: hsl(42 83% 61%);
   --warning-foreground: hsl(0 0% 98%);
-  --destructive: hsl(8 70% 59%);
+  --destructive: hsl(358 77% 63%);
   --destructive-foreground: hsl(0 0% 98%);
 
-  --border: hsl(222 10% 20%);
-  --input: hsl(222 10% 20%);
-  --ring: hsl(310 70% 63%);
+  --border: hsl(220 8% 20%);
+  --input: hsl(220 8% 20%);
+  --ring: hsl(265 80% 65%);
 
-  --chart-1: hsl(310 70% 63%);
+  --chart-1: hsl(265 80% 65%);
   --chart-2: hsl(135 70% 55%);
   --chart-3: hsl(180 65% 50%);
-  --chart-4: hsl(38 80% 63%);
-  --chart-5: hsl(8 70% 59%);
+  --chart-4: hsl(42 83% 61%);
+  --chart-5: hsl(358 77% 63%);
 
-  --sidebar: hsla(222.5, 37.5%, 12.549%);
+  --sidebar: hsl(220 10% 10%);
   --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(310 70% 63%);
+  --sidebar-primary: hsl(265 80% 65%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(222 10% 18%);
+  --sidebar-accent: hsl(220 8% 16%);
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(222 10% 20%);
-  --sidebar-ring: hsl(310 70% 63%);
+  --sidebar-border: hsl(220 8% 20%);
+  --sidebar-ring: hsl(265 80% 65%);
 
   /* Landing Page Specific Backgrounds */
-  --landing-navbar-bg: hsl(217 28% 17%);
-  --landing-hero-bg: hsl(222 47% 11%);
+  --landing-navbar-bg: hsl(220 10% 12%);
+  --landing-hero-bg: hsl(220 10% 10%);
 }
 
 /* Map CSS variables to Tailwind theme */

@@ -7,35 +7,35 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: {
-    template: "%s | Skribo.ai",
-    default: "Skribo.ai - AI-Powered Transcription for Creators",
+    template: "%s | Site Engine",
+    default: "Site Engine - AI-Powered Website Builder",
   },
   description:
-    "Turn audio and video into accurate text in minutes. AI-powered transcription built for solo creators and podcasters. Save 5-10 hours weekly with automated transcription, timestamps, and searchable content.",
+    "Build beautiful websites without code. AI-powered theme generation and intuitive content management for creators and businesses.",
   keywords: [
-    "AI Transcription",
-    "Audio to Text",
-    "Video Transcription",
-    "Podcast Transcription",
-    "Content Creator Tools",
-    "Speech to Text",
-    "Automated Transcription",
-    "Whisper AI",
-    "Transcription Software",
-    "Creator Tools",
+    "Website Builder",
+    "AI Website Builder",
+    "No Code Website",
+    "Content Management",
+    "AI Theme Generation",
+    "Visual Page Editor",
+    "Drag and Drop Website",
+    "Website Creator",
+    "Landing Page Builder",
+    "Small Business Website",
   ],
   openGraph: {
-    title: "Skribo.ai - AI-Powered Transcription for Creators",
+    title: "Site Engine - AI-Powered Website Builder",
     description:
-      "Turn audio and video into accurate text in minutes. Save 5-10 hours weekly with AI transcription built for solo creators and podcasters.",
+      "Build beautiful websites without code. AI-powered theme generation and intuitive content management.",
     url: new URL(defaultUrl),
-    siteName: "Skribo.ai",
+    siteName: "Site Engine",
     images: [
       {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Skribo.ai - AI-powered transcription for creators",
+        alt: "Site Engine - AI-powered website builder",
       },
     ],
     locale: "en_US",
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Skribo.ai - AI-Powered Transcription for Creators",
+    title: "Site Engine - AI-Powered Website Builder",
     description:
-      "Turn audio and video into accurate text in minutes. Save 5-10 hours weekly with AI transcription built for solo creators and podcasters.",
+      "Build beautiful websites without code. AI-powered theme generation and intuitive content management.",
     images: ["/twitter-image.png"],
   },
   robots: {
@@ -69,14 +69,14 @@ export const generateLegalMetadata = (
   description: string,
 ): Metadata => {
   return {
-    title: `${title} | Skribo.ai`,
+    title: `${title} | Site Engine`,
     description,
     robots: {
       index: true,
       follow: true,
     },
     openGraph: {
-      title: `${title} | Skribo.ai`,
+      title: `${title} | Site Engine`,
       description,
       type: "website",
     },

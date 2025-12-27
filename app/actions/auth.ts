@@ -48,7 +48,7 @@ export async function signUpAction(
     email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/transcripts`,
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/app`,
       data: {
         full_name: fullName,
       },

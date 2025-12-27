@@ -4,11 +4,11 @@ import { generateLegalMetadata } from "@/lib/metadata";
 import TableOfContents from "@/components/legal/TableOfContents";
 import LegalLayout from "@/components/legal/LegalLayout";
 
-const lastUpdated = "2025-06-30";
+const lastUpdated = "2025-12-25";
 
 export const metadata: Metadata = generateLegalMetadata(
   "Cookie Policy",
-  "Cookie Policy for ShipKit.ai - Information about cookies and tracking technologies we use to enhance your experience."
+  "Cookie Policy for Site Engine - Information about cookies and tracking technologies we use to enhance your experience."
 );
 
 const tocSections = [
@@ -30,7 +30,7 @@ export default function CookiePolicy() {
       <LegalPageWrapper
         title="Cookie Policy"
         lastUpdated={lastUpdated}
-        description="This Cookie Policy explains how ShipKit.ai uses cookies and similar tracking technologies to enhance your experience and improve our services."
+        description="This Cookie Policy explains how Site Engine uses cookies and similar tracking technologies to enhance your experience and improve our services."
       >
         <section id="introduction">
           <h2>1. What Are Cookies</h2>
@@ -47,9 +47,9 @@ export default function CookiePolicy() {
             &ldquo;cookies.&rdquo;
           </p>
           <p>
-            ShipKit.ai uses cookies to provide essential functionality, remember
-            your preferences, analyze usage patterns, and improve our AI
-            transcription platform service.
+            Site Engine uses cookies to provide essential functionality, remember
+            your preferences, analyze usage patterns, and improve our AI-powered
+            website builder.
           </p>
         </section>
 
@@ -69,10 +69,10 @@ export default function CookiePolicy() {
             <span className="text-muted-foreground">
               Contact:{" "}
               <a
-                href="mailto:privacy@shipkit.ai"
+                href="mailto:contact@headstring.com"
                 className="text-primary hover:underline"
               >
-                privacy@shipkit.ai
+                contact@headstring.com
               </a>
             </span>
           </div>
@@ -222,8 +222,8 @@ export default function CookiePolicy() {
           <h3>3.2 AI Processing</h3>
           <ul>
             <li>
-              <strong>OpenAI:</strong> AI transcription and processing via
-              Whisper API
+              <strong>OpenAI:</strong> AI-powered theme generation and content
+              assistance
             </li>
           </ul>
 
@@ -377,13 +377,7 @@ export default function CookiePolicy() {
           </p>
           <div className="bg-muted bg-opacity-30 p-4 rounded-lg border">
             <p>
-              <strong>Privacy Officer:</strong> privacy@shipkit.ai
-            </p>
-            <p>
-              <strong>General Support:</strong> support@shipkit.ai
-            </p>
-            <p>
-              <strong>Address:</strong> [Your Company Address]
+              <strong>Email:</strong> contact@headstring.com
             </p>
           </div>
           <p>

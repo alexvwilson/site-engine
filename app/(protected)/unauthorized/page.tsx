@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert, MessageCircle, Home } from "lucide-react";
+import { ShieldAlert, LayoutDashboard, Home } from "lucide-react";
 
 export default function UnauthorizedPage() {
   return (
@@ -28,9 +28,9 @@ export default function UnauthorizedPage() {
           {/* Actions */}
           <div className="space-y-3">
             <Button asChild className="w-full">
-              <Link href="/transcripts">
-                <MessageCircle className="w-4 h-4" />
-                Back to Transcripts
+              <Link href="/app">
+                <LayoutDashboard className="w-4 h-4" />
+                Back to Dashboard
               </Link>
             </Button>
 

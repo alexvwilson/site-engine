@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 ## Project Overview
 
 This is a Next.js 15 transcription application that allows users to upload audio/video files and get AI-powered transcriptions using OpenAI's Whisper API.
@@ -19,6 +21,7 @@ This is a Next.js 15 transcription application that allows users to upload audio
 
 ```bash
 npm run dev              # Start dev server with Turbopack
+npm run dev:full         # Start dev server + Trigger.dev dev server (for background jobs)
 ```
 
 ### Building and Type Checking
@@ -50,6 +53,12 @@ npm run db:generate:custom:prod
 npm run db:migrate:prod
 npm run db:rollback:prod
 npm run db:status:prod
+```
+
+### Trigger.dev Deployment
+
+```bash
+npm run trigger:deploy:prod   # Deploy Trigger.dev tasks to production
 ```
 
 ### Supabase Storage Setup
@@ -107,6 +116,8 @@ npm run storage:setup:prod    # Setup storage buckets (prod)
 - `components/` - React components organized by feature
 - `app/actions/` - Next.js Server Actions
 - `trigger/` - Trigger.dev background tasks
+  - `tasks/` - Individual task definitions
+  - `utils/` - Shared utilities (OpenAI client, FFmpeg, format converters)
 - `scripts/` - Database migration and setup scripts
 
 ## Critical Next.js 15 Requirements
@@ -300,3 +311,44 @@ Run `npm run type-check` to see all TypeScript errors without building.
 ### Database Migrations
 
 Check migration status before deploying: `npm run db:status`
+
+## Trigger.dev Tasks
+
+### Task Structure
+
+Tasks use `@trigger.dev/sdk` v4 with the `task()` function. Use `schemaTask()` for payload validation with Zod.
+
+```tsx
+import { task, logger, metadata } from "@trigger.dev/sdk";
+
+export const myTask = task({
+  id: "my-task",
+  run: async (payload: { jobId: string }) => {
+    metadata.root.set("progress", 50);
+    logger.info("Processing", { jobId: payload.jobId });
+    return { success: true };
+  },
+});
+```
+
+### Triggering Tasks
+
+From backend code (Server Actions, API routes):
+
+```tsx
+import { tasks } from "@trigger.dev/sdk";
+import type { myTask } from "@/trigger/tasks/my-task";
+
+const handle = await tasks.trigger<typeof myTask>("my-task", { jobId: "123" });
+```
+
+From within other tasks (use `triggerAndWait` for sequential execution):
+
+```tsx
+const result = await childTask.triggerAndWait({ data: "value" });
+if (result.ok) {
+  console.log(result.output);
+}
+```
+
+### Important: Never use `Promise.all` with `triggerAndWait` or `wait` calls in Trigger.dev tasks.

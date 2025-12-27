@@ -1,14 +1,14 @@
 import { db } from "@/lib/drizzle/db";
-import {
-  users,
-  transcriptionJobs,
-  transcripts,
-} from "@/lib/drizzle/schema";
-import { sql, and, gte, count, desc, like } from "drizzle-orm";
+import { users } from "@/lib/drizzle/schema";
+import { sql, and, count, desc, like } from "drizzle-orm";
 
 // Type definitions for admin metrics
 export interface SystemMetrics {
   totalUsers: number;
+  totalSites: number;
+  publishedSites: number;
+  draftSites: number;
+  // Legacy fields kept for component compatibility (will be updated in future phases)
   totalJobsAllTime: number;
   totalJobsToday: number;
   activeJobs: number;
@@ -50,136 +50,64 @@ export interface UserListItem {
 
 /**
  * Get comprehensive system metrics for admin dashboard
- * Aggregates data from users, jobs, transcripts, and usage events
+ * Updated for Site Engine - now tracks sites instead of transcription jobs
  */
 export async function getSystemMetrics(): Promise<SystemMetrics> {
-  const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-  // Single combined query for all metrics to reduce connection overhead
-  // Use raw table names to avoid Drizzle interpolation issues with nested subqueries
+  // Query site and user counts
   const metricsQuery = sql`
     SELECT
       (SELECT COUNT(*) FROM users) AS total_users,
-      (SELECT COUNT(*) FROM transcription_jobs) AS total_jobs_all_time,
-      (SELECT COUNT(*) FROM transcription_jobs WHERE status = 'pending' OR status = 'processing') AS active_jobs,
-      (SELECT COALESCE(SUM(file_size_bytes), 0) FROM transcription_jobs) AS total_storage_bytes,
-      (SELECT COUNT(*) FROM transcription_jobs WHERE created_at >= ${todayStart.toISOString()}) AS total_jobs_today,
-      (SELECT COALESCE(SUM(duration_seconds), 0) FROM transcripts WHERE created_at >= ${monthStart.toISOString()}) AS total_seconds_this_month
+      (SELECT COUNT(*) FROM sites) AS total_sites,
+      (SELECT COUNT(*) FROM sites WHERE status = 'published') AS published_sites,
+      (SELECT COUNT(*) FROM sites WHERE status = 'draft') AS draft_sites
   `;
 
-  const [metricsResult, last24HoursJobsResult] = await Promise.all([
-    db.execute(metricsQuery),
-    db
-      .select({
-        status: transcriptionJobs.status,
-        count: count(),
-      })
-      .from(transcriptionJobs)
-      .where(gte(transcriptionJobs.created_at, last24Hours))
-      .groupBy(transcriptionJobs.status),
-  ]);
+  const metricsResult = await db.execute(metricsQuery);
 
   const metrics = metricsResult[0] as {
     total_users: number;
-    total_jobs_all_time: number;
-    active_jobs: number;
-    total_storage_bytes: number;
-    total_jobs_today: number;
-    total_seconds_this_month: number;
+    total_sites: number;
+    published_sites: number;
+    draft_sites: number;
   };
-
-  // Calculate success and failure rates
-  const jobStatusCounts = last24HoursJobsResult.reduce(
-    (acc, row) => {
-      acc[row.status] = row.count;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
-  const totalLast24h =
-    (jobStatusCounts.completed || 0) + (jobStatusCounts.failed || 0);
-  const successRate =
-    totalLast24h > 0
-      ? ((jobStatusCounts.completed || 0) / totalLast24h) * 100
-      : 100;
-  const failureRate =
-    totalLast24h > 0 ? ((jobStatusCounts.failed || 0) / totalLast24h) * 100 : 0;
 
   return {
     totalUsers: Number(metrics.total_users),
-    totalJobsAllTime: Number(metrics.total_jobs_all_time),
-    totalJobsToday: Number(metrics.total_jobs_today),
-    activeJobs: Number(metrics.active_jobs),
-    totalMinutesThisMonth: Math.round(
-      Number(metrics.total_seconds_this_month) / 60,
-    ),
-    totalStorageBytes: Number(metrics.total_storage_bytes),
-    jobSuccessRate: Math.round(successRate * 10) / 10, // Round to 1 decimal
-    jobFailureRate: Math.round(failureRate * 10) / 10,
+    totalSites: Number(metrics.total_sites),
+    publishedSites: Number(metrics.published_sites),
+    draftSites: Number(metrics.draft_sites),
+    // Legacy fields - return zeros for now (components will be updated in future phases)
+    totalJobsAllTime: 0,
+    totalJobsToday: 0,
+    activeJobs: 0,
+    totalMinutesThisMonth: 0,
+    totalStorageBytes: 0,
+    jobSuccessRate: 100,
+    jobFailureRate: 0,
   };
 }
 
-
 /**
  * Get job processing statistics for the last N days
- * Returns daily counts of total, completed, and failed jobs
+ * Returns placeholder data - will be updated for site analytics in future phases
  */
 export async function getJobStatistics(days: number): Promise<JobStatistic[]> {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
   startDate.setHours(0, 0, 0, 0);
 
-  const result = await db
-    .select({
-      date: sql<string>`DATE(${transcriptionJobs.created_at})`,
-      status: transcriptionJobs.status,
-      count: count(),
-    })
-    .from(transcriptionJobs)
-    .where(gte(transcriptionJobs.created_at, startDate))
-    .groupBy(sql`DATE(${transcriptionJobs.created_at})`, transcriptionJobs.status)
-    .orderBy(sql`DATE(${transcriptionJobs.created_at})`);
-
-  // Aggregate by date
-  const statsByDate = new Map<
-    string,
-    { total: number; completed: number; failed: number }
-  >();
-
-  for (const row of result) {
-    if (!statsByDate.has(row.date)) {
-      statsByDate.set(row.date, { total: 0, completed: 0, failed: 0 });
-    }
-
-    const stats = statsByDate.get(row.date)!;
-    stats.total += row.count;
-
-    if (row.status === "completed") {
-      stats.completed += row.count;
-    } else if (row.status === "failed") {
-      stats.failed += row.count;
-    }
-  }
-
-  // Convert to array and fill in missing dates with zeros
+  // Return placeholder data for compatibility
   const statistics: JobStatistic[] = [];
   for (let i = 0; i < days; i++) {
     const date = new Date(startDate);
     date.setDate(date.getDate() + i);
     const dateStr = date.toISOString().split("T")[0];
 
-    const stats = statsByDate.get(dateStr) || {
+    statistics.push({
+      date: dateStr,
       total: 0,
       completed: 0,
       failed: 0,
-    };
-    statistics.push({
-      date: dateStr,
-      ...stats,
     });
   }
 
@@ -187,30 +115,15 @@ export async function getJobStatistics(days: number): Promise<JobStatistic[]> {
 }
 
 /**
- * Get usage trends showing minutes transcribed per day for the last N days
+ * Get usage trends for the last N days
+ * Returns placeholder data - will be updated for site analytics in future phases
  */
 export async function getUsageTrends(days: number): Promise<UsageTrend[]> {
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);
   startDate.setHours(0, 0, 0, 0);
 
-  const result = await db
-    .select({
-      date: sql<string>`DATE(${transcripts.created_at})`,
-      totalSeconds: sql<number>`COALESCE(SUM(${transcripts.duration_seconds}), 0)`,
-    })
-    .from(transcripts)
-    .where(gte(transcripts.created_at, startDate))
-    .groupBy(sql`DATE(${transcripts.created_at})`)
-    .orderBy(sql`DATE(${transcripts.created_at})`);
-
-  // Create map for quick lookup
-  const trendsByDate = new Map<string, number>();
-  for (const row of result) {
-    trendsByDate.set(row.date, Math.round(row.totalSeconds / 60));
-  }
-
-  // Fill in all dates with data or zeros
+  // Return placeholder data for compatibility
   const trends: UsageTrend[] = [];
   for (let i = 0; i < days; i++) {
     const date = new Date(startDate);
@@ -219,7 +132,7 @@ export async function getUsageTrends(days: number): Promise<UsageTrend[]> {
 
     trends.push({
       date: dateStr,
-      minutesTranscribed: trendsByDate.get(dateStr) || 0,
+      minutesTranscribed: 0,
     });
   }
 
@@ -227,77 +140,19 @@ export async function getUsageTrends(days: number): Promise<UsageTrend[]> {
 }
 
 /**
- * Get system health indicators including queue status and error rates
+ * Get system health indicators
+ * Returns healthy status - will be updated for site-related health checks in future phases
  */
 export async function getSystemHealth(): Promise<SystemHealth> {
-  const now = new Date();
-  const lastHour = new Date(now.getTime() - 60 * 60 * 1000);
-  const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-  // Skip queue wait time calculation for performance (causes timeout)
-  const avgWaitMinutes = 0;
-  const queueStatus: "healthy" | "warning" | "critical" = "healthy";
-
-  // Calculate error rates for spike detection
-  const [lastHourStats, last24HourStats] = await Promise.all([
-    db
-      .select({
-        status: transcriptionJobs.status,
-        count: count(),
-      })
-      .from(transcriptionJobs)
-      .where(gte(transcriptionJobs.created_at, lastHour))
-      .groupBy(transcriptionJobs.status),
-
-    db
-      .select({
-        status: transcriptionJobs.status,
-        count: count(),
-      })
-      .from(transcriptionJobs)
-      .where(gte(transcriptionJobs.created_at, last24Hours))
-      .groupBy(transcriptionJobs.status),
-  ]);
-
-  const lastHourCounts = lastHourStats.reduce(
-    (acc, row) => {
-      acc[row.status] = row.count;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
-  const last24HourCounts = last24HourStats.reduce(
-    (acc, row) => {
-      acc[row.status] = row.count;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-
-  const lastHourCompleted = lastHourCounts.completed || 0;
-  const lastHourFailed = lastHourCounts.failed || 0;
-  const lastHourProcessing = lastHourCounts.processing || 0;
-  const lastHourTotal = lastHourCompleted + lastHourFailed + lastHourProcessing;
-  const lastHourErrorRate =
-    lastHourTotal > 0 ? lastHourFailed / lastHourTotal : 0;
-
-  const last24HourTotal =
-    (last24HourCounts.completed || 0) + (last24HourCounts.failed || 0);
-  const last24HourErrorRate =
-    last24HourTotal > 0 ? (last24HourCounts.failed || 0) / last24HourTotal : 0;
-
-  const errorSpike = lastHourErrorRate > last24HourErrorRate * 2;
-
   return {
-    queueStatus,
-    queueWaitTimeMinutes: Math.round(avgWaitMinutes * 10) / 10,
-    errorRate: Math.round(lastHourErrorRate * 1000) / 10, // Percentage with 1 decimal
-    errorSpike,
-    lastHourCompleted,
-    lastHourFailed,
-    lastHourProcessing,
-    lastHourTotal,
+    queueStatus: "healthy",
+    queueWaitTimeMinutes: 0,
+    errorRate: 0,
+    errorSpike: false,
+    lastHourCompleted: 0,
+    lastHourFailed: 0,
+    lastHourProcessing: 0,
+    lastHourTotal: 0,
   };
 }
 

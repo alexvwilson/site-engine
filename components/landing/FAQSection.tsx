@@ -9,34 +9,34 @@ import {
 const FAQSection = () => {
   const faqs = [
     {
-      question: "What file formats do you support?",
+      question: "How does AI theme generation work?",
       answer:
-        "We support all common audio and video formats including MP3, MP4, WAV, MOV, and M4A. Both audio-only and video files work perfectly - we automatically extract audio from video files during processing.",
+        "Simply describe your brand, target audience, and style preferences in plain language. Our AI analyzes your input and generates a complete theme including color palette, typography, and component styles that match your vision.",
     },
     {
-      question: "How accurate is the transcription?",
+      question: "Can I use my own domain?",
       answer:
-        "We use OpenAI's Whisper API, which provides industry-leading accuracy of 95%+ across multiple languages. The system automatically detects the language and adapts to different accents, audio quality, and speaking styles for optimal results.",
+        "Yes! You can connect your custom domain to any published site. We handle SSL certificates automatically, so your site is secure from day one.",
     },
     {
-      question: "Are my files secure and private?",
+      question: "Do I need coding experience?",
       answer:
-        "Absolutely. All files are encrypted in transit and at rest using enterprise-grade security (Supabase Storage). Your files are only accessible to you and are automatically deleted from our servers after processing if you choose. We never train AI models on your content.",
+        "Not at all. Site Engine is designed for content managers and creators who want full control without writing code. Everything is visual - drag sections, click to edit text, and see changes in real-time.",
     },
     {
-      question: "How long does transcription take?",
+      question: "What types of pages can I create?",
       answer:
-        "Processing time is typically 0.3x your file duration. For example, a 30-minute audio file takes approximately 9 minutes to transcribe. You can watch real-time progress updates while your file processes, and you'll be notified when it's ready.",
+        "You can create any type of page using our 9 block types: Hero, Text, Image, Gallery, Features, CTA, Testimonials, Contact, and Footer sections. Combine them in any order to build landing pages, about pages, portfolios, and more.",
     },
     {
-      question: "What export formats are available?",
+      question: "Can I preview before publishing?",
       answer:
-        "All users have access to TXT, SRT, VTT, JSON, and verbose JSON export formats. All exports maintain timestamp accuracy for subtitle creation and video editing workflows.",
+        "Absolutely. Our preview mode lets you see exactly how your page will look on desktop, tablet, and mobile devices before you publish. No surprises for your visitors.",
     },
     {
-      question: "What is the maximum file size?",
+      question: "Is my content secure?",
       answer:
-        "You can upload files up to 2GB in size. This allows for processing of long-form content like podcasts, interviews, and lectures without any limitations.",
+        "Yes. All content is stored securely with enterprise-grade encryption. Your sites and data are backed up regularly, and you maintain full ownership of everything you create.",
     },
   ];
 
@@ -51,7 +51,7 @@ const FAQSection = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400">
-            Everything you need to know about transcription.
+            Everything you need to know about building with Site Engine.
           </p>
         </div>
 

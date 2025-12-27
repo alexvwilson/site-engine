@@ -1,396 +1,368 @@
-## Strategic Database Planning Document
+# Strategic Database Planning Document
 
-### App Summary
+## App Summary
 
-**End Goal:** Help solo creators and podcasters convert their audio and video content into accurate, searchable transcripts using AI-powered transcription workflows built with Whisper, FFmpeg, and Trigger.dev
-
-**Template Used:** worker-simple (background job processing with Trigger.dev)
-
-**Core Workflows:**
-- Transcription workflow (audio/video → Whisper → multi-format exports)
-- AI summary generation workflow (transcript → Gemini classification → markdown summary)
-
-**Background Job Types:** File processing (audio/video transcription with FFmpeg + Whisper)
+**End Goal:** Full control over site's look, feel, and content with fast, easy updates using AI-powered theme generation and design assistance
+**Template Used:** worker-simple (requires significant modification - content management app, not transcription)
+**Core Workflows:** Theme Generation (Trigger.dev), Layout Suggestions (Trigger.dev)
+**Background Job Types:** AI content generation (themes, layout recommendations)
 
 ---
 
-## 🗄️ Current Database State
+## Current Database State
 
-### Existing Tables (Worker-Simple Template)
+### Existing Tables (Worker-Simple Template) - TO BE REMOVED
 
-The worker-simple template provides a complete transcription-focused schema:
+The worker-simple template came with transcription-focused tables that are **not relevant** to Site Engine:
 
-- **`users`** - User profiles (synced with Supabase auth), Stripe customer IDs, roles (member/admin)
-- **`transcription_jobs`** - Job tracking with Trigger.dev integration, file metadata, status, progress
-- **`transcripts`** - Completed transcripts in multiple formats (TXT, SRT, VTT, JSON, verbose_json)
-- **`ai_summaries`** - AI-generated markdown summaries with classification (meeting_notes, youtube_video, general)
-- **`usage_events`** - Event-based usage tracking for quota enforcement
-- **`transcript_conversations`** - Chat sessions tied to transcripts (Pro tier - Ask Scribo feature)
-- **`transcript_messages`** - User/assistant messages in transcript conversations
+- `transcription_jobs` - Audio/video job tracking (REMOVE)
+- `transcripts` - Transcription results in multiple formats (REMOVE)
+- `ai_summaries` - AI-generated transcript summaries (REMOVE)
+- `transcript_conversations` - Chat threads about transcripts (REMOVE)
+- `transcript_messages` - Individual chat messages (REMOVE)
+
+### Table to Keep
+
+- `users` - User profiles with roles (keep as-is, works for single-user MVP)
 
 ### Template Assessment
 
-**✅ 100% Fit:** Worker-simple template schema perfectly matches transcription workflow needs
-**🔧 Ready to Build:** All core workflows are already supported by existing tables
-**📈 Future-Proof:** Event-based usage tracking allows flexible quota patterns
+- **Fit Level:** 10% - Only `users` table is relevant
+- **Issues:** Template designed for file processing workflow, but Site Engine is a content management system
+- **Action Required:** Remove 5 tables, create 6 new tables
 
 ---
 
-## ⚡ Workflow-to-Schema Mapping
+## Workflow-to-Schema Mapping
 
-### Core Workflows (From Trigger.dev Documentation)
+### Workflow 1: Theme Generation (`trigger_workflow_theme_generation.md`)
 
-**Workflow: Transcription** (`trigger_workflow_transcription.md`)
-- **Purpose**: Audio/video file upload → FFmpeg extraction → Whisper transcription → Multi-format export
-- **Job Tracking**: Uses `transcription_jobs` with fields:
-  - `trigger_job_id` - Trigger.dev run ID (REQUIRED)
-  - `status` - Job status enum: pending, processing, completed, failed, cancelled (REQUIRED)
-  - `progress_percentage` - 0-100 tracking (REQUIRED)
-  - `file_name`, `original_file_url`, `file_size_bytes` - Input metadata
-  - `file_type` (audio/video), `file_extension` (mp3, mp4, wav, mov, m4a)
-  - `duration_seconds`, `language`, `detected_language` - Processing metadata
-  - `timestamp_granularity` (segment/word) - User-selected precision
-  - `error_message` - User-friendly error (nullable)
-- **Results Storage**: Uses `transcripts` with fields:
-  - `transcript_text_plain`, `transcript_srt`, `transcript_vtt` - Export formats
-  - `transcript_json`, `transcript_verbose_json` - Structured data
-  - `word_timestamps` (JSONB) - Word-level timing data (Creator/Pro tiers)
-  - `detected_language`, `duration_seconds` - Metadata
-- **Enhancements**: None (AI summaries are separate workflow)
-- **Current State**: ✅ Already implemented
+**Purpose:** Generate Tailwind CSS themes with shadcn/ui compatible styles using AI
 
-**Workflow: AI Summary Generation** (`trigger_workflow_ai_summaries.md`)
-- **Purpose**: On-demand AI summary generation with intelligent classification and real-time streaming
-- **Job Tracking**: No separate jobs table (on-demand trigger, completes quickly)
-- **Results Storage**: Uses `ai_summaries` with fields:
-  - `summary_type` - Classification: meeting_notes, youtube_video, general
-  - `summary_content` - Full markdown summary (classification-based format)
-  - `transcript_id` - Links to source transcript
-- **Enhancements**: None (this IS an enhancement to transcripts)
-- **Current State**: ✅ Already implemented
-- **Note**: Classification-based approach with full markdown is more flexible than fixed fields
+**Two Modes:**
+- **Quick Generate:** Single AI call, real-time progress (30s-2min)
+- **Guided Generate:** Multi-stage with human checkpoints (2-5min)
 
-### Universal Patterns Across All Workflows
-
-**Job Tracking Pattern** (applied to transcription workflow):
-- Every workflow needs a job tracking table
-- Must include Trigger.dev integration fields (`trigger_job_id`, `status`, `progress_percentage`)
-- Status enum values: `pending`, `processing`, `completed`, `failed`, `cancelled`
-
-**Results Storage Pattern** (transcripts table):
-- One-to-one relationship with job table (UNIQUE constraint on `job_id`)
-- Multiple format exports stored directly in table (pre-generated for instant downloads)
-- Format-specific output fields
-
-**Enhancement Pattern** (AI summaries):
-- One-to-one relationship with results table (UNIQUE constraint on `transcript_id`)
-- Tier-based feature gating (Pro users only)
-- Generated on-demand (user clicks button)
-
----
-
-## 📋 Feature-to-Schema Mapping
-
-### Phase 1: Core Transcription Features (MVP)
-
-**Feature: Upload & Track Transcription Jobs** (`/app/transcripts` upload area + active jobs)
-
-- **Uses:** `transcription_jobs` table
-- **Why:** Track file uploads through Trigger.dev pipeline (pending → processing → completed/failed)
-- **Key Fields:**
-  - Input: `file_name`, `original_file_url`, `file_size_bytes`, `file_type`, `file_extension`
-  - Processing: `status`, `progress_percentage`, `trigger_job_id`, `error_message`
-  - Metadata: `duration_seconds`, `language`, `detected_language`, `timestamp_granularity`
-  - Timestamps: `created_at`, `completed_at`
-- **Trigger.dev Integration:** `trigger_job_id` enables real-time progress via `useRealtimeRun()` hook
-
-**Feature: View & Download Transcripts** (`/app/transcripts/[id]` viewer)
-
-- **Uses:** `transcripts` table
-- **Why:** Store completed transcription content with all pre-generated export formats
-- **Key Fields:**
-  - Formats: `transcript_text_plain`, `transcript_srt`, `transcript_vtt`, `transcript_json`
-  - Pro formats: `transcript_verbose_json`, `word_timestamps` (JSONB)
-  - Metadata: `detected_language`, `duration_seconds`
-- **Decision:** Pre-generate all export formats during transcription for instant downloads
-
-**Feature: AI Summary Generation** (`/app/transcripts/[id]` AI summary panel - Pro tier)
-
-- **Uses:** `ai_summaries` table
-- **Why:** Store AI-generated summaries separately from transcripts (on-demand Trigger.dev task)
-- **Key Fields:**
-  - `summary_type` - Classification: meeting_notes, youtube_video, general
-  - `summary_content` - Full markdown summary (classification determines structure)
-  - `transcript_id` - One-to-one with transcripts (UNIQUE constraint)
-- **Flow:** User clicks "Generate Summary" → AI classifies transcript type → Streams summary → Saves to DB
-- **Note:** Classification-based approach with streaming UX (see `trigger_workflow_ai_summaries.md`)
-
-**Feature: Quota Enforcement** (Profile usage stats + upload blocking)
-
-- **Uses:** `usage_events` table (event-based tracking)
-- **Why:** Track individual usage events, query on-demand for monthly aggregates
-- **Event Types:**
-  - `upload` - File upload initiated
-  - `transcription_completed` - Transcription finished
-  - `ai_summary_generated` - Summary created
-  - `storage_added` / `storage_removed` - Storage changes
-- **Key Fields:**
-  - `user_id`, `event_type`, `metadata` (JSONB), `created_at`
-- **Quota Calculation:**
-  ```sql
-  -- Get monthly uploads
-  SELECT COUNT(*) FROM usage_events
-  WHERE user_id = X
-    AND event_type = 'upload'
-    AND created_at >= '2025-01-01'
-    AND created_at < '2025-02-01'
-
-  -- Get minutes transcribed this month
-  SELECT SUM((metadata->>'duration')::int) FROM usage_events
-  WHERE user_id = X
-    AND event_type = 'transcription_completed'
-    AND created_at >= first_day_of_month
-  ```
-- **Enforcement:** Free (3 uploads), Creator (50 uploads), Pro (unlimited)
-- **Advantage:** Event-based pattern is more flexible than aggregate tables - can retroactively add new metrics
-
-**Feature: Subscription Management** (Stripe integration, tier checking)
-
-- **Uses:** `users.stripe_customer_id` field only
-- **Why:** Stripe is single source of truth - always query Stripe API for current tier/status
-- **Decision:** No local subscription_tier caching to avoid sync issues
-
-**Feature: Admin System Monitoring** (`/admin/dashboard` single page)
-
-- **Uses:** Aggregate queries across `transcription_jobs`, `usage_events`, `users`
-- **Why:** No separate admin tables needed - admin focuses on system-wide metrics
-- **Key Metrics:**
-  - Total users, jobs today, minutes this month
-  - Success/failure rates (24h, last hour)
-  - Job statistics chart (30 days)
-  - Usage trends chart (30 days)
-
-### Phase 2: Advanced Features (Post-MVP)
-
-**Feature: Ask Scribo - Chat with Transcript** (`/app/transcripts/[id]` Ask Scribo tab - Pro tier)
-
-- **Uses:** `transcript_conversations` + `transcript_messages` tables
-- **Why:** Enable users to ask questions about transcript content using AI chat
-- **Tables:**
-  - `transcript_conversations`: Chat session metadata (title, transcript_id, timestamps)
-  - `transcript_messages`: Individual messages (sender: user/assistant, content, status)
-- **Flow:** User opens Ask Scribo tab → Creates conversation → Sends messages → AI responds with context from transcript
-- **Note:** This is NOT a background job workflow - it's a synchronous API route with streaming responses
-
----
-
-## 📋 Database Schema Implementation
-
-### Phase 1 (MVP - Essential Tables)
-
-**1. `users` table** (Already exists)
+**Job Tracking Table:** `theme_generation_jobs`
 ```typescript
-id (uuid, PK) - References Supabase auth.users.id
-email (text, unique) - Synced from Supabase auth
-full_name (text, nullable)
-stripe_customer_id (text, nullable) - Links to Stripe customer
-role (enum: member, admin) - Role-based access control
-created_at, updated_at (timestamps)
+{
+  id: uuid (PK)
+  site_id: uuid (FK → sites.id, cascade delete)
+  user_id: uuid (FK → users.id, cascade delete)
 
-Indexes:
-- role (for admin queries)
+  // Generation mode
+  mode: enum ("quick", "guided")
+
+  // Job status and progress
+  status: enum (pending, generating_colors, awaiting_color_approval,
+                generating_typography, awaiting_typography_approval,
+                generating_components, awaiting_styles_approval,
+                finalizing, completed, failed)
+  progress_percentage: integer (0-100)
+  error_message: text (nullable)
+
+  // Trigger.dev integration
+  trigger_job_id: text (Trigger.dev run ID)
+
+  // Input requirements
+  requirements: jsonb {
+    brandName: string
+    industry: string
+    styleKeywords: string[]
+    colorPreferences?: { preferredColors?, avoidColors? }
+    targetAudience?: string
+    additionalNotes?: string
+  }
+
+  // Stage data (Guided mode - populated as stages complete)
+  color_data: jsonb (nullable) - ColorPalette from Stage 1
+  typography_data: jsonb (nullable) - TypographySettings from Stage 2
+  component_data: jsonb (nullable) - ComponentStyles from Stage 3
+  final_theme_data: jsonb (nullable) - Complete ThemeData
+
+  // AI provider tracking
+  ai_provider: text ("openai", "anthropic", "google")
+  ai_model: text (e.g., "gpt-4.1", "claude-3-opus")
+
+  // Timestamps
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+// Indexes
+- site_id (for site's job history)
+- user_id (for user's job list)
+- status (for active job queries)
 ```
 
-**2. `transcription_jobs` table** (Core workflow tracking)
+**Results Table:** `themes`
 ```typescript
-id (uuid, PK)
-user_id (uuid, FK → users.id, cascade delete)
+{
+  id: uuid (PK)
+  site_id: uuid (FK → sites.id, cascade delete)
+  user_id: uuid (FK → users.id, cascade delete)
+  generation_job_id: uuid (FK → theme_generation_jobs.id, nullable, set null on delete)
 
-// File information
-file_name (text)
-original_file_url (text) - Supabase Storage path
-file_size_bytes (bigint)
-file_type (enum: audio, video)
-file_extension (text) - mp3, mp4, wav, mov, m4a
+  // Theme identification
+  name: text (user-editable, e.g., "Modern Blue", "Generated Theme 1")
+  is_active: boolean (only one active per site)
 
-// Job status and progress
-status (enum: pending, processing, completed, failed, cancelled)
-progress_percentage (integer, 0-100)
-error_message (text, nullable)
+  // Theme data
+  data: jsonb {
+    colors: ColorPalette
+    typography: TypographySettings
+    components: ComponentStyles
+    tailwindExtends: Record<string, unknown>
+    cssVariables: string
+    generatedAt: string
+    aiProvider?: string
+    aiModel?: string
+  }
 
-// Audio/transcription metadata
-duration_seconds (integer, nullable) - Set after FFmpeg extraction
-language (text, nullable) - User-selected or 'auto'
-detected_language (text, nullable) - Whisper detection result
-timestamp_granularity (enum: segment, word)
+  // Timestamps
+  created_at: timestamp
+  updated_at: timestamp
+}
 
-// Trigger.dev integration (CRITICAL)
-trigger_job_id (text, nullable) - Trigger.dev run ID
+// Constraints
+- Only one theme with is_active=true per site_id (enforced in application logic)
 
-// Timestamps
-created_at (timestamp)
-completed_at (timestamp, nullable)
-
-Indexes:
-- user_id (for user's job list queries)
-- status (for polling active jobs)
-- created_at (for sorting/pagination)
-```
-
-**3. `transcripts` table** (Results storage)
-```typescript
-id (uuid, PK)
-job_id (uuid, FK → transcription_jobs.id, cascade delete, UNIQUE)
-user_id (uuid, FK → users.id, cascade delete)
-
-// Transcript formats (pre-generated)
-transcript_text_plain (text) - Plain text format
-transcript_srt (text) - SRT subtitle format
-transcript_vtt (text) - WebVTT format
-transcript_json (jsonb) - JSON format with segments
-transcript_verbose_json (jsonb, nullable) - Verbose JSON (Pro tier only)
-word_timestamps (jsonb, nullable) - Word-level timestamps (Creator/Pro)
-
-// Metadata
-detected_language (text)
-duration_seconds (integer)
-
-// Timestamp
-created_at (timestamp)
-
-Constraints:
-- UNIQUE on job_id (one transcript per job)
-
-Indexes:
-- user_id (for user's transcript queries)
-- created_at (for sorting)
-```
-
-**4. `ai_summaries` table** (Enhancement - Pro tier)
-```typescript
-id (uuid, PK)
-transcript_id (uuid, FK → transcripts.id, cascade delete, UNIQUE)
-user_id (uuid, FK → users.id, cascade delete)
-
-// Summary classification and content
-summary_type (enum: meeting_notes, youtube_video, general)
-summary_content (text) - Full markdown summary
-
-// Timestamp
-created_at (timestamp)
-
-Constraints:
-- UNIQUE on transcript_id (one summary per transcript)
-
-Indexes:
-- user_id (for user's summaries)
-- summary_type (for analytics)
-```
-
-**5. `usage_events` table** (Event-based quota tracking)
-```typescript
-id (uuid, PK)
-user_id (uuid, FK → users.id, cascade delete)
-event_type (text) - 'upload', 'transcription_completed', 'ai_summary_generated', etc.
-metadata (jsonb, nullable) - Event-specific data (file_size, duration, job_id, etc.)
-created_at (timestamp)
-
-Indexes:
-- (user_id, event_type, created_at) - Composite index for time-window queries
-- created_at (for general time-based queries)
-- user_id (for user-specific queries)
-
-Event Types:
-- 'upload' - File upload initiated (metadata: {fileSize, fileName, mimeType})
-- 'transcription_completed' - Transcription finished (metadata: {duration, jobId})
-- 'ai_summary_generated' - Summary created (metadata: {transcriptId, summaryType})
-- 'storage_added' - Storage consumed (metadata: {bytes, jobId})
-- 'storage_removed' - Storage freed (metadata: {bytes, jobId})
-```
-
-### Phase 2 (Post-MVP - Advanced Features)
-
-**6. `transcript_conversations` table** (Ask Scribo - Pro tier)
-```typescript
-id (uuid, PK)
-transcript_id (uuid, FK → transcripts.id, cascade delete)
-user_id (uuid, FK → users.id, cascade delete)
-title (text, nullable) - Auto-generated or user-set
-created_at, updated_at (timestamps)
-
-Indexes:
-- transcript_id (for conversation lookup)
-- user_id (for user's conversations)
-```
-
-**7. `transcript_messages` table** (Ask Scribo - Pro tier)
-```typescript
-id (uuid, PK)
-transcript_conversation_id (uuid, FK → transcript_conversations.id, cascade delete)
-sender (enum: user, assistant)
-content (text)
-status (enum: success, error) - Message status
-created_at (timestamp)
-
-Indexes:
-- transcript_conversation_id (for message list)
-- status (for error tracking)
+// Indexes
+- site_id (for site's themes list)
+- user_id (for user queries)
+- is_active (for finding active theme quickly)
 ```
 
 ---
 
-## 🎯 Strategic Advantage
+### Workflow 2: Layout Suggestions (`trigger_workflow_layout_suggestion.md`)
 
-### Why This Schema Design Works
+**Purpose:** AI recommends page section structure based on description
+**Duration:** 10-30s (quick operation)
+**Decision:** Use Trigger.dev task for job history tracking
 
-**1. Trigger.dev Integration Pattern**
-- ✅ `trigger_job_id` in jobs table enables real-time progress tracking
-- ✅ `status` enum matches Trigger.dev job lifecycle
-- ✅ `progress_percentage` synced with `metadata.set("progress", X)` in tasks
-- ✅ Frontend uses `useRealtimeRun(trigger_job_id)` for live updates
+**Job Tracking Table:** `layout_suggestion_jobs`
+```typescript
+{
+  id: uuid (PK)
+  page_id: uuid (FK → pages.id, cascade delete)
+  user_id: uuid (FK → users.id, cascade delete)
 
-**2. Event-Based Usage Tracking**
-- ✅ More flexible than aggregate tables (usage_tracking with monthly columns)
-- ✅ Query on-demand for any time window: `WHERE created_at >= X AND created_at < Y`
-- ✅ Can retroactively add new metrics without schema changes
-- ✅ Metadata JSONB allows event-specific data without new columns
-- ✅ Natural audit log for debugging quota issues
+  // Job status
+  status: enum (pending, processing, completed, failed)
+  progress_percentage: integer (0-100)
+  error_message: text (nullable)
 
-**3. Classification-Based AI Summaries**
-- ✅ `summary_type` enum allows different markdown formats per classification
-- ✅ `summary_content` as full markdown is more flexible than fixed fields (key_highlights, topics, show_notes)
-- ✅ Aligns with streaming workflow design (see `trigger_workflow_ai_summaries.md`)
-- ✅ Enables future classification types without schema changes
+  // Trigger.dev integration
+  trigger_job_id: text (Trigger.dev run ID)
 
-**4. Separation of Concerns**
-- ✅ `transcription_jobs` tracks Trigger.dev pipeline status (pending → processing → completed)
-- ✅ `transcripts` stores completed output with all export formats pre-generated
-- ✅ `ai_summaries` runs as separate on-demand job (user can view transcript while summary generates)
-- ✅ `usage_events` tracks quota consumption without hitting Stripe API
+  // Input
+  description: text (user's description of page purpose)
 
-**5. Stripe Integration Strategy**
-- ✅ No local subscription tier caching avoids webhook sync complexity
-- ✅ Query Stripe API directly for tier checks (acceptable latency for tier-gated features)
-- ✅ Stripe webhooks only needed for critical events (payment success/failure)
-- ✅ Single source of truth for subscription status
+  // Output
+  suggestions: jsonb (nullable) - Array of suggested sections
+  /*
+  [
+    {
+      blockType: "hero" | "text" | "features" | etc.
+      title: string
+      description: string
+      defaultContent: object (block-type-specific defaults)
+    }
+  ]
+  */
 
-**6. Performance Optimizations**
-- ✅ Pre-generate all export formats during transcription (faster downloads)
-- ✅ JSONB for word_timestamps allows flexible querying without separate table
-- ✅ JSONB for usage_events.metadata keeps event data together
-- ✅ Composite index on (user_id, event_type, created_at) makes quota checks instant
+  // Timestamps
+  created_at: timestamp
+  completed_at: timestamp (nullable)
+}
+
+// Indexes
+- page_id (for page's suggestion history)
+- user_id (for user queries)
+- status (for active job queries)
+```
+
+**Note:** No separate results table needed - suggestions stored directly in job record since they're ephemeral (user applies them to page or dismisses).
 
 ---
 
-## 🔧 Trigger.dev Integration Requirements
+## Content Management Tables (Core Application)
+
+### `sites` - Top-Level Container
+
+```typescript
+{
+  id: uuid (PK)
+  user_id: uuid (FK → users.id, cascade delete)
+
+  // Site identification
+  name: text (required)
+  description: text (nullable)
+  slug: text (unique, for URL: mysite.siteengine.app/sites/[slug])
+
+  // Publishing
+  status: enum ("draft", "published")
+  custom_domain: text (nullable, for Vercel domain setup)
+
+  // Timestamps
+  created_at: timestamp
+  updated_at: timestamp
+  published_at: timestamp (nullable, set when first published)
+}
+
+// Constraints
+- UNIQUE on slug
+
+// Indexes
+- user_id (for user's sites list)
+- slug (for domain-based routing lookups)
+- status (for filtering published sites)
+```
+
+---
+
+### `pages` - Pages Within Sites
+
+```typescript
+{
+  id: uuid (PK)
+  site_id: uuid (FK → sites.id, cascade delete)
+  user_id: uuid (FK → users.id, cascade delete)
+
+  // Page identification
+  title: text (required)
+  slug: text (required, unique within site)
+
+  // Publishing
+  status: enum ("draft", "published")
+
+  // Metadata
+  meta_title: text (nullable, for SEO)
+  meta_description: text (nullable, for SEO)
+
+  // Timestamps
+  created_at: timestamp
+  updated_at: timestamp
+  published_at: timestamp (nullable)
+}
+
+// Constraints
+- UNIQUE on (site_id, slug) - slug unique within each site
+
+// Indexes
+- site_id (for site's pages list)
+- user_id (for user queries)
+- (site_id, slug) (for page routing lookups)
+```
+
+---
+
+### `sections` - Content Blocks Within Pages
+
+```typescript
+{
+  id: uuid (PK)
+  page_id: uuid (FK → pages.id, cascade delete)
+  user_id: uuid (FK → users.id, cascade delete)
+
+  // Section type (block type)
+  block_type: enum ("hero", "text", "image", "gallery", "features",
+                    "cta", "testimonials", "contact", "footer")
+
+  // Content (flexible JSONB based on block_type)
+  content: jsonb (required)
+  /*
+  Examples by block_type:
+
+  hero: {
+    heading: string
+    subheading: string
+    ctaText: string
+    ctaUrl: string
+    backgroundImageUrl: string (nullable)
+  }
+
+  text: {
+    content: string (rich text / markdown)
+  }
+
+  image: {
+    imageUrl: string
+    caption: string (nullable)
+    alt: string
+  }
+
+  features: {
+    heading: string
+    items: [
+      { icon: string, title: string, description: string }
+    ]
+  }
+
+  testimonials: {
+    items: [
+      { quote: string, author: string, role: string (nullable) }
+    ]
+  }
+  */
+
+  // Ordering
+  position: integer (for drag-and-drop ordering, 0-indexed)
+
+  // Timestamps
+  created_at: timestamp
+  updated_at: timestamp
+}
+
+// Indexes
+- page_id (for page's sections list)
+- user_id (for user queries)
+- (page_id, position) (for ordered section retrieval)
+```
+
+---
+
+## Complete Schema Overview
+
+### Users & Auth
+- `users` - Core user data with roles (KEEP from template)
+
+### Content Management (NEW)
+- `sites` - Top-level site containers
+- `pages` - Pages within sites
+- `sections` - Content blocks within pages (JSONB for flexibility)
+
+### Theme Generation Workflow (NEW)
+- `theme_generation_jobs` - Job tracking with Trigger.dev integration
+- `themes` - Saved theme versions with activation
+
+### Layout Suggestion Workflow (NEW)
+- `layout_suggestion_jobs` - Quick job tracking with suggestions stored inline
+
+### Tables to Remove
+- `transcription_jobs` (not needed)
+- `transcripts` (not needed)
+- `ai_summaries` (not needed)
+- `transcript_conversations` (not needed)
+- `transcript_messages` (not needed)
+
+**Total Tables After Migration:** 7
+- Keep: 1 (`users`)
+- New: 6 (`sites`, `pages`, `sections`, `themes`, `theme_generation_jobs`, `layout_suggestion_jobs`)
+- Remove: 5 (all transcription-related)
+
+---
+
+## Trigger.dev Integration Requirements
 
 ### Required Fields (Every Job Table)
 
 ```typescript
-// These fields MUST exist in every [workflow]_jobs table
+// These fields MUST exist in theme_generation_jobs and layout_suggestion_jobs
 {
   trigger_job_id: text        // Trigger.dev run ID for useRealtimeRun()
-  status: enum               // pending | processing | completed | failed | cancelled
+  status: enum               // Job lifecycle status
   progress_percentage: int   // 0-100, synced with metadata.set("progress")
   error_message: text        // User-friendly error message (nullable)
 }
@@ -399,10 +371,14 @@ Indexes:
 ### Frontend Integration Pattern
 
 ```typescript
-// How to use these fields in your UI
+// How to use these fields in your UI (Theme Generation)
 const { run } = useRealtimeRun(job.trigger_job_id, { accessToken });
 const progress = run?.metadata?.progress ?? job.progress_percentage;
+const currentStep = run?.metadata?.currentStep;
 const status = job.status;
+
+// For Guided mode - poll for stage changes
+const isAwaitingApproval = job.status.includes("awaiting");
 ```
 
 ### Database Update Pattern
@@ -416,218 +392,204 @@ await updateJobStatus(jobId, "completed");    // Updates status enum
 
 ---
 
-## 📊 Usage Tracking Pattern
+## Block Type Content Schemas
 
-### Event-Based Quota Enforcement
-
-**Why Event-Based > Aggregate Tables:**
-
-❌ **Aggregate approach (discouraged):**
+### Hero Block
 ```typescript
-usage_tracking {
-  user_id, month, uploads_count, minutes_transcribed, storage_bytes
-  // Problems:
-  // - Need to UPDATE every event (race conditions, locks)
-  // - Hard to add new metrics without schema changes
-  // - Can't query arbitrary time windows
-  // - No audit trail
+interface HeroContent {
+  heading: string;
+  subheading?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  backgroundImageUrl?: string;
 }
 ```
 
-✅ **Event-based approach (recommended):**
+### Text Block
 ```typescript
-usage_events {
-  user_id, event_type, metadata, created_at
-  // Benefits:
-  // - INSERT only (no race conditions)
-  // - Add new event types without schema changes
-  // - Query any time window on-demand
-  // - Natural audit log
-  // - Metadata JSONB allows flexible event data
+interface TextContent {
+  content: string; // Rich text or markdown
 }
 ```
 
-### Query Patterns
-
-```sql
--- Get monthly uploads (Free: 3, Creator: 50, Pro: unlimited)
-SELECT COUNT(*) FROM usage_events
-WHERE user_id = $1
-  AND event_type = 'upload'
-  AND created_at >= date_trunc('month', CURRENT_DATE)
-  AND created_at < date_trunc('month', CURRENT_DATE) + interval '1 month';
-
--- Get minutes transcribed this month
-SELECT COALESCE(SUM((metadata->>'duration')::int), 0) / 60 AS minutes
-FROM usage_events
-WHERE user_id = $1
-  AND event_type = 'transcription_completed'
-  AND created_at >= date_trunc('month', CURRENT_DATE);
-
--- Get storage used (current balance)
-SELECT
-  COALESCE(SUM(CASE WHEN event_type = 'storage_added'
-    THEN (metadata->>'bytes')::bigint
-    ELSE 0 END), 0) -
-  COALESCE(SUM(CASE WHEN event_type = 'storage_removed'
-    THEN (metadata->>'bytes')::bigint
-    ELSE 0 END), 0) AS storage_bytes
-FROM usage_events
-WHERE user_id = $1;
-```
-
-### Event Metadata Examples
-
+### Image Block
 ```typescript
-// Upload event
-{
-  event_type: 'upload',
-  metadata: {
-    fileSize: 15728640,
-    fileName: 'episode_42.mp3',
-    mimeType: 'audio/mpeg',
-    jobId: 'uuid'
-  }
-}
-
-// Transcription completed event
-{
-  event_type: 'transcription_completed',
-  metadata: {
-    duration: 3600, // seconds
-    jobId: 'uuid',
-    fileSize: 15728640
-  }
-}
-
-// AI summary generated event
-{
-  event_type: 'ai_summary_generated',
-  metadata: {
-    transcriptId: 'uuid',
-    summaryType: 'meeting_notes'
-  }
+interface ImageContent {
+  imageUrl: string;
+  caption?: string;
+  alt: string;
 }
 ```
 
-### Tier-Based Restrictions
+### Gallery Block
+```typescript
+interface GalleryContent {
+  images: Array<{
+    imageUrl: string;
+    caption?: string;
+    alt: string;
+  }>;
+}
+```
 
-**Free Tier:**
-- 3 uploads per month (check `event_type = 'upload'` count)
-- 15 min max per file (validate before upload)
-- Segment-level timestamps only
-- TXT, SRT exports only
+### Features Block
+```typescript
+interface FeaturesContent {
+  heading?: string;
+  items: Array<{
+    icon: string;
+    title: string;
+    description: string;
+  }>;
+}
+```
 
-**Creator Tier ($19/mo):**
-- 50 uploads per month
-- 60 min max per file
-- Word-level timestamps
-- TXT, SRT, VTT, JSON exports
-- AI summaries (basic)
+### CTA Block
+```typescript
+interface CTAContent {
+  heading: string;
+  description?: string;
+  buttonText: string;
+  buttonUrl: string;
+}
+```
 
-**Pro Tier ($49/mo):**
-- Unlimited uploads
-- 120 min max per file
-- Word-level timestamps
-- All export formats (+ verbose_json)
-- AI summaries (full)
-- Ask Scribo chat feature
+### Testimonials Block
+```typescript
+interface TestimonialsContent {
+  items: Array<{
+    quote: string;
+    author: string;
+    role?: string;
+    avatarUrl?: string;
+  }>;
+}
+```
+
+### Contact Block
+```typescript
+interface ContactContent {
+  heading?: string;
+  fields: Array<{
+    type: "text" | "email" | "textarea";
+    label: string;
+    required: boolean;
+  }>;
+  submitButtonText: string;
+}
+```
+
+### Footer Block
+```typescript
+interface FooterContent {
+  copyrightText: string;
+  links: Array<{
+    label: string;
+    url: string;
+  }>;
+}
+```
 
 ---
 
-## 🗺️ Complete Schema Overview
+## Implementation Priority
 
-### Users & Auth
-- `users` - Core user data + `stripe_customer_id` only
+### Phase 1: Foundation (Core Content Management)
 
-### Transcription Workflow
-- `transcription_jobs` - Job tracking with Trigger.dev integration
-- `transcripts` - Completed transcripts (multi-format exports)
+**Migration 1:** Remove transcription tables
+- Drop `transcript_messages`
+- Drop `transcript_conversations`
+- Drop `ai_summaries`
+- Drop `transcripts`
+- Drop `transcription_jobs`
+- Drop related enums
 
-### AI Enhancements
-- `ai_summaries` - Classification-based markdown summaries (Pro tier)
-- `transcript_conversations` - Chat sessions tied to transcripts (Pro tier - Ask Scribo)
-- `transcript_messages` - User/assistant messages (Pro tier - Ask Scribo)
+**Migration 2:** Create content management tables
+- Create `sites` table with enums
+- Create `pages` table
+- Create `sections` table with block_type enum
 
-### Usage & Billing
-- `usage_events` - Event-based usage tracking (flexible quota enforcement)
+### Phase 2: Theme System
 
-**Total Tables:** 7
-**Background Job Tables:** 1 (`transcription_jobs`)
-**Results Tables:** 1 (`transcripts`)
-**Enhancement Tables:** 3 (`ai_summaries`, `transcript_conversations`, `transcript_messages`)
-**Usage Tables:** 1 (`usage_events`)
+**Migration 3:** Create theme tables
+- Create `theme_generation_jobs` table with status enum
+- Create `themes` table
 
----
+### Phase 3: Layout Suggestions
 
-## 💡 Key Architecture Decisions
-
-### 1. Event-Based vs Aggregate Usage Tracking
-
-**Decision:** Use event-based tracking (`usage_events` table)
-
-**Reasoning:**
-- More flexible - query any time window on-demand
-- No UPDATE race conditions (INSERT only)
-- Natural audit log for debugging
-- Can add new metrics without schema changes
-- Metadata JSONB allows event-specific data
-
-**Trade-off:** Quota checks require aggregation query vs simple column read
-**Mitigation:** Composite index makes queries fast, acceptable for tier-gated features
-
-### 2. Classification-Based vs Fixed-Field Summaries
-
-**Decision:** Use classification-based approach (`summary_type` + `summary_content`)
-
-**Reasoning:**
-- AI classifies transcript type (meeting, video, general) → applies type-specific prompt
-- Full markdown content is more flexible than fixed fields
-- Aligns with streaming workflow design
-- Enables future classification types without schema changes
-
-**Trade-off:** No structured fields for direct querying (key_highlights, topics)
-**Mitigation:** Can extract structured data from markdown if needed later
-
-### 3. Pre-Generated vs On-Demand Export Formats
-
-**Decision:** Pre-generate all formats during transcription
-
-**Reasoning:**
-- Instant downloads - no waiting for format conversion
-- Simpler architecture - no separate export job queue
-- Storage cost is low compared to compute cost
-
-**Trade-off:** Larger database size (storing 5 formats per transcript)
-**Mitigation:** JSONB fields are efficient, Pro-only formats reduce free tier storage
-
-### 4. Ask Scribo as Post-MVP Feature
-
-**Decision:** Separate tables for chat functionality
-
-**Reasoning:**
-- Not a background job workflow (synchronous API route)
-- Pro tier only - not critical for MVP
-- Conversation history enables multi-turn context
-- Can add later without affecting core transcription workflow
-
-**Trade-off:** Additional complexity for Pro features
-**Mitigation:** Feature toggle based on tier check, separate from main workflow
+**Migration 4:** Create layout suggestion table
+- Create `layout_suggestion_jobs` table
 
 ---
 
-## 🚀 Next Steps
+## Strategic Advantage
 
-**Development Approach:** Schema is complete and ready for implementation. All tables follow Trigger.dev integration patterns and event-based tracking principles.
+Your worker-simple template provides the **Trigger.dev infrastructure** you need, even though the data model is completely different. Key advantages preserved:
 
-**Critical Reminder:**
-- Store ONLY `stripe_customer_id` in users table
-- Query Stripe API for subscription status (never cache tier locally)
-- Track usage in `usage_events` table with event-based pattern
-- Include Trigger.dev integration fields in all job tracking tables
+- Trigger.dev configuration (`trigger.config.ts`)
+- Real-time progress tracking pattern (`useRealtimeRun`)
+- Job status management patterns
+- Supabase Storage integration (for images)
 
-**Implementation Order:**
-1. Core workflow: `transcription_jobs` → `transcripts` (MVP)
-2. Usage tracking: `usage_events` (quota enforcement)
-3. Enhancements: `ai_summaries` (Pro tier)
-4. Advanced features: `transcript_conversations` + `transcript_messages` (Post-MVP)
+**Gaps Addressed:**
+- Content hierarchy (Sites → Pages → Sections) now properly modeled
+- Theme versioning supports save/switch/delete workflow
+- JSONB sections enable flexible block types without schema changes
+- Layout suggestions tracked for history/debugging
+
+---
+
+## Migration Checklist
+
+### Before You Start
+- [ ] Backup current database (even if empty)
+- [ ] Review existing migrations in `drizzle/migrations/`
+
+### Database Migrations
+- [ ] Create migration to drop transcription tables
+- [ ] Create down migration for rollback capability
+- [ ] Create migration for `sites` table
+- [ ] Create migration for `pages` table
+- [ ] Create migration for `sections` table with block_type enum
+- [ ] Create migration for `theme_generation_jobs` table
+- [ ] Create migration for `themes` table
+- [ ] Create migration for `layout_suggestion_jobs` table
+- [ ] Run `npm run db:migrate` locally
+- [ ] Test rollback with `npm run db:rollback`
+
+### Schema Files
+- [ ] Create `lib/drizzle/schema/sites.ts`
+- [ ] Create `lib/drizzle/schema/pages.ts`
+- [ ] Create `lib/drizzle/schema/sections.ts`
+- [ ] Create `lib/drizzle/schema/themes.ts`
+- [ ] Create `lib/drizzle/schema/theme-generation-jobs.ts`
+- [ ] Create `lib/drizzle/schema/layout-suggestion-jobs.ts`
+- [ ] Update `lib/drizzle/schema/index.ts` exports
+- [ ] Remove transcription schema files
+
+### Cleanup
+- [ ] Remove `lib/drizzle/schema/transcription-jobs.ts`
+- [ ] Remove `lib/drizzle/schema/transcripts.ts`
+- [ ] Remove `lib/drizzle/schema/ai-summaries.ts`
+- [ ] Remove `lib/drizzle/schema/transcript-conversations.ts`
+- [ ] Remove `lib/drizzle/schema/transcript-messages.ts`
+- [ ] Remove transcription task files from `trigger/tasks/`
+- [ ] Update `trigger/index.ts` to remove transcription task exports
+
+---
+
+## Next Steps
+
+1. **Create database migrations** - Start with dropping transcription tables, then add new tables
+2. **Create schema files** - Define Drizzle schemas for new tables
+3. **Implement Theme Generation workflow** - Tasks, server actions, UI
+4. **Implement Layout Suggestion workflow** - Task, server action, UI
+5. **Build content management features** - Sites, pages, sections CRUD
+
+> **Development Approach:** Build incrementally - get Sites/Pages/Sections working first, then add Theme Generation, then Layout Suggestions. Each feature builds on the foundation.
+
+---
+
+**Last Updated:** December 2025
+**Current State:** Strategic Planning Complete - Ready for Migration
+**Total Tables (Target):** 7
