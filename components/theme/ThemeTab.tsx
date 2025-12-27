@@ -10,8 +10,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Sparkles, Eye } from "lucide-react";
+import { Sparkles, Eye, Pencil } from "lucide-react";
 import { ThemePreview } from "./ThemePreview";
+import { ThemeEditor } from "./ThemeEditor";
 import { SavedThemesList } from "./SavedThemesList";
 import { ThemeGeneratorModal } from "./ThemeGeneratorModal";
 import type { Theme } from "@/lib/drizzle/schema/themes";
@@ -27,10 +28,27 @@ export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
   const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [editingTheme, setEditingTheme] = useState<Theme | null>(null);
 
-  const handleThemeSelect = (theme: Theme) => {
+  const handleThemeSelect = (theme: Theme): void => {
+    setEditingTheme(null);
     setSelectedTheme(theme);
     setIsPreviewOpen(true);
+  };
+
+  const handleThemeEdit = (theme: Theme): void => {
+    setSelectedTheme(theme);
+    setEditingTheme(theme);
+    setIsPreviewOpen(true);
+  };
+
+  const handleEditSave = (): void => {
+    setEditingTheme(null);
+    setIsPreviewOpen(false);
+  };
+
+  const handleEditCancel = (): void => {
+    setEditingTheme(null);
   };
 
   return (
@@ -58,14 +76,24 @@ export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
                       : "Manually Created"}
                   </p>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleThemeSelect(activeTheme)}
-                >
-                  <Eye className="h-4 w-4 mr-2" />
-                  Preview
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleThemeEdit(activeTheme)}
+                  >
+                    <Pencil className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleThemeSelect(activeTheme)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    Preview
+                  </Button>
+                </div>
               </div>
 
               {/* Quick Color Preview */}
@@ -118,7 +146,11 @@ export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
         <h3 className="font-medium mb-3">
           Saved Themes ({themes.length})
         </h3>
-        <SavedThemesList themes={themes} onThemeSelect={handleThemeSelect} />
+        <SavedThemesList
+          themes={themes}
+          onThemeSelect={handleThemeSelect}
+          onEdit={handleThemeEdit}
+        />
       </div>
 
       {/* Theme Generator Modal */}
@@ -132,21 +164,42 @@ export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
         }}
       />
 
-      {/* Theme Preview Sheet */}
-      <Sheet open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <SheetContent className="sm:max-w-xl overflow-y-auto">
+      {/* Theme Preview/Edit Sheet */}
+      <Sheet
+        open={isPreviewOpen}
+        onOpenChange={(open) => {
+          setIsPreviewOpen(open);
+          if (!open) {
+            setEditingTheme(null);
+          }
+        }}
+      >
+        <SheetContent className="sm:max-w-xl flex flex-col h-full">
           <SheetHeader>
-            <SheetTitle>{selectedTheme?.name}</SheetTitle>
+            <SheetTitle>
+              {editingTheme ? `Edit: ${selectedTheme?.name}` : selectedTheme?.name}
+            </SheetTitle>
             <SheetDescription>
-              {selectedTheme?.generation_job_id
-                ? "AI Generated Theme"
-                : "Custom Theme"}
+              {editingTheme
+                ? "Customize colors, fonts, and component styles"
+                : selectedTheme?.generation_job_id
+                  ? "AI Generated Theme"
+                  : "Custom Theme"}
             </SheetDescription>
           </SheetHeader>
-          <div className="mt-6">
-            {selectedTheme && (
-              <ThemePreview theme={selectedTheme.data} showRationale />
-            )}
+          <div className="mt-6 flex-1 overflow-hidden">
+            {editingTheme ? (
+              <ThemeEditor
+                themeId={editingTheme.id}
+                initialData={editingTheme.data}
+                onSave={handleEditSave}
+                onCancel={handleEditCancel}
+              />
+            ) : selectedTheme ? (
+              <div className="overflow-y-auto h-full pr-2">
+                <ThemePreview theme={selectedTheme.data} showRationale />
+              </div>
+            ) : null}
           </div>
         </SheetContent>
       </Sheet>

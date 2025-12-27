@@ -77,27 +77,47 @@ export function SectionCard({ section }: SectionCardProps) {
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 p-4 border-b">
+      <div
+        className={cn(
+          "flex items-center gap-3 p-4 border-b transition-colors",
+          isExpanded && "bg-muted/30"
+        )}
+      >
         <button
           className="cursor-grab touch-none text-muted-foreground hover:text-foreground transition-colors"
           {...attributes}
           {...listeners}
+          onClick={(e) => e.stopPropagation()}
         >
           <GripVertical className="h-5 w-5" />
         </button>
 
-        <BlockIcon blockType={section.block_type} className="h-5 w-5 text-muted-foreground" />
+        {/* Clickable area to expand/collapse */}
+        <button
+          type="button"
+          className="flex items-center gap-3 flex-1 text-left group"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <BlockIcon
+            blockType={section.block_type}
+            className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors"
+          />
 
-        <span className="font-medium">
-          {blockInfo?.label ?? section.block_type}
-        </span>
+          <span className="font-medium group-hover:text-primary transition-colors">
+            {blockInfo?.label ?? section.block_type}
+          </span>
+
+          {!isExpanded && (
+            <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+              Click to edit
+            </span>
+          )}
+        </button>
 
         <SectionStatusToggle
           sectionId={section.id}
           status={section.status}
         />
-
-        <div className="flex-1" />
 
         <div className="flex items-center gap-1">
           <Button

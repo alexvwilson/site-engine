@@ -26,7 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Check, Copy, MoreHorizontal, Trash2, Sparkles } from "lucide-react";
+import { Check, Copy, MoreHorizontal, Pencil, Trash2, Sparkles } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { activateTheme, deleteTheme, duplicateTheme } from "@/app/actions/theme";
 import { toast } from "sonner";
@@ -35,9 +35,10 @@ import type { Theme } from "@/lib/drizzle/schema/themes";
 interface SavedThemesListProps {
   themes: Theme[];
   onThemeSelect?: (theme: Theme) => void;
+  onEdit?: (theme: Theme) => void;
 }
 
-export function SavedThemesList({ themes, onThemeSelect }: SavedThemesListProps) {
+export function SavedThemesList({ themes, onThemeSelect, onEdit }: SavedThemesListProps) {
   const [deletingThemeId, setDeletingThemeId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isActivating, setIsActivating] = useState<string | null>(null);
@@ -105,6 +106,7 @@ export function SavedThemesList({ themes, onThemeSelect }: SavedThemesListProps)
             key={theme.id}
             theme={theme}
             onSelect={() => onThemeSelect?.(theme)}
+            onEdit={() => onEdit?.(theme)}
             onActivate={() => handleActivate(theme.id)}
             onDelete={() => setDeletingThemeId(theme.id)}
             onDuplicate={() => handleDuplicate(theme.id)}
@@ -146,6 +148,7 @@ export function SavedThemesList({ themes, onThemeSelect }: SavedThemesListProps)
 interface ThemeCardProps {
   theme: Theme;
   onSelect: () => void;
+  onEdit: () => void;
   onActivate: () => void;
   onDelete: () => void;
   onDuplicate: () => void;
@@ -156,6 +159,7 @@ interface ThemeCardProps {
 function ThemeCard({
   theme,
   onSelect,
+  onEdit,
   onActivate,
   onDelete,
   onDuplicate,
@@ -207,6 +211,15 @@ function ThemeCard({
                   {isActivating ? "Activating..." : "Set as Active"}
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit();
+                }}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit Theme
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
