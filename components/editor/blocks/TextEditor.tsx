@@ -1,8 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import type { TextContent } from "@/lib/section-types";
+
+// Dynamically import TiptapEditor to avoid SSR issues with ProseMirror
+const TiptapEditor = dynamic(
+  () => import("@/components/editor/TiptapEditor").then((mod) => mod.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border rounded-md bg-muted/50 min-h-[200px]">
+        <div className="h-10 border-b bg-muted/30" />
+        <div className="p-3 text-muted-foreground text-sm">Loading editor...</div>
+      </div>
+    ),
+  }
+);
 
 interface TextEditorProps {
   content: TextContent;
@@ -11,25 +25,19 @@ interface TextEditorProps {
 }
 
 export function TextEditor({ content, onChange, disabled }: TextEditorProps) {
-  const handleChange = (value: string): void => {
-    onChange({ ...content, body: value });
+  const handleChange = (html: string): void => {
+    onChange({ ...content, body: html });
   };
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="text-body">Content</Label>
-      <Textarea
-        id="text-body"
+      <Label>Content</Label>
+      <TiptapEditor
         value={content.body}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={handleChange}
         placeholder="Enter your text content..."
-        rows={8}
         disabled={disabled}
-        className="font-mono text-sm"
       />
-      <p className="text-xs text-muted-foreground">
-        You can use basic HTML tags for formatting. Rich text editor coming soon.
-      </p>
     </div>
   );
 }

@@ -22,24 +22,6 @@ _No items currently in P1_
 
 ## P2 - Medium Priority
 
-### 2. Rich Text Editor for Text Sections
-
-**Problem:** Text sections use plain textarea. Users expect basic formatting (bold, italic, links).
-
-**Options:**
-- Tiptap (modern, extensible, good DX)
-- Slate (powerful but complex)
-- react-quill (simple but dated)
-
-**Scope:**
-- Replace textarea in TextEditor with rich text editor
-- Store HTML or JSON content format
-- Update TextBlock renderer to handle formatted content
-
-**Complexity:** Medium
-
----
-
 ### 3. Image Upload (Supabase Storage)
 
 **Problem:** Images require external URLs. Users want to upload directly.
@@ -180,6 +162,31 @@ _No items currently in P1_
 
 ## Completed Features
 
+### 5. Rich Text Editor for Text Sections ✅ 2025-12-27
+
+**Problem:** Text sections used plain textarea. Users expected basic formatting (bold, italic, links, headings).
+
+**Solution Implemented:**
+- [x] Custom Tiptap editor with shadcn/ui-styled toolbar
+- [x] Bold, Italic, H2, H3, Bullet/Numbered lists, Blockquote, Links
+- [x] Undo/Redo support
+- [x] HTML output stored in existing content.body field
+- [x] Content normalization to handle plain text migration and proper paragraph structure
+- [x] Proper HTML rendering on published pages with theme-aware styling
+
+**Task Document:** `ai_docs/tasks/016_rich_text_editor.md`
+**Files Created:**
+- `components/editor/TiptapEditor.tsx` - Rich text editor with toolbar
+
+**Files Modified:**
+- `components/editor/blocks/TextEditor.tsx` - Dynamic import of TiptapEditor
+- `components/render/blocks/TextBlock.tsx` - HTML rendering with theme-aware prose styles
+
+**Dependencies Added:**
+- `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/extension-link`, `@tiptap/extension-placeholder`
+
+---
+
 ### 4. Preview Mode Toggle for Light/Dark Testing ✅ 2025-12-27
 
 **Problem:** While light/dark mode works on published sites, there was no way to test both modes in the editor preview.
@@ -279,4 +286,4 @@ _No items currently in P1_
 
 ---
 
-**Last Updated:** 2025-12-27 (Preview Mode Toggle for Light/Dark Testing completed)
+**Last Updated:** 2025-12-27 (Rich Text Editor for Text Sections completed)
