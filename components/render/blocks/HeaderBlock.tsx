@@ -19,10 +19,7 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo / Site Name */}
-          <a
-            href="/"
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
+          <div className="flex items-center gap-2">
             {content.logoUrl && (
               <img
                 src={content.logoUrl}
@@ -40,7 +37,7 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
             >
               {content.siteName}
             </span>
-          </a>
+          </div>
 
           {/* Navigation Links */}
           {content.links && content.links.length > 0 && (

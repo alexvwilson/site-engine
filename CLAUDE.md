@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 15 transcription application that allows users to upload audio/video files and get AI-powered transcriptions using OpenAI's Whisper API.
+Site Engine is a Next.js 15 AI-powered website builder that allows users to create, customize, and publish websites with AI-generated themes and visual section editing.
 
 **Tech Stack:**
 
 - Next.js 15 (App Router) with React 19
-- Supabase (Authentication + Storage)
+- Supabase (Authentication + Database)
 - Drizzle ORM with PostgreSQL
-- OpenAI Whisper API (Transcription)
+- OpenAI GPT-4o (Theme generation, Layout suggestions)
 - Trigger.dev (Background Jobs)
 - shadcn/ui + Tailwind CSS
 
@@ -37,7 +37,7 @@ npm run format           # Prettier formatting
 
 **IMPORTANT:** Always use these npm scripts, never run `npx drizzle-kit` directly. The scripts properly load environment variables via `dotenv-cli`.
 
-**🚨 CRITICAL WORKFLOW:** Every migration MUST have a down migration created BEFORE running `db:migrate`. See "Database Migration Workflows" section below for detailed instructions.
+**CRITICAL WORKFLOW:** Every migration MUST have a down migration created BEFORE running `db:migrate`. See "Database Migration Workflows" section below for detailed instructions.
 
 ```bash
 # Development (uses .env.local)
@@ -61,13 +61,6 @@ npm run db:status:prod
 npm run trigger:deploy:prod   # Deploy Trigger.dev tasks to production
 ```
 
-### Supabase Storage Setup
-
-```bash
-npm run storage:setup         # Setup storage buckets (local)
-npm run storage:setup:prod    # Setup storage buckets (prod)
-```
-
 ## Architecture Overview
 
 ### Route Structure
@@ -75,18 +68,38 @@ npm run storage:setup:prod    # Setup storage buckets (prod)
 - `app/(public)/` - Public pages (landing, terms, privacy)
 - `app/(auth)/` - Authentication pages (login, signup, password reset)
 - `app/(protected)/` - Protected routes requiring authentication
-  - `/transcripts` - Main transcription interface
+  - `/app` - Sites dashboard
+  - `/app/sites/[siteId]` - Site detail with tabs (Pages, Theme, Settings)
+  - `/app/sites/[siteId]/pages/[pageId]` - Page editor
+  - `/app/sites/[siteId]/pages/[pageId]/preview` - Page preview
   - `/profile` - User profile
-  - `/admin/` - Admin-only pages (dashboard)
-- `app/api/` - API routes
-  - `/api/download/[jobId]/[format]` - Transcript download handler
+  - `/admin/` - Admin-only pages
+- `app/(sites)/` - Published site routes
+  - `/sites/[siteSlug]` - Published site homepage
+  - `/sites/[siteSlug]/[pageSlug]` - Published site pages
 
 ### Database Schema (`lib/drizzle/schema/`)
 
 - **users** - User profiles (synced with Supabase auth), roles (member/admin)
-- **transcription_jobs** - Transcription job metadata and status
-- **transcripts** - Completed transcripts with multiple formats
-- **ai_summaries** - AI-generated summaries for transcripts
+- **sites** - User-created websites with name, slug, status (draft/published)
+- **pages** - Pages within sites, with slug, SEO metadata, is_home flag
+- **sections** - Content sections on pages with block_type and JSONB content
+- **themes** - Saved themes with colors, typography, component styles
+- **theme_generation_jobs** - Track AI theme generation progress
+- **layout_suggestion_jobs** - Track AI layout suggestion progress
+
+### Block Types (10 total)
+
+1. **header** - Site navigation with logo and links
+2. **hero** - Hero section with heading, CTA, background
+3. **text** - Rich text content
+4. **image** - Single image with caption
+5. **gallery** - Image grid
+6. **features** - Feature cards with icons
+7. **cta** - Call-to-action section
+8. **testimonials** - Customer testimonials
+9. **contact** - Contact form
+10. **footer** - Site footer with links
 
 ### Authentication & Authorization
 
@@ -97,28 +110,21 @@ npm run storage:setup:prod    # Setup storage buckets (prod)
 - `getCurrentUserWithRole()` - Get user with role information
 - `requireAdminAccess()` - Enforce admin-only access, redirects to /unauthorized
 
-### Transcription Flow
+### Site Building Flow
 
-1. User uploads audio/video file via drag-and-drop
-2. File is uploaded to Supabase Storage with signed URL
-3. Transcription job is created in database
-4. Trigger.dev background task processes the file:
-   - Chunks audio if needed
-   - Transcribes via OpenAI Whisper API
-   - Generates multiple formats (TXT, SRT, VTT, JSON)
-5. User can download transcripts in various formats
+1. User creates a site on the dashboard
+2. User adds pages to the site
+3. User adds sections to pages using the section builder
+4. User generates an AI theme (Quick mode) or uses default
+5. User previews pages with device toggle
+6. User publishes site - accessible at `/sites/[slug]`
 
-### File Organization
+### Theme System
 
-- `lib/` - Server-side utilities and database logic
-  - `*-client.ts` - Client-safe constants and utilities (can be imported by client components)
-  - `*.ts` - Server-only functions (uses `next/headers`, Supabase server client, etc.)
-- `components/` - React components organized by feature
-- `app/actions/` - Next.js Server Actions
-- `trigger/` - Trigger.dev background tasks
-  - `tasks/` - Individual task definitions
-  - `utils/` - Shared utilities (OpenAI client, FFmpeg, format converters)
-- `scripts/` - Database migration and setup scripts
+- **Theme data** stored as JSONB with colors, typography, component styles
+- **CSS variables** generated from theme for runtime switching
+- **Inline styles** applied in renderers (CSS variable approach deferred)
+- **Default theme** used when no active theme exists
 
 ## Critical Next.js 15 Requirements
 
@@ -127,7 +133,7 @@ npm run storage:setup:prod    # Setup storage buckets (prod)
 In Next.js 15, both `params` and `searchParams` are Promises that MUST be awaited:
 
 ```tsx
-// ✅ Correct
+// Correct
 interface PageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<{ query: string }>;
@@ -155,7 +161,7 @@ export default function ClientPage({
 Always include the `type` parameter:
 
 ```tsx
-revalidatePath("/transcripts/[id]", "page");
+revalidatePath("/app/sites/[siteId]", "page");
 ```
 
 ## Database Best Practices
@@ -165,10 +171,10 @@ revalidatePath("/transcripts/[id]", "page");
 **NEVER** use raw SQL for basic operations. Always use Drizzle operators:
 
 ```tsx
-// ❌ BAD - SQL injection risk
+// BAD - SQL injection risk
 sql`${column} = ANY(${array})`;
 
-// ✅ GOOD - Type-safe
+// GOOD - Type-safe
 import { inArray } from "drizzle-orm";
 inArray(column, array);
 ```
@@ -186,12 +192,12 @@ Use `pgTable` syntax from `drizzle-orm/pg-core`. See `lib/drizzle/schema/*` for 
 **NEVER** mix server-side imports with client-safe utilities in the same file.
 
 ```tsx
-// ❌ BAD - Mixing concerns causes build errors
+// BAD - Mixing concerns causes build errors
 // lib/storage.ts
 import { createClient } from "@/lib/supabase/server"; // Server-only
 export const IMAGE_CONSTRAINTS = { MAX_SIZE: 10 * 1024 * 1024 }; // Client-safe
 
-// ✅ GOOD - Separate files
+// GOOD - Separate files
 // lib/storage-client.ts (client-safe)
 export const IMAGE_CONSTRAINTS = { MAX_SIZE: 10 * 1024 * 1024 };
 
@@ -223,9 +229,11 @@ Client components cannot be async. Use Server Components for async operations or
 Use `cn()` utility with Tailwind classes instead of inline styles:
 
 ```tsx
-// ✅ Good
+// Good
 <div className={cn("text-lg", isActive && "font-bold")} />
 ```
+
+Exception: Theme-based styles in render components use inline styles for dynamic theming.
 
 ### Prefer shadcn/ui Components
 
@@ -257,7 +265,7 @@ Validated via `@t3-oss/env-nextjs` in `lib/env.ts`:
 
 - `DATABASE_URL` - PostgreSQL connection string
 - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-- `OPENAI_API_KEY` - OpenAI API key for Whisper transcription
+- `OPENAI_API_KEY` - OpenAI API key for GPT-4o theme/layout generation
 - `TRIGGER_SECRET_KEY` - Trigger.dev secret key
 
 **Client:**
@@ -302,16 +310,6 @@ export default async function AdminPage() {
 }
 ```
 
-## Testing & Debugging
-
-### TypeScript Errors
-
-Run `npm run type-check` to see all TypeScript errors without building.
-
-### Database Migrations
-
-Check migration status before deploying: `npm run db:status`
-
 ## Trigger.dev Tasks
 
 ### Task Structure
@@ -324,12 +322,17 @@ import { task, logger, metadata } from "@trigger.dev/sdk";
 export const myTask = task({
   id: "my-task",
   run: async (payload: { jobId: string }) => {
-    metadata.root.set("progress", 50);
+    metadata.set("progress", 50);
     logger.info("Processing", { jobId: payload.jobId });
     return { success: true };
   },
 });
 ```
+
+### Existing Tasks
+
+- `generate-theme-quick` - Single-call AI theme generation
+- `suggest-layout` - AI-powered layout suggestions for pages
 
 ### Triggering Tasks
 
@@ -342,13 +345,25 @@ import type { myTask } from "@/trigger/tasks/my-task";
 const handle = await tasks.trigger<typeof myTask>("my-task", { jobId: "123" });
 ```
 
-From within other tasks (use `triggerAndWait` for sequential execution):
+## Key Directories
 
-```tsx
-const result = await childTask.triggerAndWait({ data: "value" });
-if (result.ok) {
-  console.log(result.output);
-}
 ```
+components/
+  editor/          # Section editors (HeroEditor, TextEditor, etc.)
+  render/          # Section renderers (HeroBlock, TextBlock, etc.)
+  sites/           # Site management (SiteCard, SiteTabs, SettingsTab)
+  pages/           # Page management (PagesList, CreatePageModal)
+  theme/           # Theme UI (ThemeTab, ThemePreview, RequirementsForm)
+  preview/         # Preview components (DeviceToggle, PreviewFrame)
 
-### Important: Never use `Promise.all` with `triggerAndWait` or `wait` calls in Trigger.dev tasks.
+lib/
+  drizzle/schema/  # Database schemas
+  queries/         # Database query functions
+  section-types.ts # Block type interfaces
+  section-defaults.ts # Default content for each block type
+  default-theme.ts # Fallback theme when none active
+
+trigger/
+  tasks/           # Background task definitions
+  utils/           # AI providers, prompts, parsers
+```

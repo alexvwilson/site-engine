@@ -4,7 +4,7 @@ import "dotenv/config";
  * Database Seeding Script
  *
  * This script is a placeholder for seeding initial data into the database.
- * Add your seed data here as needed for transcription-related tables.
+ * Add your seed data here as needed for sites, pages, and sections.
  */
 
 async function main(): Promise<void> {

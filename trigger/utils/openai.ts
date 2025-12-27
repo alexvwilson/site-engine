@@ -1,8 +1,8 @@
 /**
  * OpenAI Client Utility
  *
- * Singleton OpenAI client for Whisper API and GPT-4o API calls.
- * Used by transcription and summarization tasks.
+ * Singleton OpenAI client for GPT-4o API calls.
+ * Used by theme generation and layout suggestion tasks.
  */
 
 import OpenAI from "openai";
@@ -10,7 +10,7 @@ import OpenAI from "openai";
 // Validate API key
 if (!process.env.OPENAI_API_KEY) {
   throw new Error(
-    "OPENAI_API_KEY environment variable is required for Whisper and GPT-4o",
+    "OPENAI_API_KEY environment variable is required for GPT-4o",
   );
 }
 

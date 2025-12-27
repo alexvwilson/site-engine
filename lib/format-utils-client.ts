@@ -3,8 +3,6 @@
  *
  * Centralized date, duration, and timestamp formatting utilities.
  * These functions are pure and can be safely imported by client components.
- *
- * Used across transcript components for consistent formatting.
  */
 
 /**

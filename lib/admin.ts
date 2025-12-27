@@ -27,7 +27,7 @@ export interface JobStatistic {
 
 export interface UsageTrend {
   date: string;
-  minutesTranscribed: number;
+  siteViews: number;
 }
 
 export interface SystemHealth {
@@ -132,7 +132,7 @@ export async function getUsageTrends(days: number): Promise<UsageTrend[]> {
 
     trends.push({
       date: dateStr,
-      minutesTranscribed: 0,
+      siteViews: 0,
     });
   }
 

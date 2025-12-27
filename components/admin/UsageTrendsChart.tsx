@@ -53,18 +53,15 @@ export function UsageTrendsChart({ data }: UsageTrendsChartProps) {
     }),
   }));
 
-  // Calculate total minutes
-  const totalMinutes = data.reduce(
-    (sum, trend) => sum + trend.minutesTranscribed,
-    0,
-  );
+  // Calculate total views
+  const totalViews = data.reduce((sum, trend) => sum + trend.siteViews, 0);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Usage Trends</CardTitle>
         <CardDescription>
-          Minutes transcribed daily for the last {data.length} days
+          Site views daily for the last {data.length} days
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -112,7 +109,7 @@ export function UsageTrendsChart({ data }: UsageTrendsChartProps) {
               className="text-xs"
               tick={{ fill: "hsl(var(--foreground))" }}
               label={{
-                value: "Minutes",
+                value: "Views",
                 angle: -90,
                 position: "insideLeft",
                 style: { fill: "hsl(var(--foreground))" },
@@ -127,11 +124,11 @@ export function UsageTrendsChart({ data }: UsageTrendsChartProps) {
               }}
               labelStyle={{ color: "hsl(var(--foreground))" }}
               itemStyle={{ color: "hsl(var(--foreground))" }}
-              formatter={(value: number) => [`${value} min`, "Transcribed"]}
+              formatter={(value: number) => [`${value}`, "Views"]}
             />
             <Area
               type="monotone"
-              dataKey="minutesTranscribed"
+              dataKey="siteViews"
               stroke={isDarkMode ? "hsl(310 70% 63%)" : "hsl(310 75% 58%)"}
               strokeWidth={2}
               fillOpacity={1}
@@ -140,16 +137,14 @@ export function UsageTrendsChart({ data }: UsageTrendsChartProps) {
           </AreaChart>
         </ResponsiveContainer>
 
-        {/* Total minutes summary */}
+        {/* Total views summary */}
         <div className="mt-4 text-center">
           <div className="text-sm font-semibold text-muted-foreground">
-            Total Minutes Transcribed
+            Total Site Views
           </div>
-          <div className="text-3xl font-bold">
-            {totalMinutes.toLocaleString()}
-          </div>
+          <div className="text-3xl font-bold">{totalViews.toLocaleString()}</div>
           <div className="text-sm text-muted-foreground">
-            ≈ {Math.round(totalMinutes / 60)} hours
+            Last {data.length} days
           </div>
         </div>
       </CardContent>
