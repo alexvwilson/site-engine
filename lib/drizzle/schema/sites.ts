@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid, index, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, index, jsonb, boolean } from "drizzle-orm/pg-core";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { users } from "./users";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
@@ -35,6 +35,10 @@ export const sites = pgTable(
     header_content: jsonb("header_content").$type<HeaderContent>(),
     // Site-level footer configuration (shared across all pages)
     footer_content: jsonb("footer_content").$type<FooterContent>(),
+    // Under construction mode - show Coming Soon page to public visitors
+    under_construction: boolean("under_construction").notNull().default(false),
+    construction_title: text("construction_title"),
+    construction_description: text("construction_description"),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

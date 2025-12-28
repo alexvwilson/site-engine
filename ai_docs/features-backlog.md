@@ -16,7 +16,7 @@
 
 ## P1 - High Priority
 
-_No items currently in P1_
+(No items currently - Under Construction Mode moved to Completed)
 
 ---
 
@@ -122,6 +122,34 @@ _No items currently in P1_
 ---
 
 ## Completed Features
+
+### 10. Under Construction Mode ✅ 2025-12-28
+
+**Problem:** Deployed sites are publicly accessible while still being built. Need a way to hide sites under development.
+
+**Solution Implemented:**
+- [x] Site-level toggle: "Under Construction" on/off in Settings
+- [x] When enabled, public visitors see a "Coming Soon" page instead of site content
+- [x] Owner (authenticated user) can still view the actual site
+- [x] Customizable Coming Soon title and description
+- [x] Dashboard shows 🚧 badge on sites under construction
+- [x] Preview mode works normally regardless of construction status
+
+**Task Document:** `ai_docs/tasks/022_under_construction_mode.md`
+**Files Created:**
+- `components/render/ComingSoonPage.tsx` - Coming Soon placeholder page
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `under_construction`, `construction_title`, `construction_description` columns
+- `app/actions/sites.ts` - Added handling for new settings fields
+- `components/sites/SettingsTab.tsx` - Added Under Construction card with toggle and customization
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Added construction check for homepage
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Added construction check for subpages
+- `components/sites/SiteCard.tsx` - Added construction badge
+
+**Database Migration:** `0011_nosy_vin_gonzales` - Added under_construction columns
+
+---
 
 ### 9. Undo/Redo for Section Edits ✅ 2025-12-27
 
@@ -357,4 +385,10 @@ _No items currently in P1_
 
 ---
 
-**Last Updated:** 2025-12-27 (Undo/Redo for Section Edits completed)
+**Last Updated:** 2025-12-28 (Added Under Construction mode, Blog System planning)
+
+---
+
+## Related Documents
+
+- [Blog System Planning](./blog-system-planning.md) - Detailed planning for the blog module

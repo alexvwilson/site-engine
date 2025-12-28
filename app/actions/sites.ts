@@ -229,6 +229,9 @@ export interface UpdateSiteSettingsData {
   colorMode?: ColorMode;
   headerContent?: HeaderContent | null;
   footerContent?: FooterContent | null;
+  underConstruction?: boolean;
+  constructionTitle?: string | null;
+  constructionDescription?: string | null;
 }
 
 /**
@@ -304,6 +307,15 @@ export async function updateSiteSettings(
   }
   if (data.footerContent !== undefined) {
     updateData.footer_content = data.footerContent;
+  }
+  if (data.underConstruction !== undefined) {
+    updateData.under_construction = data.underConstruction;
+  }
+  if (data.constructionTitle !== undefined) {
+    updateData.construction_title = data.constructionTitle?.trim() || null;
+  }
+  if (data.constructionDescription !== undefined) {
+    updateData.construction_description = data.constructionDescription?.trim() || null;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

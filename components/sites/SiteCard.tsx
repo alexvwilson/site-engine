@@ -17,7 +17,14 @@ export function SiteCard({ site, pageCount }: SiteCardProps) {
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold text-lg line-clamp-1">{site.name}</h3>
-            <SiteStatusBadge status={site.status} />
+            <div className="flex items-center gap-1.5">
+              {site.under_construction && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400">
+                  🚧
+                </span>
+              )}
+              <SiteStatusBadge status={site.status} />
+            </div>
           </div>
           {site.description && (
             <p className="text-sm text-muted-foreground line-clamp-2">

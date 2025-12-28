@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { updateSiteSettings } from "@/app/actions/sites";
 import type { Site, ColorMode } from "@/lib/drizzle/schema/sites";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
@@ -48,6 +49,11 @@ export function SettingsTab({ site }: SettingsTabProps) {
   );
   const [colorMode, setColorMode] = useState<ColorMode>(site.color_mode);
 
+  // Under construction mode
+  const [underConstruction, setUnderConstruction] = useState(site.under_construction);
+  const [constructionTitle, setConstructionTitle] = useState(site.construction_title || "");
+  const [constructionDescription, setConstructionDescription] = useState(site.construction_description || "");
+
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
     site.header_content ?? { ...sectionDefaults.header, siteName: site.name }
@@ -66,6 +72,9 @@ export function SettingsTab({ site }: SettingsTabProps) {
     metaTitle !== (site.meta_title || "") ||
     metaDescription !== (site.meta_description || "") ||
     colorMode !== site.color_mode ||
+    underConstruction !== site.under_construction ||
+    constructionTitle !== (site.construction_title || "") ||
+    constructionDescription !== (site.construction_description || "") ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter);
 
@@ -84,6 +93,9 @@ export function SettingsTab({ site }: SettingsTabProps) {
     setMetaTitle(site.meta_title || "");
     setMetaDescription(site.meta_description || "");
     setColorMode(site.color_mode);
+    setUnderConstruction(site.under_construction);
+    setConstructionTitle(site.construction_title || "");
+    setConstructionDescription(site.construction_description || "");
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
   }, [site]);
@@ -110,6 +122,9 @@ export function SettingsTab({ site }: SettingsTabProps) {
           ? metaDescription || null
           : undefined,
       colorMode: colorMode !== site.color_mode ? colorMode : undefined,
+      underConstruction: underConstruction !== site.under_construction ? underConstruction : undefined,
+      constructionTitle: constructionTitle !== (site.construction_title || "") ? constructionTitle || null : undefined,
+      constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
@@ -198,6 +213,66 @@ export function SettingsTab({ site }: SettingsTabProps) {
               available soon.
             </p>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Under Construction */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Construction className="h-5 w-5" />
+            Under Construction
+          </CardTitle>
+          <CardDescription>
+            Show a &quot;Coming Soon&quot; page to visitors while you continue building
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="underConstruction">Enable Under Construction Mode</Label>
+              <p className="text-sm text-muted-foreground">
+                Public visitors will see a Coming Soon page. You can still view your site when logged in.
+              </p>
+            </div>
+            <Switch
+              id="underConstruction"
+              checked={underConstruction}
+              onCheckedChange={setUnderConstruction}
+              disabled={loading}
+            />
+          </div>
+
+          {underConstruction && (
+            <>
+              <Separator />
+              <div className="space-y-2">
+                <Label htmlFor="constructionTitle">Coming Soon Title</Label>
+                <Input
+                  id="constructionTitle"
+                  placeholder={site.name}
+                  value={constructionTitle}
+                  onChange={(e) => setConstructionTitle(e.target.value)}
+                  disabled={loading}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Defaults to your site name if empty
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="constructionDescription">Coming Soon Message</Label>
+                <Textarea
+                  id="constructionDescription"
+                  placeholder="We're working on something exciting. Check back soon!"
+                  value={constructionDescription}
+                  onChange={(e) => setConstructionDescription(e.target.value)}
+                  disabled={loading}
+                  rows={3}
+                />
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 

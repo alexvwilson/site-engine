@@ -4,11 +4,13 @@ import { getPublishedSiteBySlug } from "@/lib/queries/sites";
 import { getPublishedHomePage } from "@/lib/queries/pages";
 import { getPublishedSectionsByPage } from "@/lib/queries/sections";
 import { getActiveTheme } from "@/lib/queries/themes";
+import { getCurrentUserId } from "@/lib/auth";
 import { PageRenderer } from "@/components/render";
 import { ThemeStyles, ColorModeScript } from "@/components/render/ThemeStyles";
 import { ColorModeToggle } from "@/components/render/ColorModeToggle";
 import { HeaderBlock } from "@/components/render/blocks/HeaderBlock";
 import { FooterBlock } from "@/components/render/blocks/FooterBlock";
+import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
@@ -49,6 +51,14 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
   const site = await getPublishedSiteBySlug(siteSlug);
   if (!site) {
     notFound();
+  }
+
+  // Show Coming Soon page to non-owners when under construction
+  if (site.under_construction) {
+    const userId = await getCurrentUserId();
+    if (userId !== site.user_id) {
+      return <ComingSoonPage site={site} />;
+    }
   }
 
   const page = await getPublishedHomePage(site.id);

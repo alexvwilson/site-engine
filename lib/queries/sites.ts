@@ -110,6 +110,7 @@ export async function getSitesWithPageCounts(
       published_at: sites.published_at,
       created_at: sites.created_at,
       updated_at: sites.updated_at,
+      under_construction: sites.under_construction,
       pageCount: sql<number>`COALESCE(${pageCountSubquery.count}, 0)`.as(
         "pageCount"
       ),
