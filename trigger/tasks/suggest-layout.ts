@@ -19,6 +19,7 @@ import type { LayoutSuggestion } from "@/lib/drizzle/schema/layout-suggestion-jo
 // ============================================================================
 
 const blockTypeEnum = z.enum([
+  "header",
   "hero",
   "text",
   "image",

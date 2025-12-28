@@ -5,6 +5,7 @@ import { db } from "@/lib/drizzle/db";
 import { sites, type ColorMode, COLOR_MODES } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, ne } from "drizzle-orm";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 /**
  * Generate a URL-safe slug from a name
@@ -226,6 +227,8 @@ export interface UpdateSiteSettingsData {
   metaTitle?: string | null;
   metaDescription?: string | null;
   colorMode?: ColorMode;
+  headerContent?: HeaderContent | null;
+  footerContent?: FooterContent | null;
 }
 
 /**
@@ -295,6 +298,12 @@ export async function updateSiteSettings(
   }
   if (data.colorMode !== undefined && COLOR_MODES.includes(data.colorMode)) {
     updateData.color_mode = data.colorMode;
+  }
+  if (data.headerContent !== undefined) {
+    updateData.header_content = data.headerContent;
+  }
+  if (data.footerContent !== undefined) {
+    updateData.footer_content = data.footerContent;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

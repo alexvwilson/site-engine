@@ -75,6 +75,22 @@ interface DeleteResult {
   error?: string;
 }
 
+// ============================================================================
+// Image Library Types
+// ============================================================================
+
+export interface ImageFile {
+  name: string;
+  url: string;
+  createdAt: string;
+}
+
+export interface ListImagesResult {
+  success: boolean;
+  images?: ImageFile[];
+  error?: string;
+}
+
 export async function deleteImage(imagePath: string): Promise<DeleteResult> {
   await requireUserId();
 
@@ -92,4 +108,44 @@ export async function deleteImage(imagePath: string): Promise<DeleteResult> {
   }
 
   return { success: true };
+}
+
+// ============================================================================
+// Image Library
+// ============================================================================
+
+/**
+ * List all images uploaded to a site's storage folder.
+ * Returns images sorted by most recent first.
+ */
+export async function listSiteImages(siteId: string): Promise<ListImagesResult> {
+  const userId = await requireUserId();
+  const supabase = await createClient();
+
+  const prefix = `${userId}/${siteId}/`;
+
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .list(prefix, {
+      limit: 100,
+      sortBy: { column: "created_at", order: "desc" },
+    });
+
+  if (error) {
+    console.error("Storage list error:", error);
+    return { success: false, error: error.message };
+  }
+
+  // Filter out folders and map to ImageFile format
+  const images: ImageFile[] = (data ?? [])
+    .filter((file) => file.name && !file.name.endsWith("/"))
+    .map((file) => ({
+      name: file.name,
+      url: supabase.storage
+        .from(STORAGE_BUCKET)
+        .getPublicUrl(`${prefix}${file.name}`).data.publicUrl,
+      createdAt: file.created_at ?? "",
+    }));
+
+  return { success: true, images };
 }

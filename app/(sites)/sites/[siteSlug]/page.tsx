@@ -7,7 +7,10 @@ import { getActiveTheme } from "@/lib/queries/themes";
 import { PageRenderer } from "@/components/render";
 import { ThemeStyles, ColorModeScript } from "@/components/render/ThemeStyles";
 import { ColorModeToggle } from "@/components/render/ColorModeToggle";
+import { HeaderBlock } from "@/components/render/blocks/HeaderBlock";
+import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { DEFAULT_THEME } from "@/lib/default-theme";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 // Ensure fresh data on every request for published sites
 export const dynamic = "force-dynamic";
@@ -53,10 +56,21 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
     notFound();
   }
 
-  const sections = await getPublishedSectionsByPage(page.id);
+  const allSections = await getPublishedSectionsByPage(page.id);
   const activeTheme = await getActiveTheme(site.id);
   const theme = activeTheme?.data ?? DEFAULT_THEME;
   const colorMode = site.color_mode;
+
+  // Use site-level header/footer if configured, otherwise fall back to page sections
+  const siteHeader = site.header_content as HeaderContent | null;
+  const siteFooter = site.footer_content as FooterContent | null;
+
+  // Filter out page-level header/footer if site-level ones are configured
+  const sections = allSections.filter((section) => {
+    if (siteHeader && section.block_type === "header") return false;
+    if (siteFooter && section.block_type === "footer") return false;
+    return true;
+  });
 
   return (
     <>
@@ -68,7 +82,9 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
         <PageRenderer sections={sections} theme={theme} />
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
       </div>
     </>
   );

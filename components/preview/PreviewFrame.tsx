@@ -3,10 +3,14 @@
 import { useState } from "react";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
 import { PageRenderer } from "@/components/render/PageRenderer";
+import { HeaderBlock } from "@/components/render/blocks/HeaderBlock";
+import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { DeviceToggle, type DeviceType } from "./DeviceToggle";
 import { ColorModePreviewToggle, type PreviewColorMode } from "./ColorModePreviewToggle";
 import { generateDefaultDarkPalette } from "@/lib/theme-utils";
+import { DEFAULT_THEME } from "@/lib/default-theme";
 import { cn } from "@/lib/utils";
 
 const DEVICE_WIDTHS: Record<DeviceType, string> = {
@@ -18,6 +22,8 @@ const DEVICE_WIDTHS: Record<DeviceType, string> = {
 interface PreviewFrameProps {
   sections: Section[];
   theme: ThemeData | null;
+  siteHeader?: HeaderContent | null;
+  siteFooter?: FooterContent | null;
 }
 
 /**
@@ -56,9 +62,14 @@ function PreviewThemeStyles({
 export function PreviewFrame({
   sections,
   theme,
+  siteHeader,
+  siteFooter,
 }: PreviewFrameProps) {
   const [device, setDevice] = useState<DeviceType>("desktop");
   const [colorMode, setColorMode] = useState<PreviewColorMode>("light");
+
+  // Use DEFAULT_THEME for header/footer rendering if no theme
+  const renderTheme = theme ?? DEFAULT_THEME;
 
   if (!theme) {
     return (
@@ -98,7 +109,9 @@ export function PreviewFrame({
             backgroundColor: "var(--color-background)",
           }}
         >
+          {siteHeader && <HeaderBlock content={siteHeader} theme={renderTheme} />}
           <PageRenderer sections={sections} theme={theme} />
+          {siteFooter && <FooterBlock content={siteFooter} theme={renderTheme} />}
         </div>
       </div>
     </div>

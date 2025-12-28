@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,9 +24,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { updateSiteSettings } from "@/app/actions/sites";
 import type { Site, ColorMode } from "@/lib/drizzle/schema/sites";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
+import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
+import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
   site: Site;
+}
+
+// Helper to compare objects for change detection
+function deepEqual(a: unknown, b: unknown): boolean {
+  return JSON.stringify(a) === JSON.stringify(b);
 }
 
 export function SettingsTab({ site }: SettingsTabProps) {
@@ -39,13 +48,26 @@ export function SettingsTab({ site }: SettingsTabProps) {
   );
   const [colorMode, setColorMode] = useState<ColorMode>(site.color_mode);
 
+  // Site-level header/footer configuration
+  const [headerContent, setHeaderContent] = useState<HeaderContent>(
+    site.header_content ?? { ...sectionDefaults.header, siteName: site.name }
+  );
+  const [footerContent, setFooterContent] = useState<FooterContent>(
+    site.footer_content ?? sectionDefaults.footer
+  );
+
   // Track if any changes have been made
+  const initialHeader = site.header_content ?? { ...sectionDefaults.header, siteName: site.name };
+  const initialFooter = site.footer_content ?? sectionDefaults.footer;
+
   const hasChanges =
     slug !== site.slug ||
     customDomain !== (site.custom_domain || "") ||
     metaTitle !== (site.meta_title || "") ||
     metaDescription !== (site.meta_description || "") ||
-    colorMode !== site.color_mode;
+    colorMode !== site.color_mode ||
+    !deepEqual(headerContent, initialHeader) ||
+    !deepEqual(footerContent, initialFooter);
 
   // Validate slug format
   const slugError =
@@ -62,6 +84,8 @@ export function SettingsTab({ site }: SettingsTabProps) {
     setMetaTitle(site.meta_title || "");
     setMetaDescription(site.meta_description || "");
     setColorMode(site.color_mode);
+    setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
+    setFooterContent(site.footer_content ?? sectionDefaults.footer);
   }, [site]);
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -86,6 +110,8 @@ export function SettingsTab({ site }: SettingsTabProps) {
           ? metaDescription || null
           : undefined,
       colorMode: colorMode !== site.color_mode ? colorMode : undefined,
+      headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
+      footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
     setLoading(false);
 
@@ -268,6 +294,47 @@ export function SettingsTab({ site }: SettingsTabProps) {
               {colorMode === "system" && "Your site will follow the visitor's system preference (light or dark)."}
               {colorMode === "user_choice" && "Visitors can toggle between light and dark mode with a button on your site."}
             </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Site Header & Footer */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <LayoutTemplate className="h-5 w-5" />
+            Site Header & Footer
+          </CardTitle>
+          <CardDescription>
+            Configure the header and footer that appear on all pages of your published site.
+            These settings override individual page header/footer sections.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <Label className="text-base font-semibold">Header Configuration</Label>
+            <div className="border rounded-lg p-4 bg-muted/30">
+              <HeaderEditor
+                content={headerContent}
+                onChange={setHeaderContent}
+                disabled={loading}
+                siteId={site.id}
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <Label className="text-base font-semibold">Footer Configuration</Label>
+            <div className="border rounded-lg p-4 bg-muted/30">
+              <FooterEditor
+                content={footerContent}
+                onChange={setFooterContent}
+                disabled={loading}
+                siteId={site.id}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { tasks } from "@trigger.dev/sdk/v3";
+import { tasks } from "@trigger.dev/sdk";
 import { db } from "@/lib/drizzle/db";
 import { sections, type BlockType } from "@/lib/drizzle/schema/sections";
 import { pages } from "@/lib/drizzle/schema/pages";

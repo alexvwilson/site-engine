@@ -39,7 +39,7 @@ export function ContactBlock({
         </div>
 
         <div style={getCardStyles(theme)}>
-          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-4">
             {content.fields.map((field, index) => (
               <div key={index}>
                 <label

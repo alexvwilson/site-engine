@@ -20,13 +20,15 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
         <div className="flex h-16 items-center justify-between">
           {/* Logo / Site Name */}
           <div className="flex items-center gap-2">
-            {content.logoUrl && (
-              <img
-                src={content.logoUrl}
-                alt={content.siteName}
-                className="h-8 w-auto"
-              />
-            )}
+            {content.logoUrl &&
+              (content.logoUrl.startsWith("http") ||
+                content.logoUrl.startsWith("/")) && (
+                <img
+                  src={content.logoUrl}
+                  alt={content.siteName}
+                  className="h-8 w-auto"
+                />
+              )}
             <span
               style={{
                 fontFamily: "var(--font-heading)",

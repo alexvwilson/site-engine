@@ -1,6 +1,7 @@
-import { pgTable, text, timestamp, uuid, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, index, jsonb } from "drizzle-orm/pg-core";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { users } from "./users";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 export const SITE_STATUSES = ["draft", "published"] as const;
 export type SiteStatus = (typeof SITE_STATUSES)[number];
@@ -30,6 +31,10 @@ export const sites = pgTable(
     meta_title: text("meta_title"),
     meta_description: text("meta_description"),
     color_mode: text("color_mode", { enum: COLOR_MODES }).notNull().default("light"),
+    // Site-level header configuration (shared across all pages)
+    header_content: jsonb("header_content").$type<HeaderContent>(),
+    // Site-level footer configuration (shared across all pages)
+    footer_content: jsonb("footer_content").$type<FooterContent>(),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

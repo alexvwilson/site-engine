@@ -25,6 +25,17 @@ export interface LayoutPromptResult {
  * AI uses these to generate appropriate content for suggestions.
  */
 const BLOCK_CONTENT_EXAMPLES = {
+  header: `{
+  "siteName": "Your Site Name",
+  "logoUrl": "",
+  "links": [
+    { "label": "Home", "url": "/" },
+    { "label": "About", "url": "/about" },
+    { "label": "Contact", "url": "/contact" }
+  ],
+  "ctaText": "Get Started",
+  "ctaUrl": "#"
+}`,
   hero: `{
   "heading": "Your main headline here",
   "subheading": "Supporting text that elaborates on the headline",
@@ -139,7 +150,8 @@ ${AVAILABLE_ICONS.join(", ")}
 ## Guidelines
 1. Suggest 3-8 sections that make sense for the page purpose
 2. Order sections logically:
-   - Hero sections typically come first
+   - Header sections typically come first (site navigation)
+   - Hero sections come after header for main visual impact
    - Content sections (text, features, testimonials) in the middle
    - CTA sections near the end for conversion
    - Footer sections always last (if included)
@@ -154,7 +166,7 @@ Respond with a valid JSON object matching this exact schema:
 {
   "suggestions": [
     {
-      "blockType": "hero" | "text" | "image" | "gallery" | "features" | "cta" | "testimonials" | "contact" | "footer",
+      "blockType": "header" | "hero" | "text" | "image" | "gallery" | "features" | "cta" | "testimonials" | "contact" | "footer",
       "rationale": "Brief explanation why this section fits the page",
       "suggestedContent": { /* content matching the block type structure */ }
     }

@@ -90,11 +90,16 @@ async function getHeaderContentWithSiteData(
 
 /**
  * Add a new section to a page
+ * @param pageId - The page to add the section to
+ * @param blockType - The type of block to create
+ * @param position - Optional position (defaults to end of page)
+ * @param templateContent - Optional pre-filled content from a template
  */
 export async function addSection(
   pageId: string,
   blockType: BlockType,
-  position?: number
+  position?: number,
+  templateContent?: SectionContent
 ): Promise<CreateSectionResult> {
   const userId = await requireUserId();
 
@@ -119,11 +124,16 @@ export async function addSection(
       );
   }
 
-  // For header blocks, populate with actual site name and page navigation
-  const content: SectionContent =
-    blockType === "header" && ownership.siteId
-      ? await getHeaderContentWithSiteData(ownership.siteId, userId)
-      : getDefaultContent(blockType);
+  // Use template content if provided, otherwise use defaults
+  // For header blocks without template, populate with actual site name and page navigation
+  let content: SectionContent;
+  if (templateContent) {
+    content = templateContent;
+  } else if (blockType === "header" && ownership.siteId) {
+    content = await getHeaderContentWithSiteData(ownership.siteId, userId);
+  } else {
+    content = getDefaultContent(blockType);
+  }
 
   const [section] = await db
     .insert(sections)

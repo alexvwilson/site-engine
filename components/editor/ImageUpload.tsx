@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { Upload, Link, X, Loader2, ImageIcon } from "lucide-react";
+import { Upload, Link, X, Loader2, ImageIcon, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { uploadImage } from "@/app/actions/storage";
+import { ImageLibrary } from "./ImageLibrary";
 
 interface ImageUploadProps {
   value: string;
@@ -29,7 +30,7 @@ export function ImageUpload({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const [mode, setMode] = useState<"upload" | "url">("upload");
+  const [mode, setMode] = useState<"upload" | "library" | "url">("upload");
   const [urlInput, setUrlInput] = useState(value);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -132,13 +133,17 @@ export function ImageUpload({
     <div className={cn("space-y-2", className)}>
       <Tabs
         value={mode}
-        onValueChange={(v) => setMode(v as "upload" | "url")}
+        onValueChange={(v) => setMode(v as "upload" | "library" | "url")}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="upload" disabled={disabled}>
             <Upload className="h-4 w-4 mr-2" />
             Upload
+          </TabsTrigger>
+          <TabsTrigger value="library" disabled={disabled}>
+            <FolderOpen className="h-4 w-4 mr-2" />
+            Library
           </TabsTrigger>
           <TabsTrigger value="url" disabled={disabled}>
             <Link className="h-4 w-4 mr-2" />
@@ -222,6 +227,17 @@ export function ImageUpload({
               />
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="library" className="mt-3">
+          <ImageLibrary
+            siteId={siteId}
+            onSelect={(url) => {
+              onChange(url);
+              setUrlInput(url);
+              setMode("upload");
+            }}
+          />
         </TabsContent>
 
         <TabsContent value="url" className="mt-3 space-y-3">

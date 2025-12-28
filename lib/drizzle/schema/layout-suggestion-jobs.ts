@@ -35,6 +35,7 @@ export const layoutJobStatusEnum = pgEnum("layout_job_status", [
 
 export interface LayoutSuggestion {
   blockType:
+    | "header"
     | "hero"
     | "text"
     | "image"

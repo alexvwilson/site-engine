@@ -34,17 +34,7 @@ _No items currently in P1_
 
 ---
 
-### 5. Section Templates / Presets
-
-**Problem:** AI suggestions are one way to get started, but users might want pre-designed section variations.
-
-**Idea:** Curated section presets per block type (e.g., 3 hero styles, 4 feature layouts)
-
-**Complexity:** Medium
-
----
-
-### 6. Guided Theme Generation Mode
+### 5. Guided Theme Generation Mode
 
 **Problem:** Quick mode generates entire theme at once. Some users want more control.
 
@@ -144,6 +134,57 @@ _No items currently in P1_
 ---
 
 ## Completed Features
+
+### 8. Section Templates / Presets ✅ 2025-12-27
+
+**Problem:** AI suggestions are one way to get started, but users might want pre-designed section variations.
+
+**Solution Implemented:**
+- [x] Created `lib/section-templates.ts` with 2-4 templates per block type
+- [x] Two-step "Add Section" flow: select block type → select template
+- [x] "Blank" option for default content
+- [x] Templates include: Hero (4), Features (4), CTA (3), Testimonials (3), Text (3), Contact (2), Image (2), Gallery (2), Header (2), Footer (2)
+
+**Task Document:** `ai_docs/tasks/020_section_templates.md`
+**Files Created:**
+- `lib/section-templates.ts` - Template definitions for all block types
+- `components/editor/TemplateSelector.tsx` - Template selection UI
+
+**Files Modified:**
+- `app/actions/sections.ts` - Added optional `templateContent` parameter to `addSection`
+- `components/editor/BlockPicker.tsx` - Two-step flow with template selection
+
+---
+
+### 7. Site Image Library & Global Header/Footer ✅ 2025-12-27
+
+**Problem:** Users had to re-upload images for each section. Header/footer content had to be manually synchronized across pages.
+
+**Solution Implemented:**
+- [x] Image Library - Browse and select from previously uploaded images
+- [x] New "Library" tab in ImageUpload component alongside Upload and URL
+- [x] Site-level header/footer configuration in Settings tab
+- [x] Header/footer applies automatically to all pages (published + preview)
+- [x] Page-level header/footer sections filtered out when site-level is configured
+
+**Task Document:** `ai_docs/tasks/019_site_image_library_global_header_footer.md`
+**Files Created:**
+- `components/editor/ImageLibrary.tsx` - Grid browser for site images
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `header_content`, `footer_content` JSONB columns
+- `app/actions/storage.ts` - Added `listSiteImages()` function
+- `app/actions/sites.ts` - Extended `updateSiteSettings()` for header/footer
+- `components/editor/ImageUpload.tsx` - Added "Library" tab
+- `components/sites/SettingsTab.tsx` - Added Site Header & Footer configuration card
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Render site header/footer on published homepage
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Render site header/footer on published subpages
+- `app/(protected)/app/sites/[siteId]/pages/[pageId]/preview/page.tsx` - Pass site header/footer to preview
+- `components/preview/PreviewFrame.tsx` - Render site header/footer in preview
+
+**Database Migration:** `0010_pink_exodus` - Added header_content and footer_content columns
+
+---
 
 ### 6. Image Upload (Supabase Storage) ✅ 2025-12-27
 
@@ -305,4 +346,4 @@ _No items currently in P1_
 
 ---
 
-**Last Updated:** 2025-12-27 (Image Upload completed)
+**Last Updated:** 2025-12-27 (Section Templates completed)
