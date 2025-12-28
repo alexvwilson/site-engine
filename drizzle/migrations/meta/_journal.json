@@ -85,6 +85,13 @@
       "when": 1766950851411,
       "tag": "0011_nosy_vin_gonzales",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1766962520671,
+      "tag": "0012_complete_stick",
+      "breakpoints": true
     }
   ]
 }

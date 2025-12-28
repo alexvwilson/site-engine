@@ -39,6 +39,8 @@ export const sites = pgTable(
     under_construction: boolean("under_construction").notNull().default(false),
     construction_title: text("construction_title"),
     construction_description: text("construction_description"),
+    // Blog settings
+    show_blog_author: boolean("show_blog_author").notNull().default(true),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

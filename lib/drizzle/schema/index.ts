@@ -37,6 +37,12 @@ export * from "./pages";
  */
 export * from "./sections";
 
+/**
+ * Blog Posts table - Blog entries within sites
+ * Separate content type for time-based articles and news
+ */
+export * from "./blog-posts";
+
 // ============================================================================
 // Theme Management
 // ============================================================================

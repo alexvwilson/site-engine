@@ -232,6 +232,7 @@ export interface UpdateSiteSettingsData {
   underConstruction?: boolean;
   constructionTitle?: string | null;
   constructionDescription?: string | null;
+  showBlogAuthor?: boolean;
 }
 
 /**
@@ -316,6 +317,9 @@ export async function updateSiteSettings(
   }
   if (data.constructionDescription !== undefined) {
     updateData.construction_description = data.constructionDescription?.trim() || null;
+  }
+  if (data.showBlogAuthor !== undefined) {
+    updateData.show_blog_author = data.showBlogAuthor;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

@@ -3,20 +3,23 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PagesList } from "@/components/pages/PagesList";
+import { BlogTab } from "@/components/blog";
 import { ThemeTab } from "@/components/theme";
 import { SettingsTab } from "./SettingsTab";
 import type { Site } from "@/lib/drizzle/schema/sites";
 import type { Page } from "@/lib/drizzle/schema/pages";
+import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 import type { Theme } from "@/lib/drizzle/schema/themes";
 
 interface SiteTabsProps {
   site: Site;
   pages: Page[];
+  posts: BlogPost[];
   themes: Theme[];
   activeTheme: Theme | null;
 }
 
-export function SiteTabs({ site, pages, themes, activeTheme }: SiteTabsProps) {
+export function SiteTabs({ site, pages, posts, themes, activeTheme }: SiteTabsProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -38,11 +41,15 @@ export function SiteTabs({ site, pages, themes, activeTheme }: SiteTabsProps) {
     <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
       <TabsList className="mb-6">
         <TabsTrigger value="pages">Pages</TabsTrigger>
+        <TabsTrigger value="blog">Blog</TabsTrigger>
         <TabsTrigger value="theme">Theme</TabsTrigger>
         <TabsTrigger value="settings">Settings</TabsTrigger>
       </TabsList>
       <TabsContent value="pages">
         <PagesList pages={pages} siteId={site.id} />
+      </TabsContent>
+      <TabsContent value="blog">
+        <BlogTab siteId={site.id} posts={posts} />
       </TabsContent>
       <TabsContent value="theme">
         <ThemeTab site={site} themes={themes} activeTheme={activeTheme} />

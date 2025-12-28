@@ -146,6 +146,7 @@
 - `app/(sites)/sites/[siteSlug]/page.tsx` - Added construction check for homepage
 - `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Added construction check for subpages
 - `components/sites/SiteCard.tsx` - Added construction badge
+- `lib/queries/sites.ts` - Added `under_construction` to `getSitesWithPageCounts` query
 
 **Database Migration:** `0011_nosy_vin_gonzales` - Added under_construction columns
 

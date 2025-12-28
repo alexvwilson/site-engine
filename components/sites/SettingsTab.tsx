@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,6 +54,9 @@ export function SettingsTab({ site }: SettingsTabProps) {
   const [constructionTitle, setConstructionTitle] = useState(site.construction_title || "");
   const [constructionDescription, setConstructionDescription] = useState(site.construction_description || "");
 
+  // Blog settings
+  const [showBlogAuthor, setShowBlogAuthor] = useState(site.show_blog_author);
+
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
     site.header_content ?? { ...sectionDefaults.header, siteName: site.name }
@@ -75,6 +78,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
     underConstruction !== site.under_construction ||
     constructionTitle !== (site.construction_title || "") ||
     constructionDescription !== (site.construction_description || "") ||
+    showBlogAuthor !== site.show_blog_author ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter);
 
@@ -96,6 +100,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
     setUnderConstruction(site.under_construction);
     setConstructionTitle(site.construction_title || "");
     setConstructionDescription(site.construction_description || "");
+    setShowBlogAuthor(site.show_blog_author);
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
   }, [site]);
@@ -125,6 +130,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
       underConstruction: underConstruction !== site.under_construction ? underConstruction : undefined,
       constructionTitle: constructionTitle !== (site.construction_title || "") ? constructionTitle || null : undefined,
       constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
+      showBlogAuthor: showBlogAuthor !== site.show_blog_author ? showBlogAuthor : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
@@ -369,6 +375,35 @@ export function SettingsTab({ site }: SettingsTabProps) {
               {colorMode === "system" && "Your site will follow the visitor's system preference (light or dark)."}
               {colorMode === "user_choice" && "Visitors can toggle between light and dark mode with a button on your site."}
             </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Blog Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5" />
+            Blog Settings
+          </CardTitle>
+          <CardDescription>
+            Configure how your blog posts are displayed
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="showBlogAuthor">Show Author on Posts</Label>
+              <p className="text-sm text-muted-foreground">
+                Display the author name and date on published blog posts
+              </p>
+            </div>
+            <Switch
+              id="showBlogAuthor"
+              checked={showBlogAuthor}
+              onCheckedChange={setShowBlogAuthor}
+              disabled={loading}
+            />
           </div>
         </CardContent>
       </Card>
