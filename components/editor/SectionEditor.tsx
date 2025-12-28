@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { HeaderEditor } from "./blocks/HeaderEditor";
 import { HeroEditor } from "./blocks/HeroEditor";
 import { TextEditor } from "./blocks/TextEditor";
@@ -12,10 +12,12 @@ import { TestimonialsEditor } from "./blocks/TestimonialsEditor";
 import { ContactEditor } from "./blocks/ContactEditor";
 import { FooterEditor } from "./blocks/FooterEditor";
 import { SaveIndicator } from "./SaveIndicator";
+import { UndoRedoButtons } from "./UndoRedoButtons";
 import { updateSection } from "@/app/actions/sections";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { SectionContent } from "@/lib/section-types";
 import { useAutoSave } from "@/hooks/useAutoSave";
+import { useHistory } from "@/hooks/useHistory";
 
 interface SectionEditorProps {
   section: Section;
@@ -23,9 +25,19 @@ interface SectionEditorProps {
 }
 
 export function SectionEditor({ section, siteId }: SectionEditorProps) {
-  const [content, setContent] = useState<SectionContent>(
-    section.content as SectionContent
-  );
+  // Use history hook for undo/redo support
+  const {
+    state: content,
+    set: setContent,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useHistory<SectionContent>({
+    initialState: section.content as SectionContent,
+    storageKey: `section-history-${section.id}`,
+    maxHistory: 50,
+  });
 
   const saveContent = useCallback(
     async (contentToSave: SectionContent): Promise<void> => {
@@ -39,13 +51,58 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
     debounceMs: 500,
   });
 
+  // Track previous content to detect undo/redo changes
+  const prevContentRef = useRef(content);
+
+  // When content changes (including from undo/redo), trigger save
+  useEffect(() => {
+    if (prevContentRef.current !== content) {
+      triggerSave(content);
+      prevContentRef.current = content;
+    }
+  }, [content, triggerSave]);
+
   const handleContentChange = useCallback(
     (newContent: SectionContent): void => {
       setContent(newContent);
-      triggerSave(newContent);
     },
-    [triggerSave]
+    [setContent]
   );
+
+  // Keyboard shortcuts for undo/redo
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if user is typing in an input, textarea, or contenteditable
+      const activeElement = document.activeElement;
+      const isEditing =
+        activeElement instanceof HTMLInputElement ||
+        activeElement instanceof HTMLTextAreaElement ||
+        activeElement?.getAttribute("contenteditable") === "true";
+
+      // Don't intercept if user is editing in a form field
+      if (isEditing) return;
+
+      // Check for Ctrl+Z (undo) or Ctrl+Shift+Z (redo)
+      if ((e.metaKey || e.ctrlKey) && e.key === "z") {
+        if (e.shiftKey) {
+          e.preventDefault();
+          redo();
+        } else {
+          e.preventDefault();
+          undo();
+        }
+      }
+
+      // Also support Ctrl+Y for redo (Windows convention)
+      if ((e.metaKey || e.ctrlKey) && e.key === "y") {
+        e.preventDefault();
+        redo();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [undo, redo]);
 
   const editorProps = {
     content,
@@ -56,7 +113,14 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between">
+        <UndoRedoButtons
+          onUndo={undo}
+          onRedo={redo}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          disabled={saveStatus === "saving"}
+        />
         <SaveIndicator status={saveStatus} />
       </div>
 

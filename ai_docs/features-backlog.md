@@ -22,18 +22,6 @@ _No items currently in P1_
 
 ## P2 - Medium Priority
 
-### 4. Undo/Redo for Section Edits
-
-**Problem:** No way to revert accidental changes to section content.
-
-**Options:**
-- Browser-level: Store edit history in state/localStorage
-- Database-level: Version history for sections
-
-**Complexity:** Medium-High
-
----
-
 ### 5. Guided Theme Generation Mode
 
 **Problem:** Quick mode generates entire theme at once. Some users want more control.
@@ -134,6 +122,29 @@ _No items currently in P1_
 ---
 
 ## Completed Features
+
+### 9. Undo/Redo for Section Edits ✅ 2025-12-27
+
+**Problem:** No way to revert accidental changes to section content.
+
+**Solution Implemented:**
+- [x] Browser-level undo/redo using React state + localStorage
+- [x] Undo/Redo buttons in section editor toolbar
+- [x] Keyboard shortcuts: Ctrl/Cmd+Z (undo), Ctrl/Cmd+Shift+Z or Ctrl/Cmd+Y (redo)
+- [x] 50-step history limit per section
+- [x] History persists across page refreshes via localStorage
+- [x] Smart keyboard handling - doesn't interfere with text input undo
+- [x] Stale history detection - clears localStorage if database content changed
+
+**Task Document:** `ai_docs/tasks/021_undo_redo_section_edits.md`
+**Files Created:**
+- `hooks/useHistory.ts` - Generic undo/redo hook with localStorage persistence
+- `components/editor/UndoRedoButtons.tsx` - Undo/Redo button pair with tooltips
+
+**Files Modified:**
+- `components/editor/SectionEditor.tsx` - Integrated history hook, keyboard shortcuts, toolbar buttons
+
+---
 
 ### 8. Section Templates / Presets ✅ 2025-12-27
 
@@ -346,4 +357,4 @@ _No items currently in P1_
 
 ---
 
-**Last Updated:** 2025-12-27 (Section Templates completed)
+**Last Updated:** 2025-12-27 (Undo/Redo for Section Edits completed)
