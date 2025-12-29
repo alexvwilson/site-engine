@@ -35,6 +35,8 @@ export const blogPosts = pgTable(
     featured_image: text("featured_image"),
     status: text("status", { enum: POST_STATUSES }).notNull().default("draft"),
     published_at: timestamp("published_at", { withTimezone: true }),
+    meta_title: text("meta_title"),
+    meta_description: text("meta_description"),
     created_at: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),

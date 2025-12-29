@@ -119,33 +119,35 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 ---
 
-### Phase 2: Categories & Organization
+### Phase 2: Categories & Organization ✅ COMPLETE
 
 **Scope:** Categorize posts, filter by category
 
-- [ ] Create `blog_categories` and `blog_post_categories` tables
-- [ ] Category management UI (CRUD)
-- [ ] Category selector in post editor
-- [ ] Category filter on blog listing
-- [ ] Category archive pages
+- [x] Create `blog_categories` table (simplified: single category per post via `category_id` FK on `blog_posts`)
+- [x] Category management UI (CRUD in Settings tab)
+- [x] Site-level default category setting
+- [x] Category selector in post editor
+- [x] Category filter on blog listing (via URL parameter)
+- [x] Category archive pages (`/sites/[siteSlug]/blog/category/[categorySlug]`)
 
 ---
 
-### Phase 3: Enhanced Features
+### Phase 3: Enhanced Features ✅ COMPLETE
 
 **Scope:** Additional blog capabilities
 
-- [ ] RSS feed generation (`/sites/[siteSlug]/blog/feed.xml`)
-- [ ] Related posts suggestions
-- [ ] Post scheduling (publish_at in future)
-- [ ] Reading time estimation
-- [ ] Social sharing buttons
-- [ ] Previous/Next post navigation
+- [x] RSS feed generation (`/sites/[siteSlug]/blog/rss.xml`)
+- [ ] Related posts suggestions - *Deferred to Phase 4*
+- [x] Post scheduling (optional `scheduledAt` parameter in `publishPost`)
+- [x] Reading time estimation (~200 wpm calculation)
+- [x] Social sharing buttons (Twitter, Facebook, LinkedIn, Copy Link)
+- [x] Previous/Next post navigation
 
 ---
 
 ### Phase 4: Advanced (Future)
 
+- [ ] Related posts suggestions (deferred from Phase 3)
 - [ ] Tags (many-to-many, more granular than categories)
 - [ ] Search within blog
 - [ ] Comments system (or integration with Disqus/etc)
@@ -196,11 +198,11 @@ The Blog System extends Site Engine with content management capabilities, allowi
 - [x] Colors apply to cards, links, etc. via `--theme-*` variables
 - [ ] Blog-specific theme options (post card style, etc.) - *Future*
 
-### SEO
-- [ ] Post meta title/description - *Phase 2*
-- [ ] Open Graph tags for social sharing - *Phase 2*
-- [ ] Structured data (Article schema) - *Phase 2*
-- [ ] Automatic sitemap inclusion - *Phase 2*
+### SEO ✅ COMPLETE
+- [x] Post meta title/description
+- [x] Open Graph tags for social sharing
+- [x] Structured data (Article schema)
+- [x] Automatic sitemap inclusion
 
 ### Existing Components Reused ✅
 - [x] `TiptapEditor` - Rich text editing for post content
@@ -231,7 +233,7 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 - [x] Users can create and publish blog posts
 - [x] Posts render correctly with site theme
-- [ ] Blog pages are SEO-friendly (partial - needs meta tags)
+- [x] Blog pages are SEO-friendly (meta tags, JSON-LD, sitemap)
 - [x] Post creation is intuitive (< 2 min to publish first post)
 - [x] Blog posts can be embedded on any page via section blocks
 
@@ -239,7 +241,7 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 **Created:** 2025-12-28
 **Updated:** 2025-12-28
-**Status:** Phase 1 & 1.5 Complete
+**Status:** Phase 1, 1.5, 2, 3 & SEO Complete
 **Priority:** P2 - Medium (larger initiative)
 
 ---
@@ -248,3 +250,4 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 1. `31adf40` - feat: add blog system with admin UI and public routes (Phase 1)
 2. `627078e` - feat: add blog section blocks for embedding posts on pages (Phase 1.5)
+3. `36b5212` - feat: add blog categories, reading time, RSS feed, and enhanced features (Phase 2 & 3)

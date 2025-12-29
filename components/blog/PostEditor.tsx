@@ -57,6 +57,8 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
   const [categoryId, setCategoryId] = useState<string | null>(
     post.category_id ?? null
   );
+  const [metaTitle, setMetaTitle] = useState(post.meta_title || "");
+  const [metaDescription, setMetaDescription] = useState(post.meta_description || "");
   const [localCategories, setLocalCategories] =
     useState<BlogCategory[]>(categories);
   const [isSaving, setIsSaving] = useState(false);
@@ -75,6 +77,8 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
       content: { html: content },
       featured_image: featuredImage || null,
       category_id: categoryId,
+      meta_title: metaTitle || null,
+      meta_description: metaDescription || null,
     });
     setIsSaving(false);
 
@@ -84,7 +88,7 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
       toast.error(result.error || "Failed to save post");
     }
     return result.success;
-  }, [post.id, title, slug, excerpt, content, featuredImage, categoryId]);
+  }, [post.id, title, slug, excerpt, content, featuredImage, categoryId, metaTitle, metaDescription]);
 
   const handlePublish = async () => {
     setIsPublishing(true);
@@ -325,6 +329,40 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
                   />
                   <p className="text-xs text-muted-foreground">
                     Shown in blog listing cards
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* SEO Settings */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium">SEO</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="metaTitle">Meta Title</Label>
+                  <Input
+                    id="metaTitle"
+                    value={metaTitle}
+                    onChange={(e) => setMetaTitle(e.target.value)}
+                    placeholder={title || "Page title for search engines"}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {metaTitle.length}/60 characters (recommended)
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="metaDescription">Meta Description</Label>
+                  <Textarea
+                    id="metaDescription"
+                    value={metaDescription}
+                    onChange={(e) => setMetaDescription(e.target.value)}
+                    placeholder={excerpt || "Brief description for search results..."}
+                    rows={3}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {metaDescription.length}/160 characters (recommended)
                   </p>
                 </div>
               </CardContent>

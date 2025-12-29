@@ -152,6 +152,8 @@ export interface UpdatePostData {
   content?: { html: string };
   featured_image?: string | null;
   category_id?: string | null;
+  meta_title?: string | null;
+  meta_description?: string | null;
 }
 
 /**
@@ -205,6 +207,12 @@ export async function updatePost(
   }
   if (data.category_id !== undefined) {
     updateData.category_id = data.category_id;
+  }
+  if (data.meta_title !== undefined) {
+    updateData.meta_title = data.meta_title?.trim() || null;
+  }
+  if (data.meta_description !== undefined) {
+    updateData.meta_description = data.meta_description?.trim() || null;
   }
 
   await db.update(blogPosts).set(updateData).where(eq(blogPosts.id, postId));

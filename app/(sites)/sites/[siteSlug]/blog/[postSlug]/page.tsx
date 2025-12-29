@@ -33,15 +33,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Not Found" };
   }
 
+  const title = post.meta_title || `${post.title} | ${post.site.name}`;
+  const description = post.meta_description || post.excerpt || `Read ${post.title} on ${post.site.name}`;
+  const postUrl = `${process.env.NEXT_PUBLIC_APP_URL}/sites/${siteSlug}/blog/${postSlug}`;
+
   return {
-    title: `${post.title} | ${post.site.name}`,
-    description: post.excerpt || `Read ${post.title} on ${post.site.name}`,
+    title,
+    description,
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
-      title: post.title,
-      description: post.excerpt || `Read ${post.title} on ${post.site.name}`,
+      title: post.meta_title || post.title,
+      description,
       type: "article",
+      url: postUrl,
+      siteName: post.site.name,
       publishedTime: post.published_at?.toISOString(),
+      modifiedTime: post.updated_at?.toISOString(),
       authors: post.author?.full_name ? [post.author.full_name] : undefined,
+      images: post.featured_image ? [post.featured_image] : undefined,
+    },
+    twitter: {
+      card: post.featured_image ? "summary_large_image" : "summary",
+      title: post.meta_title || post.title,
+      description,
       images: post.featured_image ? [post.featured_image] : undefined,
     },
   };
@@ -90,8 +106,36 @@ export default async function PublishedPostPage({ params }: PageProps) {
   const readingTime = calculateReadingTime(post.content?.html);
   const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || ""}/sites/${siteSlug}/blog/${postSlug}`;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.meta_description || post.excerpt || undefined,
+    image: post.featured_image || undefined,
+    datePublished: post.published_at?.toISOString(),
+    dateModified: post.updated_at?.toISOString(),
+    author: post.author?.full_name
+      ? {
+          "@type": "Person",
+          name: post.author.full_name,
+        }
+      : undefined,
+    publisher: {
+      "@type": "Organization",
+      name: post.site.name,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": postUrl,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ColorModeScript colorMode={colorMode} />
       <ThemeStyles theme={theme} colorMode={colorMode} />
       <div className="relative min-h-screen flex flex-col">
