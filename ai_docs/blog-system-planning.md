@@ -39,7 +39,7 @@ The Blog System extends Site Engine with content management capabilities, allowi
 | created_at | timestamp | |
 | updated_at | timestamp | |
 
-#### `blog_categories` (Phase 2)
+#### `blog_categories`
 | Column | Type | Description |
 |--------|------|-------------|
 | id | uuid | Primary key |
@@ -47,12 +47,9 @@ The Blog System extends Site Engine with content management capabilities, allowi
 | name | text | Category name |
 | slug | text | URL slug |
 | description | text | Optional description |
+| created_at | timestamp | |
 
-#### `blog_post_categories` (Phase 2)
-| Column | Type | Description |
-|--------|------|-------------|
-| post_id | uuid | FK to blog_posts |
-| category_id | uuid | FK to blog_categories |
+> **Note:** Originally planned a many-to-many `blog_post_categories` join table, but simplified to single category per post via `category_id` FK on `blog_posts`.
 
 ---
 
@@ -159,6 +156,62 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 ---
 
+### Phase 5: Featured Post Block Enhancements ✅ COMPLETE
+
+**Scope:** Enhance the `blog_featured` block to display full post content inline with multiple layout options.
+
+**Problem:** Current `blog_featured` block only shows a preview (title, excerpt, image) that links to the full post. Users want to display the entire post content inline on any page, creating a "news website" style experience without requiring navigation.
+
+**Layout Options:**
+- [x] `split` - Image on one side, content on other (default)
+- [x] `stacked` - Image on top, full content below
+- [x] `hero` - Full-width background image with configurable overlay
+- [x] `minimal` - No image, text-focused layout
+
+**Content Display Options:**
+- [x] Show full post content (HTML stripped, plain text displayed)
+- [x] Character limit for truncation with word-boundary awareness
+- [x] Ellipsis ("...") appended when content is truncated
+- [x] "Read More" link toggle (subtle styling, not CTA)
+- [x] Category badge display toggle
+
+**Hero Layout Specific:**
+- [x] Configurable overlay color (color picker + hex input)
+- [x] Configurable overlay opacity (0-100% slider)
+- [x] Solid theme color fallback when no featured image
+
+**Data Model (Implemented):**
+```typescript
+export type BlogFeaturedLayout = "split" | "stacked" | "hero" | "minimal";
+
+export interface BlogFeaturedContent {
+  postId: string | null;
+  layout: BlogFeaturedLayout;
+  showFullContent: boolean;
+  contentLimit: number;      // Character limit (0 = no limit)
+  showReadMore: boolean;
+  showCategory: boolean;
+  overlayColor: string;      // Hex color for hero overlay
+  overlayOpacity: number;    // 0-100 for hero overlay
+}
+```
+
+**Files Modified:**
+- [x] `lib/section-types.ts` - Added layout type and expanded interface
+- [x] `lib/section-defaults.ts` - Added sensible defaults for all properties
+- [x] `components/editor/BlogFeaturedEditor.tsx` - Layout selector, content controls, hero overlay settings
+- [x] `components/render/blocks/BlogFeaturedBlock.tsx` - 4 layout variants with helper components
+- [x] `components/render/PreviewBlockRenderer.tsx` - Shows selected layout type in placeholder
+
+**Implementation Notes:**
+- Backwards compatible: existing blocks get default values via nullish coalescing
+- Content truncation strips HTML tags before truncating for clean display
+- Truncation respects word boundaries (won't cut mid-word)
+- "Read More" link shows "Read more" when truncated, "View post" otherwise
+- Category badge uses theme primary color, with light variant for hero layout
+
+---
+
 ## UI/UX Considerations
 
 ### Blog Tab in Site Editor
@@ -259,7 +312,7 @@ The Blog System extends Site Engine with content management capabilities, allowi
 ---
 
 **Created:** 2025-12-28
-**Updated:** 2025-12-28
+**Updated:** 2025-12-29
 **Status:** Phase 1, 1.5, 2, 3 & SEO Complete
 **Priority:** P2 - Medium (larger initiative)
 

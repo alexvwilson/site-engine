@@ -2,7 +2,11 @@
 
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import { getTypedContent } from "@/lib/section-types";
+import {
+  getTypedContent,
+  type BlogFeaturedContent,
+  type BlogFeaturedLayout,
+} from "@/lib/section-types";
 
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
@@ -89,7 +93,16 @@ export function PreviewBlockRenderer({
           theme={theme}
         />
       );
-    case "blog_featured":
+    case "blog_featured": {
+      const blogContent = content as BlogFeaturedContent;
+      const layout: BlogFeaturedLayout = blogContent.layout ?? "split";
+      const layoutLabels: Record<BlogFeaturedLayout, string> = {
+        split: "Split",
+        stacked: "Stacked",
+        hero: "Hero",
+        minimal: "Minimal",
+      };
+
       return (
         <div
           className="py-16 text-center border-2 border-dashed rounded-lg mx-4 my-8"
@@ -110,11 +123,12 @@ export function PreviewBlockRenderer({
               className="text-sm"
               style={{ color: "var(--color-muted-foreground)" }}
             >
-              Blog posts will display on the published site
+              {layoutLabels[layout]} layout • Displays on published site
             </p>
           </div>
         </div>
       );
+    }
     case "blog_grid":
       return (
         <div

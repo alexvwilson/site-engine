@@ -96,8 +96,18 @@ export interface FooterContent {
   links: FooterLink[];
 }
 
+export type BlogFeaturedLayout = "split" | "stacked" | "hero" | "minimal";
+
 export interface BlogFeaturedContent {
   postId: string | null;
+  layout: BlogFeaturedLayout;
+  showFullContent: boolean;
+  contentLimit: number; // Character limit (0 = no limit)
+  showReadMore: boolean;
+  showCategory: boolean;
+  // Hero layout specific
+  overlayColor: string; // Hex color, e.g., "#000000"
+  overlayOpacity: number; // 0-100
 }
 
 export interface BlogGridContent {

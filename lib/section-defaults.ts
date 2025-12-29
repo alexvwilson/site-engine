@@ -100,6 +100,13 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
 
   blog_featured: {
     postId: null,
+    layout: "split",
+    showFullContent: false,
+    contentLimit: 0,
+    showReadMore: true,
+    showCategory: true,
+    overlayColor: "#000000",
+    overlayOpacity: 50,
   },
 
   blog_grid: {
