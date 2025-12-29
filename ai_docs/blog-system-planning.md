@@ -65,39 +65,57 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 ## Implementation Phases
 
-### Phase 1: Core Blog Functionality
+### Phase 1: Core Blog Functionality ✅ COMPLETE
 
 **Scope:** Basic post creation, editing, and display
 
 **Database:**
-- [ ] Create `blog_posts` table schema
-- [ ] Generate and run migration
+- [x] Create `blog_posts` table schema (`lib/drizzle/schema/blog-posts.ts`)
+- [x] Generate and run migration
 
 **Server Actions (`app/actions/blog.ts`):**
-- [ ] `createPost(siteId, data)` - Create new draft post
-- [ ] `updatePost(postId, data)` - Update post content
-- [ ] `publishPost(postId)` - Set status to published
-- [ ] `unpublishPost(postId)` - Revert to draft
-- [ ] `deletePost(postId)` - Delete post
-- [ ] `getPostsBySite(siteId, options)` - List posts with pagination
-- [ ] `getPostBySlug(siteSlug, postSlug)` - Get single post for display
+- [x] `createPost(siteId, data)` - Create new draft post
+- [x] `updatePost(postId, data)` - Update post content
+- [x] `publishPost(postId)` - Set status to published
+- [x] `unpublishPost(postId)` - Revert to draft
+- [x] `deletePost(postId)` - Delete post
+
+**Query Functions (`lib/queries/blog.ts`):**
+- [x] `getPostsBySite(siteId)` - List posts for admin
+- [x] `getPublishedPostsBySite(siteId, limit, offset)` - List published posts with pagination
+- [x] `getPublishedPostBySlug(siteSlug, postSlug)` - Get single post for display
+- [x] `getPublishedPostById(postId)` - Get single post by ID (for featured block)
 
 **Admin UI:**
-- [ ] Add "Blog" tab to site detail page (`components/blog/BlogTab.tsx`)
-- [ ] Posts list with status badges (`components/blog/PostsList.tsx`)
-- [ ] Post editor page (`app/(protected)/app/sites/[siteId]/blog/[postId]/page.tsx`)
-- [ ] Rich text editor integration (reuse TiptapEditor)
-- [ ] Featured image upload (reuse ImageUpload)
-- [ ] SEO fields (meta title, description)
+- [x] Add "Blog" tab to site detail page (`components/blog/BlogTab.tsx`)
+- [x] Posts list with status badges (`components/blog/PostsList.tsx`, `PostCard.tsx`)
+- [x] Post editor page (`app/(protected)/app/sites/[siteId]/blog/[postId]/page.tsx`)
+- [x] Rich text editor integration (reuses TiptapEditor)
+- [x] Featured image upload (reuses ImageUpload)
+- [ ] SEO fields (meta title, description) - *Deferred to Phase 2*
 
 **Public Routes:**
-- [ ] Blog listing page (`app/(sites)/sites/[siteSlug]/blog/page.tsx`)
-- [ ] Post detail page (`app/(sites)/sites/[siteSlug]/blog/[postSlug]/page.tsx`)
+- [x] Blog listing page (`app/(sites)/sites/[siteSlug]/blog/page.tsx`)
+- [x] Post detail page (`app/(sites)/sites/[siteSlug]/blog/[postSlug]/page.tsx`)
+- [x] Loading states (`loading.tsx`)
+- [x] Not found handling (`not-found.tsx`)
 
 **Rendering Components:**
-- [ ] `BlogListingPage.tsx` - Grid/list of post cards
-- [ ] `BlogPostPage.tsx` - Full post with title, image, content, date
-- [ ] `PostCard.tsx` - Card for listing display
+- [x] `BlogListingPage.tsx` - Grid of post cards with pagination
+- [x] `PostContent.tsx` - Renders rich text post content
+- [x] `PublicPostCard.tsx` - Card for listing display
+
+### Phase 1.5: Blog Section Blocks ✅ COMPLETE (Added)
+
+**Scope:** Embed blog posts as sections on any page
+
+- [x] `blog_featured` block type - Display a selected post as a hero section
+- [x] `blog_grid` block type - Display grid of recent posts (3/6/9)
+- [x] `BlogFeaturedEditor.tsx` - Post selector dropdown
+- [x] `BlogGridEditor.tsx` - Post count and excerpt toggle
+- [x] `BlogFeaturedBlock.tsx` - Async server component renderer
+- [x] `BlogGridBlock.tsx` - Async server component renderer
+- [x] `PreviewBlockRenderer.tsx` - Client-safe preview with placeholders
 
 ---
 
@@ -172,53 +190,61 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 ## Integration Points
 
-### Theme System
-- Blog pages use site's active theme
-- Typography applies to post content
-- Colors apply to cards, links, etc.
-- Consider blog-specific theme options later (post card style, etc.)
+### Theme System ✅
+- [x] Blog pages use site's active theme (CSS variables)
+- [x] Typography applies to post content via `--theme-font-*` variables
+- [x] Colors apply to cards, links, etc. via `--theme-*` variables
+- [ ] Blog-specific theme options (post card style, etc.) - *Future*
 
 ### SEO
-- Post meta title/description
-- Open Graph tags for social sharing
-- Structured data (Article schema)
-- Automatic sitemap inclusion
+- [ ] Post meta title/description - *Phase 2*
+- [ ] Open Graph tags for social sharing - *Phase 2*
+- [ ] Structured data (Article schema) - *Phase 2*
+- [ ] Automatic sitemap inclusion - *Phase 2*
 
-### Existing Components to Reuse
-- `TiptapEditor` - Rich text editing
-- `ImageUpload` - Featured image
-- `ThemeStyles` - Apply theme to blog pages
-- Site header/footer rendering
+### Existing Components Reused ✅
+- [x] `TiptapEditor` - Rich text editing for post content
+- [x] `ImageUpload` - Featured image upload
+- [x] `ThemeStyles` - Apply theme to blog pages
+- [x] Site header/footer rendering (uses global header/footer if configured)
 
 ---
 
-## Open Questions
+## Open Questions (Resolved)
 
 1. **Blog as page type vs. separate entity?**
-   - Current plan: Separate entity (blog_posts table)
-   - Alternative: Blog post as a special page type
-   - Decision: Separate entity allows for blog-specific features
+   - ✅ Decision: Separate entity (blog_posts table)
+   - Allows blog-specific features and cleaner data model
 
 2. **Blog listing as automatic route vs. configurable?**
-   - Current plan: Automatic `/blog` route when blog is enabled
-   - Alternative: Let user choose where blog appears
-   - Decision: Start with automatic, consider flexibility later
+   - ✅ Decision: Both! Automatic `/blog` route exists, PLUS blog section blocks
+   - Users can embed `blog_featured` and `blog_grid` blocks on any page
+   - This provides maximum flexibility
 
 3. **Multiple blogs per site?**
-   - Current plan: One blog per site
-   - Could extend later if needed
+   - Current: One blog per site
+   - Can extend later if needed
 
 ---
 
 ## Success Metrics
 
-- Users can create and publish blog posts
-- Posts render correctly with site theme
-- Blog pages are SEO-friendly
-- Post creation is intuitive (< 2 min to publish first post)
+- [x] Users can create and publish blog posts
+- [x] Posts render correctly with site theme
+- [ ] Blog pages are SEO-friendly (partial - needs meta tags)
+- [x] Post creation is intuitive (< 2 min to publish first post)
+- [x] Blog posts can be embedded on any page via section blocks
 
 ---
 
 **Created:** 2025-12-28
-**Status:** Planning
+**Updated:** 2025-12-28
+**Status:** Phase 1 & 1.5 Complete
 **Priority:** P2 - Medium (larger initiative)
+
+---
+
+## Completed Commits
+
+1. `31adf40` - feat: add blog system with admin UI and public routes (Phase 1)
+2. `627078e` - feat: add blog section blocks for embedding posts on pages (Phase 1.5)
