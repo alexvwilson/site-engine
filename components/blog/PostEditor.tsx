@@ -28,7 +28,9 @@ import {
   deletePost,
 } from "@/app/actions/blog";
 import { ImageUpload } from "@/components/editor/ImageUpload";
+import { CategorySelector } from "@/components/blog/CategorySelector";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
+import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
 import dynamic from "next/dynamic";
 
 const TiptapEditor = dynamic(
@@ -42,15 +44,21 @@ const TiptapEditor = dynamic(
 interface PostEditorProps {
   post: BlogPost;
   siteId: string;
+  categories: BlogCategory[];
 }
 
-export function PostEditor({ post, siteId }: PostEditorProps) {
+export function PostEditor({ post, siteId, categories }: PostEditorProps) {
   const router = useRouter();
   const [title, setTitle] = useState(post.title);
   const [slug, setSlug] = useState(post.slug);
   const [excerpt, setExcerpt] = useState(post.excerpt || "");
   const [content, setContent] = useState(post.content?.html || "");
   const [featuredImage, setFeaturedImage] = useState(post.featured_image || "");
+  const [categoryId, setCategoryId] = useState<string | null>(
+    post.category_id ?? null
+  );
+  const [localCategories, setLocalCategories] =
+    useState<BlogCategory[]>(categories);
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -66,6 +74,7 @@ export function PostEditor({ post, siteId }: PostEditorProps) {
       excerpt,
       content: { html: content },
       featured_image: featuredImage || null,
+      category_id: categoryId,
     });
     setIsSaving(false);
 
@@ -75,7 +84,7 @@ export function PostEditor({ post, siteId }: PostEditorProps) {
       toast.error(result.error || "Failed to save post");
     }
     return result.success;
-  }, [post.id, title, slug, excerpt, content, featuredImage]);
+  }, [post.id, title, slug, excerpt, content, featuredImage, categoryId]);
 
   const handlePublish = async () => {
     setIsPublishing(true);
@@ -247,6 +256,28 @@ export function PostEditor({ post, siteId }: PostEditorProps) {
                   value={featuredImage}
                   onChange={setFeaturedImage}
                   siteId={siteId}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Category */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium">Category</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CategorySelector
+                  siteId={siteId}
+                  categories={localCategories}
+                  value={categoryId}
+                  onChange={setCategoryId}
+                  onCategoryCreated={(newCategory) => {
+                    setLocalCategories((prev) =>
+                      [...prev, newCategory].sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                      )
+                    );
+                  }}
                 />
               </CardContent>
             </Card>

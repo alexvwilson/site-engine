@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Clock, Tag } from "lucide-react";
+import { calculateReadingTime } from "@/lib/blog-utils";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 
 interface PublicPostCardProps {
@@ -7,6 +9,8 @@ interface PublicPostCardProps {
   siteSlug: string;
   showAuthor?: boolean;
   authorName?: string | null;
+  categoryName?: string | null;
+  categorySlug?: string | null;
 }
 
 export function PublicPostCard({
@@ -14,6 +18,8 @@ export function PublicPostCard({
   siteSlug,
   showAuthor = true,
   authorName,
+  categoryName,
+  categorySlug,
 }: PublicPostCardProps) {
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
@@ -22,6 +28,8 @@ export function PublicPostCard({
         day: "numeric",
       })
     : "";
+
+  const readingTime = calculateReadingTime(post.content?.html);
 
   return (
     <Link
@@ -88,8 +96,23 @@ export function PublicPostCard({
           </p>
         )}
 
+        {/* Category Badge */}
+        {categoryName && categorySlug && (
+          <span
+            className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full w-fit"
+            style={{
+              backgroundColor: "var(--theme-primary)",
+              color: "var(--theme-background)",
+              opacity: 0.9,
+            }}
+          >
+            <Tag className="w-3 h-3" />
+            {categoryName}
+          </span>
+        )}
+
         <div
-          className="flex items-center gap-2 text-xs"
+          className="flex items-center gap-2 text-xs flex-wrap"
           style={{ color: "var(--theme-muted-text)" }}
         >
           {showAuthor && authorName && (
@@ -99,6 +122,11 @@ export function PublicPostCard({
             </>
           )}
           <span>{formattedDate}</span>
+          <span>•</span>
+          <span className="inline-flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            {readingTime} min
+          </span>
         </div>
       </div>
     </Link>

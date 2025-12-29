@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Rss } from "lucide-react";
 import { PublicPostCard } from "./PublicPostCard";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 
 interface PostWithAuthor extends BlogPost {
   authorName?: string | null;
+  categoryName?: string | null;
+  categorySlug?: string | null;
 }
 
 interface BlogListingPageProps {
@@ -95,7 +98,7 @@ export function BlogListingPage({
             Blog
           </h1>
           <p
-            className="text-lg"
+            className="text-lg mb-4"
             style={{
               color: "var(--theme-muted-text)",
               fontFamily: "var(--theme-font-body)",
@@ -103,6 +106,19 @@ export function BlogListingPage({
           >
             Latest posts from {siteName}
           </p>
+          <a
+            href={`/sites/${siteSlug}/blog/rss.xml`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full transition-colors hover:opacity-80"
+            style={{
+              backgroundColor: "var(--theme-muted)",
+              color: "var(--theme-text)",
+            }}
+          >
+            <Rss className="w-4 h-4" />
+            RSS Feed
+          </a>
         </div>
 
         {/* Posts Grid */}
@@ -114,6 +130,8 @@ export function BlogListingPage({
               siteSlug={siteSlug}
               showAuthor={showAuthor}
               authorName={post.authorName}
+              categoryName={post.categoryName}
+              categorySlug={post.categorySlug}
             />
           ))}
         </div>

@@ -43,6 +43,12 @@ export * from "./sections";
  */
 export * from "./blog-posts";
 
+/**
+ * Blog Categories table - Categories for organizing blog posts
+ * Each category belongs to one site, posts can have one category
+ */
+export * from "./blog-categories";
+
 // ============================================================================
 // Theme Management
 // ============================================================================

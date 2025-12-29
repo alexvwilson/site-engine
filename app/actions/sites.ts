@@ -233,6 +233,7 @@ export interface UpdateSiteSettingsData {
   constructionTitle?: string | null;
   constructionDescription?: string | null;
   showBlogAuthor?: boolean;
+  defaultBlogCategoryId?: string | null;
 }
 
 /**
@@ -320,6 +321,9 @@ export async function updateSiteSettings(
   }
   if (data.showBlogAuthor !== undefined) {
     updateData.show_blog_author = data.showBlogAuthor;
+  }
+  if (data.defaultBlogCategoryId !== undefined) {
+    updateData.default_blog_category_id = data.defaultBlogCategoryId;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

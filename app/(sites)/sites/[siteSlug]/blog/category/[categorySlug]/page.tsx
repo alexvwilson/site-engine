@@ -1,0 +1,112 @@
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import { getPublishedSiteBySlug } from "@/lib/queries/sites";
+import {
+  getCategoryBySlug,
+  getPublishedPostsByCategory,
+  getPublishedPostCountByCategory,
+} from "@/lib/queries/blog";
+import { getActiveTheme } from "@/lib/queries/themes";
+import { getCurrentUserId } from "@/lib/auth";
+import { ThemeStyles, ColorModeScript } from "@/components/render/ThemeStyles";
+import { ColorModeToggle } from "@/components/render/ColorModeToggle";
+import { HeaderBlock } from "@/components/render/blocks/HeaderBlock";
+import { FooterBlock } from "@/components/render/blocks/FooterBlock";
+import { ComingSoonPage } from "@/components/render/ComingSoonPage";
+import { CategoryListingPage } from "@/components/render/blog/CategoryListingPage";
+import { DEFAULT_THEME } from "@/lib/default-theme";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
+
+export const dynamic = "force-dynamic";
+
+const POSTS_PER_PAGE = 9;
+
+interface PageProps {
+  params: Promise<{ siteSlug: string; categorySlug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { siteSlug, categorySlug } = await params;
+  const site = await getPublishedSiteBySlug(siteSlug);
+
+  if (!site) {
+    return { title: "Not Found" };
+  }
+
+  const category = await getCategoryBySlug(site.id, categorySlug);
+
+  if (!category) {
+    return { title: "Category Not Found" };
+  }
+
+  return {
+    title: `${category.name} | Blog | ${site.meta_title || site.name}`,
+    description: category.description || `Posts in ${category.name} from ${site.name}`,
+    openGraph: {
+      title: `${category.name} | Blog | ${site.meta_title || site.name}`,
+      description: category.description || `Posts in ${category.name} from ${site.name}`,
+      type: "website",
+    },
+  };
+}
+
+export default async function CategoryArchivePage({ params }: PageProps) {
+  const { siteSlug, categorySlug } = await params;
+
+  const site = await getPublishedSiteBySlug(siteSlug);
+  if (!site) {
+    notFound();
+  }
+
+  // Show Coming Soon page to non-owners when under construction
+  if (site.under_construction) {
+    const userId = await getCurrentUserId();
+    if (userId !== site.user_id) {
+      return <ComingSoonPage site={site} />;
+    }
+  }
+
+  const category = await getCategoryBySlug(site.id, categorySlug);
+  if (!category) {
+    notFound();
+  }
+
+  const [posts, totalCount, activeTheme] = await Promise.all([
+    getPublishedPostsByCategory(site.id, categorySlug, POSTS_PER_PAGE, 0),
+    getPublishedPostCountByCategory(site.id, categorySlug),
+    getActiveTheme(site.id),
+  ]);
+
+  const theme = activeTheme?.data ?? DEFAULT_THEME;
+  const colorMode = site.color_mode;
+
+  const siteHeader = site.header_content as HeaderContent | null;
+  const siteFooter = site.footer_content as FooterContent | null;
+
+  return (
+    <>
+      <ColorModeScript colorMode={colorMode} />
+      <ThemeStyles theme={theme} colorMode={colorMode} />
+      <div className="relative min-h-screen flex flex-col">
+        {colorMode === "user_choice" && (
+          <div className="fixed top-4 right-4 z-[60]">
+            <ColorModeToggle />
+          </div>
+        )}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
+        <main className="flex-1">
+          <CategoryListingPage
+            initialPosts={posts}
+            siteSlug={siteSlug}
+            siteId={site.id}
+            category={category}
+            showAuthor={site.show_blog_author}
+            totalCount={totalCount}
+            postsPerPage={POSTS_PER_PAGE}
+          />
+        </main>
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
+      </div>
+    </>
+  );
+}

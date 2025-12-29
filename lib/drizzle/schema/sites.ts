@@ -41,6 +41,8 @@ export const sites = pgTable(
     construction_description: text("construction_description"),
     // Blog settings
     show_blog_author: boolean("show_blog_author").notNull().default(true),
+    // Default category for new blog posts (FK to blog_categories.id, set via migration)
+    default_blog_category_id: uuid("default_blog_category_id"),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

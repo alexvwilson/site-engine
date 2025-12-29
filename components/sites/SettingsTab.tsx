@@ -25,6 +25,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { updateSiteSettings } from "@/app/actions/sites";
 import type { Site, ColorMode } from "@/lib/drizzle/schema/sites";
+import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
@@ -32,6 +33,7 @@ import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
   site: Site;
+  categories?: BlogCategory[];
 }
 
 // Helper to compare objects for change detection
@@ -39,7 +41,7 @@ function deepEqual(a: unknown, b: unknown): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-export function SettingsTab({ site }: SettingsTabProps) {
+export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
   const [loading, setLoading] = useState(false);
   const [slug, setSlug] = useState(site.slug);
   const [customDomain, setCustomDomain] = useState(site.custom_domain || "");
@@ -56,6 +58,9 @@ export function SettingsTab({ site }: SettingsTabProps) {
 
   // Blog settings
   const [showBlogAuthor, setShowBlogAuthor] = useState(site.show_blog_author);
+  const [defaultBlogCategoryId, setDefaultBlogCategoryId] = useState<string | null>(
+    site.default_blog_category_id ?? null
+  );
 
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
@@ -79,6 +84,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
     constructionTitle !== (site.construction_title || "") ||
     constructionDescription !== (site.construction_description || "") ||
     showBlogAuthor !== site.show_blog_author ||
+    defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter);
 
@@ -101,6 +107,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
     setConstructionTitle(site.construction_title || "");
     setConstructionDescription(site.construction_description || "");
     setShowBlogAuthor(site.show_blog_author);
+    setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
   }, [site]);
@@ -131,6 +138,7 @@ export function SettingsTab({ site }: SettingsTabProps) {
       constructionTitle: constructionTitle !== (site.construction_title || "") ? constructionTitle || null : undefined,
       constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
       showBlogAuthor: showBlogAuthor !== site.show_blog_author ? showBlogAuthor : undefined,
+      defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
@@ -404,6 +412,32 @@ export function SettingsTab({ site }: SettingsTabProps) {
               onCheckedChange={setShowBlogAuthor}
               disabled={loading}
             />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label htmlFor="defaultBlogCategory">Default Category</Label>
+            <Select
+              value={defaultBlogCategoryId ?? "none"}
+              onValueChange={(value) => setDefaultBlogCategoryId(value === "none" ? null : value)}
+              disabled={loading}
+            >
+              <SelectTrigger className="w-full max-w-xs" id="defaultBlogCategory">
+                <SelectValue placeholder="Uncategorized" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Uncategorized</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              New blog posts will be assigned this category by default. You can create categories when editing a post.
+            </p>
           </div>
         </CardContent>
       </Card>

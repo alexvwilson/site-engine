@@ -2,9 +2,12 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock, Tag } from "lucide-react";
 import { getPublishedSiteBySlug } from "@/lib/queries/sites";
-import { getPublishedPostBySlug } from "@/lib/queries/blog";
+import { getPublishedPostBySlug, getAdjacentPosts } from "@/lib/queries/blog";
+import { calculateReadingTime } from "@/lib/blog-utils";
+import { SocialShare } from "@/components/render/blog/SocialShare";
+import { PostNavigation } from "@/components/render/blog/PostNavigation";
 import { getActiveTheme } from "@/lib/queries/themes";
 import { getCurrentUserId } from "@/lib/auth";
 import { ThemeStyles, ColorModeScript } from "@/components/render/ThemeStyles";
@@ -65,7 +68,10 @@ export default async function PublishedPostPage({ params }: PageProps) {
     notFound();
   }
 
-  const activeTheme = await getActiveTheme(site.id);
+  const [activeTheme, adjacentPosts] = await Promise.all([
+    getActiveTheme(site.id),
+    post.published_at ? getAdjacentPosts(site.id, post.published_at) : Promise.resolve({ previous: null, next: null }),
+  ]);
   const theme = activeTheme?.data ?? DEFAULT_THEME;
   const colorMode = site.color_mode;
 
@@ -81,6 +87,8 @@ export default async function PublishedPostPage({ params }: PageProps) {
     : "";
 
   const showAuthor = post.site.show_blog_author;
+  const readingTime = calculateReadingTime(post.content?.html);
+  const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || ""}/sites/${siteSlug}/blog/${postSlug}`;
 
   return (
     <>
@@ -137,6 +145,24 @@ export default async function PublishedPostPage({ params }: PageProps) {
                   <time dateTime={post.published_at?.toISOString()}>
                     {formattedDate}
                   </time>
+                  <span>•</span>
+                  <span className="inline-flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" />
+                    {readingTime} min read
+                  </span>
+                  {post.category && (
+                    <>
+                      <span>•</span>
+                      <Link
+                        href={`/sites/${siteSlug}/blog/category/${post.category.slug}`}
+                        className="inline-flex items-center gap-1 transition-colors hover:opacity-80"
+                        style={{ color: "var(--theme-primary)" }}
+                      >
+                        <Tag className="w-3.5 h-3.5" />
+                        {post.category.name}
+                      </Link>
+                    </>
+                  )}
                 </div>
               </header>
 
@@ -155,6 +181,22 @@ export default async function PublishedPostPage({ params }: PageProps) {
 
               {/* Post Content */}
               <PostContent content={post.content} />
+
+              {/* Social Sharing */}
+              <div className="mt-10 pt-8 border-t" style={{ borderColor: "var(--theme-border)" }}>
+                <SocialShare
+                  url={postUrl}
+                  title={post.title}
+                  description={post.excerpt || undefined}
+                />
+              </div>
+
+              {/* Post Navigation */}
+              <PostNavigation
+                siteSlug={siteSlug}
+                previous={adjacentPosts.previous}
+                next={adjacentPosts.next}
+              />
             </div>
           </article>
         </main>

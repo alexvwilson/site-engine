@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { requireUserId } from "@/lib/auth";
 import { getSiteById } from "@/lib/queries/sites";
 import { getPagesBySite } from "@/lib/queries/pages";
-import { getPostsBySite } from "@/lib/queries/blog";
+import { getPostsBySite, getCategoriesBySite } from "@/lib/queries/blog";
 import { getThemesBySite, getActiveTheme } from "@/lib/queries/themes";
 import { SiteHeader } from "@/components/sites/SiteHeader";
 import { SiteTabs } from "@/components/sites/SiteTabs";
@@ -23,10 +23,11 @@ export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
     notFound();
   }
 
-  // Fetch pages, posts, and themes in parallel
-  const [pages, posts, themes, activeTheme] = await Promise.all([
+  // Fetch pages, posts, categories, and themes in parallel
+  const [pages, posts, categories, themes, activeTheme] = await Promise.all([
     getPagesBySite(siteId, userId),
     getPostsBySite(siteId),
+    getCategoriesBySite(siteId),
     getThemesBySite(siteId),
     getActiveTheme(siteId),
   ]);
@@ -42,7 +43,7 @@ export default async function SiteDetailPage({ params }: SiteDetailPageProps) {
       <div className="container mx-auto px-4 py-8">
         <SiteHeader site={site} />
         <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-          <SiteTabs site={site} pages={pages} posts={posts} themes={themes} activeTheme={activeTheme} />
+          <SiteTabs site={site} pages={pages} posts={posts} categories={categories} themes={themes} activeTheme={activeTheme} />
         </Suspense>
       </div>
     </div>

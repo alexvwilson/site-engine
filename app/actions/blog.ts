@@ -3,6 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/drizzle/db";
 import { blogPosts } from "@/lib/drizzle/schema/blog-posts";
+import {
+  blogCategories,
+  type BlogCategory,
+} from "@/lib/drizzle/schema/blog-categories";
 import { sites } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and } from "drizzle-orm";
@@ -15,6 +19,12 @@ export interface ActionResult {
 export interface CreatePostResult {
   success: boolean;
   postId?: string;
+  error?: string;
+}
+
+export interface CreateCategoryResult {
+  success: boolean;
+  category?: BlogCategory;
   error?: string;
 }
 
@@ -94,14 +104,31 @@ async function getPostSiteId(
 /**
  * Create a new draft blog post
  */
-export async function createPost(siteId: string): Promise<CreatePostResult> {
+export async function createPost(
+  siteId: string,
+  options?: { category_id?: string | null }
+): Promise<CreatePostResult> {
   const userId = await requireUserId();
 
-  if (!(await verifySiteOwnership(siteId, userId))) {
+  // Get site and verify ownership
+  const [site] = await db
+    .select({
+      id: sites.id,
+      user_id: sites.user_id,
+      default_blog_category_id: sites.default_blog_category_id,
+    })
+    .from(sites)
+    .where(eq(sites.id, siteId))
+    .limit(1);
+
+  if (!site || site.user_id !== userId) {
     return { success: false, error: "Site not found" };
   }
 
   const slug = await generateUniqueSlug(siteId, "Untitled Post");
+
+  // Use provided category or fall back to site's default
+  const categoryId = options?.category_id ?? site.default_blog_category_id;
 
   const [post] = await db
     .insert(blogPosts)
@@ -110,6 +137,7 @@ export async function createPost(siteId: string): Promise<CreatePostResult> {
       author_id: userId,
       title: "Untitled Post",
       slug,
+      category_id: categoryId,
     })
     .returning({ id: blogPosts.id });
 
@@ -123,6 +151,7 @@ export interface UpdatePostData {
   excerpt?: string;
   content?: { html: string };
   featured_image?: string | null;
+  category_id?: string | null;
 }
 
 /**
@@ -174,6 +203,9 @@ export async function updatePost(
   if (data.featured_image !== undefined) {
     updateData.featured_image = data.featured_image;
   }
+  if (data.category_id !== undefined) {
+    updateData.category_id = data.category_id;
+  }
 
   await db.update(blogPosts).set(updateData).where(eq(blogPosts.id, postId));
 
@@ -183,9 +215,14 @@ export async function updatePost(
 }
 
 /**
- * Publish a blog post
+ * Publish a blog post (optionally schedule for future)
+ * @param postId - The post ID
+ * @param scheduledAt - Optional future date to schedule the post (ISO string or Date)
  */
-export async function publishPost(postId: string): Promise<ActionResult> {
+export async function publishPost(
+  postId: string,
+  scheduledAt?: string | Date | null
+): Promise<ActionResult> {
   const userId = await requireUserId();
 
   const siteId = await getPostSiteId(postId, userId);
@@ -204,11 +241,18 @@ export async function publishPost(postId: string): Promise<ActionResult> {
     return { success: false, error: "Please add a title before publishing" };
   }
 
+  // Parse scheduled date if provided, otherwise use now
+  const publishDate = scheduledAt
+    ? typeof scheduledAt === "string"
+      ? new Date(scheduledAt)
+      : scheduledAt
+    : new Date();
+
   await db
     .update(blogPosts)
     .set({
       status: "published",
-      published_at: new Date(),
+      published_at: publishDate,
       updated_at: new Date(),
     })
     .where(eq(blogPosts.id, postId));
@@ -287,5 +331,159 @@ export async function deletePost(postId: string): Promise<ActionResult> {
   }
 
   revalidatePath(`/app/sites/${siteId}`);
+  return { success: true };
+}
+
+// ============================================================================
+// Category Actions
+// ============================================================================
+
+/**
+ * Generate unique category slug within site
+ */
+async function generateUniqueCategorySlug(
+  siteId: string,
+  baseName: string
+): Promise<string> {
+  const baseSlug = generateSlug(baseName) || "category";
+  let slug = baseSlug;
+  let counter = 1;
+
+  while (true) {
+    const existing = await db
+      .select({ id: blogCategories.id })
+      .from(blogCategories)
+      .where(and(eq(blogCategories.site_id, siteId), eq(blogCategories.slug, slug)))
+      .limit(1);
+
+    if (existing.length === 0) return slug;
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+}
+
+/**
+ * Create a new blog category
+ */
+export async function createCategory(
+  siteId: string,
+  data: { name: string; description?: string }
+): Promise<CreateCategoryResult> {
+  const userId = await requireUserId();
+
+  if (!(await verifySiteOwnership(siteId, userId))) {
+    return { success: false, error: "Site not found" };
+  }
+
+  const name = data.name.trim();
+  if (!name) {
+    return { success: false, error: "Category name is required" };
+  }
+
+  const slug = await generateUniqueCategorySlug(siteId, name);
+
+  const [category] = await db
+    .insert(blogCategories)
+    .values({
+      site_id: siteId,
+      name,
+      slug,
+      description: data.description?.trim() || null,
+    })
+    .returning();
+
+  revalidatePath(`/app/sites/${siteId}`);
+  return { success: true, category };
+}
+
+/**
+ * Update an existing category
+ */
+export async function updateCategory(
+  categoryId: string,
+  data: { name?: string; description?: string }
+): Promise<ActionResult> {
+  const userId = await requireUserId();
+
+  // Get category and verify site ownership
+  const [category] = await db
+    .select({ site_id: blogCategories.site_id })
+    .from(blogCategories)
+    .where(eq(blogCategories.id, categoryId))
+    .limit(1);
+
+  if (!category) {
+    return { success: false, error: "Category not found" };
+  }
+
+  if (!(await verifySiteOwnership(category.site_id, userId))) {
+    return { success: false, error: "Category not found" };
+  }
+
+  const updateData: Partial<typeof blogCategories.$inferInsert> = {};
+
+  if (data.name !== undefined) {
+    const name = data.name.trim();
+    if (!name) {
+      return { success: false, error: "Category name is required" };
+    }
+    updateData.name = name;
+    updateData.slug = await generateUniqueCategorySlug(category.site_id, name);
+  }
+
+  if (data.description !== undefined) {
+    updateData.description = data.description.trim() || null;
+  }
+
+  if (Object.keys(updateData).length > 0) {
+    await db
+      .update(blogCategories)
+      .set(updateData)
+      .where(eq(blogCategories.id, categoryId));
+  }
+
+  revalidatePath(`/app/sites/${category.site_id}`);
+  return { success: true };
+}
+
+/**
+ * Delete a category (posts will have category_id set to null)
+ */
+export async function deleteCategory(categoryId: string): Promise<ActionResult> {
+  const userId = await requireUserId();
+
+  // Get category and verify site ownership
+  const [category] = await db
+    .select({ site_id: blogCategories.site_id })
+    .from(blogCategories)
+    .where(eq(blogCategories.id, categoryId))
+    .limit(1);
+
+  if (!category) {
+    return { success: false, error: "Category not found" };
+  }
+
+  if (!(await verifySiteOwnership(category.site_id, userId))) {
+    return { success: false, error: "Category not found" };
+  }
+
+  // Check if this is the site's default category
+  const [site] = await db
+    .select({ default_blog_category_id: sites.default_blog_category_id })
+    .from(sites)
+    .where(eq(sites.id, category.site_id))
+    .limit(1);
+
+  // Clear default if this category is the default
+  if (site?.default_blog_category_id === categoryId) {
+    await db
+      .update(sites)
+      .set({ default_blog_category_id: null })
+      .where(eq(sites.id, category.site_id));
+  }
+
+  await db.delete(blogCategories).where(eq(blogCategories.id, categoryId));
+
+  revalidatePath(`/app/sites/${category.site_id}`);
   return { success: true };
 }
