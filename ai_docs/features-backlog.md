@@ -22,29 +22,6 @@
 
 ## P2 - Medium Priority
 
-### 14. Header CTA Button Toggle
-
-**Problem:** Header CTA button visibility is controlled by whether `ctaText` and `ctaUrl` fields have values. Users want an explicit toggle to show/hide the CTA.
-
-**Current Behavior:** CTA shows when both `ctaText` AND `ctaUrl` are present.
-
-**Proposed Solution:**
-- [ ] Add `showCta: boolean` field to HeaderContent interface
-- [ ] Add Switch toggle in HeaderEditor
-- [ ] Update HeaderBlock to check `showCta` flag
-
-**Files to Modify:**
-- `lib/section-types.ts` - Add `showCta?: boolean` to HeaderContent
-- `lib/section-defaults.ts` - Set default value
-- `components/editor/blocks/HeaderEditor.tsx` - Add Switch toggle
-- `components/render/blocks/HeaderBlock.tsx` - Check showCta flag
-
-**Complexity:** Low
-
-**Related:** Consider moving CTA controls to header section block only (not global settings) since CTA may not be needed on all pages.
-
----
-
 ### 16. Logo Generation Assistant
 
 **Problem:** Site owners need logos/favicons but lack design skills. Currently they must manually create or hire designers.
@@ -107,39 +84,6 @@ logo_generation_history: jsonb  // Optional: store past generations
 **Complexity:** Medium-High (multi-step UI, AI integration, new fields)
 
 **Reference:** Based on `.claude/commands/04_chatgpt_logo_generation.md` methodology
-
----
-
-### 15. Header/Footer Section Block Refinement
-
-**Problem:** Header and footer configuration exists in two places: site-level Settings (global) and as section block types on individual pages. The relationship between these is unclear, and section blocks don't currently override settings.
-
-**Current State:**
-- Site Settings has global header/footer configuration
-- Section blocks for header/footer exist but are filtered out when site-level config exists
-- No way for page-specific header/footer to override global settings
-
-**Proposed Options:**
-
-**Option A: Section Overrides Settings**
-- If a page has header/footer sections, use those instead of global settings
-- Global settings become "defaults" for pages without sections
-- More flexible but potentially confusing
-
-**Option B: Keep Both, Clarify UI**
-- Add visual indicator in section picker that global header/footer is active
-- Show warning when adding header/footer section that it will override global
-- Allow explicit "Use Global" toggle in section editor
-
-**Decision Needed:** Which approach aligns better with user expectations?
-
-**Files Potentially Affected:**
-- `components/render/BlockRenderer.tsx` - Override logic
-- `components/render/PageRenderer.tsx` - Override logic
-- `components/editor/BlockPicker.tsx` - Warning/indicator
-- `components/sites/SettingsTab.tsx` - Clarify relationship
-
-**Complexity:** Medium
 
 ---
 
@@ -243,6 +187,50 @@ logo_generation_history: jsonb  // Optional: store past generations
 ---
 
 ## Completed Features
+
+### 14 & 15. Header/Footer Layout Variants & Override System ✅ 2025-12-29
+
+**Problem:** Header CTA visibility was implicit (based on field values). Header/footer had no layout variants. Page-level sections couldn't override site-level settings.
+
+**Solution Implemented:**
+
+**Task 028 - Header CTA Toggle:**
+- [x] Add explicit `showCta` boolean field to HeaderContent interface
+- [x] Add Switch toggle in HeaderEditor (site and page level)
+- [x] Update HeaderBlock to check `showCta` flag with backwards compatibility
+
+**Task 029 - Header/Footer Override System:**
+- [x] Header layout variants: Left, Right, Center (logo centered with nav below)
+- [x] Footer layout variants: Simple, Columns, Minimal
+- [x] Sticky header toggle
+- [x] Show/hide site name text toggle
+- [x] Page-level override system using merge utilities
+- [x] OverrideField component for page-level override toggles
+- [x] Site-level content (name, logo, links) always from settings
+- [x] Page sections can override: layout, sticky, showLogoText, CTA
+
+**Task Documents:**
+- `ai_docs/tasks/028_header_cta_toggle.md`
+- `ai_docs/tasks/029_header_footer_override_system.md`
+
+**Files Created:**
+- `lib/header-footer-utils.ts` - Merge utilities for combining site and page settings
+- `components/editor/OverrideField.tsx` - Toggle-based override control component
+
+**Files Modified:**
+- `lib/section-types.ts` - Added HeaderLayout, FooterLayout types, override flags
+- `lib/section-defaults.ts` - Added default styling values
+- `app/actions/sections.ts` - Updated getHeaderContentWithSiteData
+- `components/editor/blocks/HeaderEditor.tsx` - Added styling options and page mode
+- `components/editor/blocks/FooterEditor.tsx` - Added layout option and page mode
+- `components/editor/SectionEditor.tsx` - Pass mode="page" for header/footer
+- `components/render/blocks/HeaderBlock.tsx` - Layout variants rendering
+- `components/render/blocks/FooterBlock.tsx` - Layout variants rendering
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Merge logic for published homepage
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Merge logic for published subpages
+- `app/(protected)/app/sites/[siteId]/pages/[pageId]/preview/page.tsx` - Merge logic for preview
+
+---
 
 ### 10. Under Construction Mode ✅ 2025-12-28
 
@@ -507,7 +495,7 @@ logo_generation_history: jsonb  // Optional: store past generations
 
 ---
 
-**Last Updated:** 2025-12-29 (Added Header CTA Toggle #14, Header/Footer Refinement #15, Logo Generation Assistant #16)
+**Last Updated:** 2025-12-29 (Completed #14 Header CTA Toggle & #15 Header/Footer Override System)
 
 ---
 
