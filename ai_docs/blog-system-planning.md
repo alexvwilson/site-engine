@@ -30,9 +30,12 @@ The Blog System extends Site Engine with content management capabilities, allowi
 | excerpt | text | Short description for listings |
 | content | jsonb | Rich text content (same format as text sections) |
 | featured_image | text | Image URL |
-| status | enum | draft / published / archived |
+| status | enum | draft / published |
 | published_at | timestamp | Publication date (can be scheduled) |
 | author_id | uuid | FK to users |
+| category_id | uuid | FK to blog_categories (optional) |
+| meta_title | text | Custom SEO title (optional) |
+| meta_description | text | Custom SEO description (optional) |
 | created_at | timestamp | |
 | updated_at | timestamp | |
 
@@ -56,9 +59,11 @@ The Blog System extends Site Engine with content management capabilities, allowi
 ## URL Structure
 
 ```
-/sites/[siteSlug]/blog              # Blog listing (paginated)
-/sites/[siteSlug]/blog/[postSlug]   # Individual post
-/sites/[siteSlug]/blog/category/[categorySlug]  # Category filter (Phase 2)
+/sites/[siteSlug]/blog                          # Blog listing (paginated)
+/sites/[siteSlug]/blog/[postSlug]               # Individual post
+/sites/[siteSlug]/blog/category/[categorySlug]  # Category filter
+/sites/[siteSlug]/blog/rss.xml                  # RSS feed
+/sites/[siteSlug]/sitemap.xml                   # Site sitemap (includes blog posts)
 ```
 
 ---
@@ -92,7 +97,7 @@ The Blog System extends Site Engine with content management capabilities, allowi
 - [x] Post editor page (`app/(protected)/app/sites/[siteId]/blog/[postId]/page.tsx`)
 - [x] Rich text editor integration (reuses TiptapEditor)
 - [x] Featured image upload (reuses ImageUpload)
-- [ ] SEO fields (meta title, description) - *Deferred to Phase 2*
+- [x] SEO fields (meta title, description) - Added in SEO phase
 
 **Public Routes:**
 - [x] Blog listing page (`app/(sites)/sites/[siteSlug]/blog/page.tsx`)
@@ -150,8 +155,6 @@ The Blog System extends Site Engine with content management capabilities, allowi
 - [ ] Related posts suggestions (deferred from Phase 3)
 - [ ] Tags (many-to-many, more granular than categories)
 - [ ] Search within blog
-- [ ] Comments system (or integration with Disqus/etc)
-- [ ] Multiple authors with author pages
 - [ ] Post series/collections
 
 ---
@@ -199,10 +202,26 @@ The Blog System extends Site Engine with content management capabilities, allowi
 - [ ] Blog-specific theme options (post card style, etc.) - *Future*
 
 ### SEO ✅ COMPLETE
-- [x] Post meta title/description
-- [x] Open Graph tags for social sharing
-- [x] Structured data (Article schema)
-- [x] Automatic sitemap inclusion
+
+**Database:**
+- [x] `meta_title` column on blog_posts (optional, falls back to title)
+- [x] `meta_description` column on blog_posts (optional, falls back to excerpt)
+
+**Admin UI:**
+- [x] SEO card in PostEditor sidebar with character count guidance (60/160 recommended)
+
+**Public Pages:**
+- [x] Custom meta title/description with intelligent fallbacks
+- [x] Canonical URL for each post
+- [x] Enhanced Open Graph (siteName, url, modifiedTime)
+- [x] Twitter card metadata (summary_large_image when featured image exists)
+- [x] JSON-LD Article structured data (headline, description, dates, author, publisher)
+
+**Sitemap:**
+- [x] Per-site sitemap at `/sites/[siteSlug]/sitemap.xml`
+- [x] Includes: site homepage, blog listing, published pages, published blog posts
+- [x] Proper lastmod, changefreq, and priority values
+- [x] Caching headers for performance
 
 ### Existing Components Reused ✅
 - [x] `TiptapEditor` - Rich text editing for post content
@@ -251,3 +270,4 @@ The Blog System extends Site Engine with content management capabilities, allowi
 1. `31adf40` - feat: add blog system with admin UI and public routes (Phase 1)
 2. `627078e` - feat: add blog section blocks for embedding posts on pages (Phase 1.5)
 3. `36b5212` - feat: add blog categories, reading time, RSS feed, and enhanced features (Phase 2 & 3)
+4. `88316dd` - feat: add blog SEO with meta fields, structured data, and sitemap
