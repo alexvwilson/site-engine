@@ -127,7 +127,7 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       </div>
 
       {section.block_type === "header" && (
-        <HeaderEditor {...editorProps} content={content as Parameters<typeof HeaderEditor>[0]["content"]} />
+        <HeaderEditor {...editorProps} content={content as Parameters<typeof HeaderEditor>[0]["content"]} mode="page" />
       )}
       {section.block_type === "hero" && (
         <HeroEditor {...editorProps} content={content as Parameters<typeof HeroEditor>[0]["content"]} />
@@ -154,7 +154,7 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
         <ContactEditor {...editorProps} content={content as Parameters<typeof ContactEditor>[0]["content"]} />
       )}
       {section.block_type === "footer" && (
-        <FooterEditor {...editorProps} content={content as Parameters<typeof FooterEditor>[0]["content"]} />
+        <FooterEditor {...editorProps} content={content as Parameters<typeof FooterEditor>[0]["content"]} mode="page" />
       )}
       {section.block_type === "blog_featured" && (
         <BlogFeaturedEditor {...editorProps} content={content as Parameters<typeof BlogFeaturedEditor>[0]["content"]} />

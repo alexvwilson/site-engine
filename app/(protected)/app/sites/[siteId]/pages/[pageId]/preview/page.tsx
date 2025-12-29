@@ -6,6 +6,7 @@ import { getSectionsByPage } from "@/lib/queries/sections";
 import { getActiveTheme } from "@/lib/queries/themes";
 import { PreviewHeader } from "@/components/preview/PreviewHeader";
 import { PreviewFrame } from "@/components/preview/PreviewFrame";
+import { mergeHeaderContent, mergeFooterContent } from "@/lib/header-footer-utils";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 interface PagePreviewProps {
@@ -32,16 +33,29 @@ export default async function PagePreviewPage({
     getActiveTheme(siteId),
   ]);
 
-  // Use site-level header/footer if configured
+  // Get site-level header/footer
   const siteHeader = site.header_content as HeaderContent | null;
   const siteFooter = site.footer_content as FooterContent | null;
 
-  // Filter out page-level header/footer if site-level ones are configured
-  const sections = allSections.filter((section) => {
-    if (siteHeader && section.block_type === "header") return false;
-    if (siteFooter && section.block_type === "footer") return false;
-    return true;
-  });
+  // Find page-level header/footer sections for potential overrides
+  const pageHeaderSection = allSections.find((s) => s.block_type === "header");
+  const pageFooterSection = allSections.find((s) => s.block_type === "footer");
+  const pageHeader = pageHeaderSection?.content as HeaderContent | null;
+  const pageFooter = pageFooterSection?.content as FooterContent | null;
+
+  // Merge site-level with page-level overrides
+  const finalHeader = siteHeader
+    ? mergeHeaderContent(siteHeader, pageHeader)
+    : pageHeader;
+  const finalFooter = siteFooter
+    ? mergeFooterContent(siteFooter, pageFooter)
+    : pageFooter;
+
+  // Filter out header/footer from regular sections (they're rendered separately)
+  const sections = allSections.filter(
+    (section) =>
+      section.block_type !== "header" && section.block_type !== "footer"
+  );
 
   return (
     <div className="flex flex-col h-full">
@@ -54,8 +68,8 @@ export default async function PagePreviewPage({
         <PreviewFrame
           sections={sections}
           theme={activeTheme?.data ?? null}
-          siteHeader={siteHeader}
-          siteFooter={siteFooter}
+          siteHeader={finalHeader}
+          siteFooter={finalFooter}
         />
       </div>
     </div>

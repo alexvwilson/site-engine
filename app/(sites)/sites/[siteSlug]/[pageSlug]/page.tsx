@@ -12,6 +12,7 @@ import { HeaderBlock } from "@/components/render/blocks/HeaderBlock";
 import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
+import { mergeHeaderContent, mergeFooterContent } from "@/lib/header-footer-utils";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 // Ensure fresh data on every request for published sites
@@ -75,16 +76,29 @@ export default async function PublishedSitePage({ params }: PageProps) {
   const theme = activeTheme?.data ?? DEFAULT_THEME;
   const colorMode = site.color_mode;
 
-  // Use site-level header/footer if configured, otherwise fall back to page sections
+  // Get site-level header/footer
   const siteHeader = site.header_content as HeaderContent | null;
   const siteFooter = site.footer_content as FooterContent | null;
 
-  // Filter out page-level header/footer if site-level ones are configured
-  const sections = allSections.filter((section) => {
-    if (siteHeader && section.block_type === "header") return false;
-    if (siteFooter && section.block_type === "footer") return false;
-    return true;
-  });
+  // Find page-level header/footer sections for potential overrides
+  const pageHeaderSection = allSections.find((s) => s.block_type === "header");
+  const pageFooterSection = allSections.find((s) => s.block_type === "footer");
+  const pageHeader = pageHeaderSection?.content as HeaderContent | null;
+  const pageFooter = pageFooterSection?.content as FooterContent | null;
+
+  // Merge site-level with page-level overrides
+  const finalHeader = siteHeader
+    ? mergeHeaderContent(siteHeader, pageHeader)
+    : pageHeader;
+  const finalFooter = siteFooter
+    ? mergeFooterContent(siteFooter, pageFooter)
+    : pageFooter;
+
+  // Filter out header/footer from regular sections (they're rendered separately)
+  const sections = allSections.filter(
+    (section) =>
+      section.block_type !== "header" && section.block_type !== "footer"
+  );
 
   return (
     <>
@@ -96,7 +110,7 @@ export default async function PublishedSitePage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
+        {finalHeader && <HeaderBlock content={finalHeader} theme={theme} />}
         <PageRenderer
           sections={sections}
           theme={theme}
@@ -104,7 +118,7 @@ export default async function PublishedSitePage({ params }: PageProps) {
           siteSlug={siteSlug}
           showBlogAuthor={site.show_blog_author}
         />
-        {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
+        {finalFooter && <FooterBlock content={finalFooter} theme={theme} />}
       </div>
     </>
   );

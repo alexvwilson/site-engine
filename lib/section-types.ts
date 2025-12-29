@@ -10,12 +10,28 @@ export interface NavLink {
   url: string;
 }
 
+export type HeaderLayout = "left" | "right" | "center";
+export type FooterLayout = "simple" | "columns" | "minimal";
+
 export interface HeaderContent {
+  // Content (from site settings)
   siteName: string;
   logoUrl?: string;
   links: NavLink[];
+  showCta?: boolean;
   ctaText?: string;
   ctaUrl?: string;
+
+  // Styling options
+  layout?: HeaderLayout;
+  sticky?: boolean;
+  showLogoText?: boolean;
+
+  // Override flags (only for page-level sections)
+  overrideLayout?: boolean;
+  overrideSticky?: boolean;
+  overrideShowLogoText?: boolean;
+  overrideCta?: boolean;
 }
 
 export interface HeroContent {
@@ -92,8 +108,15 @@ export interface FooterLink {
 }
 
 export interface FooterContent {
+  // Content (from site settings)
   copyright: string;
   links: FooterLink[];
+
+  // Styling options
+  layout?: FooterLayout;
+
+  // Override flags (only for page-level sections)
+  overrideLayout?: boolean;
 }
 
 export type BlogFeaturedLayout = "split" | "stacked" | "hero" | "minimal";

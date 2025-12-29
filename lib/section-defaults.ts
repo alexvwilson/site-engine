@@ -14,8 +14,12 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
       { label: "About", url: "/about" },
       { label: "Contact", url: "/contact" },
     ],
+    showCta: true,
     ctaText: "Get Started",
     ctaUrl: "#",
+    layout: "left",
+    sticky: true,
+    showLogoText: true,
   },
 
   hero: {
@@ -96,6 +100,7 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
       { label: "Privacy Policy", url: "/privacy" },
       { label: "Terms of Service", url: "/terms" },
     ],
+    layout: "simple",
   },
 
   blog_featured: {

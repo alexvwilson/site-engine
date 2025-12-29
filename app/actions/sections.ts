@@ -83,8 +83,12 @@ async function getHeaderContentWithSiteData(
     siteName: site.name,
     logoUrl: "",
     links,
+    showCta: true,
     ctaText: "",
     ctaUrl: "",
+    layout: "left",
+    sticky: true,
+    showLogoText: true,
   };
 }
 
