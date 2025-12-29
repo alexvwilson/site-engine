@@ -6,11 +6,17 @@ import { getPageStyles } from "./utilities/theme-styles";
 interface PageRendererProps {
   sections: Section[];
   theme: ThemeData;
+  siteId?: string;
+  siteSlug?: string;
+  showBlogAuthor?: boolean;
 }
 
-export function PageRenderer({
+export async function PageRenderer({
   sections,
   theme,
+  siteId,
+  siteSlug,
+  showBlogAuthor = true,
 }: PageRendererProps) {
   if (sections.length === 0) {
     return (
@@ -28,7 +34,14 @@ export function PageRenderer({
   return (
     <div style={getPageStyles(theme)}>
       {sections.map((section) => (
-        <BlockRenderer key={section.id} section={section} theme={theme} />
+        <BlockRenderer
+          key={section.id}
+          section={section}
+          theme={theme}
+          siteId={siteId}
+          siteSlug={siteSlug}
+          showBlogAuthor={showBlogAuthor}
+        />
       ))}
     </div>
   );

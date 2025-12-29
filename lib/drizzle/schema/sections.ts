@@ -22,6 +22,8 @@ export const BLOCK_TYPES = [
   "testimonials",
   "contact",
   "footer",
+  "blog_featured",
+  "blog_grid",
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];

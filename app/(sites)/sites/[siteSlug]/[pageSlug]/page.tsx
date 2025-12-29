@@ -97,7 +97,13 @@ export default async function PublishedSitePage({ params }: PageProps) {
           </div>
         )}
         {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
-        <PageRenderer sections={sections} theme={theme} />
+        <PageRenderer
+          sections={sections}
+          theme={theme}
+          siteId={site.id}
+          siteSlug={siteSlug}
+          showBlogAuthor={site.show_blog_author}
+        />
         {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
       </div>
     </>

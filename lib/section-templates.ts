@@ -482,6 +482,10 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
       },
     },
   ],
+
+  // Blog blocks are data-driven, no templates needed
+  blog_featured: [],
+  blog_grid: [],
 };
 
 /**

@@ -96,6 +96,15 @@ export interface FooterContent {
   links: FooterLink[];
 }
 
+export interface BlogFeaturedContent {
+  postId: string | null;
+}
+
+export interface BlogGridContent {
+  postCount: 3 | 6 | 9;
+  showExcerpt: boolean;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -109,7 +118,9 @@ export type SectionContent =
   | CTAContent
   | TestimonialsContent
   | ContactContent
-  | FooterContent;
+  | FooterContent
+  | BlogFeaturedContent
+  | BlogGridContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -125,6 +136,8 @@ export interface ContentTypeMap {
   testimonials: TestimonialsContent;
   contact: ContactContent;
   footer: FooterContent;
+  blog_featured: BlogFeaturedContent;
+  blog_grid: BlogGridContent;
 }
 
 /**
@@ -207,5 +220,17 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Footer",
     description: "Page footer with links and copyright",
     icon: "panel-bottom",
+  },
+  {
+    type: "blog_featured",
+    label: "Featured Post",
+    description: "Display a single blog post as a hero section",
+    icon: "newspaper",
+  },
+  {
+    type: "blog_grid",
+    label: "Post Grid",
+    description: "Grid of recent blog posts",
+    icon: "layout-grid",
   },
 ];

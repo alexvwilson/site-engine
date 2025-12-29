@@ -1,3 +1,5 @@
+"use client";
+
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import { getTypedContent } from "@/lib/section-types";
@@ -12,24 +14,20 @@ import { CTABlock } from "./blocks/CTABlock";
 import { TestimonialsBlock } from "./blocks/TestimonialsBlock";
 import { ContactBlock } from "./blocks/ContactBlock";
 import { FooterBlock } from "./blocks/FooterBlock";
-import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
-import { BlogGridBlock } from "./blocks/BlogGridBlock";
 
-interface BlockRendererProps {
+interface PreviewBlockRendererProps {
   section: Section;
   theme: ThemeData;
-  siteId?: string;
-  siteSlug?: string;
-  showBlogAuthor?: boolean;
 }
 
-export async function BlockRenderer({
+/**
+ * Preview-safe block renderer that doesn't import server-side blog components.
+ * Blog blocks show placeholders in preview mode.
+ */
+export function PreviewBlockRenderer({
   section,
   theme,
-  siteId,
-  siteSlug,
-  showBlogAuthor = true,
-}: BlockRendererProps) {
+}: PreviewBlockRendererProps) {
   const { block_type, content } = section;
 
   switch (block_type) {
@@ -92,37 +90,56 @@ export async function BlockRenderer({
         />
       );
     case "blog_featured":
-      if (!siteSlug) {
-        return (
-          <div className="p-8 text-center text-muted-foreground">
-            Blog featured block requires site context
-          </div>
-        );
-      }
       return (
-        <BlogFeaturedBlock
-          content={getTypedContent("blog_featured", content)}
-          theme={theme}
-          siteSlug={siteSlug}
-          showAuthor={showBlogAuthor}
-        />
+        <div
+          className="py-16 text-center border-2 border-dashed rounded-lg mx-4 my-8"
+          style={{
+            borderColor: "var(--color-border)",
+            backgroundColor: "var(--color-muted)",
+          }}
+        >
+          <div className="space-y-2">
+            <div className="text-3xl">📰</div>
+            <p
+              className="font-medium"
+              style={{ color: "var(--color-foreground)" }}
+            >
+              Featured Post
+            </p>
+            <p
+              className="text-sm"
+              style={{ color: "var(--color-muted-foreground)" }}
+            >
+              Blog posts will display on the published site
+            </p>
+          </div>
+        </div>
       );
     case "blog_grid":
-      if (!siteId || !siteSlug) {
-        return (
-          <div className="p-8 text-center text-muted-foreground">
-            Blog grid block requires site context
-          </div>
-        );
-      }
       return (
-        <BlogGridBlock
-          content={getTypedContent("blog_grid", content)}
-          theme={theme}
-          siteId={siteId}
-          siteSlug={siteSlug}
-          showAuthor={showBlogAuthor}
-        />
+        <div
+          className="py-16 text-center border-2 border-dashed rounded-lg mx-4 my-8"
+          style={{
+            borderColor: "var(--color-border)",
+            backgroundColor: "var(--color-muted)",
+          }}
+        >
+          <div className="space-y-2">
+            <div className="text-3xl">📰</div>
+            <p
+              className="font-medium"
+              style={{ color: "var(--color-foreground)" }}
+            >
+              Post Grid
+            </p>
+            <p
+              className="text-sm"
+              style={{ color: "var(--color-muted-foreground)" }}
+            >
+              Blog posts will display on the published site
+            </p>
+          </div>
+        </div>
       );
     default:
       return (

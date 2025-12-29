@@ -97,6 +97,15 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
       { label: "Terms of Service", url: "/terms" },
     ],
   },
+
+  blog_featured: {
+    postId: null,
+  },
+
+  blog_grid: {
+    postCount: 6,
+    showExcerpt: true,
+  },
 };
 
 /**

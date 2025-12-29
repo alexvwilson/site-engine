@@ -76,6 +76,26 @@ export async function getPostById(postId: string): Promise<BlogPost | null> {
 }
 
 /**
+ * Get a single published post by ID with author (public view)
+ */
+export async function getPublishedPostById(
+  postId: string
+): Promise<(BlogPost & { authorName: string | null }) | null> {
+  const [result] = await db
+    .select({
+      post: blogPosts,
+      authorName: users.full_name,
+    })
+    .from(blogPosts)
+    .leftJoin(users, eq(blogPosts.author_id, users.id))
+    .where(and(eq(blogPosts.id, postId), eq(blogPosts.status, "published")))
+    .limit(1);
+
+  if (!result) return null;
+  return { ...result.post, authorName: result.authorName };
+}
+
+/**
  * Get post with author info
  */
 export async function getPostWithAuthor(postId: string): Promise<

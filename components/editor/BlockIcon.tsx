@@ -11,6 +11,8 @@ import {
   Mail,
   PanelTop,
   PanelBottom,
+  Newspaper,
+  LayoutGrid,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -31,6 +33,8 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   testimonials: Quote,
   contact: Mail,
   footer: PanelBottom,
+  blog_featured: Newspaper,
+  blog_grid: LayoutGrid,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
-import { PageRenderer } from "@/components/render/PageRenderer";
+import { PreviewBlockRenderer } from "@/components/render/PreviewBlockRenderer";
 import { HeaderBlock } from "@/components/render/blocks/HeaderBlock";
 import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { DeviceToggle, type DeviceType } from "./DeviceToggle";
@@ -110,7 +110,13 @@ export function PreviewFrame({
           }}
         >
           {siteHeader && <HeaderBlock content={siteHeader} theme={renderTheme} />}
-          <PageRenderer sections={sections} theme={theme} />
+          {sections.map((section) => (
+            <PreviewBlockRenderer
+              key={section.id}
+              section={section}
+              theme={theme}
+            />
+          ))}
           {siteFooter && <FooterBlock content={siteFooter} theme={renderTheme} />}
         </div>
       </div>

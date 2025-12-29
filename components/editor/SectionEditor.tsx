@@ -11,6 +11,8 @@ import { CTAEditor } from "./blocks/CTAEditor";
 import { TestimonialsEditor } from "./blocks/TestimonialsEditor";
 import { ContactEditor } from "./blocks/ContactEditor";
 import { FooterEditor } from "./blocks/FooterEditor";
+import { BlogFeaturedEditor } from "./BlogFeaturedEditor";
+import { BlogGridEditor } from "./BlogGridEditor";
 import { SaveIndicator } from "./SaveIndicator";
 import { UndoRedoButtons } from "./UndoRedoButtons";
 import { updateSection } from "@/app/actions/sections";
@@ -153,6 +155,12 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       )}
       {section.block_type === "footer" && (
         <FooterEditor {...editorProps} content={content as Parameters<typeof FooterEditor>[0]["content"]} />
+      )}
+      {section.block_type === "blog_featured" && (
+        <BlogFeaturedEditor {...editorProps} content={content as Parameters<typeof BlogFeaturedEditor>[0]["content"]} />
+      )}
+      {section.block_type === "blog_grid" && (
+        <BlogGridEditor {...editorProps} content={content as Parameters<typeof BlogGridEditor>[0]["content"]} />
       )}
     </div>
   );
