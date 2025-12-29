@@ -22,6 +22,127 @@
 
 ## P2 - Medium Priority
 
+### 14. Header CTA Button Toggle
+
+**Problem:** Header CTA button visibility is controlled by whether `ctaText` and `ctaUrl` fields have values. Users want an explicit toggle to show/hide the CTA.
+
+**Current Behavior:** CTA shows when both `ctaText` AND `ctaUrl` are present.
+
+**Proposed Solution:**
+- [ ] Add `showCta: boolean` field to HeaderContent interface
+- [ ] Add Switch toggle in HeaderEditor
+- [ ] Update HeaderBlock to check `showCta` flag
+
+**Files to Modify:**
+- `lib/section-types.ts` - Add `showCta?: boolean` to HeaderContent
+- `lib/section-defaults.ts` - Set default value
+- `components/editor/blocks/HeaderEditor.tsx` - Add Switch toggle
+- `components/render/blocks/HeaderBlock.tsx` - Check showCta flag
+
+**Complexity:** Low
+
+**Related:** Consider moving CTA controls to header section block only (not global settings) since CTA may not be needed on all pages.
+
+---
+
+### 16. Logo Generation Assistant
+
+**Problem:** Site owners need logos/favicons but lack design skills. Currently they must manually create or hire designers.
+
+**Proposed Solution:** AI-powered logo prompt generator that creates ChatGPT-ready prompts based on site context, similar to the AI theme generation flow.
+
+**Location:** Theme Tab → New "Logo & Branding" card
+
+**UX Flow:**
+
+1. **Context Collection (Modal Step 1)**
+   - Auto-populated: Site name, primary color from theme
+   - User inputs: Site description, brand personality (dropdown), core function
+   - Brand personality options: Professional/Enterprise, Consumer/Friendly, Tech/AI, Creative
+
+2. **AI Generation (Step 2)**
+   - Call OpenAI with logo generation prompt
+   - Generate 10 unique concepts across 3 categories:
+     - Decomposed (4): Functional visual metaphors
+     - Monogram (3): Letter-based designs
+     - SnapAI Pattern (3): Proven aesthetic patterns
+   - Include 3 expert recommendations (Top, Alternative, Safe)
+
+3. **Selection (Step 3)**
+   - Display concepts as cards with category badges
+   - Highlight recommended options
+   - User selects 1-3 favorites
+
+4. **Output (Step 4)**
+   - ChatGPT-ready prompt with copy button
+   - Collapsible instructions for:
+     - Using ChatGPT to generate the image
+     - Setting up favicon via realfavicongenerator.net
+     - Getting transparent version for UI
+   - "Upload Completed Logo" → existing ImageUpload component
+   - Logo stored in site's image library + header config
+
+**Data Model Changes:**
+```typescript
+// sites table - new fields
+description: text          // Site purpose/description
+brand_personality: enum    // 'professional' | 'consumer' | 'tech' | 'creative'
+
+// New table or JSONB field for storing generated prompts
+logo_generation_history: jsonb  // Optional: store past generations
+```
+
+**Files to Create:**
+- `components/theme/LogoBrandingCard.tsx` - Main UI card
+- `components/theme/LogoGeneratorModal.tsx` - Multi-step wizard
+- `components/theme/LogoConceptCard.tsx` - Individual concept display
+- `app/actions/logo-generation.ts` - Server action for AI generation
+- `trigger/utils/logo-prompts.ts` - OpenAI prompt templates (or inline)
+
+**Files to Modify:**
+- `lib/drizzle/schema/sites.ts` - Add description, brand_personality
+- `components/theme/ThemeTab.tsx` - Add LogoBrandingCard
+- `components/sites/SettingsTab.tsx` - Add description field (or keep in Theme)
+
+**Complexity:** Medium-High (multi-step UI, AI integration, new fields)
+
+**Reference:** Based on `.claude/commands/04_chatgpt_logo_generation.md` methodology
+
+---
+
+### 15. Header/Footer Section Block Refinement
+
+**Problem:** Header and footer configuration exists in two places: site-level Settings (global) and as section block types on individual pages. The relationship between these is unclear, and section blocks don't currently override settings.
+
+**Current State:**
+- Site Settings has global header/footer configuration
+- Section blocks for header/footer exist but are filtered out when site-level config exists
+- No way for page-specific header/footer to override global settings
+
+**Proposed Options:**
+
+**Option A: Section Overrides Settings**
+- If a page has header/footer sections, use those instead of global settings
+- Global settings become "defaults" for pages without sections
+- More flexible but potentially confusing
+
+**Option B: Keep Both, Clarify UI**
+- Add visual indicator in section picker that global header/footer is active
+- Show warning when adding header/footer section that it will override global
+- Allow explicit "Use Global" toggle in section editor
+
+**Decision Needed:** Which approach aligns better with user expectations?
+
+**Files Potentially Affected:**
+- `components/render/BlockRenderer.tsx` - Override logic
+- `components/render/PageRenderer.tsx` - Override logic
+- `components/editor/BlockPicker.tsx` - Warning/indicator
+- `components/sites/SettingsTab.tsx` - Clarify relationship
+
+**Complexity:** Medium
+
+---
+
 ### 5. Guided Theme Generation Mode
 
 **Problem:** Quick mode generates entire theme at once. Some users want more control.
@@ -386,7 +507,7 @@
 
 ---
 
-**Last Updated:** 2025-12-28 (Added Under Construction mode, Blog System planning)
+**Last Updated:** 2025-12-29 (Added Header CTA Toggle #14, Header/Footer Refinement #15, Logo Generation Assistant #16)
 
 ---
 

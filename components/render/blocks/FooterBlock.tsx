@@ -19,9 +19,10 @@ export function FooterBlock({ content, theme }: FooterBlockProps) {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p
+            className="opacity-70"
             style={{
               ...getSmallStyles(theme),
-              color: "rgba(255, 255, 255, 0.7)",
+              color: "var(--color-background)",
             }}
           >
             {content.copyright}
@@ -33,10 +34,10 @@ export function FooterBlock({ content, theme }: FooterBlockProps) {
                 <a
                   key={index}
                   href={link.url}
-                  className="hover:opacity-80 transition-opacity"
+                  className="opacity-70 hover:opacity-100 transition-opacity"
                   style={{
                     ...getLinkStyles(theme),
-                    color: "rgba(255, 255, 255, 0.7)",
+                    color: "var(--color-background)",
                     fontSize: theme.typography.scale.small,
                   }}
                 >
