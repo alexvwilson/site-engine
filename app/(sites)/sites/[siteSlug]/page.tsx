@@ -45,6 +45,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: "website",
     },
+    ...(site.favicon_url && {
+      icons: {
+        icon: site.favicon_url,
+        apple: site.favicon_url,
+      },
+    }),
   };
 }
 

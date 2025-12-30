@@ -38,6 +38,7 @@ import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
+import { ImageUpload } from "@/components/editor/ImageUpload";
 import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
@@ -77,6 +78,9 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
   const [contactNotificationEmail, setContactNotificationEmail] = useState(
     site.contact_notification_email || ""
   );
+
+  // Favicon
+  const [faviconUrl, setFaviconUrl] = useState(site.favicon_url || "");
 
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
@@ -131,6 +135,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     showBlogAuthor !== site.show_blog_author ||
     defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
     contactNotificationEmail !== (site.contact_notification_email || "") ||
+    faviconUrl !== (site.favicon_url || "") ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter);
 
@@ -155,6 +160,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setShowBlogAuthor(site.show_blog_author);
     setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
     setContactNotificationEmail(site.contact_notification_email || "");
+    setFaviconUrl(site.favicon_url || "");
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
     setDomainInput("");
@@ -185,6 +191,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
       showBlogAuthor: showBlogAuthor !== site.show_blog_author ? showBlogAuthor : undefined,
       defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
       contactNotificationEmail: contactNotificationEmail !== (site.contact_notification_email || "") ? contactNotificationEmail || null : undefined,
+      faviconUrl: faviconUrl !== (site.favicon_url || "") ? faviconUrl || null : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
@@ -678,6 +685,39 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
               Used by the Logo Generator to create prompts that match your brand style.
             </p>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Favicon */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Globe className="h-5 w-5" />
+            Favicon
+          </CardTitle>
+          <CardDescription>
+            The small icon shown in browser tabs and when visitors bookmark your site
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ImageUpload
+            value={faviconUrl}
+            onChange={setFaviconUrl}
+            disabled={loading}
+            siteId={site.id}
+          />
+          <p className="text-sm text-muted-foreground">
+            Upload a square image (PNG or ICO, recommended 512x512px).{" "}
+            <a
+              href="https://realfavicongenerator.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline inline-flex items-center gap-1"
+            >
+              Create a favicon from your logo
+              <ExternalLink className="h-3 w-3" />
+            </a>
+          </p>
         </CardContent>
       </Card>
 

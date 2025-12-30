@@ -236,6 +236,7 @@ export interface UpdateSiteSettingsData {
   defaultBlogCategoryId?: string | null;
   brandPersonality?: BrandPersonality | null;
   contactNotificationEmail?: string | null;
+  faviconUrl?: string | null;
 }
 
 /**
@@ -334,6 +335,9 @@ export async function updateSiteSettings(
   }
   if (data.contactNotificationEmail !== undefined) {
     updateData.contact_notification_email = data.contactNotificationEmail?.trim() || null;
+  }
+  if (data.faviconUrl !== undefined) {
+    updateData.favicon_url = data.faviconUrl?.trim() || null;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

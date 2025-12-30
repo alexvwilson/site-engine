@@ -64,6 +64,8 @@ export const sites = pgTable(
     brand_personality: text("brand_personality", { enum: BRAND_PERSONALITIES }),
     // Email address for contact form notifications
     contact_notification_email: text("contact_notification_email"),
+    // Favicon for browser tabs and iOS bookmarks
+    favicon_url: text("favicon_url"),
     // Custom domain verification fields
     domain_verification_status: text("domain_verification_status", {
       enum: DOMAIN_VERIFICATION_STATUSES,

@@ -62,6 +62,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: post.featured_image ? [post.featured_image] : undefined,
     },
+    ...(post.site.favicon_url && {
+      icons: {
+        icon: post.site.favicon_url,
+        apple: post.site.favicon_url,
+      },
+    }),
   };
 }
 

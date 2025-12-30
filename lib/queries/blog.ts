@@ -197,7 +197,7 @@ export async function getPublishedPostBySlug(
 ): Promise<
   | (BlogPost & {
       author: { id: string; full_name: string | null; email: string } | null;
-      site: { id: string; name: string; show_blog_author: boolean };
+      site: { id: string; name: string; show_blog_author: boolean; favicon_url: string | null };
       category: { id: string; name: string; slug: string } | null;
     })
   | null
@@ -214,6 +214,7 @@ export async function getPublishedPostBySlug(
         id: sites.id,
         name: sites.name,
         show_blog_author: sites.show_blog_author,
+        favicon_url: sites.favicon_url,
       },
       category: {
         id: blogCategories.id,

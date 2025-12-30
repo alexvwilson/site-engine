@@ -39,6 +39,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: `Latest blog posts from ${site.name}`,
       type: "website",
     },
+    ...(site.favicon_url && {
+      icons: {
+        icon: site.favicon_url,
+        apple: site.favicon_url,
+      },
+    }),
   };
 }
 
