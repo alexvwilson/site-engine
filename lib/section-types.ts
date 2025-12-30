@@ -90,16 +90,12 @@ export interface TestimonialsContent {
   testimonials: Testimonial[];
 }
 
-export interface ContactField {
-  type: "text" | "email" | "textarea";
-  label: string;
-  required: boolean;
-}
+export type ContactVariant = "simple" | "detailed";
 
 export interface ContactContent {
   heading: string;
   description: string;
-  fields: ContactField[];
+  variant: ContactVariant;
 }
 
 export interface FooterLink {

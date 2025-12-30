@@ -87,11 +87,7 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     heading: "Get in Touch",
     description:
       "Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
-    fields: [
-      { type: "text", label: "Name", required: true },
-      { type: "email", label: "Email", required: true },
-      { type: "textarea", label: "Message", required: true },
-    ],
+    variant: "simple",
   },
 
   footer: {

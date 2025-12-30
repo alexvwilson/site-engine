@@ -1,11 +1,8 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -13,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { ContactContent, ContactField } from "@/lib/section-types";
+import type { ContactContent, ContactVariant } from "@/lib/section-types";
 
 interface ContactEditorProps {
   content: ContactContent;
@@ -22,38 +19,20 @@ interface ContactEditorProps {
   siteId: string;
 }
 
-const DEFAULT_FIELD: ContactField = {
-  type: "text",
-  label: "New Field",
-  required: false,
-};
-
-export function ContactEditor({ content, onChange, disabled }: ContactEditorProps) {
-  const handleChange = (field: keyof ContactContent, value: string): void => {
+export function ContactEditor({
+  content,
+  onChange,
+  disabled,
+}: ContactEditorProps) {
+  const handleChange = (
+    field: keyof ContactContent,
+    value: string | ContactVariant
+  ): void => {
     onChange({ ...content, [field]: value });
   };
 
-  const handleFieldChange = (
-    index: number,
-    field: keyof ContactField,
-    value: string | boolean
-  ): void => {
-    const newFields = [...content.fields];
-    newFields[index] = { ...newFields[index], [field]: value } as ContactField;
-    onChange({ ...content, fields: newFields });
-  };
-
-  const handleAddField = (): void => {
-    onChange({
-      ...content,
-      fields: [...content.fields, { ...DEFAULT_FIELD }],
-    });
-  };
-
-  const handleRemoveField = (index: number): void => {
-    const newFields = content.fields.filter((_, i) => i !== index);
-    onChange({ ...content, fields: newFields });
-  };
+  // Handle legacy data that may have fields array instead of variant
+  const currentVariant = content.variant ?? "simple";
 
   return (
     <div className="space-y-6">
@@ -80,78 +59,30 @@ export function ContactEditor({ content, onChange, disabled }: ContactEditorProp
         />
       </div>
 
-      <div className="space-y-4">
-        <Label>Form Fields</Label>
-        {content.fields.map((field, index) => (
-          <div key={index} className="border rounded-lg p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-muted-foreground">
-                Field {index + 1}
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                onClick={() => handleRemoveField(index)}
-                disabled={disabled || content.fields.length <= 1}
-              >
-                <Trash2 className="h-4 w-4" />
-                <span className="sr-only">Remove field</span>
-              </Button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor={`field-${index}-label`}>Label</Label>
-                <Input
-                  id={`field-${index}-label`}
-                  value={field.label}
-                  onChange={(e) => handleFieldChange(index, "label", e.target.value)}
-                  placeholder="Field label"
-                  disabled={disabled}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor={`field-${index}-type`}>Type</Label>
-                <Select
-                  value={field.type}
-                  onValueChange={(value) => handleFieldChange(index, "type", value)}
-                  disabled={disabled}
-                >
-                  <SelectTrigger id={`field-${index}-type`}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="text">Text</SelectItem>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="textarea">Text Area</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id={`field-${index}-required`}
-                checked={field.required}
-                onCheckedChange={(checked) => handleFieldChange(index, "required", checked)}
-                disabled={disabled}
-              />
-              <Label htmlFor={`field-${index}-required`}>Required</Label>
-            </div>
-          </div>
-        ))}
-
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={handleAddField}
+      <div className="space-y-2">
+        <Label htmlFor="contact-variant">Form Type</Label>
+        <Select
+          value={currentVariant}
+          onValueChange={(value: ContactVariant) =>
+            handleChange("variant", value)
+          }
           disabled={disabled}
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Field
-        </Button>
+          <SelectTrigger id="contact-variant">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="simple">Simple (Name, Email, Message)</SelectItem>
+            <SelectItem value="detailed">
+              Detailed (+ Company, Phone)
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">
+          {currentVariant === "detailed"
+            ? "Shows: Name, Email, Company, Phone, Message"
+            : "Shows: Name, Email, Message"}
+        </p>
       </div>
     </div>
   );

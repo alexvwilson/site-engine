@@ -27,6 +27,9 @@ export function ContactBlockPublished({
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Handle legacy data - default to "detailed" for backwards compatibility
+  const variant = content.variant ?? "detailed";
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -39,8 +42,9 @@ export function ContactBlockPublished({
     const data = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
-      company: formData.get("company") as string,
-      phone: formData.get("phone") as string,
+      company: (formData.get("company") as string) || "",
+      phone: (formData.get("phone") as string) || "",
+      message: formData.get("message") as string,
       website: formData.get("website") as string, // Honeypot
     };
 
@@ -72,7 +76,7 @@ export function ContactBlockPublished({
               color: "var(--color-muted-foreground)",
             }}
           >
-            We&apos;ve received your information and will be in touch soon.
+            We&apos;ve received your message and will be in touch soon.
           </p>
           <button
             onClick={() => setStatus("idle")}
@@ -142,7 +146,7 @@ export function ContactBlockPublished({
               />
             </div>
 
-            {/* Email */}
+            {/* Email - required */}
             <div>
               <label
                 htmlFor="contact-email"
@@ -162,39 +166,66 @@ export function ContactBlockPublished({
               />
             </div>
 
-            {/* Company */}
-            <div>
-              <label
-                htmlFor="contact-company"
-                className="block mb-2"
-                style={{ ...getBodyStyles(theme), fontWeight: 500 }}
-              >
-                Company
-              </label>
-              <input
-                id="contact-company"
-                type="text"
-                name="company"
-                placeholder="Your company"
-                style={getInputStyles(theme)}
-              />
-            </div>
+            {/* Company & Phone - only for detailed variant */}
+            {variant === "detailed" && (
+              <>
+                <div>
+                  <label
+                    htmlFor="contact-company"
+                    className="block mb-2"
+                    style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+                  >
+                    Company
+                  </label>
+                  <input
+                    id="contact-company"
+                    type="text"
+                    name="company"
+                    placeholder="Your company"
+                    style={getInputStyles(theme)}
+                  />
+                </div>
 
-            {/* Phone */}
+                <div>
+                  <label
+                    htmlFor="contact-phone"
+                    className="block mb-2"
+                    style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+                  >
+                    Phone
+                  </label>
+                  <input
+                    id="contact-phone"
+                    type="tel"
+                    name="phone"
+                    placeholder="Your phone number"
+                    style={getInputStyles(theme)}
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Message - required */}
             <div>
               <label
-                htmlFor="contact-phone"
+                htmlFor="contact-message"
                 className="block mb-2"
                 style={{ ...getBodyStyles(theme), fontWeight: 500 }}
               >
-                Phone
+                Message{" "}
+                <span style={{ color: "var(--color-primary)" }}>*</span>
               </label>
-              <input
-                id="contact-phone"
-                type="tel"
-                name="phone"
-                placeholder="Your phone number"
-                style={getInputStyles(theme)}
+              <textarea
+                id="contact-message"
+                name="message"
+                required
+                rows={4}
+                placeholder="Your message..."
+                style={{
+                  ...getInputStyles(theme),
+                  resize: "vertical",
+                  minHeight: "100px",
+                }}
               />
             </div>
 
@@ -216,7 +247,7 @@ export function ContactBlockPublished({
               className="w-full mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
               style={getButtonStyles(theme)}
             >
-              {isSubmitting ? "Sending..." : "Submit"}
+              {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
         </div>

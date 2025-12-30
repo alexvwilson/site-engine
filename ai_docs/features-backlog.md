@@ -16,13 +16,131 @@
 
 ## P1 - High Priority
 
-(No items currently - Under Construction Mode moved to Completed)
+### 20. Feature Block Icon Picker
+
+**Problem:** Features editor has "Icon Name" text input expecting Lucide icon names (e.g., "star", "zap"). Users don't know available icon names.
+
+**Current State:** Text input with placeholder "star, zap, shield..."
+
+**Requirements:**
+- Replace text input with visual icon picker dropdown
+- Show icon preview alongside name
+- Searchable/filterable list of Lucide icons
+- Group by category if possible (arrows, devices, shapes, etc.)
+- Show currently selected icon in the picker button
+
+**Complexity:** Medium (need to enumerate Lucide icons)
+
+---
+
+### 21. Image Library Management
+
+**Problem:** No way to view all uploaded images or delete unused/duplicate ones. Testing creates clutter.
+
+**Current State:** ImageLibrary component only shows images for selection, no delete capability.
+
+**Requirements:**
+- Standalone Image Library page/modal accessible from Settings
+- Grid view of all site images with filename and upload date
+- Select multiple images for bulk delete
+- Confirm dialog before deletion
+- Show image dimensions and file size
+- Search/filter by filename
+
+**Complexity:** Medium
 
 ---
 
 ## P2 - Medium Priority
 
-(No items currently)
+### 22. Logo & Favicon Consolidation
+
+**Problem:** Logo and Favicon are configured separately in different places (Header for logo, Appearance for favicon). Often they should be the same image.
+
+**Current State:**
+- Logo: Settings → Header Configuration
+- Favicon: Settings → Appearance
+
+**Requirements:**
+- Combine into single "Branding" or "Logo & Favicon" section
+- Default behavior: Use same image for both
+- Toggle option: "Use different image for favicon"
+- If toggled, show separate favicon upload
+- Simplify the common case while allowing flexibility
+
+**Complexity:** Low
+
+---
+
+### 23. Anchor Links for Same-Page Navigation
+
+**Problem:** Header nav links can only point to other pages. Some single-page sites need links to sections on the same page.
+
+**Requirements:**
+- Each section gets optional "Section ID" field in editor
+- Header nav links support `#section-id` syntax
+- Smooth scroll behavior when clicking anchor links
+- Visual indicator in editor when a section has an ID set
+- Validate IDs are unique within page
+
+**Complexity:** Medium
+
+---
+
+### 24. Gallery Layout Options
+
+**Problem:** Gallery has fixed layout (flex wrap, object-cover). No control over aspect ratio or display style.
+
+**Current State:** Images display at fixed height with object-cover, responsive flex layout.
+
+**Requirements:**
+- Aspect ratio options: Square (1:1, default), Landscape (16:9, 4:3), Portrait (3:4), Original
+- Layout variants:
+  - Grid (current behavior, improved)
+  - Masonry (Pinterest-style)
+  - Carousel/Slider (arrows or dots navigation)
+- Columns setting (2, 3, 4, auto)
+- Gap/spacing control
+- Lightbox option on click
+
+**Complexity:** Medium-High
+
+---
+
+### 25. Embed Block
+
+**Problem:** No way to embed third-party content like Google Maps, chat widgets, or other iframes.
+
+**Use Case:** Google Maps embed for business SEO, social media feeds, booking widgets.
+
+**Requirements:**
+- New block type: "embed"
+- Paste iframe/embed code from third-party services
+- Sanitize/validate embed code for security
+- Preview in editor (may need sandboxing)
+- Common presets: Google Maps, YouTube, etc.
+- Responsive container options
+
+**Complexity:** Medium (security considerations for arbitrary HTML)
+
+---
+
+### 26. Legal Pages for Child Sites
+
+**Problem:** Footer legal links (Privacy Policy, Terms) currently link to Site Engine's legal pages, not the child site's own policies.
+
+**Requirements:**
+- Site owner selects which legal pages to generate (checkboxes):
+  - Privacy Policy
+  - Terms of Service
+  - Cookie Policy
+- AI generates legal content specific to the child site's business
+- Trigger.dev background task for generation
+- Auto-creates pages with generated content
+- Footer links point to child site's legal pages
+- Ability to edit generated content
+
+**Complexity:** Medium-High (AI generation + page creation)
 
 ---
 
@@ -98,6 +216,64 @@
 ---
 
 ## Completed Features
+
+### 19. Contact Form Simple vs Detailed Fix ✅ 2025-12-30
+
+**Problem:** Contact form had Simple and Detailed options, but both rendered identically. Neither included a Message field.
+
+**Solution Implemented:**
+- [x] Added `ContactVariant` type with "simple" and "detailed" options
+- [x] Replaced broken custom fields system with variant selector dropdown
+- [x] Simple variant shows: Name, Email (required), Message (required)
+- [x] Detailed variant shows: Name, Email (required), Company, Phone, Message (required)
+- [x] Message field is textarea, sent via email notification only
+- [x] Message is NOT stored in database (contact info still stored)
+- [x] Legacy data fallback for existing sections (defaults to "detailed")
+- [x] Updated preview (ContactBlock) and published (ContactBlockPublished) forms
+- [x] Simplified ContactEditor from 159 to 89 lines
+
+**Task Document:** `ai_docs/tasks/035_contact_form_simple_detailed_fix.md`
+
+**Files Modified:**
+- `lib/section-types.ts` - Added ContactVariant type, simplified ContactContent
+- `lib/section-defaults.ts` - Updated default to use variant
+- `lib/section-templates.ts` - Updated contact templates
+- `app/actions/contact.ts` - Added message validation and email handling
+- `lib/email.ts` - Added message to notification
+- `components/editor/blocks/ContactEditor.tsx` - Replaced with variant selector
+- `components/render/blocks/ContactBlock.tsx` - Updated to render by variant
+- `components/render/blocks/ContactBlockPublished.tsx` - Fixed rendering + Message field
+
+---
+
+### 18. Favicon Support for Child Sites ✅ 2025-12-30
+
+**Problem:** Published child sites couldn't display custom favicons. Browser tabs showed default/no icon, lacking professional branding.
+
+**Solution Implemented:**
+- [x] Favicon upload in Site Settings (Appearance section)
+- [x] Uses existing ImageUpload component for consistency
+- [x] Favicon displays in browser tabs for all published pages
+- [x] Same image serves as Apple Touch Icon for iOS bookmarks
+- [x] Link to realfavicongenerator.net for creating favicons from logos
+- [x] Moved static favicon from `app/` to `public/` so child sites can override
+
+**Task Document:** `ai_docs/tasks/034_favicon_support_child_sites.md`
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `favicon_url` column
+- `app/actions/sites.ts` - Handle faviconUrl in updateSiteSettings
+- `components/sites/SettingsTab.tsx` - Added Favicon card with ImageUpload
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Added icons to metadata
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Added icons to metadata
+- `app/(sites)/sites/[siteSlug]/blog/page.tsx` - Added icons to metadata
+- `app/(sites)/sites/[siteSlug]/blog/[postSlug]/page.tsx` - Added icons to metadata
+- `app/(sites)/sites/[siteSlug]/blog/category/[categorySlug]/page.tsx` - Added icons to metadata
+- `lib/queries/blog.ts` - Added favicon_url to blog post site query
+
+**Database Migration:** `0018_violet_aqueduct` - Added favicon_url column to sites table
+
+---
 
 ### 17. Contact Form Submissions ✅ 2025-12-29
 
@@ -491,7 +667,7 @@
 
 ---
 
-**Last Updated:** 2025-12-29 (Completed #17 Contact Form Submissions)
+**Last Updated:** 2025-12-30 (Completed #19 Contact Form Simple vs Detailed Fix)
 
 ---
 

@@ -13,10 +13,10 @@ interface ContactBlockProps {
   theme: ThemeData;
 }
 
-export function ContactBlock({
-  content,
-  theme,
-}: ContactBlockProps) {
+export function ContactBlock({ content, theme }: ContactBlockProps) {
+  // Handle legacy data - default to "detailed" for backwards compatibility
+  const variant = content.variant ?? "detailed";
+
   return (
     <section
       className="py-16 px-6"
@@ -40,48 +40,105 @@ export function ContactBlock({
 
         <div style={getCardStyles(theme)}>
           <form className="space-y-4">
-            {content.fields.map((field, index) => (
-              <div key={index}>
-                <label
-                  className="block mb-2"
-                  style={{
-                    ...getBodyStyles(theme),
-                    fontWeight: 500,
-                  }}
-                >
-                  {field.label}
-                  {field.required && (
-                    <span style={{ color: "var(--color-primary)" }}> *</span>
-                  )}
-                </label>
-                {field.type === "textarea" ? (
-                  <textarea
-                    placeholder={`Enter ${field.label.toLowerCase()}`}
-                    rows={4}
-                    required={field.required}
-                    disabled
-                    style={getInputStyles(theme)}
-                    className="resize-none opacity-60 cursor-not-allowed"
-                  />
-                ) : (
+            {/* Name */}
+            <div>
+              <label
+                className="block mb-2"
+                style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                placeholder="Your name"
+                disabled
+                style={getInputStyles(theme)}
+                className="opacity-60 cursor-not-allowed"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label
+                className="block mb-2"
+                style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+              >
+                Email <span style={{ color: "var(--color-primary)" }}>*</span>
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                disabled
+                style={getInputStyles(theme)}
+                className="opacity-60 cursor-not-allowed"
+              />
+            </div>
+
+            {/* Company & Phone - only for detailed variant */}
+            {variant === "detailed" && (
+              <>
+                <div>
+                  <label
+                    className="block mb-2"
+                    style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+                  >
+                    Company
+                  </label>
                   <input
-                    type={field.type}
-                    placeholder={`Enter ${field.label.toLowerCase()}`}
-                    required={field.required}
+                    type="text"
+                    placeholder="Your company"
                     disabled
                     style={getInputStyles(theme)}
                     className="opacity-60 cursor-not-allowed"
                   />
-                )}
-              </div>
-            ))}
+                </div>
+
+                <div>
+                  <label
+                    className="block mb-2"
+                    style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+                  >
+                    Phone
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="Your phone number"
+                    disabled
+                    style={getInputStyles(theme)}
+                    className="opacity-60 cursor-not-allowed"
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Message */}
+            <div>
+              <label
+                className="block mb-2"
+                style={{ ...getBodyStyles(theme), fontWeight: 500 }}
+              >
+                Message <span style={{ color: "var(--color-primary)" }}>*</span>
+              </label>
+              <textarea
+                placeholder="Your message..."
+                rows={4}
+                disabled
+                style={{
+                  ...getInputStyles(theme),
+                  resize: "none",
+                  minHeight: "100px",
+                }}
+                className="opacity-60 cursor-not-allowed"
+              />
+            </div>
+
             <button
               type="submit"
               disabled
               className="w-full mt-4 opacity-60 cursor-not-allowed"
               style={getButtonStyles(theme)}
             >
-              Submit
+              Send Message
             </button>
             <p
               className="text-center mt-2"

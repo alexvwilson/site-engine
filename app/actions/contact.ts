@@ -13,6 +13,7 @@ interface ContactFormData {
   email: string;
   company?: string;
   phone?: string;
+  message: string;
   website?: string; // Honeypot field - should always be empty
 }
 
@@ -55,6 +56,11 @@ export async function submitContactForm(
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!data.email || !emailRegex.test(data.email)) {
     return { success: false, error: "Please provide a valid email address." };
+  }
+
+  // Validate message
+  if (!data.message?.trim()) {
+    return { success: false, error: "Please provide a message." };
   }
 
   // Get site info for email notification
@@ -103,6 +109,7 @@ export async function submitContactForm(
         email: normalizedEmail,
         company: data.company,
         phone: data.phone,
+        message: data.message.trim(),
       },
     }).catch((error) => {
       // Log but don't fail the submission if email fails

@@ -12,6 +12,7 @@ interface ContactNotificationParams {
     email: string;
     company?: string;
     phone?: string;
+    message: string;
   };
 }
 
@@ -38,6 +39,9 @@ Name: ${contact.name || "Not provided"}
 Email: ${contact.email}
 Company: ${contact.company || "Not provided"}
 Phone: ${contact.phone || "Not provided"}
+
+Message:
+${contact.message}
 
 ---
 This email was sent by Site Engine.

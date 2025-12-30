@@ -420,33 +420,23 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
     {
       id: "contact-simple",
       name: "Simple",
-      description: "Basic contact form with essential fields",
+      description: "Name, Email, and Message fields",
       content: {
         heading: "Get in Touch",
         description:
           "Have a question or want to work together? Fill out the form below and we'll get back to you soon.",
-        fields: [
-          { type: "text", label: "Name", required: true },
-          { type: "email", label: "Email", required: true },
-          { type: "textarea", label: "Message", required: true },
-        ],
+        variant: "simple",
       },
     },
     {
       id: "contact-detailed",
       name: "Detailed",
-      description: "Extended form with additional fields",
+      description: "Includes Company and Phone fields",
       content: {
         heading: "Contact Us",
         description:
           "Tell us about your project and we'll schedule a call to discuss how we can help.",
-        fields: [
-          { type: "text", label: "Full Name", required: true },
-          { type: "email", label: "Work Email", required: true },
-          { type: "text", label: "Company", required: false },
-          { type: "text", label: "Phone Number", required: false },
-          { type: "textarea", label: "How can we help?", required: true },
-        ],
+        variant: "detailed",
       },
     },
   ],
