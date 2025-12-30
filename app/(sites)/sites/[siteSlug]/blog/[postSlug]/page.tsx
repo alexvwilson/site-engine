@@ -25,6 +25,7 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ siteSlug: string; postSlug: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -65,8 +66,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function PublishedPostPage({ params }: PageProps) {
+export default async function PublishedPostPage({ params, searchParams }: PageProps) {
   const { siteSlug, postSlug } = await params;
+  const { preview } = await searchParams;
 
   // Detect custom domain via middleware header
   const headersList = await headers();
@@ -78,8 +80,12 @@ export default async function PublishedPostPage({ params }: PageProps) {
     notFound();
   }
 
-  // Show Coming Soon page to non-owners when under construction
+  // Show Coming Soon page when under construction
+  // Force preview with ?preview=coming-soon, otherwise show to non-owners only
   if (site.under_construction) {
+    if (preview === "coming-soon") {
+      return <ComingSoonPage site={site} />;
+    }
     const userId = await getCurrentUserId();
     if (userId !== site.user_id) {
       return <ComingSoonPage site={site} />;
