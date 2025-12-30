@@ -53,25 +53,6 @@
 
 ## P2 - Medium Priority
 
-### 22. Logo & Favicon Consolidation
-
-**Problem:** Logo and Favicon are configured separately in different places (Header for logo, Appearance for favicon). Often they should be the same image.
-
-**Current State:**
-- Logo: Settings → Header Configuration
-- Favicon: Settings → Appearance
-
-**Requirements:**
-- Combine into single "Branding" or "Logo & Favicon" section
-- Default behavior: Use same image for both
-- Toggle option: "Use different image for favicon"
-- If toggled, show separate favicon upload
-- Simplify the common case while allowing flexibility
-
-**Complexity:** Low
-
----
-
 ### 23. Anchor Links for Same-Page Navigation
 
 **Problem:** Header nav links can only point to other pages. Some single-page sites need links to sections on the same page.
@@ -216,6 +197,32 @@
 ---
 
 ## Completed Features
+
+### 22. Logo & Favicon Consolidation ✅ 2025-12-30
+
+**Problem:** Logo and Favicon were configured separately in different places (Header for logo, Appearance for favicon). Often they should be the same image.
+
+**Solution Implemented:**
+- [x] New "Logo & Branding" card in Settings (after URL Settings)
+- [x] Logo upload moved from HeaderEditor to Branding card
+- [x] Toggle "Use different image for favicon" (default: OFF)
+- [x] When toggle OFF: favicon automatically syncs to logo
+- [x] When toggle ON: separate favicon upload appears
+- [x] Removed standalone Favicon card
+- [x] HeaderEditor shows reference text to Branding section
+- [x] Added `use_separate_favicon` boolean column to sites table
+
+**Task Document:** `ai_docs/tasks/036_logo_favicon_consolidation.md`
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added use_separate_favicon column
+- `app/actions/sites.ts` - Handle new field in updateSiteSettings
+- `components/sites/SettingsTab.tsx` - New Branding card, removed Favicon card
+- `components/editor/blocks/HeaderEditor.tsx` - Replaced logo upload with info text
+
+**Database Migration:** `0019_condemned_gorgon` - Added use_separate_favicon column to sites table
+
+---
 
 ### 19. Contact Form Simple vs Detailed Fix ✅ 2025-12-30
 
@@ -667,7 +674,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #19 Contact Form Simple vs Detailed Fix)
+**Last Updated:** 2025-12-30 (Completed #22 Logo & Favicon Consolidation)
 
 ---
 
