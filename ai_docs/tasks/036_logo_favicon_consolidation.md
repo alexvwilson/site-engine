@@ -1,7 +1,8 @@
 # Task 036: Logo & Favicon Consolidation
 
-> **Status:** Planning
+> **Status:** ✅ Completed
 > **Created:** 2025-12-30
+> **Completed:** 2025-12-30
 > **Complexity:** Low
 
 ---
@@ -77,14 +78,14 @@ This is unintuitive because:
 Site owners need to configure branding (logo + favicon) in two separate places. The logo is hidden inside "Header Configuration" and favicon is in a separate "Appearance" section. Most users want the same image for both, but currently must upload it twice.
 
 ### Success Criteria
-- [ ] New "Logo & Branding" card appears near the top of Settings (after URL Settings)
-- [ ] Logo upload is in the Branding card
-- [ ] Toggle "Use different image for favicon" is available
-- [ ] When toggle OFF: favicon automatically uses logo image
-- [ ] When toggle ON: separate favicon upload appears
-- [ ] Existing logo data migrates correctly (no data loss)
-- [ ] HeaderBlock still renders logo correctly
-- [ ] Published sites still show correct favicon
+- [x] New "Logo & Branding" card appears near the top of Settings (after URL Settings)
+- [x] Logo upload is in the Branding card
+- [x] Toggle "Use different image for favicon" is available
+- [x] When toggle OFF: favicon automatically uses logo image
+- [x] When toggle ON: separate favicon upload appears
+- [x] Existing logo data migrates correctly (no data loss)
+- [x] HeaderBlock still renders logo correctly
+- [x] Published sites still show correct favicon
 
 ---
 
