@@ -68,22 +68,27 @@ export default async function CategoryArchivePage({ params, searchParams }: Page
   }
 
   // Show Coming Soon page when under construction
-  // Owner can bypass with ?preview=site to see full site
-  // Owner can test Coming Soon page with ?preview=coming-soon
+  // Bypass with ?preview=<PREVIEW_SECRET> to see full site (no auth required)
   if (site.under_construction) {
-    const userId = await getCurrentUserId();
-    const isOwner = userId === site.user_id;
+    const previewSecret = process.env.PREVIEW_SECRET;
 
-    if (preview === "coming-soon" && isOwner) {
-      return <ComingSoonPage site={site} />;
-    }
-
-    if (preview === "site" && isOwner) {
-      // Owner wants to preview the full site - continue rendering
-    } else if (!isOwner) {
-      return <ComingSoonPage site={site} />;
+    if (previewSecret && preview === previewSecret) {
+      // Valid preview secret - continue rendering full site
     } else {
-      return <ComingSoonPage site={site} />;
+      const userId = await getCurrentUserId();
+      const isOwner = userId === site.user_id;
+
+      if (preview === "coming-soon" && isOwner) {
+        return <ComingSoonPage site={site} />;
+      }
+
+      if (preview === "site" && isOwner) {
+        // Owner wants to preview the full site - continue rendering
+      } else if (!isOwner) {
+        return <ComingSoonPage site={site} />;
+      } else {
+        return <ComingSoonPage site={site} />;
+      }
     }
   }
 

@@ -64,25 +64,29 @@ export default async function PublishedSiteHomePage({ params, searchParams }: Pa
   }
 
   // Show Coming Soon page when under construction
-  // Owner can bypass with ?preview=site to see full site
-  // Owner can test Coming Soon page with ?preview=coming-soon
+  // Bypass with ?preview=<PREVIEW_SECRET> to see full site (no auth required)
   if (site.under_construction) {
-    const userId = await getCurrentUserId();
-    const isOwner = userId === site.user_id;
+    const previewSecret = process.env.PREVIEW_SECRET;
 
-    if (preview === "coming-soon" && isOwner) {
-      // Owner wants to preview the Coming Soon page
-      return <ComingSoonPage site={site} />;
-    }
-
-    if (preview === "site" && isOwner) {
-      // Owner wants to preview the full site - continue rendering
-    } else if (!isOwner) {
-      // Non-owners always see Coming Soon
-      return <ComingSoonPage site={site} />;
+    // Allow bypass with secret token (works without auth)
+    if (previewSecret && preview === previewSecret) {
+      // Valid preview secret - continue rendering full site
     } else {
-      // Owner without preview param sees Coming Soon by default
-      return <ComingSoonPage site={site} />;
+      // Check if user is owner for auth-based preview
+      const userId = await getCurrentUserId();
+      const isOwner = userId === site.user_id;
+
+      if (preview === "coming-soon" && isOwner) {
+        return <ComingSoonPage site={site} />;
+      }
+
+      if (preview === "site" && isOwner) {
+        // Owner wants to preview the full site - continue rendering
+      } else if (!isOwner) {
+        return <ComingSoonPage site={site} />;
+      } else {
+        return <ComingSoonPage site={site} />;
+      }
     }
   }
 

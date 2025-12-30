@@ -24,6 +24,9 @@ export const env = createEnv({
     VERCEL_API_TOKEN: z.string().min(1).optional(),
     VERCEL_PROJECT_ID: z.string().min(1).optional(),
     VERCEL_TEAM_ID: z.string().min(1).optional(),
+
+    // Preview secret - optional, allows bypassing under construction with ?preview=<secret>
+    PREVIEW_SECRET: z.string().min(8).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -40,6 +43,7 @@ export const env = createEnv({
     VERCEL_API_TOKEN: process.env.VERCEL_API_TOKEN,
     VERCEL_PROJECT_ID: process.env.VERCEL_PROJECT_ID,
     VERCEL_TEAM_ID: process.env.VERCEL_TEAM_ID,
+    PREVIEW_SECRET: process.env.PREVIEW_SECRET,
 
     // Client variables
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
