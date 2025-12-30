@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +24,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { updateSiteSettings } from "@/app/actions/sites";
+import {
+  addCustomDomain,
+  retryDomainVerification,
+  removeCustomDomain,
+  checkDomainFeatureAvailable,
+} from "@/app/actions/domains";
 import type { Site, ColorMode, BrandPersonality } from "@/lib/drizzle/schema/sites";
+import { Badge } from "@/components/ui/badge";
+import { DnsInstructionsCard } from "@/components/sites/DnsInstructionsCard";
+import { formatDnsInstructions, type DnsInstruction } from "@/lib/domain-utils";
 import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
@@ -44,7 +53,6 @@ function deepEqual(a: unknown, b: unknown): boolean {
 export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
   const [loading, setLoading] = useState(false);
   const [slug, setSlug] = useState(site.slug);
-  const [customDomain, setCustomDomain] = useState(site.custom_domain || "");
   const [metaTitle, setMetaTitle] = useState(site.meta_title || "");
   const [metaDescription, setMetaDescription] = useState(
     site.meta_description || ""
@@ -78,13 +86,41 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     site.footer_content ?? sectionDefaults.footer
   );
 
+  // Custom domain management (separate from main form)
+  const [domainInput, setDomainInput] = useState("");
+  const [domainLoading, setDomainLoading] = useState(false);
+  const [domainFeatureAvailable, setDomainFeatureAvailable] = useState(false);
+  const [dnsInstructions, setDnsInstructions] = useState<DnsInstruction[]>([]);
+
+  // Check if domain features are available on mount
+  useEffect(() => {
+    checkDomainFeatureAvailable().then(setDomainFeatureAvailable);
+  }, []);
+
+  // Generate DNS instructions from site data
+  useEffect(() => {
+    if (
+      site.custom_domain &&
+      site.domain_verification_status === "pending" &&
+      site.domain_verification_challenges
+    ) {
+      const challenges = site.domain_verification_challenges as Array<{
+        type: string;
+        domain: string;
+        value: string;
+      }>;
+      setDnsInstructions(formatDnsInstructions(site.custom_domain, challenges));
+    } else {
+      setDnsInstructions([]);
+    }
+  }, [site.custom_domain, site.domain_verification_status, site.domain_verification_challenges]);
+
   // Track if any changes have been made
   const initialHeader = site.header_content ?? { ...sectionDefaults.header, siteName: site.name };
   const initialFooter = site.footer_content ?? sectionDefaults.footer;
 
   const hasChanges =
     slug !== site.slug ||
-    customDomain !== (site.custom_domain || "") ||
     metaTitle !== (site.meta_title || "") ||
     metaDescription !== (site.meta_description || "") ||
     colorMode !== site.color_mode ||
@@ -109,7 +145,6 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
   // Reset form when site changes
   useEffect(() => {
     setSlug(site.slug);
-    setCustomDomain(site.custom_domain || "");
     setMetaTitle(site.meta_title || "");
     setMetaDescription(site.meta_description || "");
     setColorMode(site.color_mode);
@@ -122,6 +157,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setContactNotificationEmail(site.contact_notification_email || "");
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
+    setDomainInput("");
   }, [site]);
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -135,10 +171,6 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setLoading(true);
     const result = await updateSiteSettings(site.id, {
       slug: slug !== site.slug ? slug : undefined,
-      customDomain:
-        customDomain !== (site.custom_domain || "")
-          ? customDomain || null
-          : undefined,
       metaTitle:
         metaTitle !== (site.meta_title || "") ? metaTitle || null : undefined,
       metaDescription:
@@ -169,6 +201,59 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     typeof window !== "undefined"
       ? `${window.location.origin}/sites/${slug}`
       : `/sites/${slug}`;
+
+  // Domain management handlers
+  const handleAddDomain = async (): Promise<void> => {
+    if (!domainInput.trim()) {
+      toast.error("Please enter a domain");
+      return;
+    }
+
+    setDomainLoading(true);
+    const result = await addCustomDomain(site.id, domainInput.trim());
+    setDomainLoading(false);
+
+    if (result.success) {
+      setDomainInput("");
+      if (result.verified) {
+        toast.success("Domain connected and verified!");
+      } else {
+        toast.success("Domain added! Configure your DNS records below.");
+      }
+    } else {
+      toast.error(result.error || "Failed to add domain");
+    }
+  };
+
+  const handleRemoveDomain = async (): Promise<void> => {
+    if (!site.custom_domain) return;
+
+    setDomainLoading(true);
+    const result = await removeCustomDomain(site.id);
+    setDomainLoading(false);
+
+    if (result.success) {
+      toast.success("Domain removed successfully");
+    } else {
+      toast.error(result.error || "Failed to remove domain");
+    }
+  };
+
+  const handleRetryVerification = async (): Promise<void> => {
+    setDomainLoading(true);
+    const result = await retryDomainVerification(site.id);
+    setDomainLoading(false);
+
+    if (result.success) {
+      if (result.verified) {
+        toast.success("Domain verified successfully!");
+      } else {
+        toast.info("Verification in progress. DNS records are being checked.");
+      }
+    } else {
+      toast.error(result.error || "Verification failed");
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -223,23 +308,191 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
 
           <Separator />
 
-          <div className="space-y-2">
-            <Label htmlFor="customDomain">
-              Custom Domain{" "}
-              <span className="text-muted-foreground">(Coming Soon)</span>
-            </Label>
-            <Input
-              id="customDomain"
-              placeholder="www.example.com"
-              value={customDomain}
-              onChange={(e) => setCustomDomain(e.target.value)}
-              disabled={true}
-              className="max-w-md"
-            />
-            <p className="text-sm text-muted-foreground">
-              Connect your own domain to this site. This feature will be
-              available soon.
-            </p>
+          <div className="space-y-4">
+            <Label>Custom Domain</Label>
+
+            {/* Feature not available */}
+            {!domainFeatureAvailable && (
+              <div className="p-3 bg-muted/50 rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  Custom domains require Vercel API configuration. Add VERCEL_API_TOKEN and VERCEL_PROJECT_ID to your environment variables.
+                </p>
+              </div>
+            )}
+
+            {/* No domain connected */}
+            {domainFeatureAvailable && !site.custom_domain && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Input
+                    placeholder="www.example.com"
+                    value={domainInput}
+                    onChange={(e) => setDomainInput(e.target.value)}
+                    disabled={domainLoading}
+                    className="max-w-md"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleAddDomain}
+                    disabled={domainLoading || !domainInput.trim()}
+                  >
+                    {domainLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      "Connect Domain"
+                    )}
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Connect your own domain. Your site will be accessible at both your custom domain and {publicUrl}
+                </p>
+              </div>
+            )}
+
+            {/* Domain pending verification */}
+            {domainFeatureAvailable && site.custom_domain && site.domain_verification_status === "pending" && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-4 p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-200 dark:border-amber-900">
+                  <div className="flex items-center gap-3">
+                    <Clock className="h-5 w-5 text-amber-600" />
+                    <div>
+                      <p className="font-medium">{site.custom_domain}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-200">
+                          Pending Verification
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRetryVerification}
+                      disabled={domainLoading}
+                    >
+                      {domainLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <RefreshCw className="h-4 w-4 mr-1" />
+                          Check Verification
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveDomain}
+                      disabled={domainLoading}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* DNS Instructions */}
+                <DnsInstructionsCard instructions={dnsInstructions} />
+              </div>
+            )}
+
+            {/* Domain verified */}
+            {domainFeatureAvailable && site.custom_domain && site.domain_verification_status === "verified" && (
+              <div className="flex items-center justify-between gap-4 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-900">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <div>
+                    <a
+                      href={`https://${site.custom_domain}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-medium hover:underline flex items-center gap-1"
+                    >
+                      {site.custom_domain}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
+                        Verified
+                      </Badge>
+                      {site.domain_ssl_status === "issued" && (
+                        <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
+                          <Shield className="h-3 w-3 mr-1" />
+                          SSL Active
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRemoveDomain}
+                  disabled={domainLoading}
+                  className="text-destructive hover:text-destructive"
+                >
+                  {domainLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            )}
+
+            {/* Domain failed */}
+            {domainFeatureAvailable && site.custom_domain && site.domain_verification_status === "failed" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-4 p-3 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-900">
+                  <div className="flex items-center gap-3">
+                    <Globe className="h-5 w-5 text-red-600" />
+                    <div>
+                      <p className="font-medium">{site.custom_domain}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-red-100 text-red-700 border-red-200">
+                          Verification Failed
+                        </Badge>
+                      </div>
+                      {site.domain_error_message && (
+                        <p className="text-sm text-red-600 mt-1">{site.domain_error_message}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRetryVerification}
+                      disabled={domainLoading}
+                    >
+                      {domainLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <RefreshCw className="h-4 w-4 mr-1" />
+                          Retry
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveDomain}
+                      disabled={domainLoading}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

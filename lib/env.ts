@@ -19,6 +19,11 @@ export const env = createEnv({
 
     // Resend (email) - optional, email notifications disabled if not set
     RESEND_API_KEY: z.string().min(1).optional(),
+
+    // Vercel API - optional, custom domain features disabled if not set
+    VERCEL_API_TOKEN: z.string().min(1).optional(),
+    VERCEL_PROJECT_ID: z.string().min(1).optional(),
+    VERCEL_TEAM_ID: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -32,6 +37,9 @@ export const env = createEnv({
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
+    VERCEL_API_TOKEN: process.env.VERCEL_API_TOKEN,
+    VERCEL_PROJECT_ID: process.env.VERCEL_PROJECT_ID,
+    VERCEL_TEAM_ID: process.env.VERCEL_TEAM_ID,
 
     // Client variables
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

@@ -15,6 +15,9 @@ export * from "./tasks/generate-theme-quick";
 // Layout suggestion task
 export * from "./tasks/suggest-layout";
 
+// Domain verification task
+export * from "./tasks/verify-domain";
+
 // ============================================================================
 // Utilities
 // ============================================================================

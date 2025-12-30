@@ -135,3 +135,46 @@ export async function getPublishedSiteBySlug(slug: string): Promise<Site | null>
 
   return site ?? null;
 }
+
+/**
+ * Get a published site by custom domain (for middleware routing)
+ * Only returns verified domains on published sites
+ */
+export async function getPublishedSiteByDomain(
+  domain: string
+): Promise<Site | null> {
+  const [site] = await db
+    .select()
+    .from(sites)
+    .where(
+      and(
+        eq(sites.custom_domain, domain),
+        eq(sites.domain_verification_status, "verified"),
+        eq(sites.status, "published")
+      )
+    )
+    .limit(1);
+
+  return site ?? null;
+}
+
+/**
+ * Get site slug by custom domain (lightweight query for middleware)
+ */
+export async function getSiteSlugByDomain(
+  domain: string
+): Promise<string | null> {
+  const [result] = await db
+    .select({ slug: sites.slug })
+    .from(sites)
+    .where(
+      and(
+        eq(sites.custom_domain, domain),
+        eq(sites.domain_verification_status, "verified"),
+        eq(sites.status, "published")
+      )
+    )
+    .limit(1);
+
+  return result?.slug ?? null;
+}

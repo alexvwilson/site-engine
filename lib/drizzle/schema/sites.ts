@@ -12,6 +12,20 @@ export type ColorMode = (typeof COLOR_MODES)[number];
 export const BRAND_PERSONALITIES = ["professional", "consumer", "tech", "creative"] as const;
 export type BrandPersonality = (typeof BRAND_PERSONALITIES)[number];
 
+export const DOMAIN_VERIFICATION_STATUSES = ["pending", "verified", "failed"] as const;
+export type DomainVerificationStatus = (typeof DOMAIN_VERIFICATION_STATUSES)[number];
+
+export const DOMAIN_SSL_STATUSES = ["pending", "issued", "failed"] as const;
+export type DomainSslStatus = (typeof DOMAIN_SSL_STATUSES)[number];
+
+// Vercel API verification challenge structure
+export interface VercelVerificationChallenge {
+  type: "TXT" | "CNAME" | "A";
+  domain: string;
+  value: string;
+  reason: string;
+}
+
 export const sites = pgTable(
   "sites",
   {
@@ -50,6 +64,16 @@ export const sites = pgTable(
     brand_personality: text("brand_personality", { enum: BRAND_PERSONALITIES }),
     // Email address for contact form notifications
     contact_notification_email: text("contact_notification_email"),
+    // Custom domain verification fields
+    domain_verification_status: text("domain_verification_status", {
+      enum: DOMAIN_VERIFICATION_STATUSES,
+    }),
+    domain_verification_challenges: jsonb(
+      "domain_verification_challenges"
+    ).$type<VercelVerificationChallenge[]>(),
+    domain_verified_at: timestamp("domain_verified_at", { withTimezone: true }),
+    domain_ssl_status: text("domain_ssl_status", { enum: DOMAIN_SSL_STATUSES }),
+    domain_error_message: text("domain_error_message"),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

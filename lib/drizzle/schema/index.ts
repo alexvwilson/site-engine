@@ -92,3 +92,13 @@ export * from "./layout-suggestion-jobs";
  * Generates ChatGPT-ready prompts based on site context and brand personality
  */
 export * from "./logo-generation-jobs";
+
+// ============================================================================
+// Domain Management
+// ============================================================================
+
+/**
+ * Domain verification jobs table - Tracks custom domain verification polling
+ * Background task polls Vercel API to check DNS verification status
+ */
+export * from "./domain-verification-jobs";
