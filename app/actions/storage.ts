@@ -83,6 +83,7 @@ export interface ImageFile {
   name: string;
   url: string;
   createdAt: string;
+  size: number;
 }
 
 export interface ListImagesResult {
@@ -145,7 +146,38 @@ export async function listSiteImages(siteId: string): Promise<ListImagesResult> 
         .from(STORAGE_BUCKET)
         .getPublicUrl(`${prefix}${file.name}`).data.publicUrl,
       createdAt: file.created_at ?? "",
+      size: (file.metadata as { size?: number })?.size ?? 0,
     }));
 
   return { success: true, images };
+}
+
+/**
+ * Delete multiple images from a site's storage folder.
+ */
+export async function deleteImages(imageUrls: string[]): Promise<DeleteResult> {
+  await requireUserId();
+
+  if (imageUrls.length === 0) {
+    return { success: false, error: "No images selected" };
+  }
+
+  if (imageUrls.length > 100) {
+    return { success: false, error: "Cannot delete more than 100 images at once" };
+  }
+
+  const paths = imageUrls.map((url) => {
+    const match = url.match(/media-uploads\/(.+)$/);
+    return match ? match[1] : url;
+  });
+
+  const supabase = await createClient();
+  const { error } = await supabase.storage.from(STORAGE_BUCKET).remove(paths);
+
+  if (error) {
+    console.error("Storage bulk delete error:", error);
+    return { success: false, error: "Delete failed. Please try again." };
+  }
+
+  return { success: true };
 }

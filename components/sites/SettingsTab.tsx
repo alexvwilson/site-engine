@@ -39,6 +39,7 @@ import type { HeaderContent, FooterContent } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
 import { ImageUpload } from "@/components/editor/ImageUpload";
+import { ImageLibraryModal } from "@/components/sites/ImageLibraryModal";
 import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
@@ -900,6 +901,22 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
               />
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Image Library */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ImageIcon className="h-5 w-5" />
+            Image Library
+          </CardTitle>
+          <CardDescription>
+            View and manage all uploaded images for this site.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ImageLibraryModal siteId={site.id} />
         </CardContent>
       </Card>
 
