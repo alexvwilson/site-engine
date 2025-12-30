@@ -58,13 +58,21 @@ export default async function PublishedBlogPage({ params, searchParams }: PagePr
   }
 
   // Show Coming Soon page when under construction
-  // Force preview with ?preview=coming-soon, otherwise show to non-owners only
+  // Owner can bypass with ?preview=site to see full site
+  // Owner can test Coming Soon page with ?preview=coming-soon
   if (site.under_construction) {
-    if (preview === "coming-soon") {
+    const userId = await getCurrentUserId();
+    const isOwner = userId === site.user_id;
+
+    if (preview === "coming-soon" && isOwner) {
       return <ComingSoonPage site={site} />;
     }
-    const userId = await getCurrentUserId();
-    if (userId !== site.user_id) {
+
+    if (preview === "site" && isOwner) {
+      // Owner wants to preview the full site - continue rendering
+    } else if (!isOwner) {
+      return <ComingSoonPage site={site} />;
+    } else {
       return <ComingSoonPage site={site} />;
     }
   }
