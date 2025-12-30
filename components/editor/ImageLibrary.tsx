@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Loader2, ImageIcon } from "lucide-react";
 import { listSiteImages, type ImageFile } from "@/app/actions/storage";
 import { cn } from "@/lib/utils";
@@ -63,15 +64,17 @@ export function ImageLibrary({ siteId, onSelect }: ImageLibraryProps) {
           type="button"
           onClick={() => onSelect(image.url)}
           className={cn(
-            "aspect-square rounded-md overflow-hidden border-2 border-transparent",
+            "relative aspect-square rounded-md overflow-hidden border-2 border-transparent",
             "hover:border-primary focus:border-primary focus:outline-none",
             "transition-colors bg-muted"
           )}
         >
-          <img
+          <Image
             src={image.url}
             alt={image.name}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 33vw, 100px"
+            className="object-cover"
           />
         </button>
       ))}

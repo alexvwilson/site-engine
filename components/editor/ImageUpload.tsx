@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { Upload, Link, X, Loader2, ImageIcon, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -153,15 +154,13 @@ export function ImageUpload({
 
         <TabsContent value="upload" className="mt-3">
           {value ? (
-            <div className="relative border rounded-lg overflow-hidden bg-muted/50">
-              <img
+            <div className="relative border rounded-lg overflow-hidden bg-muted/50 h-48">
+              <Image
                 src={value}
                 alt="Uploaded"
-                className="w-full h-48 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='12'%3EImage not found%3C/text%3E%3C/svg%3E";
-                }}
+                fill
+                className="object-contain"
+                unoptimized
               />
               <Button
                 type="button"
@@ -263,15 +262,13 @@ export function ImageUpload({
             </Button>
           </div>
           {value && (
-            <div className="relative border rounded-lg overflow-hidden bg-muted/50">
-              <img
+            <div className="relative border rounded-lg overflow-hidden bg-muted/50 h-48">
+              <Image
                 src={value}
                 alt="Preview"
-                className="w-full h-48 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f3f4f6' width='100' height='100'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-size='12'%3EImage not found%3C/text%3E%3C/svg%3E";
-                }}
+                fill
+                className="object-contain"
+                unoptimized
               />
               <Button
                 type="button"

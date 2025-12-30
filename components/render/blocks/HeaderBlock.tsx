@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { HeaderContent } from "@/lib/section-types";
 import { getButtonStyles, getLinkStyles } from "../utilities/theme-styles";
@@ -19,10 +20,13 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
       {content.logoUrl &&
         (content.logoUrl.startsWith("http") ||
           content.logoUrl.startsWith("/")) && (
-          <img
+          <Image
             src={content.logoUrl}
             alt={content.siteName}
+            width={120}
+            height={32}
             className="h-8 w-auto"
+            unoptimized
           />
         )}
       {showLogoText && (

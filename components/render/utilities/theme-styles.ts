@@ -127,7 +127,7 @@ export function getBadgeStyles(theme: ThemeData): CSSProperties {
 /**
  * Generate inline styles for page/section backgrounds
  */
-export function getPageStyles(theme: ThemeData): CSSProperties {
+export function getPageStyles(_theme: ThemeData): CSSProperties {
   return {
     backgroundColor: "var(--color-background)",
     color: "var(--color-foreground)",
@@ -138,7 +138,7 @@ export function getPageStyles(theme: ThemeData): CSSProperties {
 /**
  * Generate inline styles for muted background sections
  */
-export function getMutedSectionStyles(theme: ThemeData): CSSProperties {
+export function getMutedSectionStyles(_theme: ThemeData): CSSProperties {
   return {
     backgroundColor: "var(--color-muted)",
     color: "var(--color-foreground)",
@@ -148,7 +148,7 @@ export function getMutedSectionStyles(theme: ThemeData): CSSProperties {
 /**
  * Generate inline styles for links
  */
-export function getLinkStyles(theme: ThemeData): CSSProperties {
+export function getLinkStyles(_theme: ThemeData): CSSProperties {
   return {
     color: "var(--color-primary)",
     textDecoration: "none",

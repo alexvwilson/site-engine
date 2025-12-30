@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,11 +72,13 @@ export function LogoBrandingCard({
           {/* Logo Status */}
           {currentLogo ? (
             <div className="flex items-center gap-4">
-              <div className="h-16 w-16 rounded-lg border bg-muted/50 flex items-center justify-center overflow-hidden">
-                <img
+              <div className="relative h-16 w-16 rounded-lg border bg-muted/50 overflow-hidden">
+                <Image
                   src={currentLogo}
                   alt="Site logo"
-                  className="h-full w-full object-contain"
+                  fill
+                  className="object-contain"
+                  unoptimized
                 />
               </div>
               <div className="flex-1">
