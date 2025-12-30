@@ -80,3 +80,9 @@ export * from "./themes";
  * Users describe page purpose and receive section recommendations
  */
 export * from "./layout-suggestion-jobs";
+
+/**
+ * Logo generation jobs table - Tracks AI logo prompt generation
+ * Generates ChatGPT-ready prompts based on site context and brand personality
+ */
+export * from "./logo-generation-jobs";

@@ -24,7 +24,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { updateSiteSettings } from "@/app/actions/sites";
-import type { Site, ColorMode } from "@/lib/drizzle/schema/sites";
+import type { Site, ColorMode, BrandPersonality } from "@/lib/drizzle/schema/sites";
 import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
@@ -50,6 +50,9 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     site.meta_description || ""
   );
   const [colorMode, setColorMode] = useState<ColorMode>(site.color_mode);
+  const [brandPersonality, setBrandPersonality] = useState<BrandPersonality | null>(
+    site.brand_personality as BrandPersonality | null
+  );
 
   // Under construction mode
   const [underConstruction, setUnderConstruction] = useState(site.under_construction);
@@ -80,6 +83,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     metaTitle !== (site.meta_title || "") ||
     metaDescription !== (site.meta_description || "") ||
     colorMode !== site.color_mode ||
+    brandPersonality !== (site.brand_personality as BrandPersonality | null) ||
     underConstruction !== site.under_construction ||
     constructionTitle !== (site.construction_title || "") ||
     constructionDescription !== (site.construction_description || "") ||
@@ -103,6 +107,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setMetaTitle(site.meta_title || "");
     setMetaDescription(site.meta_description || "");
     setColorMode(site.color_mode);
+    setBrandPersonality(site.brand_personality as BrandPersonality | null);
     setUnderConstruction(site.under_construction);
     setConstructionTitle(site.construction_title || "");
     setConstructionDescription(site.construction_description || "");
@@ -134,6 +139,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
           ? metaDescription || null
           : undefined,
       colorMode: colorMode !== site.color_mode ? colorMode : undefined,
+      brandPersonality: brandPersonality !== (site.brand_personality as BrandPersonality | null) ? brandPersonality : undefined,
       underConstruction: underConstruction !== site.under_construction ? underConstruction : undefined,
       constructionTitle: constructionTitle !== (site.construction_title || "") ? constructionTitle || null : undefined,
       constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
@@ -382,6 +388,33 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
               {colorMode === "dark" && "Your site will always display in dark mode."}
               {colorMode === "system" && "Your site will follow the visitor's system preference (light or dark)."}
               {colorMode === "user_choice" && "Visitors can toggle between light and dark mode with a button on your site."}
+            </p>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label htmlFor="brandPersonality">Brand Personality</Label>
+            <Select
+              value={brandPersonality ?? "none"}
+              onValueChange={(value) =>
+                setBrandPersonality(value === "none" ? null : (value as BrandPersonality))
+              }
+              disabled={loading}
+            >
+              <SelectTrigger className="w-full max-w-xs" id="brandPersonality">
+                <SelectValue placeholder="Not set" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Not set</SelectItem>
+                <SelectItem value="professional">Professional / Enterprise</SelectItem>
+                <SelectItem value="consumer">Consumer / Friendly</SelectItem>
+                <SelectItem value="tech">Tech / AI</SelectItem>
+                <SelectItem value="creative">Creative / Artistic</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              Used by the Logo Generator to create prompts that match your brand style.
             </p>
           </div>
         </CardContent>

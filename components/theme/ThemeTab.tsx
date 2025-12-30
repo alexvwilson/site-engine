@@ -15,8 +15,11 @@ import { ThemePreview } from "./ThemePreview";
 import { ThemeEditor } from "./ThemeEditor";
 import { SavedThemesList } from "./SavedThemesList";
 import { ThemeGeneratorModal } from "./ThemeGeneratorModal";
+import { LogoBrandingCard } from "./LogoBrandingCard";
+import { LogoGeneratorModal } from "./LogoGeneratorModal";
 import type { Theme } from "@/lib/drizzle/schema/themes";
 import type { Site } from "@/lib/drizzle/schema/sites";
+import type { HeaderContent } from "@/lib/section-types";
 
 interface ThemeTabProps {
   site: Site;
@@ -26,9 +29,26 @@ interface ThemeTabProps {
 
 export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
   const [isGeneratorOpen, setIsGeneratorOpen] = useState(false);
+  const [isLogoGeneratorOpen, setIsLogoGeneratorOpen] = useState(false);
+  const [viewingLogoJobId, setViewingLogoJobId] = useState<string | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [editingTheme, setEditingTheme] = useState<Theme | null>(null);
+
+  // Get header content for logo display
+  const headerContent = site.header_content as HeaderContent | null;
+
+  const handleViewPastLogoJob = (jobId: string) => {
+    setViewingLogoJobId(jobId);
+    setIsLogoGeneratorOpen(true);
+  };
+
+  const handleLogoModalClose = (open: boolean) => {
+    setIsLogoGeneratorOpen(open);
+    if (!open) {
+      setViewingLogoJobId(null);
+    }
+  };
 
   const handleThemeSelect = (theme: Theme): void => {
     setEditingTheme(null);
@@ -141,6 +161,14 @@ export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
         </CardContent>
       </Card>
 
+      {/* Logo & Branding Section */}
+      <LogoBrandingCard
+        site={site}
+        headerContent={headerContent}
+        onGenerateClick={() => setIsLogoGeneratorOpen(true)}
+        onViewPastJob={handleViewPastLogoJob}
+      />
+
       {/* Saved Themes Section */}
       <div>
         <h3 className="font-medium mb-3">
@@ -162,6 +190,15 @@ export function ThemeTab({ site, themes, activeTheme }: ThemeTabProps) {
         onThemeGenerated={() => {
           // The page will revalidate via server action
         }}
+      />
+
+      {/* Logo Generator Modal */}
+      <LogoGeneratorModal
+        open={isLogoGeneratorOpen}
+        onOpenChange={handleLogoModalClose}
+        site={site}
+        primaryColor={activeTheme?.data.colors.primary}
+        initialJobId={viewingLogoJobId}
       />
 
       {/* Theme Preview/Edit Sheet */}

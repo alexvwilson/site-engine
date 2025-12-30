@@ -22,71 +22,6 @@
 
 ## P2 - Medium Priority
 
-### 16. Logo Generation Assistant
-
-**Problem:** Site owners need logos/favicons but lack design skills. Currently they must manually create or hire designers.
-
-**Proposed Solution:** AI-powered logo prompt generator that creates ChatGPT-ready prompts based on site context, similar to the AI theme generation flow.
-
-**Location:** Theme Tab → New "Logo & Branding" card
-
-**UX Flow:**
-
-1. **Context Collection (Modal Step 1)**
-   - Auto-populated: Site name, primary color from theme
-   - User inputs: Site description, brand personality (dropdown), core function
-   - Brand personality options: Professional/Enterprise, Consumer/Friendly, Tech/AI, Creative
-
-2. **AI Generation (Step 2)**
-   - Call OpenAI with logo generation prompt
-   - Generate 10 unique concepts across 3 categories:
-     - Decomposed (4): Functional visual metaphors
-     - Monogram (3): Letter-based designs
-     - SnapAI Pattern (3): Proven aesthetic patterns
-   - Include 3 expert recommendations (Top, Alternative, Safe)
-
-3. **Selection (Step 3)**
-   - Display concepts as cards with category badges
-   - Highlight recommended options
-   - User selects 1-3 favorites
-
-4. **Output (Step 4)**
-   - ChatGPT-ready prompt with copy button
-   - Collapsible instructions for:
-     - Using ChatGPT to generate the image
-     - Setting up favicon via realfavicongenerator.net
-     - Getting transparent version for UI
-   - "Upload Completed Logo" → existing ImageUpload component
-   - Logo stored in site's image library + header config
-
-**Data Model Changes:**
-```typescript
-// sites table - new fields
-description: text          // Site purpose/description
-brand_personality: enum    // 'professional' | 'consumer' | 'tech' | 'creative'
-
-// New table or JSONB field for storing generated prompts
-logo_generation_history: jsonb  // Optional: store past generations
-```
-
-**Files to Create:**
-- `components/theme/LogoBrandingCard.tsx` - Main UI card
-- `components/theme/LogoGeneratorModal.tsx` - Multi-step wizard
-- `components/theme/LogoConceptCard.tsx` - Individual concept display
-- `app/actions/logo-generation.ts` - Server action for AI generation
-- `trigger/utils/logo-prompts.ts` - OpenAI prompt templates (or inline)
-
-**Files to Modify:**
-- `lib/drizzle/schema/sites.ts` - Add description, brand_personality
-- `components/theme/ThemeTab.tsx` - Add LogoBrandingCard
-- `components/sites/SettingsTab.tsx` - Add description field (or keep in Theme)
-
-**Complexity:** Medium-High (multi-step UI, AI integration, new fields)
-
-**Reference:** Based on `.claude/commands/04_chatgpt_logo_generation.md` methodology
-
----
-
 ### 5. Guided Theme Generation Mode
 
 **Problem:** Quick mode generates entire theme at once. Some users want more control.
@@ -187,6 +122,54 @@ logo_generation_history: jsonb  // Optional: store past generations
 ---
 
 ## Completed Features
+
+### 16. Logo Generation Assistant ✅ 2025-12-29
+
+**Problem:** Site owners need logos/favicons but lack design skills. Currently they must manually create or hire designers.
+
+**Solution Implemented:**
+- [x] AI-powered logo prompt generator using OpenAI GPT-4o
+- [x] Multi-step wizard modal: Context → Generating → Selection → Output
+- [x] Auto-populates site name and primary color from active theme
+- [x] User selects brand personality (Professional, Consumer, Tech, Creative)
+- [x] Generates 10 unique concepts across 3 categories:
+  - Decomposed (4): Functional visual metaphors
+  - Monogram (3): Letter-based designs
+  - SnapAI Pattern (3): Proven aesthetic patterns
+- [x] Expert recommendations: Top, Alternative, and Safe choices highlighted
+- [x] User can select 1-3 favorites and get ChatGPT-ready prompts
+- [x] Copy button for each selected prompt
+- [x] Transparent background prompt helper with copy button
+- [x] Favicon instructions with realfavicongenerator.net link
+- [x] Trimmy.io link for cropping
+- [x] Previous Generations section to revisit past jobs
+- [x] Progress tracking with Trigger.dev background task
+- [x] Brand personality persists in database for reuse
+- [x] Instructions point to Settings → Header Configuration for logo upload
+
+**Task Document:** `ai_docs/tasks/030_logo_generation_assistant.md`
+
+**Files Created:**
+- `components/theme/LogoBrandingCard.tsx` - Logo & Branding card in Theme Tab
+- `components/theme/LogoGeneratorModal.tsx` - Multi-step wizard modal
+- `components/theme/LogoConceptCard.tsx` - Individual concept display card
+- `app/actions/logo-generation.ts` - Server actions for triggering and polling jobs
+- `lib/logo-jobs.ts` - Database helpers for logo generation jobs
+- `lib/drizzle/schema/logo-generation-jobs.ts` - Job tracking table schema
+- `trigger/tasks/generate-logo-prompts.ts` - Trigger.dev background task
+- `trigger/utils/logo-prompts.ts` - OpenAI prompt engineering (SnapAI methodology)
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `description`, `brand_personality` columns
+- `lib/drizzle/schema/index.ts` - Export logo generation schema
+- `components/theme/ThemeTab.tsx` - Integrated LogoBrandingCard and LogoGeneratorModal
+- `trigger/index.ts` - Registered new task
+
+**Database Migration:** `0012_*` - Added logo_generation_jobs table and site columns
+
+**Reference:** Based on `.claude/commands/04_chatgpt_logo_generation.md` methodology
+
+---
 
 ### 14 & 15. Header/Footer Layout Variants & Override System ✅ 2025-12-29
 
@@ -495,7 +478,7 @@ logo_generation_history: jsonb  // Optional: store past generations
 
 ---
 
-**Last Updated:** 2025-12-29 (Completed #14 Header CTA Toggle & #15 Header/Footer Override System)
+**Last Updated:** 2025-12-29 (Completed #16 Logo Generation Assistant)
 
 ---
 

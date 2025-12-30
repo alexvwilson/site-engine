@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/drizzle/db";
-import { sites, type ColorMode, COLOR_MODES } from "@/lib/drizzle/schema/sites";
+import { sites, type ColorMode, COLOR_MODES, type BrandPersonality, BRAND_PERSONALITIES } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, ne } from "drizzle-orm";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
@@ -234,6 +234,7 @@ export interface UpdateSiteSettingsData {
   constructionDescription?: string | null;
   showBlogAuthor?: boolean;
   defaultBlogCategoryId?: string | null;
+  brandPersonality?: BrandPersonality | null;
 }
 
 /**
@@ -324,6 +325,11 @@ export async function updateSiteSettings(
   }
   if (data.defaultBlogCategoryId !== undefined) {
     updateData.default_blog_category_id = data.defaultBlogCategoryId;
+  }
+  if (data.brandPersonality !== undefined) {
+    if (data.brandPersonality === null || BRAND_PERSONALITIES.includes(data.brandPersonality)) {
+      updateData.brand_personality = data.brandPersonality;
+    }
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

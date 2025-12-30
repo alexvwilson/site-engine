@@ -9,6 +9,9 @@ export type SiteStatus = (typeof SITE_STATUSES)[number];
 export const COLOR_MODES = ["light", "dark", "system", "user_choice"] as const;
 export type ColorMode = (typeof COLOR_MODES)[number];
 
+export const BRAND_PERSONALITIES = ["professional", "consumer", "tech", "creative"] as const;
+export type BrandPersonality = (typeof BRAND_PERSONALITIES)[number];
+
 export const sites = pgTable(
   "sites",
   {
@@ -43,6 +46,8 @@ export const sites = pgTable(
     show_blog_author: boolean("show_blog_author").notNull().default(true),
     // Default category for new blog posts (FK to blog_categories.id, set via migration)
     default_blog_category_id: uuid("default_blog_category_id"),
+    // Brand personality for AI features (logo generation, etc.)
+    brand_personality: text("brand_personality", { enum: BRAND_PERSONALITIES }),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),
