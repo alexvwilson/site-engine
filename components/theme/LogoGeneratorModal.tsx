@@ -684,7 +684,7 @@ export function LogoGeneratorModal({
                     <div>
                       <p className="font-medium">3. Get transparent version</p>
                       <p className="text-muted-foreground text-xs">
-                        Use the "Copy Transparent Prompt" button above to remove the background.
+                        Use the &quot;Copy Transparent Prompt&quot; button above to remove the background.
                       </p>
                     </div>
                     <div>
