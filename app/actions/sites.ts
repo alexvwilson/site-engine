@@ -237,6 +237,7 @@ export interface UpdateSiteSettingsData {
   brandPersonality?: BrandPersonality | null;
   contactNotificationEmail?: string | null;
   faviconUrl?: string | null;
+  useSeparateFavicon?: boolean;
 }
 
 /**
@@ -338,6 +339,9 @@ export async function updateSiteSettings(
   }
   if (data.faviconUrl !== undefined) {
     updateData.favicon_url = data.faviconUrl?.trim() || null;
+  }
+  if (data.useSeparateFavicon !== undefined) {
+    updateData.use_separate_favicon = data.useSeparateFavicon;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

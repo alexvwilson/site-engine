@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,8 +79,9 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     site.contact_notification_email || ""
   );
 
-  // Favicon
+  // Favicon and branding
   const [faviconUrl, setFaviconUrl] = useState(site.favicon_url || "");
+  const [useSeparateFavicon, setUseSeparateFavicon] = useState(site.use_separate_favicon);
 
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
@@ -136,6 +137,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
     contactNotificationEmail !== (site.contact_notification_email || "") ||
     faviconUrl !== (site.favicon_url || "") ||
+    useSeparateFavicon !== site.use_separate_favicon ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter);
 
@@ -161,6 +163,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
     setContactNotificationEmail(site.contact_notification_email || "");
     setFaviconUrl(site.favicon_url || "");
+    setUseSeparateFavicon(site.use_separate_favicon);
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
     setDomainInput("");
@@ -192,6 +195,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
       defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
       contactNotificationEmail: contactNotificationEmail !== (site.contact_notification_email || "") ? contactNotificationEmail || null : undefined,
       faviconUrl: faviconUrl !== (site.favicon_url || "") ? faviconUrl || null : undefined,
+      useSeparateFavicon: useSeparateFavicon !== site.use_separate_favicon ? useSeparateFavicon : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
@@ -504,6 +508,91 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
         </CardContent>
       </Card>
 
+      {/* Logo & Branding */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ImageIcon className="h-5 w-5" />
+            Logo & Branding
+          </CardTitle>
+          <CardDescription>
+            Your site logo and favicon (browser tab icon)
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Logo Upload */}
+          <div className="space-y-2">
+            <Label>Logo</Label>
+            <ImageUpload
+              value={headerContent.logoUrl || ""}
+              onChange={(url) => {
+                setHeaderContent({ ...headerContent, logoUrl: url });
+                if (!useSeparateFavicon) {
+                  setFaviconUrl(url);
+                }
+              }}
+              siteId={site.id}
+              disabled={loading}
+              placeholder="Drag & drop your logo"
+            />
+            <p className="text-sm text-muted-foreground">
+              Your logo appears in the site header
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* Favicon Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="useSeparateFavicon">Use different image for favicon</Label>
+                <p className="text-sm text-muted-foreground">
+                  {useSeparateFavicon
+                    ? "Upload a separate favicon image below"
+                    : "Your logo will be used as the favicon"}
+                </p>
+              </div>
+              <Switch
+                id="useSeparateFavicon"
+                checked={useSeparateFavicon}
+                onCheckedChange={(checked) => {
+                  setUseSeparateFavicon(checked);
+                  if (!checked) {
+                    setFaviconUrl(headerContent.logoUrl || "");
+                  }
+                }}
+                disabled={loading}
+              />
+            </div>
+
+            {useSeparateFavicon && (
+              <div className="space-y-2">
+                <Label>Favicon</Label>
+                <ImageUpload
+                  value={faviconUrl}
+                  onChange={setFaviconUrl}
+                  siteId={site.id}
+                  disabled={loading}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Square image recommended (512x512px).{" "}
+                  <a
+                    href="https://realfavicongenerator.net"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline inline-flex items-center gap-1"
+                  >
+                    Create a favicon from your logo
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Under Construction */}
       <Card>
         <CardHeader>
@@ -685,39 +774,6 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
               Used by the Logo Generator to create prompts that match your brand style.
             </p>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Favicon */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5" />
-            Favicon
-          </CardTitle>
-          <CardDescription>
-            The small icon shown in browser tabs and when visitors bookmark your site
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <ImageUpload
-            value={faviconUrl}
-            onChange={setFaviconUrl}
-            disabled={loading}
-            siteId={site.id}
-          />
-          <p className="text-sm text-muted-foreground">
-            Upload a square image (PNG or ICO, recommended 512x512px).{" "}
-            <a
-              href="https://realfavicongenerator.net"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline inline-flex items-center gap-1"
-            >
-              Create a favicon from your logo
-              <ExternalLink className="h-3 w-3" />
-            </a>
-          </p>
         </CardContent>
       </Card>
 

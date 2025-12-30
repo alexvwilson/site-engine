@@ -66,6 +66,8 @@ export const sites = pgTable(
     contact_notification_email: text("contact_notification_email"),
     // Favicon for browser tabs and iOS bookmarks
     favicon_url: text("favicon_url"),
+    // When false, logo is used as favicon; when true, use separate favicon_url
+    use_separate_favicon: boolean("use_separate_favicon").notNull().default(false),
     // Custom domain verification fields
     domain_verification_status: text("domain_verification_status", {
       enum: DOMAIN_VERIFICATION_STATUSES,

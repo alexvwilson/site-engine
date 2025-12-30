@@ -29,7 +29,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ImageUpload } from "@/components/editor/ImageUpload";
 import { OverrideField } from "@/components/editor/OverrideField";
 import { cn } from "@/lib/utils";
 import type { HeaderContent, HeaderLayout, NavLink } from "@/lib/section-types";
@@ -376,15 +375,10 @@ export function HeaderEditor({
         />
       </div>
 
-      <div className="space-y-2">
-        <Label>Logo (optional)</Label>
-        <ImageUpload
-          value={content.logoUrl || ""}
-          onChange={(url) => handleFieldChange("logoUrl", url)}
-          siteId={siteId}
-          disabled={disabled}
-          placeholder="Drag & drop your logo"
-        />
+      <div className="p-3 bg-muted/50 rounded-lg">
+        <p className="text-sm text-muted-foreground">
+          Logo is configured in the <strong>Logo & Branding</strong> section above.
+        </p>
       </div>
 
       <div className="space-y-4">

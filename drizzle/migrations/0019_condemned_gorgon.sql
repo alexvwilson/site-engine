@@ -1,0 +1,1 @@
+ALTER TABLE "sites" ADD COLUMN "use_separate_favicon" boolean DEFAULT false NOT NULL;
