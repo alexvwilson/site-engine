@@ -25,7 +25,6 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ siteSlug: string; postSlug: string }>;
-  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -66,9 +65,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function PublishedPostPage({ params, searchParams }: PageProps) {
+export default async function PublishedPostPage({ params }: PageProps) {
   const { siteSlug, postSlug } = await params;
-  const { preview } = await searchParams;
 
   // Detect custom domain via middleware header
   const headersList = await headers();
@@ -80,28 +78,11 @@ export default async function PublishedPostPage({ params, searchParams }: PagePr
     notFound();
   }
 
-  // Show Coming Soon page when under construction
-  // Bypass with ?preview=<PREVIEW_SECRET> to see full site (no auth required)
+  // Show Coming Soon page to non-owners when under construction
   if (site.under_construction) {
-    const previewSecret = process.env.PREVIEW_SECRET;
-
-    if (previewSecret && preview === previewSecret) {
-      // Valid preview secret - continue rendering full site
-    } else {
-      const userId = await getCurrentUserId();
-      const isOwner = userId === site.user_id;
-
-      if (preview === "coming-soon" && isOwner) {
-        return <ComingSoonPage site={site} />;
-      }
-
-      if (preview === "site" && isOwner) {
-        // Owner wants to preview the full site - continue rendering
-      } else if (!isOwner) {
-        return <ComingSoonPage site={site} />;
-      } else {
-        return <ComingSoonPage site={site} />;
-      }
+    const userId = await getCurrentUserId();
+    if (userId !== site.user_id) {
+      return <ComingSoonPage site={site} />;
     }
   }
 

@@ -117,6 +117,67 @@ npm run db:status        # Check migration status
 npm run trigger:deploy:prod   # Deploy background tasks
 ```
 
+## Custom Domain Setup
+
+Connect your own domain to published sites via Vercel's domain management.
+
+### 1. Configure Vercel API Access
+
+Get your Vercel credentials and add them to `.env.local`:
+
+```bash
+VERCEL_API_TOKEN=your_token_here      # Vercel Dashboard → Settings → Tokens → Create
+VERCEL_PROJECT_ID=prj_xxxxxxxxxxxxx   # Project Settings → General → Project ID
+VERCEL_TEAM_ID=team_xxxxxxxxxxxxx     # Team Settings → General (only if using a team)
+```
+
+Also add these variables in your Vercel project's Environment Variables settings for production.
+
+### 2. Add Domain in Site Engine
+
+1. Go to your site's **Settings** tab
+2. Enter your domain (e.g., `example.com` or `www.example.com`)
+3. Click **Connect Domain**
+4. Note the DNS records shown (and any verification TXT record)
+
+### 3. Configure DNS at Your Registrar
+
+Add these records at your domain registrar (Namecheap, GoDaddy, Cloudflare, etc.):
+
+**For apex/root domain (example.com):**
+
+| Type | Host | Value |
+|------|------|-------|
+| A | `@` | `76.76.21.21` |
+
+**For subdomain (www.example.com):**
+
+| Type | Host | Value |
+|------|------|-------|
+| CNAME | `www` | `cname.vercel-dns.com` |
+
+**If verification required (check Site Engine UI):**
+
+| Type | Host | Value |
+|------|------|-------|
+| TXT | `_vercel` | (value from Site Engine UI) |
+
+**Recommended setup (both root + www):**
+
+| Type | Host | Value |
+|------|------|-------|
+| A | `@` | `76.76.21.21` |
+| CNAME | `www` | `cname.vercel-dns.com` |
+
+### 4. Wait for Verification
+
+- DNS propagation typically takes 5-30 minutes (can take up to 48 hours)
+- Site Engine polls for verification automatically
+- Check propagation at [dnschecker.org](https://dnschecker.org)
+- Use **Retry Verification** in Settings if needed
+
+Once verified, SSL is automatically provisioned and your site is accessible at both your custom domain and `/sites/[slug]`.
+
 ## Project Structure
 
 ```
