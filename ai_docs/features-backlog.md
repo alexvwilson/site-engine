@@ -16,21 +16,7 @@
 
 ## P1 - High Priority
 
-### 21. Image Library Management
-
-**Problem:** No way to view all uploaded images or delete unused/duplicate ones. Testing creates clutter.
-
-**Current State:** ImageLibrary component only shows images for selection, no delete capability.
-
-**Requirements:**
-- Standalone Image Library page/modal accessible from Settings
-- Grid view of all site images with filename and upload date
-- Select multiple images for bulk delete
-- Confirm dialog before deletion
-- Show image dimensions and file size
-- Search/filter by filename
-
-**Complexity:** Medium
+*(No items currently in P1)*
 
 ---
 
@@ -180,6 +166,32 @@
 ---
 
 ## Completed Features
+
+### 21. Image Library Management ✅ 2025-12-30
+
+**Problem:** No way to view all uploaded images or delete unused/duplicate ones. Testing creates clutter.
+
+**Solution Implemented:**
+- [x] "Image Library" card in Settings tab with "Manage Images" button
+- [x] Modal shows grid of all site images with thumbnails
+- [x] Each image displays filename, file size, and upload date
+- [x] Search input filters images by filename
+- [x] Multi-select with checkboxes (Select All / Clear buttons)
+- [x] Bulk delete with confirmation dialog
+- [x] Extended ImageFile interface to include size from Supabase metadata
+- [x] Added deleteImages server action for bulk deletion
+
+**Task Document:** `ai_docs/tasks/038_image_library_management.md`
+
+**Files Created:**
+- `components/sites/ImageLibraryManager.tsx` - Full management UI with search, selection, delete
+- `components/sites/ImageLibraryModal.tsx` - Dialog wrapper with trigger button
+
+**Files Modified:**
+- `app/actions/storage.ts` - Added size to ImageFile, added deleteImages action
+- `components/sites/SettingsTab.tsx` - Added Image Library card
+
+---
 
 ### 20. Feature Block Icon Picker ✅ 2025-12-30
 
@@ -680,7 +692,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #20 Feature Block Icon Picker)
+**Last Updated:** 2025-12-30 (Completed #21 Image Library Management)
 
 ---
 
