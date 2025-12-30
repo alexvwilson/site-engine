@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { IconPicker } from "@/components/editor/IconPicker";
 import type { FeaturesContent, Feature } from "@/lib/section-types";
 
 interface FeaturesEditorProps {
@@ -65,17 +66,12 @@ export function FeaturesEditor({ content, onChange, disabled }: FeaturesEditorPr
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
-              <Label htmlFor={`feature-${index}-icon`}>Icon Name</Label>
-              <Input
-                id={`feature-${index}-icon`}
+              <Label>Icon</Label>
+              <IconPicker
                 value={feature.icon}
-                onChange={(e) => handleFeatureChange(index, "icon", e.target.value)}
-                placeholder="star, zap, shield..."
+                onChange={(icon) => handleFeatureChange(index, "icon", icon)}
                 disabled={disabled}
               />
-              <p className="text-xs text-muted-foreground">
-                Lucide icon name
-              </p>
             </div>
 
             <div className="space-y-2">

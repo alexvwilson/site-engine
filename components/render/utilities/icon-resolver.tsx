@@ -216,3 +216,140 @@ export function isValidIconName(name: string): boolean {
 export function getAvailableIconNames(): string[] {
   return Object.keys(ICON_MAP);
 }
+
+/**
+ * Icon info for picker display
+ */
+export interface IconInfo {
+  name: string;
+  component: LucideIcon;
+}
+
+/**
+ * Category grouping for icon picker
+ */
+export interface IconCategory {
+  name: string;
+  icons: IconInfo[];
+}
+
+/**
+ * Categorized icons for the icon picker component.
+ * Each icon appears once in its primary category.
+ */
+export const ICON_CATEGORIES: IconCategory[] = [
+  {
+    name: "Common",
+    icons: [
+      { name: "star", component: Star },
+      { name: "zap", component: Zap },
+      { name: "shield", component: Shield },
+      { name: "heart", component: Heart },
+      { name: "check", component: CheckCircle },
+      { name: "target", component: Target },
+      { name: "lightbulb", component: Lightbulb },
+      { name: "award", component: Award },
+      { name: "trending", component: TrendingUp },
+      { name: "lock", component: Lock },
+      { name: "clock", component: Clock },
+      { name: "settings", component: Settings },
+      { name: "sparkles", component: Sparkles },
+    ],
+  },
+  {
+    name: "Business",
+    icons: [
+      { name: "globe", component: Globe },
+      { name: "rocket", component: Rocket },
+      { name: "users", component: Users },
+      { name: "briefcase", component: Briefcase },
+      { name: "building", component: Building },
+      { name: "store", component: Store },
+    ],
+  },
+  {
+    name: "Contact",
+    icons: [
+      { name: "mail", component: Mail },
+      { name: "phone", component: Phone },
+      { name: "location", component: MapPin },
+      { name: "calendar", component: Calendar },
+    ],
+  },
+  {
+    name: "E-commerce",
+    icons: [
+      { name: "cart", component: ShoppingCart },
+      { name: "credit-card", component: CreditCard },
+      { name: "package", component: Package },
+      { name: "truck", component: Truck },
+      { name: "gift", component: Gift },
+    ],
+  },
+  {
+    name: "Tech",
+    icons: [
+      { name: "wifi", component: Wifi },
+      { name: "database", component: Database },
+      { name: "server", component: Server },
+      { name: "code", component: Code },
+      { name: "terminal", component: Terminal },
+      { name: "laptop", component: Laptop },
+      { name: "smartphone", component: Smartphone },
+      { name: "headphones", component: Headphones },
+    ],
+  },
+  {
+    name: "Media",
+    icons: [
+      { name: "camera", component: Camera },
+      { name: "video", component: Video },
+      { name: "music", component: Music },
+      { name: "image", component: Image },
+      { name: "file", component: FileText },
+      { name: "folder", component: Folder },
+    ],
+  },
+  {
+    name: "Analytics",
+    icons: [
+      { name: "search", component: Search },
+      { name: "filter", component: Filter },
+      { name: "chart", component: BarChart },
+      { name: "pie-chart", component: PieChart },
+      { name: "activity", component: Activity },
+      { name: "gauge", component: Gauge },
+    ],
+  },
+  {
+    name: "Navigation",
+    icons: [
+      { name: "compass", component: Compass },
+      { name: "navigation", component: Navigation },
+      { name: "map", component: Map },
+      { name: "home", component: Home },
+    ],
+  },
+  {
+    name: "Nature",
+    icons: [
+      { name: "leaf", component: Leaf },
+      { name: "sun", component: Sun },
+      { name: "moon", component: Moon },
+      { name: "cloud", component: Cloud },
+    ],
+  },
+  {
+    name: "Design",
+    icons: [
+      { name: "pen", component: PenTool },
+      { name: "palette", component: Palette },
+      { name: "layers", component: Layers },
+      { name: "layout", component: Layout },
+      { name: "grid", component: Grid },
+      { name: "list", component: List },
+      { name: "graduation", component: GraduationCap },
+      { name: "book", component: BookOpen },
+    ],
+  },
+];

@@ -16,23 +16,6 @@
 
 ## P1 - High Priority
 
-### 20. Feature Block Icon Picker
-
-**Problem:** Features editor has "Icon Name" text input expecting Lucide icon names (e.g., "star", "zap"). Users don't know available icon names.
-
-**Current State:** Text input with placeholder "star, zap, shield..."
-
-**Requirements:**
-- Replace text input with visual icon picker dropdown
-- Show icon preview alongside name
-- Searchable/filterable list of Lucide icons
-- Group by category if possible (arrows, devices, shapes, etc.)
-- Show currently selected icon in the picker button
-
-**Complexity:** Medium (need to enumerate Lucide icons)
-
----
-
 ### 21. Image Library Management
 
 **Problem:** No way to view all uploaded images or delete unused/duplicate ones. Testing creates clutter.
@@ -197,6 +180,29 @@
 ---
 
 ## Completed Features
+
+### 20. Feature Block Icon Picker ✅ 2025-12-30
+
+**Problem:** Features editor had "Icon Name" text input expecting Lucide icon names. Users didn't know available icon names.
+
+**Solution Implemented:**
+- [x] Replaced text input with visual icon picker popover
+- [x] Shows icon preview alongside name in trigger button
+- [x] Searchable/filterable list of icons
+- [x] Grouped into 10 categories (Common, Business, Contact, E-commerce, Tech, Media, Analytics, Navigation, Nature, Design)
+- [x] Currently selected icon highlighted in picker grid
+- [x] 65 curated icons available (subset of Lucide library)
+
+**Task Document:** `ai_docs/tasks/037_feature_block_icon_picker.md`
+
+**Files Created:**
+- `components/editor/IconPicker.tsx` - Reusable icon picker popover component
+
+**Files Modified:**
+- `components/render/utilities/icon-resolver.tsx` - Added ICON_CATEGORIES export with categorized icon data
+- `components/editor/blocks/FeaturesEditor.tsx` - Replaced Input with IconPicker component
+
+---
 
 ### 22. Logo & Favicon Consolidation ✅ 2025-12-30
 
@@ -674,7 +680,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #22 Logo & Favicon Consolidation)
+**Last Updated:** 2025-12-30 (Completed #20 Feature Block Icon Picker)
 
 ---
 
