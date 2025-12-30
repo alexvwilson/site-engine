@@ -6,7 +6,7 @@ import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 
 interface PublicPostCardProps {
   post: BlogPost;
-  siteSlug: string;
+  basePath: string;
   showAuthor?: boolean;
   authorName?: string | null;
   categoryName?: string | null;
@@ -15,7 +15,7 @@ interface PublicPostCardProps {
 
 export function PublicPostCard({
   post,
-  siteSlug,
+  basePath,
   showAuthor = true,
   authorName,
   categoryName,
@@ -33,7 +33,7 @@ export function PublicPostCard({
 
   return (
     <Link
-      href={`/sites/${siteSlug}/blog/${post.slug}`}
+      href={`${basePath}/blog/${post.slug}`}
       className="group block overflow-hidden rounded-lg border transition-all hover:shadow-lg"
       style={{
         borderColor: "var(--theme-border)",

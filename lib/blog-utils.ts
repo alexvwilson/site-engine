@@ -41,20 +41,22 @@ interface RssFeedPost {
 
 interface RssFeedSite {
   name: string;
-  slug: string;
   meta_description?: string | null;
 }
 
 /**
  * Generate RSS 2.0 feed XML
+ * @param site - Site metadata
+ * @param posts - Posts to include in the feed
+ * @param publicSiteUrl - The public URL of the site (e.g., https://example.com or https://app.com/sites/slug)
  */
 export function generateRssFeed(
   site: RssFeedSite,
   posts: RssFeedPost[],
-  baseUrl: string
+  publicSiteUrl: string
 ): string {
-  const siteUrl = `${baseUrl}/sites/${site.slug}`;
-  const feedUrl = `${siteUrl}/blog/feed.xml`;
+  const siteUrl = publicSiteUrl;
+  const feedUrl = `${siteUrl}/blog/rss.xml`;
 
   // Escape XML special characters
   const escapeXml = (str: string): string =>

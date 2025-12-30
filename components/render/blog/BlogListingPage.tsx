@@ -13,7 +13,7 @@ interface PostWithAuthor extends BlogPost {
 
 interface BlogListingPageProps {
   initialPosts: PostWithAuthor[];
-  siteSlug: string;
+  basePath: string;
   siteId: string;
   siteName: string;
   showAuthor: boolean;
@@ -23,7 +23,7 @@ interface BlogListingPageProps {
 
 export function BlogListingPage({
   initialPosts,
-  siteSlug,
+  basePath,
   siteId,
   siteName,
   showAuthor,
@@ -107,7 +107,7 @@ export function BlogListingPage({
             Latest posts from {siteName}
           </p>
           <a
-            href={`/sites/${siteSlug}/blog/rss.xml`}
+            href={`${basePath}/blog/rss.xml`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full transition-colors hover:opacity-80"
@@ -127,7 +127,7 @@ export function BlogListingPage({
             <PublicPostCard
               key={post.id}
               post={post}
-              siteSlug={siteSlug}
+              basePath={basePath}
               showAuthor={showAuthor}
               authorName={post.authorName}
               categoryName={post.categoryName}

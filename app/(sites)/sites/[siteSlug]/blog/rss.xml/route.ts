@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getPublishedSiteBySlug } from "@/lib/queries/sites";
 import { getPublishedPostsBySite } from "@/lib/queries/blog";
 import { generateRssFeed } from "@/lib/blog-utils";
+import { getPublicSiteUrl } from "@/lib/url-utils";
 
 export const dynamic = "force-dynamic";
 
@@ -23,12 +24,16 @@ export async function GET(
   // Get last 50 published posts for the feed
   const posts = await getPublishedPostsBySite(site.id, 50, 0);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "";
+  // Use custom domain for public URL if available
+  const publicSiteUrl = getPublicSiteUrl(
+    siteSlug,
+    site.custom_domain,
+    process.env.NEXT_PUBLIC_APP_URL || ""
+  );
 
   const rssXml = generateRssFeed(
     {
       name: site.name,
-      slug: siteSlug,
       meta_description: site.description,
     },
     posts.map((post) => ({
@@ -38,7 +43,7 @@ export async function GET(
       published_at: post.published_at,
       featured_image: post.featured_image,
     })),
-    baseUrl
+    publicSiteUrl
   );
 
   return new NextResponse(rssXml, {

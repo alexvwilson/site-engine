@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Metadata } from "next";
 import { getPublishedSiteBySlug } from "@/lib/queries/sites";
 import { getPublishedPageBySlug } from "@/lib/queries/pages";
@@ -13,6 +14,7 @@ import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { mergeHeaderContent, mergeFooterContent } from "@/lib/header-footer-utils";
+import { getBasePath } from "@/lib/url-utils";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 // Ensure fresh data on every request for published sites
@@ -52,6 +54,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PublishedSitePage({ params }: PageProps) {
   const { siteSlug, pageSlug } = await params;
+
+  // Detect custom domain via middleware header
+  const headersList = await headers();
+  const isCustomDomain = headersList.has("x-site-base-path");
+  const basePath = getBasePath(siteSlug, isCustomDomain);
 
   const site = await getPublishedSiteBySlug(siteSlug);
   if (!site) {
@@ -110,15 +117,15 @@ export default async function PublishedSitePage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {finalHeader && <HeaderBlock content={finalHeader} theme={theme} />}
+        {finalHeader && <HeaderBlock content={finalHeader} theme={theme} basePath={basePath} />}
         <PageRenderer
           sections={sections}
           theme={theme}
           siteId={site.id}
-          siteSlug={siteSlug}
+          basePath={basePath}
           showBlogAuthor={site.show_blog_author}
         />
-        {finalFooter && <FooterBlock content={finalFooter} theme={theme} />}
+        {finalFooter && <FooterBlock content={finalFooter} theme={theme} basePath={basePath} />}
       </div>
     </>
   );

@@ -20,7 +20,7 @@ interface BlockRendererProps {
   section: Section;
   theme: ThemeData;
   siteId?: string;
-  siteSlug?: string;
+  basePath?: string;
   showBlogAuthor?: boolean;
 }
 
@@ -28,7 +28,7 @@ export async function BlockRenderer({
   section,
   theme,
   siteId,
-  siteSlug,
+  basePath = "",
   showBlogAuthor = true,
 }: BlockRendererProps) {
   const { block_type, content } = section;
@@ -39,11 +39,16 @@ export async function BlockRenderer({
         <HeaderBlock
           content={getTypedContent("header", content)}
           theme={theme}
+          basePath={basePath}
         />
       );
     case "hero":
       return (
-        <HeroBlock content={getTypedContent("hero", content)} theme={theme} />
+        <HeroBlock
+          content={getTypedContent("hero", content)}
+          theme={theme}
+          basePath={basePath}
+        />
       );
     case "text":
       return (
@@ -69,7 +74,11 @@ export async function BlockRenderer({
       );
     case "cta":
       return (
-        <CTABlock content={getTypedContent("cta", content)} theme={theme} />
+        <CTABlock
+          content={getTypedContent("cta", content)}
+          theme={theme}
+          basePath={basePath}
+        />
       );
     case "testimonials":
       return (
@@ -100,26 +109,20 @@ export async function BlockRenderer({
         <FooterBlock
           content={getTypedContent("footer", content)}
           theme={theme}
+          basePath={basePath}
         />
       );
     case "blog_featured":
-      if (!siteSlug) {
-        return (
-          <div className="p-8 text-center text-muted-foreground">
-            Blog featured block requires site context
-          </div>
-        );
-      }
       return (
         <BlogFeaturedBlock
           content={getTypedContent("blog_featured", content)}
           theme={theme}
-          siteSlug={siteSlug}
+          basePath={basePath}
           showAuthor={showBlogAuthor}
         />
       );
     case "blog_grid":
-      if (!siteId || !siteSlug) {
+      if (!siteId) {
         return (
           <div className="p-8 text-center text-muted-foreground">
             Blog grid block requires site context
@@ -131,7 +134,7 @@ export async function BlockRenderer({
           content={getTypedContent("blog_grid", content)}
           theme={theme}
           siteId={siteId}
-          siteSlug={siteSlug}
+          basePath={basePath}
           showAuthor={showBlogAuthor}
         />
       );

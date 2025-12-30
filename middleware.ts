@@ -110,7 +110,11 @@ export async function middleware(request: NextRequest) {
         }
 
         // Rewrite (not redirect) to preserve the custom domain in browser
-        return NextResponse.rewrite(url);
+        const response = NextResponse.rewrite(url);
+        // Set header to signal custom domain context to Server Components
+        // This allows components to generate correct relative URLs
+        response.headers.set("x-site-base-path", "");
+        return response;
       }
     }
 

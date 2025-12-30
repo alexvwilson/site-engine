@@ -8,14 +8,14 @@ interface BlogGridBlockProps {
   content: BlogGridContent;
   theme: ThemeData;
   siteId: string;
-  siteSlug: string;
+  basePath: string;
   showAuthor?: boolean;
 }
 
 export async function BlogGridBlock({
   content,
   siteId,
-  siteSlug,
+  basePath,
   showAuthor = true,
 }: BlogGridBlockProps) {
   const posts = await getPublishedPostsBySite(siteId, content.postCount, 0);
@@ -52,7 +52,7 @@ export async function BlogGridBlock({
             return (
               <Link
                 key={post.id}
-                href={`/sites/${siteSlug}/blog/${post.slug}`}
+                href={`${basePath}/blog/${post.slug}`}
                 className="group block overflow-hidden rounded-lg border transition-all hover:shadow-lg"
                 style={{
                   borderColor: "var(--theme-border)",

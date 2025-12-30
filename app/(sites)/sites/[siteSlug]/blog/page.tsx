@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Metadata } from "next";
 import { getPublishedSiteBySlug } from "@/lib/queries/sites";
 import { getPublishedPostsBySite, getPublishedPostCount } from "@/lib/queries/blog";
@@ -11,6 +12,7 @@ import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { BlogListingPage } from "@/components/render/blog/BlogListingPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
+import { getBasePath } from "@/lib/url-utils";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
@@ -42,6 +44,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PublishedBlogPage({ params }: PageProps) {
   const { siteSlug } = await params;
+
+  // Detect custom domain via middleware header
+  const headersList = await headers();
+  const isCustomDomain = headersList.has("x-site-base-path");
+  const basePath = getBasePath(siteSlug, isCustomDomain);
 
   const site = await getPublishedSiteBySlug(siteSlug);
   if (!site) {
@@ -78,11 +85,11 @@ export default async function PublishedBlogPage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} />}
         <main className="flex-1">
           <BlogListingPage
             initialPosts={posts}
-            siteSlug={siteSlug}
+            basePath={basePath}
             siteId={site.id}
             siteName={site.name}
             showAuthor={site.show_blog_author}
@@ -90,7 +97,7 @@ export default async function PublishedBlogPage({ params }: PageProps) {
             postsPerPage={POSTS_PER_PAGE}
           />
         </main>
-        {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} />}
       </div>
     </>
   );

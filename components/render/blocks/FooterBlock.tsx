@@ -1,13 +1,15 @@
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { FooterContent } from "@/lib/section-types";
 import { getSmallStyles, getLinkStyles } from "../utilities/theme-styles";
+import { transformUrl } from "@/lib/url-utils";
 
 interface FooterBlockProps {
   content: FooterContent;
   theme: ThemeData;
+  basePath?: string;
 }
 
-export function FooterBlock({ content, theme }: FooterBlockProps) {
+export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps) {
   const layout = content.layout ?? "simple";
 
   // Minimal layout: Copyright only
@@ -63,7 +65,7 @@ export function FooterBlock({ content, theme }: FooterBlockProps) {
                   {content.links.map((link, index) => (
                     <a
                       key={index}
-                      href={link.url}
+                      href={transformUrl(basePath, link.url)}
                       className="opacity-70 hover:opacity-100 transition-opacity"
                       style={{
                         ...getLinkStyles(theme),
@@ -121,7 +123,7 @@ export function FooterBlock({ content, theme }: FooterBlockProps) {
               {content.links.map((link, index) => (
                 <a
                   key={index}
-                  href={link.url}
+                  href={transformUrl(basePath, link.url)}
                   className="opacity-70 hover:opacity-100 transition-opacity"
                   style={{
                     ...getLinkStyles(theme),

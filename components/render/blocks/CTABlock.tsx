@@ -5,13 +5,15 @@ import {
   getBodyStyles,
   getButtonStyles,
 } from "../utilities/theme-styles";
+import { transformUrl } from "@/lib/url-utils";
 
 interface CTABlockProps {
   content: CTAContent;
   theme: ThemeData;
+  basePath?: string;
 }
 
-export function CTABlock({ content, theme }: CTABlockProps) {
+export function CTABlock({ content, theme, basePath = "" }: CTABlockProps) {
   return (
     <section
       className="py-20 px-6"
@@ -41,7 +43,7 @@ export function CTABlock({ content, theme }: CTABlockProps) {
 
         {content.buttonText && content.buttonUrl && (
           <a
-            href={content.buttonUrl}
+            href={transformUrl(basePath, content.buttonUrl)}
             className="inline-block mt-8 hover:opacity-90 transition-opacity"
             style={{
               ...getButtonStyles(theme),

@@ -7,7 +7,7 @@ import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 interface BlogFeaturedBlockProps {
   content: BlogFeaturedContent;
   theme: ThemeData;
-  siteSlug: string;
+  basePath: string;
   showAuthor?: boolean;
 }
 
@@ -70,7 +70,7 @@ function hexToRgba(hex: string, opacity: number): string {
 
 export async function BlogFeaturedBlock({
   content,
-  siteSlug,
+  basePath,
   showAuthor = true,
 }: BlogFeaturedBlockProps) {
   // Merge with defaults for backwards compatibility
@@ -119,7 +119,7 @@ export async function BlogFeaturedBlock({
       ? truncateContent(post.content.html, settings.contentLimit)
       : { text: post.excerpt || "", truncated: false };
 
-  const postUrl = `/sites/${siteSlug}/blog/${post.slug}`;
+  const postUrl = `${basePath}/blog/${post.slug}`;
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
         year: "numeric",

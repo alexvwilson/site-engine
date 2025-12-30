@@ -5,13 +5,15 @@ import {
   getBodyStyles,
   getButtonStyles,
 } from "../utilities/theme-styles";
+import { transformUrl } from "@/lib/url-utils";
 
 interface HeroBlockProps {
   content: HeroContent;
   theme: ThemeData;
+  basePath?: string;
 }
 
-export function HeroBlock({ content, theme }: HeroBlockProps) {
+export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
   const hasBackgroundImage =
     content.backgroundImage && content.backgroundImage.trim() !== "";
 
@@ -61,7 +63,7 @@ export function HeroBlock({ content, theme }: HeroBlockProps) {
 
         {content.ctaText && content.ctaUrl && (
           <a
-            href={content.ctaUrl}
+            href={transformUrl(basePath, content.ctaUrl)}
             className="inline-block mt-8 hover:opacity-90 transition-opacity"
             style={getButtonStyles(theme)}
           >

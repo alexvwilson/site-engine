@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Metadata } from "next";
 import { getPublishedSiteBySlug } from "@/lib/queries/sites";
 import {
@@ -15,6 +16,7 @@ import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { CategoryListingPage } from "@/components/render/blog/CategoryListingPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
+import { getBasePath } from "@/lib/url-utils";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
@@ -52,6 +54,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CategoryArchivePage({ params }: PageProps) {
   const { siteSlug, categorySlug } = await params;
+
+  // Detect custom domain via middleware header
+  const headersList = await headers();
+  const isCustomDomain = headersList.has("x-site-base-path");
+  const basePath = getBasePath(siteSlug, isCustomDomain);
 
   const site = await getPublishedSiteBySlug(siteSlug);
   if (!site) {
@@ -93,11 +100,11 @@ export default async function CategoryArchivePage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} />}
         <main className="flex-1">
           <CategoryListingPage
             initialPosts={posts}
-            siteSlug={siteSlug}
+            basePath={basePath}
             siteId={site.id}
             category={category}
             showAuthor={site.show_blog_author}
@@ -105,7 +112,7 @@ export default async function CategoryArchivePage({ params }: PageProps) {
             postsPerPage={POSTS_PER_PAGE}
           />
         </main>
-        {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} />}
       </div>
     </>
   );

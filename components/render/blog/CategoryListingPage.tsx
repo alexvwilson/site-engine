@@ -14,7 +14,7 @@ interface PostWithAuthor extends BlogPost {
 
 interface CategoryListingPageProps {
   initialPosts: PostWithAuthor[];
-  siteSlug: string;
+  basePath: string;
   siteId: string;
   category: BlogCategory;
   showAuthor: boolean;
@@ -24,7 +24,7 @@ interface CategoryListingPageProps {
 
 export function CategoryListingPage({
   initialPosts,
-  siteSlug,
+  basePath,
   siteId,
   category,
   showAuthor,
@@ -63,7 +63,7 @@ export function CategoryListingPage({
         <div className="container mx-auto px-4">
           {/* Back Link */}
           <Link
-            href={`/sites/${siteSlug}/blog`}
+            href={`${basePath}/blog`}
             className="inline-flex items-center gap-2 mb-8 text-sm transition-colors hover:opacity-80"
             style={{ color: "var(--theme-primary)" }}
           >
@@ -116,7 +116,7 @@ export function CategoryListingPage({
       <div className="container mx-auto px-4">
         {/* Back Link */}
         <Link
-          href={`/sites/${siteSlug}/blog`}
+          href={`${basePath}/blog`}
           className="inline-flex items-center gap-2 mb-8 text-sm transition-colors hover:opacity-80"
           style={{ color: "var(--theme-primary)" }}
         >
@@ -173,7 +173,7 @@ export function CategoryListingPage({
             <PublicPostCard
               key={post.id}
               post={post}
-              siteSlug={siteSlug}
+              basePath={basePath}
               showAuthor={showAuthor}
               authorName={post.authorName}
               categoryName={post.categoryName}

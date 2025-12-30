@@ -2,13 +2,13 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PostNavigationProps {
-  siteSlug: string;
+  basePath: string;
   previous: { slug: string; title: string } | null;
   next: { slug: string; title: string } | null;
 }
 
 export function PostNavigation({
-  siteSlug,
+  basePath,
   previous,
   next,
 }: PostNavigationProps) {
@@ -27,7 +27,7 @@ export function PostNavigation({
         <div className="order-2 sm:order-1">
           {previous && (
             <Link
-              href={`/sites/${siteSlug}/blog/${previous.slug}`}
+              href={`${basePath}/blog/${previous.slug}`}
               className="group block p-4 rounded-lg border transition-colors hover:border-opacity-50"
               style={{
                 borderColor: "var(--theme-border)",
@@ -58,7 +58,7 @@ export function PostNavigation({
         <div className="order-1 sm:order-2 sm:text-right">
           {next && (
             <Link
-              href={`/sites/${siteSlug}/blog/${next.slug}`}
+              href={`${basePath}/blog/${next.slug}`}
               className="group block p-4 rounded-lg border transition-colors hover:border-opacity-50"
               style={{
                 borderColor: "var(--theme-border)",

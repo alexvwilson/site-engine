@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +18,7 @@ import { FooterBlock } from "@/components/render/blocks/FooterBlock";
 import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { PostContent } from "@/components/render/blog/PostContent";
 import { DEFAULT_THEME } from "@/lib/default-theme";
+import { getBasePath, getPublicSiteUrl } from "@/lib/url-utils";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
@@ -66,6 +68,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function PublishedPostPage({ params }: PageProps) {
   const { siteSlug, postSlug } = await params;
 
+  // Detect custom domain via middleware header
+  const headersList = await headers();
+  const isCustomDomain = headersList.has("x-site-base-path");
+  const basePath = getBasePath(siteSlug, isCustomDomain);
+
   const site = await getPublishedSiteBySlug(siteSlug);
   if (!site) {
     notFound();
@@ -104,7 +111,9 @@ export default async function PublishedPostPage({ params }: PageProps) {
 
   const showAuthor = post.site.show_blog_author;
   const readingTime = calculateReadingTime(post.content?.html);
-  const postUrl = `${process.env.NEXT_PUBLIC_APP_URL || ""}/sites/${siteSlug}/blog/${postSlug}`;
+  // Use custom domain for public URL if available, otherwise default app URL
+  const publicSiteUrl = getPublicSiteUrl(siteSlug, site.custom_domain, process.env.NEXT_PUBLIC_APP_URL || "");
+  const postUrl = `${publicSiteUrl}/blog/${postSlug}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -144,13 +153,13 @@ export default async function PublishedPostPage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} />}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} />}
         <main className="flex-1" style={{ backgroundColor: "var(--theme-background)" }}>
           <article className="py-12 md:py-16">
             <div className="container mx-auto px-4 max-w-4xl">
               {/* Back Link */}
               <Link
-                href={`/sites/${siteSlug}/blog`}
+                href={`${basePath}/blog`}
                 className="inline-flex items-center gap-2 mb-8 text-sm transition-colors hover:opacity-80"
                 style={{ color: "var(--theme-primary)" }}
               >
@@ -198,7 +207,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
                     <>
                       <span>•</span>
                       <Link
-                        href={`/sites/${siteSlug}/blog/category/${post.category.slug}`}
+                        href={`${basePath}/blog/category/${post.category.slug}`}
                         className="inline-flex items-center gap-1 transition-colors hover:opacity-80"
                         style={{ color: "var(--theme-primary)" }}
                       >
@@ -237,14 +246,14 @@ export default async function PublishedPostPage({ params }: PageProps) {
 
               {/* Post Navigation */}
               <PostNavigation
-                siteSlug={siteSlug}
+                basePath={basePath}
                 previous={adjacentPosts.previous}
                 next={adjacentPosts.next}
               />
             </div>
           </article>
         </main>
-        {siteFooter && <FooterBlock content={siteFooter} theme={theme} />}
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} />}
       </div>
     </>
   );

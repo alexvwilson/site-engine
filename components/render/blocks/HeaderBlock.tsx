@@ -2,14 +2,16 @@ import Image from "next/image";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { HeaderContent } from "@/lib/section-types";
 import { getButtonStyles, getLinkStyles } from "../utilities/theme-styles";
+import { transformUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
 
 interface HeaderBlockProps {
   content: HeaderContent;
   theme: ThemeData;
+  basePath?: string;
 }
 
-export function HeaderBlock({ content, theme }: HeaderBlockProps) {
+export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps) {
   const layout = content.layout ?? "left";
   const isSticky = content.sticky ?? true;
   const showLogoText = content.showLogoText ?? true;
@@ -53,7 +55,7 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
       {content.links.map((link, index) => (
         <a
           key={index}
-          href={link.url}
+          href={transformUrl(basePath, link.url)}
           className="hover:opacity-70 transition-opacity"
           style={{
             ...getLinkStyles(theme),
@@ -74,7 +76,7 @@ export function HeaderBlock({ content, theme }: HeaderBlockProps) {
     content.ctaText &&
     content.ctaUrl && (
       <a
-        href={content.ctaUrl}
+        href={transformUrl(basePath, content.ctaUrl)}
         className="hidden sm:inline-block hover:opacity-90 transition-opacity"
         style={getButtonStyles(theme)}
       >
