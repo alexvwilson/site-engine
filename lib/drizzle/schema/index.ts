@@ -49,6 +49,12 @@ export * from "./blog-posts";
  */
 export * from "./blog-categories";
 
+/**
+ * Contact Submissions table - Form submissions from published sites
+ * Unique per email per site, stores contact info only
+ */
+export * from "./contact-submissions";
+
 // ============================================================================
 // Theme Management
 // ============================================================================

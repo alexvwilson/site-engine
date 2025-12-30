@@ -48,6 +48,8 @@ export const sites = pgTable(
     default_blog_category_id: uuid("default_blog_category_id"),
     // Brand personality for AI features (logo generation, etc.)
     brand_personality: text("brand_personality", { enum: BRAND_PERSONALITIES }),
+    // Email address for contact form notifications
+    contact_notification_email: text("contact_notification_email"),
   },
   (t) => [
     index("sites_user_id_idx").on(t.user_id),

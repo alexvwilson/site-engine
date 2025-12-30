@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,6 +65,11 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     site.default_blog_category_id ?? null
   );
 
+  // Contact form settings
+  const [contactNotificationEmail, setContactNotificationEmail] = useState(
+    site.contact_notification_email || ""
+  );
+
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
     site.header_content ?? { ...sectionDefaults.header, siteName: site.name }
@@ -89,6 +94,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     constructionDescription !== (site.construction_description || "") ||
     showBlogAuthor !== site.show_blog_author ||
     defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
+    contactNotificationEmail !== (site.contact_notification_email || "") ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter);
 
@@ -113,6 +119,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setConstructionDescription(site.construction_description || "");
     setShowBlogAuthor(site.show_blog_author);
     setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
+    setContactNotificationEmail(site.contact_notification_email || "");
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
   }, [site]);
@@ -145,6 +152,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
       constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
       showBlogAuthor: showBlogAuthor !== site.show_blog_author ? showBlogAuthor : undefined,
       defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
+      contactNotificationEmail: contactNotificationEmail !== (site.contact_notification_email || "") ? contactNotificationEmail || null : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
     });
@@ -470,6 +478,36 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
             </Select>
             <p className="text-sm text-muted-foreground">
               New blog posts will be assigned this category by default. You can create categories when editing a post.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Contact Form Notifications */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Mail className="h-5 w-5" />
+            Contact Form Notifications
+          </CardTitle>
+          <CardDescription>
+            Receive email notifications when visitors submit contact forms
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="contactNotificationEmail">Notification Email</Label>
+            <Input
+              id="contactNotificationEmail"
+              type="email"
+              placeholder="you@example.com"
+              value={contactNotificationEmail}
+              onChange={(e) => setContactNotificationEmail(e.target.value)}
+              disabled={loading}
+              className="max-w-md"
+            />
+            <p className="text-sm text-muted-foreground">
+              Leave empty to disable email notifications. Submissions will still be saved.
             </p>
           </div>
         </CardContent>

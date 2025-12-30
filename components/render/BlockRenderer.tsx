@@ -11,6 +11,7 @@ import { FeaturesBlock } from "./blocks/FeaturesBlock";
 import { CTABlock } from "./blocks/CTABlock";
 import { TestimonialsBlock } from "./blocks/TestimonialsBlock";
 import { ContactBlock } from "./blocks/ContactBlock";
+import { ContactBlockPublished } from "./blocks/ContactBlockPublished";
 import { FooterBlock } from "./blocks/FooterBlock";
 import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
@@ -78,6 +79,16 @@ export async function BlockRenderer({
         />
       );
     case "contact":
+      // Use functional form on published sites (siteId available), display-only in preview
+      if (siteId) {
+        return (
+          <ContactBlockPublished
+            content={getTypedContent("contact", content)}
+            theme={theme}
+            siteId={siteId}
+          />
+        );
+      }
       return (
         <ContactBlock
           content={getTypedContent("contact", content)}

@@ -16,6 +16,9 @@ export const env = createEnv({
 
     // Trigger
     TRIGGER_SECRET_KEY: z.string().min(1),
+
+    // Resend (email) - optional, email notifications disabled if not set
+    RESEND_API_KEY: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
@@ -28,6 +31,7 @@ export const env = createEnv({
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     TRIGGER_SECRET_KEY: process.env.TRIGGER_SECRET_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
 
     // Client variables
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,

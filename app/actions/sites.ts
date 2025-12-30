@@ -235,6 +235,7 @@ export interface UpdateSiteSettingsData {
   showBlogAuthor?: boolean;
   defaultBlogCategoryId?: string | null;
   brandPersonality?: BrandPersonality | null;
+  contactNotificationEmail?: string | null;
 }
 
 /**
@@ -330,6 +331,9 @@ export async function updateSiteSettings(
     if (data.brandPersonality === null || BRAND_PERSONALITIES.includes(data.brandPersonality)) {
       updateData.brand_personality = data.brandPersonality;
     }
+  }
+  if (data.contactNotificationEmail !== undefined) {
+    updateData.contact_notification_email = data.contactNotificationEmail?.trim() || null;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

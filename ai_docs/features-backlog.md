@@ -22,18 +22,7 @@
 
 ## P2 - Medium Priority
 
-### 5. Guided Theme Generation Mode
-
-**Problem:** Quick mode generates entire theme at once. Some users want more control.
-
-**Current State:** Deferred from Phase 5. Prompts and schema support exists but UI not built.
-
-**Requirements:**
-- [ ] Multi-stage flow: Colors -> Typography -> Component Styles
-- [ ] Approve/adjust/regenerate at each stage
-- [ ] Build ColorReview, TypographyReview, ComponentPreview components
-
-**Complexity:** High (significant UI work)
+(No items currently)
 
 ---
 
@@ -67,20 +56,7 @@
 
 ---
 
-### 9. Form Submissions (Contact Section)
-
-**Problem:** Contact forms render but don't actually submit anywhere.
-
-**Requirements:**
-- Store submissions in database
-- Email notifications
-- Spam protection (reCAPTCHA or similar)
-
-**Complexity:** Medium
-
----
-
-### 10. SEO Enhancements
+### 9. SEO Enhancements
 
 - Sitemap generation
 - robots.txt configuration
@@ -91,7 +67,7 @@
 
 ---
 
-### 11. Page Templates
+### 10. Page Templates
 
 **Problem:** Every page starts empty. Users might want common starting points.
 
@@ -101,7 +77,7 @@
 
 ---
 
-### 12. Collaboration / Team Features
+### 11. Collaboration / Team Features
 
 - Multiple users per site
 - Role-based permissions
@@ -111,7 +87,7 @@
 
 ---
 
-### 13. Export / Backup
+### 12. Export / Backup
 
 - Export site as static HTML/CSS
 - JSON backup of site data
@@ -122,6 +98,43 @@
 ---
 
 ## Completed Features
+
+### 17. Contact Form Submissions ✅ 2025-12-29
+
+**Problem:** Contact forms rendered but didn't actually submit anywhere.
+
+**Solution Implemented:**
+- [x] Functional contact forms on published sites
+- [x] Submissions stored in database (unique per email per site, upsert pattern)
+- [x] Fixed contact fields: Name, Email (required), Company, Phone
+- [x] Email notifications via Resend (optional - works without API key)
+- [x] Spam protection: Honeypot field + rate limiting (5 per IP per 15 min)
+- [x] Notification email configurable per site in Settings
+- [x] Success/error feedback on form submission
+- [x] "Submit another response" option after success
+
+**Task Document:** `ai_docs/tasks/031_contact_form_submissions.md`
+
+**Files Created:**
+- `lib/drizzle/schema/contact-submissions.ts` - New table schema
+- `lib/email.ts` - Resend client and notification function
+- `lib/rate-limit.ts` - In-memory rate limiter
+- `app/actions/contact.ts` - Form submission server action
+- `components/render/blocks/ContactBlockPublished.tsx` - Interactive form component
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `contact_notification_email` column
+- `lib/drizzle/schema/index.ts` - Export contact-submissions schema
+- `lib/env.ts` - Added optional `RESEND_API_KEY`
+- `app/actions/sites.ts` - Handle notification email in settings
+- `components/sites/SettingsTab.tsx` - Added Contact Form Notifications card
+- `components/render/BlockRenderer.tsx` - Use ContactBlockPublished on published sites
+
+**Database Migration:** `0016_cloudy_vector` - Added contact_submissions table and notification email column
+
+**Dependencies Added:** `resend`
+
+---
 
 ### 16. Logo Generation Assistant ✅ 2025-12-29
 
@@ -478,7 +491,7 @@
 
 ---
 
-**Last Updated:** 2025-12-29 (Completed #16 Logo Generation Assistant)
+**Last Updated:** 2025-12-29 (Completed #17 Contact Form Submissions)
 
 ---
 
