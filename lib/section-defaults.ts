@@ -40,6 +40,25 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
 
   text: {
     body: "<p>Start writing your content here. You can add paragraphs, format text, and share your message with the world.</p>",
+    // Master styling toggle (disabled by default for plain text)
+    enableStyling: false,
+    textColorMode: "auto", // Auto-detects from background
+    // Border options (disabled by default)
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "", // Empty = use theme primary
+    boxBackgroundColor: "", // Empty = use theme background
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true, // Adapts to light/dark mode by default
+    // Background & overlay (disabled by default)
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    // Layout
+    contentWidth: "narrow",
+    // Typography
+    textSize: "normal",
   },
 
   image: {

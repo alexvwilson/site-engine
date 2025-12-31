@@ -104,6 +104,33 @@
 
 ## Completed Features
 
+### 28. Text Block Styling Options ✅ 2025-12-31
+
+**Problem:** Text blocks were plain with no visual styling options. Users wanted to create visually distinct text sections with borders, background images, and color overlays.
+
+**Solution Implemented:**
+- [x] Border toggle with width options (Thin/Medium/Thick)
+- [x] Border radius options (None/Small/Medium/Large/Pill)
+- [x] Border color picker (defaults to theme primary)
+- [x] Background image upload via ImageUpload component
+- [x] Overlay color picker with opacity slider (0-100%)
+- [x] Content width options (Narrow/Medium/Full)
+- [x] Overlay sits on top of background image (tinted effect)
+- [x] Text color automatically adjusts for readability on backgrounds
+- [x] Collapsible "Styling" section in editor UI
+- [x] 3 new templates: Card, Featured, Highlight
+
+**Task Document:** `ai_docs/tasks/044_text_block_styling_options.md`
+
+**Files Modified:**
+- `lib/section-types.ts` - Added TextBorderWidth, TextBorderRadius, TextContentWidth types; extended TextContent
+- `lib/section-defaults.ts` - Added default styling values
+- `lib/section-templates.ts` - Added Card, Featured, Highlight templates
+- `components/render/blocks/TextBlock.tsx` - Full styling support with overlay and borders
+- `components/editor/blocks/TextEditor.tsx` - Collapsible styling controls
+
+---
+
 ### 27. Hero Rotating Text Animation ✅ 2025-12-30
 
 **Problem:** Hero section headings are static. Users wanted animated text effects where words cycle through with visual transitions (like "Specialists in [Production | Remixing | Editing]").
@@ -749,7 +776,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #24 Gallery Layout Options)
+**Last Updated:** 2025-12-31 (Completed #28 Text Block Styling Options)
 
 ---
 

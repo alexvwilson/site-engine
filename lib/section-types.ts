@@ -59,8 +59,43 @@ export interface HeroContent {
   rotatingTitle?: RotatingTitleConfig;
 }
 
+// Text block styling types
+export type TextBorderWidth = "thin" | "medium" | "thick";
+export type TextBorderRadius = "none" | "small" | "medium" | "large" | "full";
+export type TextContentWidth = "narrow" | "medium" | "full";
+export type TextSize = "small" | "normal" | "large";
+export type TextColorMode = "auto" | "light" | "dark";
+
 export interface TextContent {
   body: string;
+
+  // Master styling toggle - when false, renders as plain text with theme colors
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode; // 'auto' detects from background, 'light'/'dark' forces color
+
+  // Border options
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string; // Hex color, defaults to theme primary if not set
+
+  // Box background (when border is shown)
+  boxBackgroundColor?: string; // Hex color for the bordered box, empty = use theme
+  boxBackgroundOpacity?: number; // 0-100, defaults to 100
+  useThemeBackground?: boolean; // If true, uses theme background color (adapts to light/dark mode)
+
+  // Background & overlay options (for section background)
+  backgroundImage?: string;
+  overlayColor?: string; // Hex color
+  overlayOpacity?: number; // 0-100
+
+  // Layout options
+  contentWidth?: TextContentWidth;
+
+  // Typography options
+  textSize?: TextSize;
 }
 
 export interface ImageContent {
