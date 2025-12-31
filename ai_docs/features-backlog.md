@@ -16,32 +16,96 @@
 
 ## P1 - High Priority
 
-*(No items currently in P1)*
+### 29. Gallery Styling Options
+
+**Problem:** Gallery images have fixed borders and gaps. Users want seamless/compact gallery options.
+
+**Requirements:**
+- Toggle to show/hide image borders (default: show)
+- Toggle for gap between images (default: with gap)
+- Apply to all gallery layouts: Grid, Masonry, Carousel
+- Independent controls (can have no border but still have gap, etc.)
+
+**Complexity:** Low
+
+---
+
+### 30. Block Styling Options (Multi-Block)
+
+**Problem:** Sections look uniform. Users want visual variety between sections to guide visitors through the page.
+
+**Requirements:**
+- Add styling options to most block types (similar to Text block #28)
+- Border options: Top border, bottom border, or both
+- Border width: Thin/Medium/Thick
+- Border color: Theme primary or custom
+- Background color option (solid color from theme or custom)
+- Background image with overlay (like Text block)
+- Blocks to update: Hero, Features, CTA, Testimonials, Contact, Image, Gallery
+- Collapsible "Styling" section in each editor
+
+**Implementation Approach:**
+- Do ONE block at a time to avoid unexpected side effects
+- Test thoroughly after each block before moving to next
+- Suggested order: Features → CTA → Testimonials → Contact → Image → Gallery → Hero
+- Hero last since it already has background image support (may need different treatment)
+
+**Complexity:** Medium-High (multiple blocks, consistent pattern)
+
+---
+
+### 31. SEO Guidance & Suggestions
+
+**Problem:** Site owners don't know if their child sites are well-optimized for search engines.
+
+**Requirements:**
+
+*Manual Checklist (immediate feedback):*
+- SEO checklist/score card in Settings tab
+- Check for: meta titles, descriptions, alt text, headings structure
+- Per-page SEO status indicators (✓/✗ badges)
+- Guidance text explaining each SEO factor and why it matters
+- Visual progress indicator (e.g., "7/10 SEO checks passed")
+
+*AI-Powered Analysis (deeper insights):*
+- "Analyze SEO" button triggers Trigger.dev background task
+- AI reviews site content and suggests specific improvements
+- Recommendations for: keyword optimization, content gaps, meta description rewrites
+- Priority-ranked suggestions (high/medium/low impact)
+- Actionable feedback users can implement
+
+**Complexity:** Medium
 
 ---
 
 ## P2 - Medium Priority
 
-### 26. Legal Pages for Child Sites
-
-**Problem:** Footer legal links (Privacy Policy, Terms) currently link to Site Engine's legal pages, not the child site's own policies.
-
-**Requirements:**
-- Site owner selects which legal pages to generate (checkboxes):
-  - Privacy Policy
-  - Terms of Service
-  - Cookie Policy
-- AI generates legal content specific to the child site's business
-- Trigger.dev background task for generation
-- Auto-creates pages with generated content
-- Footer links point to child site's legal pages
-- Ability to edit generated content
-
-**Complexity:** Medium-High (AI generation + page creation)
+*(No items currently in P2)*
 
 ---
 
 ## P3 - Low Priority / Future
+
+### 32. Media Player Blocks (Exploratory)
+
+**Problem:** Users want to showcase audio/video content beyond YouTube/Spotify embeds.
+
+**Current State:** Embed block supports YouTube, Vimeo, Spotify, SoundCloud.
+
+**To Explore:**
+- Custom audio player with playlist support
+- Self-hosted audio files (requires storage solution)
+- Integration with music distributors
+- Video player with custom controls
+
+**Storage Considerations:**
+- Vercel Free: No file storage
+- Supabase Free: 1GB storage, 2GB bandwidth
+- Supabase Pro ($25/mo): 100GB storage
+
+**Complexity:** High (storage infrastructure + custom player)
+
+---
 
 ### 7. Custom Domain Support
 
@@ -103,6 +167,29 @@
 ---
 
 ## Completed Features
+
+### 26. Legal Pages for Child Sites ✅ 2025-12-31
+
+**Problem:** Footer legal links (Privacy Policy, Terms) currently link to Site Engine's legal pages, not the child site's own policies.
+
+**Solution Implemented:**
+- [x] Site owner selects which legal pages to generate (checkboxes)
+- [x] Privacy Policy, Terms of Service, Cookie Policy options
+- [x] Business type selector for industry-specific content
+- [x] Data collection practices checkboxes (Contact Forms, Cookies, Payments, Analytics, User Accounts)
+- [x] Primary jurisdiction selector (determines GDPR, CCPA references)
+- [x] AI generates legal content via Trigger.dev background task
+- [x] Auto-creates pages with generated content
+- [x] "Exists" badges show which pages already exist
+- [x] Regenerate option to update existing pages
+- [x] Ability to edit generated content in Pages tab
+
+**Files Created/Modified:**
+- Legal Pages card in Settings tab
+- Trigger.dev task for AI generation
+- Server actions for page creation
+
+---
 
 ### 28. Text Block Styling Options ✅ 2025-12-31
 
@@ -776,7 +863,7 @@
 
 ---
 
-**Last Updated:** 2025-12-31 (Completed #28 Text Block Styling Options)
+**Last Updated:** 2025-12-31 (Added #29 Gallery Styling, #30 Block Styling, #31 SEO Guidance, #32 Media Players; Completed #26 Legal Pages)
 
 ---
 
