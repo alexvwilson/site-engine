@@ -210,10 +210,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     }
   };
 
-  const publicUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/sites/${slug}`
-      : `/sites/${slug}`;
+  const publicUrl = `/sites/${slug}`;
 
   // Domain management handlers
   const handleAddDomain = async (): Promise<void> => {
