@@ -1,6 +1,7 @@
+import type { CSSProperties } from "react";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { GalleryContent } from "@/lib/section-types";
-import { getSmallStyles, getCardStyles } from "../../utilities/theme-styles";
+import { getSmallStyles } from "../../utilities/theme-styles";
 import { cn } from "@/lib/utils";
 
 interface GalleryMasonryProps {
@@ -10,9 +11,24 @@ interface GalleryMasonryProps {
 }
 
 const GAP_VALUES = {
+  none: "0",
   small: "0.5rem",
   medium: "1rem",
   large: "1.5rem",
+} as const;
+
+const BORDER_WIDTH_VALUES = {
+  thin: "1px",
+  medium: "2px",
+  thick: "4px",
+} as const;
+
+const BORDER_RADIUS_VALUES = {
+  none: "0",
+  small: "0.25rem",
+  medium: "0.5rem",
+  large: "1rem",
+  pill: "9999px",
 } as const;
 
 const COLUMN_COUNTS = {
@@ -29,8 +45,27 @@ export function GalleryMasonry({
 }: GalleryMasonryProps): React.ReactElement {
   const columns = content.columns ?? "auto";
   const gap = content.gap ?? "medium";
+  const showBorder = content.showBorder ?? true;
+  const borderWidth = content.borderWidth ?? "thin";
+  const borderRadius = content.borderRadius ?? "medium";
+  const borderColor = content.borderColor || "var(--color-primary)";
   const columnCount = COLUMN_COUNTS[columns];
   const gapValue = GAP_VALUES[gap];
+
+  const getImageStyles = (): CSSProperties => {
+    const styles: CSSProperties = {
+      backgroundColor: "var(--color-background)",
+      borderRadius: BORDER_RADIUS_VALUES[borderRadius],
+      marginBottom: gapValue,
+    };
+
+    if (showBorder) {
+      styles.border = `${BORDER_WIDTH_VALUES[borderWidth]} solid ${borderColor}`;
+      styles.boxShadow = theme.components.card.shadow;
+    }
+
+    return styles;
+  };
 
   return (
     <div
@@ -56,10 +91,7 @@ export function GalleryMasonry({
             "overflow-hidden break-inside-avoid",
             onImageClick && "cursor-pointer"
           )}
-          style={{
-            ...getCardStyles(theme),
-            marginBottom: gapValue,
-          }}
+          style={getImageStyles()}
           onClick={() => onImageClick?.(index)}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

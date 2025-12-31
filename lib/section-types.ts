@@ -113,7 +113,9 @@ export interface GalleryImage {
 export type GalleryAspectRatio = "1:1" | "16:9" | "4:3" | "3:4" | "original";
 export type GalleryLayout = "grid" | "masonry" | "carousel";
 export type GalleryColumns = 2 | 3 | 4 | "auto";
-export type GalleryGap = "small" | "medium" | "large";
+export type GalleryGap = "none" | "small" | "medium" | "large";
+export type GalleryBorderWidth = "thin" | "medium" | "thick";
+export type GalleryBorderRadius = "none" | "small" | "medium" | "large" | "pill";
 export type GalleryAutoRotateInterval = 3 | 5 | 7 | 10;
 
 export interface GalleryContent {
@@ -125,6 +127,11 @@ export interface GalleryContent {
   lightbox?: boolean;
   autoRotate?: boolean;
   autoRotateInterval?: GalleryAutoRotateInterval;
+  // Border styling options
+  showBorder?: boolean;
+  borderWidth?: GalleryBorderWidth;
+  borderRadius?: GalleryBorderRadius;
+  borderColor?: string; // Hex color, defaults to theme primary if empty
 }
 
 export interface Feature {

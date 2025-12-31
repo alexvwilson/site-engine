@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -59,6 +59,16 @@ export function TextEditor({
   siteId,
 }: TextEditorProps) {
   const [stylingOpen, setStylingOpen] = useState(false);
+  const [themePrimaryColor, setThemePrimaryColor] = useState("#3B82F6");
+
+  // Read the theme primary color from CSS variables
+  useEffect(() => {
+    const root = document.documentElement;
+    const primaryColor = getComputedStyle(root).getPropertyValue("--color-primary").trim();
+    if (primaryColor) {
+      setThemePrimaryColor(primaryColor);
+    }
+  }, []);
 
   const handleBodyChange = (html: string): void => {
     onChange({ ...content, body: html });
@@ -182,7 +192,7 @@ export function TextEditor({
                   <div className="flex items-center gap-3">
                     <input
                       type="color"
-                      value={content.borderColor || "#3B82F6"}
+                      value={content.borderColor || themePrimaryColor}
                       onChange={(e) => updateField("borderColor", e.target.value)}
                       disabled={disabled}
                       className="h-10 w-14 rounded border cursor-pointer disabled:opacity-50"

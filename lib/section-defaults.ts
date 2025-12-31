@@ -76,6 +76,10 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     lightbox: false,
     autoRotate: false,
     autoRotateInterval: 5,
+    showBorder: true,
+    borderWidth: "thin",
+    borderRadius: "medium",
+    borderColor: "",
   },
 
   features: {

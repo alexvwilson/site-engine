@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import type { CSSProperties } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { GalleryContent } from "@/lib/section-types";
-import { getCardStyles } from "../../utilities/theme-styles";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -23,9 +23,24 @@ const ASPECT_RATIO_CLASSES = {
 } as const;
 
 const GAP_VALUES = {
+  none: 0,
   small: 8,
   medium: 16,
   large: 24,
+} as const;
+
+const BORDER_WIDTH_VALUES = {
+  thin: "1px",
+  medium: "2px",
+  thick: "4px",
+} as const;
+
+const BORDER_RADIUS_VALUES = {
+  none: "0",
+  small: "0.25rem",
+  medium: "0.5rem",
+  large: "1rem",
+  pill: "9999px",
 } as const;
 
 const VISIBLE_COUNTS = {
@@ -52,9 +67,27 @@ export function GalleryCarousel({
   const gap = content.gap ?? "medium";
   const autoRotate = content.autoRotate ?? false;
   const autoRotateInterval = content.autoRotateInterval ?? 5;
+  const showBorder = content.showBorder ?? true;
+  const borderWidth = content.borderWidth ?? "thin";
+  const borderRadius = content.borderRadius ?? "medium";
+  const borderColor = content.borderColor || "var(--color-primary)";
 
   const visibleCount = VISIBLE_COUNTS[columns];
   const gapValue = GAP_VALUES[gap];
+
+  const getImageStyles = (): CSSProperties => {
+    const styles: CSSProperties = {
+      backgroundColor: "var(--color-background)",
+      borderRadius: BORDER_RADIUS_VALUES[borderRadius],
+    };
+
+    if (showBorder) {
+      styles.border = `${BORDER_WIDTH_VALUES[borderWidth]} solid ${borderColor}`;
+      styles.boxShadow = theme.components.card.shadow;
+    }
+
+    return styles;
+  };
 
   // Calculate the maximum index (can't scroll past the last set of images)
   const maxIndex = Math.max(0, images.length - visibleCount);
@@ -168,10 +201,10 @@ export function GalleryCarousel({
             <figure
               key={index}
               className={cn(
-                "overflow-hidden rounded-lg",
+                "overflow-hidden",
                 onImageClick && "cursor-pointer"
               )}
-              style={getCardStyles(theme)}
+              style={getImageStyles()}
               onClick={() => onImageClick?.(index)}
             >
               <div className={cn("relative w-full", ASPECT_RATIO_CLASSES[aspectRatio])}>
@@ -213,11 +246,11 @@ export function GalleryCarousel({
             <figure
               key={index}
               className={cn(
-                "flex-shrink-0 overflow-hidden rounded-lg",
+                "flex-shrink-0 overflow-hidden",
                 onImageClick && "cursor-pointer"
               )}
               style={{
-                ...getCardStyles(theme),
+                ...getImageStyles(),
                 width: `calc(${slideWidthPercent}% - ${totalGapWidth / visibleCount}px)`,
               }}
               onClick={() => onImageClick?.(index)}

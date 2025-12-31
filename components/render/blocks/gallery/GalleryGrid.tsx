@@ -1,6 +1,7 @@
+import type { CSSProperties } from "react";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { GalleryContent } from "@/lib/section-types";
-import { getSmallStyles, getCardStyles } from "../../utilities/theme-styles";
+import { getSmallStyles } from "../../utilities/theme-styles";
 import { cn } from "@/lib/utils";
 
 interface GalleryGridProps {
@@ -10,9 +11,24 @@ interface GalleryGridProps {
 }
 
 const GAP_CLASSES = {
+  none: "gap-0",
   small: "gap-2",
   medium: "gap-4",
   large: "gap-6",
+} as const;
+
+const BORDER_WIDTH_VALUES = {
+  thin: "1px",
+  medium: "2px",
+  thick: "4px",
+} as const;
+
+const BORDER_RADIUS_VALUES = {
+  none: "0",
+  small: "0.25rem",
+  medium: "0.5rem",
+  large: "1rem",
+  pill: "9999px",
 } as const;
 
 const ASPECT_RATIO_CLASSES = {
@@ -38,6 +54,24 @@ export function GalleryGrid({
   const aspectRatio = content.aspectRatio ?? "1:1";
   const columns = content.columns ?? "auto";
   const gap = content.gap ?? "medium";
+  const showBorder = content.showBorder ?? true;
+  const borderWidth = content.borderWidth ?? "thin";
+  const borderRadius = content.borderRadius ?? "medium";
+  const borderColor = content.borderColor || "var(--color-primary)";
+
+  const getImageStyles = (): CSSProperties => {
+    const styles: CSSProperties = {
+      backgroundColor: "var(--color-background)",
+      borderRadius: BORDER_RADIUS_VALUES[borderRadius],
+    };
+
+    if (showBorder) {
+      styles.border = `${BORDER_WIDTH_VALUES[borderWidth]} solid ${borderColor}`;
+      styles.boxShadow = theme.components.card.shadow;
+    }
+
+    return styles;
+  };
 
   return (
     <div className={cn("grid", COLUMN_CLASSES[columns], GAP_CLASSES[gap])}>
@@ -45,7 +79,7 @@ export function GalleryGrid({
         <figure
           key={index}
           className={cn("overflow-hidden", onImageClick && "cursor-pointer")}
-          style={getCardStyles(theme)}
+          style={getImageStyles()}
           onClick={() => onImageClick?.(index)}
         >
           <div

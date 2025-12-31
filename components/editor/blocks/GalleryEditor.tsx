@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +21,8 @@ import type {
   GalleryLayout,
   GalleryColumns,
   GalleryGap,
+  GalleryBorderWidth,
+  GalleryBorderRadius,
   GalleryAutoRotateInterval,
 } from "@/lib/section-types";
 
@@ -42,6 +45,17 @@ export function GalleryEditor({
   disabled,
   siteId,
 }: GalleryEditorProps) {
+  // Read the theme primary color from CSS variables
+  const [themePrimaryColor, setThemePrimaryColor] = useState("#3B82F6");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const primaryColor = getComputedStyle(root).getPropertyValue("--color-primary").trim();
+    if (primaryColor) {
+      setThemePrimaryColor(primaryColor);
+    }
+  }, []);
+
   const handleImageChange = (
     index: number,
     field: keyof GalleryImage,
@@ -71,6 +85,10 @@ export function GalleryEditor({
   const lightbox = content.lightbox ?? false;
   const autoRotate = content.autoRotate ?? false;
   const autoRotateInterval = content.autoRotateInterval ?? 5;
+  const showBorder = content.showBorder ?? true;
+  const borderWidth = content.borderWidth ?? "thin";
+  const borderRadius = content.borderRadius ?? "medium";
+  const borderColor = content.borderColor ?? "";
 
   return (
     <div className="space-y-6">
@@ -173,12 +191,107 @@ export function GalleryEditor({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="none">None</SelectItem>
                 <SelectItem value="small">Small</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="large">Large</SelectItem>
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        {/* Border Settings */}
+        <div className="space-y-3 pt-2 border-t">
+          <div className="flex items-center gap-3 pt-2">
+            <Switch
+              id="border-toggle"
+              checked={showBorder}
+              onCheckedChange={(checked) =>
+                onChange({ ...content, showBorder: checked })
+              }
+              disabled={disabled}
+            />
+            <Label htmlFor="border-toggle" className="cursor-pointer">
+              Show image borders
+            </Label>
+          </div>
+
+          {/* Border Radius - Always visible */}
+          <div className="space-y-2 pl-10">
+            <Label>Corner Rounding</Label>
+            <Select
+              value={borderRadius}
+              onValueChange={(value: GalleryBorderRadius) =>
+                onChange({ ...content, borderRadius: value })
+              }
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                <SelectItem value="small">Small</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="large">Large</SelectItem>
+                <SelectItem value="pill">Pill</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {showBorder && (
+            <div className="grid grid-cols-2 gap-4 pl-10">
+              {/* Border Width */}
+              <div className="space-y-2">
+                <Label>Border Width</Label>
+                <Select
+                  value={borderWidth}
+                  onValueChange={(value: GalleryBorderWidth) =>
+                    onChange({ ...content, borderWidth: value })
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="thin">Thin</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="thick">Thick</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Border Color */}
+              <div className="space-y-2">
+                <Label>Border Color</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="color"
+                    value={borderColor || themePrimaryColor}
+                    onChange={(e) =>
+                      onChange({ ...content, borderColor: e.target.value })
+                    }
+                    disabled={disabled}
+                    className="h-9 w-14 rounded border cursor-pointer disabled:opacity-50"
+                  />
+                  {borderColor && (
+                    <button
+                      type="button"
+                      onClick={() => onChange({ ...content, borderColor: "" })}
+                      className="text-xs text-muted-foreground hover:text-foreground underline"
+                      disabled={disabled}
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {borderColor ? borderColor : "Using theme primary"}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Lightbox Toggle */}
