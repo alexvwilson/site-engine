@@ -58,10 +58,11 @@ export function ThemeStyles({ theme, colorMode }: ThemeStylesProps): React.React
       }
     `;
   } else if (colorMode === "user_choice") {
-    // Light by default, dark when .dark class is present
+    // Light by default, dark when .site-dark class is present
+    // Uses "site-dark" to avoid conflict with next-themes "dark" class
     css = `
       :root { ${lightVars} }
-      .dark { ${darkVars} }
+      .site-dark { ${darkVars} }
     `;
   }
   // "light" mode just uses the base lightVars
@@ -82,13 +83,14 @@ export function ColorModeScript({ colorMode }: { colorMode: ColorMode }): React.
     return null;
   }
 
+  // Uses "site-dark" class to avoid conflict with next-themes "dark" class
   const script = colorMode === "user_choice"
     ? `
       (function() {
         try {
           var mode = localStorage.getItem('site-color-mode');
           if (mode === 'dark') {
-            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add('site-dark');
           }
         } catch (e) {}
       })();
@@ -97,7 +99,7 @@ export function ColorModeScript({ colorMode }: { colorMode: ColorMode }): React.
       (function() {
         try {
           if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
+            document.documentElement.classList.add('site-dark');
           }
         } catch (e) {}
       })();

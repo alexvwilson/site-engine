@@ -1,8 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
+
+// Use useLayoutEffect on client, useEffect on server (for SSR compatibility)
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
  * Toggle button for light/dark mode.
@@ -14,35 +18,40 @@ export function ColorModeToggle(): React.ReactElement {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
-  // Sync color mode with localStorage on mount AND on every navigation
-  // This fixes persistence across client-side navigation in Next.js App Router
-  useEffect(() => {
-    setMounted(true);
+  // Sync color mode IMMEDIATELY before browser paints (useLayoutEffect)
+  // This prevents flash of wrong color mode during navigation
+  // Uses "site-dark" class to avoid conflict with next-themes "dark" class
+  useIsomorphicLayoutEffect(() => {
     const stored = localStorage.getItem("site-color-mode");
 
     // Always sync the class with localStorage on mount/navigation
     if (stored === "dark") {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add("site-dark");
       setIsDark(true);
     } else if (stored === "light") {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove("site-dark");
       setIsDark(false);
     } else {
       // No preference stored yet - check current DOM state
-      const hasDarkClass = document.documentElement.classList.contains("dark");
+      const hasDarkClass = document.documentElement.classList.contains("site-dark");
       setIsDark(hasDarkClass);
     }
   }, [pathname]); // Re-run on navigation
+
+  // Separate effect for mounted state (can use regular useEffect)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleMode = (): void => {
     const newMode = !isDark;
     setIsDark(newMode);
 
     if (newMode) {
-      document.documentElement.classList.add("dark");
+      document.documentElement.classList.add("site-dark");
       localStorage.setItem("site-color-mode", "dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      document.documentElement.classList.remove("site-dark");
       localStorage.setItem("site-color-mode", "light");
     }
   };
