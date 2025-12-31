@@ -34,12 +34,29 @@ export interface HeaderContent {
   overrideCta?: boolean;
 }
 
+// Hero title animation types
+export type HeroTitleMode = "static" | "rotating";
+export type HeroAnimationEffect = "clip" | "typing";
+export type HeroAnimationMode = "loop" | "once";
+
+export interface RotatingTitleConfig {
+  beforeText: string;
+  words: string[];
+  afterText?: string;
+  effect: HeroAnimationEffect;
+  displayTime: number;
+  animationMode: HeroAnimationMode;
+}
+
 export interface HeroContent {
   heading: string;
   subheading: string;
   ctaText: string;
   ctaUrl: string;
   backgroundImage?: string;
+  // Rotating title configuration
+  titleMode?: HeroTitleMode;
+  rotatingTitle?: RotatingTitleConfig;
 }
 
 export interface TextContent {

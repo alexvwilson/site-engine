@@ -6,6 +6,7 @@ import {
   getButtonStyles,
 } from "../utilities/theme-styles";
 import { transformUrl } from "@/lib/url-utils";
+import { RotatingText } from "./RotatingText";
 
 interface HeroBlockProps {
   content: HeroContent;
@@ -16,6 +17,13 @@ interface HeroBlockProps {
 export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
   const hasBackgroundImage =
     content.backgroundImage && content.backgroundImage.trim() !== "";
+
+  const textColor = hasBackgroundImage ? "#FFFFFF" : "var(--color-foreground)";
+
+  const showRotatingTitle =
+    content.titleMode === "rotating" &&
+    content.rotatingTitle &&
+    content.rotatingTitle.words.length > 0;
 
   return (
     <section
@@ -40,10 +48,24 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
         <h1
           style={{
             ...getHeadingStyles(theme, "h1"),
-            color: hasBackgroundImage ? "#FFFFFF" : "var(--color-foreground)",
+            color: textColor,
           }}
         >
-          {content.heading}
+          {showRotatingTitle ? (
+            <>
+              {content.rotatingTitle!.beforeText}{" "}
+              <RotatingText
+                words={content.rotatingTitle!.words}
+                effect={content.rotatingTitle!.effect}
+                displayTime={content.rotatingTitle!.displayTime}
+                animationMode={content.rotatingTitle!.animationMode}
+              />
+              {content.rotatingTitle!.afterText &&
+                ` ${content.rotatingTitle!.afterText}`}
+            </>
+          ) : (
+            content.heading
+          )}
         </h1>
 
         {content.subheading && (

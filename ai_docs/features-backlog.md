@@ -104,6 +104,33 @@
 
 ## Completed Features
 
+### 27. Hero Rotating Text Animation ✅ 2025-12-30
+
+**Problem:** Hero section headings are static. Users wanted animated text effects where words cycle through with visual transitions (like "Specialists in [Production | Remixing | Editing]").
+
+**Solution Implemented:**
+- [x] Toggle between static heading OR rotating title mode
+- [x] Rotating title structure: Before Text + Rotation Words + After Text
+- [x] Two animation effects: Clip (width-based reveal/hide) and Typing (typewriter with untype)
+- [x] Display time scales all animation speeds proportionally (500-10000ms range)
+- [x] Animation mode: Loop or Once
+- [x] Hover-to-pause for accessibility
+- [x] Respects prefers-reduced-motion preference
+- [x] Editor UI with full configuration controls
+
+**Task Document:** `ai_docs/tasks/043_hero_rotating_text_animation.md`
+
+**Files Created:**
+- `components/render/blocks/RotatingText.tsx` - Animation component with Clip and Typing effects
+
+**Files Modified:**
+- `lib/section-types.ts` - Added HeroTitleMode, HeroAnimationEffect, HeroAnimationMode, RotatingTitleConfig types
+- `lib/section-defaults.ts` - Added default rotating title configuration
+- `components/render/blocks/HeroBlock.tsx` - Conditional rendering for rotating titles
+- `components/editor/blocks/HeroEditor.tsx` - Full rotating title configuration UI
+
+---
+
 ### 24. Gallery Layout Options ✅ 2025-12-30
 
 **Problem:** Gallery had fixed layout (flex wrap, object-cover). No control over aspect ratio or display style.

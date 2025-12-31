@@ -27,6 +27,15 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     subheading: "Create something amazing with Site Engine",
     ctaText: "Get Started",
     ctaUrl: "#",
+    titleMode: "static",
+    rotatingTitle: {
+      beforeText: "We specialize in",
+      words: ["Design", "Development", "Marketing"],
+      afterText: "",
+      effect: "clip",
+      displayTime: 2000,
+      animationMode: "loop",
+    },
   },
 
   text: {
