@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { env } from "./env";
+import { logger } from "./logger";
 
 // Resend client is only initialized if API key is configured
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
@@ -23,7 +24,7 @@ export async function sendContactNotification({
 }: ContactNotificationParams): Promise<{ success: boolean; error?: string }> {
   // Skip if Resend is not configured
   if (!resend) {
-    console.log("Email notifications disabled (RESEND_API_KEY not configured)");
+    logger.info("Email notifications disabled (RESEND_API_KEY not configured)");
     return { success: true };
   }
 

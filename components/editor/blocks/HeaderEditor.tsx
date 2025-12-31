@@ -158,7 +158,7 @@ export function HeaderEditor({
   content,
   onChange,
   disabled,
-  siteId,
+  siteId: _siteId,
   mode = "site",
 }: HeaderEditorProps) {
   const handleFieldChange = (field: keyof HeaderContent, value: string): void => {
