@@ -42,24 +42,6 @@
 
 ---
 
-### 25. Embed Block
-
-**Problem:** No way to embed third-party content like Google Maps, chat widgets, or other iframes.
-
-**Use Case:** Google Maps embed for business SEO, social media feeds, booking widgets.
-
-**Requirements:**
-- New block type: "embed"
-- Paste iframe/embed code from third-party services
-- Sanitize/validate embed code for security
-- Preview in editor (may need sandboxing)
-- Common presets: Google Maps, YouTube, etc.
-- Responsive container options
-
-**Complexity:** Medium (security considerations for arbitrary HTML)
-
----
-
 ### 26. Legal Pages for Child Sites
 
 **Problem:** Footer legal links (Privacy Policy, Terms) currently link to Site Engine's legal pages, not the child site's own policies.
@@ -151,6 +133,38 @@
 ---
 
 ## Completed Features
+
+### 25. Embed Block ✅ 2025-12-30
+
+**Problem:** No way to embed third-party content like Google Maps, YouTube videos, or other iframes.
+
+**Solution Implemented:**
+- [x] New "embed" block type added to section builder
+- [x] Paste iframe embed code with real-time validation
+- [x] Allowlist-based security (YouTube, Vimeo, Google Maps, Spotify, SoundCloud)
+- [x] Clear error message when domain is not allowed
+- [x] Aspect ratio options: 16:9 (video), 4:3, 1:1, custom height
+- [x] Live preview in editor
+- [x] Responsive iframe container on published sites
+- [x] Templates: YouTube Video, Google Maps, Blank
+
+**Task Document:** `ai_docs/tasks/040_embed_block.md`
+
+**Files Created:**
+- `lib/embed-utils.ts` - Allowlist validation and iframe parsing utilities
+- `components/editor/blocks/EmbedEditor.tsx` - Editor with paste validation and preview
+- `components/render/blocks/EmbedBlock.tsx` - Responsive iframe renderer
+
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added "embed" to BLOCK_TYPES
+- `lib/section-types.ts` - Added EmbedContent interface and BLOCK_TYPE_INFO
+- `lib/section-defaults.ts` - Added embed defaults
+- `lib/section-templates.ts` - Added embed templates
+- `components/editor/SectionEditor.tsx` - Added EmbedEditor routing
+- `components/editor/BlockIcon.tsx` - Added embed icon
+- `components/render/BlockRenderer.tsx` - Added EmbedBlock routing
+
+---
 
 ### 23. Anchor Links for Same-Page Navigation ✅ 2025-12-30
 
@@ -707,7 +721,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #23 Anchor Links for Same-Page Navigation)
+**Last Updated:** 2025-12-30 (Completed #25 Embed Block)
 
 ---
 
