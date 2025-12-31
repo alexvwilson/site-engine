@@ -22,21 +22,6 @@
 
 ## P2 - Medium Priority
 
-### 23. Anchor Links for Same-Page Navigation
-
-**Problem:** Header nav links can only point to other pages. Some single-page sites need links to sections on the same page.
-
-**Requirements:**
-- Each section gets optional "Section ID" field in editor
-- Header nav links support `#section-id` syntax
-- Smooth scroll behavior when clicking anchor links
-- Visual indicator in editor when a section has an ID set
-- Validate IDs are unique within page
-
-**Complexity:** Medium
-
----
-
 ### 24. Gallery Layout Options
 
 **Problem:** Gallery has fixed layout (flex wrap, object-cover). No control over aspect ratio or display style.
@@ -166,6 +151,36 @@
 ---
 
 ## Completed Features
+
+### 23. Anchor Links for Same-Page Navigation ✅ 2025-12-30
+
+**Problem:** Header nav links could only point to other pages. Single-page sites needed links to sections on the same page.
+
+**Solution Implemented:**
+- [x] Added `anchor_id` column to sections table with page index
+- [x] Optional "Section ID" field in editor (click badge to edit)
+- [x] Visual indicator (badge) shows `#section-id` when set
+- [x] Header nav links support `#section-id` syntax (manual entry)
+- [x] Smooth scroll behavior on published sites
+- [x] Client + server validation (alphanumeric + hyphens)
+- [x] Duplicate ID check within same page
+
+**Task Document:** `ai_docs/tasks/039_anchor_links_same_page_navigation.md`
+
+**Files Created:**
+- `components/editor/AnchorIdInput.tsx` - Inline anchor ID editor with validation
+- `lib/anchor-utils.ts` - Validation utilities
+
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added anchor_id column + index
+- `app/actions/sections.ts` - Added updateSectionAnchorId action
+- `components/editor/SectionCard.tsx` - Added AnchorIdInput to header
+- `components/render/BlockRenderer.tsx` - Added id attribute wrapper
+- `app/(sites)/sites/[siteSlug]/layout.tsx` - Added smooth scroll CSS
+
+**Database Migration:** `0020_plain_white_queen` - Added anchor_id column to sections table
+
+---
 
 ### 21. Image Library Management ✅ 2025-12-30
 
@@ -692,7 +707,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #21 Image Library Management)
+**Last Updated:** 2025-12-30 (Completed #23 Anchor Links for Same-Page Navigation)
 
 ---
 
