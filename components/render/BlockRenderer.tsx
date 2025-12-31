@@ -31,9 +31,10 @@ export async function BlockRenderer({
   basePath = "",
   showBlogAuthor = true,
 }: BlockRendererProps) {
-  const { block_type, content } = section;
+  const { block_type, content, anchor_id } = section;
 
-  switch (block_type) {
+  const renderBlock = (): React.ReactNode => {
+    switch (block_type) {
     case "header":
       return (
         <HeaderBlock
@@ -144,5 +145,18 @@ export async function BlockRenderer({
           Unknown block type: {block_type}
         </div>
       );
+    }
+  };
+
+  const blockContent = renderBlock();
+
+  if (anchor_id) {
+    return (
+      <div id={anchor_id} className="scroll-mt-16">
+        {blockContent}
+      </div>
+    );
   }
+
+  return blockContent;
 }

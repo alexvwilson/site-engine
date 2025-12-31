@@ -18,6 +18,8 @@ export default function PublishedSiteLayout({
 }) {
   return (
     <>
+      {/* Smooth scroll for anchor links */}
+      <style>{`html { scroll-behavior: smooth; }`}</style>
       {/* Google Fonts - Inter as default, sites can override with their theme fonts */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link

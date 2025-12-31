@@ -25,6 +25,7 @@ import {
 import { BlockIcon } from "./BlockIcon";
 import { SectionEditor } from "./SectionEditor";
 import { SectionStatusToggle } from "./SectionStatusToggle";
+import { AnchorIdInput } from "./AnchorIdInput";
 import { deleteSection, duplicateSection } from "@/app/actions/sections";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import { BLOCK_TYPE_INFO } from "@/lib/section-types";
@@ -108,7 +109,12 @@ export function SectionCard({ section, siteId }: SectionCardProps) {
             {blockInfo?.label ?? section.block_type}
           </span>
 
-          {!isExpanded && (
+          <AnchorIdInput
+            sectionId={section.id}
+            currentAnchorId={section.anchor_id}
+          />
+
+          {!isExpanded && !section.anchor_id && (
             <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
               Click to edit
             </span>

@@ -9,11 +9,12 @@ import {
 } from "@/lib/drizzle/schema/sections";
 import { pages } from "@/lib/drizzle/schema/pages";
 import { requireUserId } from "@/lib/auth";
-import { eq, and, gt, gte, sql } from "drizzle-orm";
+import { eq, and, gt, gte, sql, ne } from "drizzle-orm";
 import { getDefaultContent } from "@/lib/section-defaults";
 import type { SectionContent, HeaderContent } from "@/lib/section-types";
 import { getSiteById } from "@/lib/queries/sites";
 import { getPagesBySite } from "@/lib/queries/pages";
+import { isValidAnchorId } from "@/lib/anchor-utils";
 
 export interface ActionResult {
   success: boolean;
@@ -486,6 +487,72 @@ export async function updateSectionStatus(
   if (page?.site_id) {
     revalidatePath(`/sites`);
   }
+
+  return { success: true };
+}
+
+/**
+ * Update a section's anchor ID for same-page navigation
+ */
+export async function updateSectionAnchorId(
+  sectionId: string,
+  anchorId: string | null
+): Promise<ActionResult> {
+  const userId = await requireUserId();
+
+  const cleanId = anchorId?.trim() || null;
+  if (cleanId && !isValidAnchorId(cleanId)) {
+    return { success: false, error: "Invalid anchor ID format" };
+  }
+
+  const [existing] = await db
+    .select({
+      id: sections.id,
+      page_id: sections.page_id,
+      user_id: sections.user_id,
+    })
+    .from(sections)
+    .where(eq(sections.id, sectionId))
+    .limit(1);
+
+  if (!existing || existing.user_id !== userId) {
+    return { success: false, error: "Section not found" };
+  }
+
+  const [page] = await db
+    .select({ site_id: pages.site_id })
+    .from(pages)
+    .where(eq(pages.id, existing.page_id))
+    .limit(1);
+
+  // Check for duplicate anchor IDs on same page
+  if (cleanId) {
+    const [duplicate] = await db
+      .select({ id: sections.id })
+      .from(sections)
+      .where(
+        and(
+          eq(sections.page_id, existing.page_id),
+          eq(sections.anchor_id, cleanId),
+          ne(sections.id, sectionId)
+        )
+      )
+      .limit(1);
+
+    if (duplicate) {
+      return { success: false, error: "This anchor ID is already used on this page" };
+    }
+  }
+
+  await db
+    .update(sections)
+    .set({
+      anchor_id: cleanId,
+      updated_at: new Date(),
+    })
+    .where(eq(sections.id, sectionId));
+
+  revalidatePath(`/app/sites/${page?.site_id}/pages/${existing.page_id}`);
 
   return { success: true };
 }

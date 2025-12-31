@@ -53,12 +53,14 @@ export const sections = pgTable(
     status: text("status", { enum: SECTION_STATUSES })
       .notNull()
       .default("published"),
+    anchor_id: text("anchor_id"),
   },
   (t) => [
     index("sections_page_id_idx").on(t.page_id),
     index("sections_user_id_idx").on(t.user_id),
     index("sections_page_position_idx").on(t.page_id, t.position),
     index("sections_status_idx").on(t.status),
+    index("sections_page_anchor_idx").on(t.page_id, t.anchor_id),
   ]
 );
 
