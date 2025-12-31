@@ -93,6 +93,12 @@ export * from "./layout-suggestion-jobs";
  */
 export * from "./logo-generation-jobs";
 
+/**
+ * Legal generation jobs table - Tracks AI legal page generation
+ * Generates Privacy Policy, Terms of Service, Cookie Policy for child sites
+ */
+export * from "./legal-generation-jobs";
+
 // ============================================================================
 // Domain Management
 // ============================================================================

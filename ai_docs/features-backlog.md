@@ -82,16 +82,6 @@
 
 ---
 
-### 10. Page Templates
-
-**Problem:** Every page starts empty. Users might want common starting points.
-
-**Idea:** Pre-built page templates (Landing Page, About, Contact, Blog Post)
-
-**Complexity:** Low-Medium
-
----
-
 ### 11. Collaboration / Team Features
 
 - Multiple users per site

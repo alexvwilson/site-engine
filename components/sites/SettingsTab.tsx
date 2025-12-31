@@ -40,6 +40,7 @@ import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
 import { ImageUpload } from "@/components/editor/ImageUpload";
 import { ImageLibraryModal } from "@/components/sites/ImageLibraryModal";
+import { LegalPagesCard } from "@/components/sites/LegalPagesCard";
 import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
@@ -862,6 +863,9 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Legal Pages */}
+      <LegalPagesCard site={site} />
 
       {/* Site Header & Footer */}
       <Card>

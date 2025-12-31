@@ -18,6 +18,12 @@ export * from "./tasks/suggest-layout";
 // Domain verification task
 export * from "./tasks/verify-domain";
 
+// Logo generation task
+export * from "./tasks/generate-logo-prompts";
+
+// Legal page generation task
+export * from "./tasks/generate-legal-pages";
+
 // ============================================================================
 // Utilities
 // ============================================================================
@@ -42,3 +48,9 @@ export * from "./utils/tailwind-generator";
 
 // Layout suggestion prompts
 export * from "./utils/layout-prompts";
+
+// Logo generation prompts
+export * from "./utils/logo-prompts";
+
+// Legal page generation prompts
+export * from "./utils/legal-prompts";
