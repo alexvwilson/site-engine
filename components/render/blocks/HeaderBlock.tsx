@@ -4,6 +4,7 @@ import type { HeaderContent } from "@/lib/section-types";
 import { getButtonStyles, getLinkStyles } from "../utilities/theme-styles";
 import { transformUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
+import { MobileMenu } from "./MobileMenu";
 
 interface HeaderBlockProps {
   content: HeaderContent;
@@ -84,29 +85,17 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
       </a>
     );
 
-  // Mobile menu button
-  const MobileMenuButton = (
-    <button
-      className="md:hidden p-2 hover:opacity-70 transition-opacity"
-      style={{ color: "var(--color-foreground)" }}
-      aria-label="Open menu"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="4" x2="20" y1="12" y2="12" />
-        <line x1="4" x2="20" y1="6" y2="6" />
-        <line x1="4" x2="20" y1="18" y2="18" />
-      </svg>
-    </button>
+  // Mobile menu component (client-side)
+  const MobileMenuComponent = (
+    <MobileMenu
+      siteName={content.siteName}
+      links={content.links || []}
+      ctaText={content.ctaText}
+      ctaUrl={content.ctaUrl}
+      showCta={content.showCta ?? (!!content.ctaText && !!content.ctaUrl)}
+      theme={theme}
+      basePath={basePath}
+    />
   );
 
   // Left layout: Logo | Nav Links | CTA
@@ -128,7 +117,7 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
             {NavLinks}
             <div className="flex items-center gap-4">
               {CTAButton}
-              {MobileMenuButton}
+              {MobileMenuComponent}
             </div>
           </div>
         </div>
@@ -152,7 +141,7 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-4">
-              {MobileMenuButton}
+              {MobileMenuComponent}
               {CTAButton}
             </div>
             {NavLinks}
@@ -184,7 +173,7 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
           </div>
           <div className="w-24 md:w-32 flex justify-end items-center gap-4">
             {CTAButton}
-            {MobileMenuButton}
+            {MobileMenuComponent}
           </div>
         </div>
         {/* Bottom row: Nav links centered */}

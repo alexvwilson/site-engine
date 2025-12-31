@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 
 /**
@@ -11,14 +12,27 @@ import { Moon, Sun } from "lucide-react";
 export function ColorModeToggle(): React.ReactElement {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
-  // Initialize state from localStorage/DOM on mount
+  // Sync color mode with localStorage on mount AND on every navigation
+  // This fixes persistence across client-side navigation in Next.js App Router
   useEffect(() => {
     setMounted(true);
     const stored = localStorage.getItem("site-color-mode");
-    const hasDarkClass = document.documentElement.classList.contains("dark");
-    setIsDark(stored === "dark" || hasDarkClass);
-  }, []);
+
+    // Always sync the class with localStorage on mount/navigation
+    if (stored === "dark") {
+      document.documentElement.classList.add("dark");
+      setIsDark(true);
+    } else if (stored === "light") {
+      document.documentElement.classList.remove("dark");
+      setIsDark(false);
+    } else {
+      // No preference stored yet - check current DOM state
+      const hasDarkClass = document.documentElement.classList.contains("dark");
+      setIsDark(hasDarkClass);
+    }
+  }, [pathname]); // Re-run on navigation
 
   const toggleMode = (): void => {
     const newMode = !isDark;
