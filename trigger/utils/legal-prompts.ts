@@ -133,6 +133,8 @@ export function buildLegalPrompt(context: LegalPromptContext): {
   const system = `You are an expert legal content writer specializing in website legal documents.
 Your task is to generate professional, comprehensive legal page content for websites.
 
+IMPORTANT: You must respond with valid JSON containing the requested legal pages.
+
 ## Critical Requirements
 
 1. **HTML Format**: Return content as clean, semantic HTML using:
@@ -201,11 +203,13 @@ ${jurisdictionReqs}
 **Pages to Generate:** ${pagesToGenerateList}
 
 Please generate the requested legal page(s) in HTML format. Only include the pages specified above.
-${context.pagesToGenerate.includes("privacy") ? "- Include 'privacy' key with Privacy Policy HTML" : ""}
-${context.pagesToGenerate.includes("terms") ? "- Include 'terms' key with Terms of Service HTML" : ""}
-${context.pagesToGenerate.includes("cookies") ? "- Include 'cookies' key with Cookie Policy HTML" : ""}
 
-Return ONLY the requested pages. Do not include pages that were not requested.`;
+Return a JSON object with the following structure:
+${context.pagesToGenerate.includes("privacy") ? '- "privacy": string containing Privacy Policy HTML content' : ""}
+${context.pagesToGenerate.includes("terms") ? '- "terms": string containing Terms of Service HTML content' : ""}
+${context.pagesToGenerate.includes("cookies") ? '- "cookies": string containing Cookie Policy HTML content' : ""}
+
+Return ONLY the requested pages in the JSON response. Do not include pages that were not requested.`;
 
   return { system, user };
 }
