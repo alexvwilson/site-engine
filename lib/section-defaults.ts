@@ -114,6 +114,14 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     postCount: 6,
     showExcerpt: true,
   },
+
+  embed: {
+    embedCode: "",
+    src: "",
+    aspectRatio: "16:9",
+    customHeight: 400,
+    title: "",
+  },
 };
 
 /**

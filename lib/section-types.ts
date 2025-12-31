@@ -134,6 +134,16 @@ export interface BlogGridContent {
   showExcerpt: boolean;
 }
 
+export type EmbedAspectRatio = "16:9" | "4:3" | "1:1" | "custom";
+
+export interface EmbedContent {
+  embedCode: string;
+  src: string;
+  aspectRatio: EmbedAspectRatio;
+  customHeight?: number;
+  title?: string;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -149,7 +159,8 @@ export type SectionContent =
   | ContactContent
   | FooterContent
   | BlogFeaturedContent
-  | BlogGridContent;
+  | BlogGridContent
+  | EmbedContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -167,6 +178,7 @@ export interface ContentTypeMap {
   footer: FooterContent;
   blog_featured: BlogFeaturedContent;
   blog_grid: BlogGridContent;
+  embed: EmbedContent;
 }
 
 /**
@@ -261,5 +273,11 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Post Grid",
     description: "Grid of recent blog posts",
     icon: "layout-grid",
+  },
+  {
+    type: "embed",
+    label: "Embed",
+    description: "Embed YouTube, Google Maps, and other content",
+    icon: "code",
   },
 ];

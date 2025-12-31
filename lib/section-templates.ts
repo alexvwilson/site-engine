@@ -476,6 +476,46 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
   // Blog blocks are data-driven, no templates needed
   blog_featured: [],
   blog_grid: [],
+
+  // Embed templates
+  embed: [
+    {
+      id: "embed-youtube",
+      name: "YouTube Video",
+      description: "Embed a YouTube video (16:9 aspect ratio)",
+      content: {
+        embedCode: "",
+        src: "",
+        aspectRatio: "16:9",
+        customHeight: 400,
+        title: "YouTube video",
+      },
+    },
+    {
+      id: "embed-google-maps",
+      name: "Google Maps",
+      description: "Embed a Google Maps location (4:3 aspect ratio)",
+      content: {
+        embedCode: "",
+        src: "",
+        aspectRatio: "4:3",
+        customHeight: 450,
+        title: "Location map",
+      },
+    },
+    {
+      id: "embed-blank",
+      name: "Blank",
+      description: "Empty embed block",
+      content: {
+        embedCode: "",
+        src: "",
+        aspectRatio: "16:9",
+        customHeight: 400,
+        title: "",
+      },
+    },
+  ],
 };
 
 /**

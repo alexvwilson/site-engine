@@ -13,6 +13,7 @@ import { TestimonialsBlock } from "./blocks/TestimonialsBlock";
 import { ContactBlock } from "./blocks/ContactBlock";
 import { ContactBlockPublished } from "./blocks/ContactBlockPublished";
 import { FooterBlock } from "./blocks/FooterBlock";
+import { EmbedBlock } from "./blocks/EmbedBlock";
 import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
 
@@ -111,6 +112,13 @@ export async function BlockRenderer({
           content={getTypedContent("footer", content)}
           theme={theme}
           basePath={basePath}
+        />
+      );
+    case "embed":
+      return (
+        <EmbedBlock
+          content={getTypedContent("embed", content)}
+          theme={theme}
         />
       );
     case "blog_featured":

@@ -13,6 +13,7 @@ import {
   PanelBottom,
   Newspaper,
   LayoutGrid,
+  Code,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   footer: PanelBottom,
   blog_featured: Newspaper,
   blog_grid: LayoutGrid,
+  embed: Code,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {
