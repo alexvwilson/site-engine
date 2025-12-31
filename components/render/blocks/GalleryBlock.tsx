@@ -1,6 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { GalleryContent } from "@/lib/section-types";
-import { getSmallStyles, getCardStyles } from "../utilities/theme-styles";
+import { GalleryGrid } from "./gallery/GalleryGrid";
+import { GalleryMasonry } from "./gallery/GalleryMasonry";
+import { GalleryCarousel } from "./gallery/GalleryCarousel";
+import { GalleryLightbox } from "./gallery/GalleryLightbox";
 
 interface GalleryBlockProps {
   content: GalleryContent;
@@ -10,7 +16,10 @@ interface GalleryBlockProps {
 export function GalleryBlock({
   content,
   theme,
-}: GalleryBlockProps) {
+}: GalleryBlockProps): React.ReactElement {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
   if (!content.images || content.images.length === 0) {
     return (
       <section
@@ -26,52 +35,53 @@ export function GalleryBlock({
     );
   }
 
+  const layout = content.layout ?? "grid";
+  const lightboxEnabled = content.lightbox ?? false;
+
+  const handleImageClick = (index: number): void => {
+    if (lightboxEnabled) {
+      setLightboxIndex(index);
+      setLightboxOpen(true);
+    }
+  };
+
   return (
     <section
       className="py-12 px-6"
       style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="max-w-6xl mx-auto">
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "1.5rem",
-            justifyContent: "center",
-          }}
-        >
-          {content.images.map((image, index) => (
-            <figure
-              key={index}
-              className="overflow-hidden"
-              style={{
-                ...getCardStyles(theme),
-                padding: 0,
-                flex: "1 1 280px",
-                maxWidth: "400px",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="w-full h-48 object-cover"
-              />
-              {image.caption && (
-                <figcaption
-                  className="p-3"
-                  style={{
-                    ...getSmallStyles(theme),
-                    backgroundColor: "var(--color-muted)",
-                  }}
-                >
-                  {image.caption}
-                </figcaption>
-              )}
-            </figure>
-          ))}
-        </div>
+        {layout === "grid" && (
+          <GalleryGrid
+            content={content}
+            theme={theme}
+            onImageClick={lightboxEnabled ? handleImageClick : undefined}
+          />
+        )}
+        {layout === "masonry" && (
+          <GalleryMasonry
+            content={content}
+            theme={theme}
+            onImageClick={lightboxEnabled ? handleImageClick : undefined}
+          />
+        )}
+        {layout === "carousel" && (
+          <GalleryCarousel
+            content={content}
+            theme={theme}
+            onImageClick={lightboxEnabled ? handleImageClick : undefined}
+          />
+        )}
       </div>
+
+      {lightboxEnabled && lightboxOpen && (
+        <GalleryLightbox
+          images={content.images}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+          onNavigate={setLightboxIndex}
+        />
+      )}
     </section>
   );
 }

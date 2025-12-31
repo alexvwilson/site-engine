@@ -22,26 +22,6 @@
 
 ## P2 - Medium Priority
 
-### 24. Gallery Layout Options
-
-**Problem:** Gallery has fixed layout (flex wrap, object-cover). No control over aspect ratio or display style.
-
-**Current State:** Images display at fixed height with object-cover, responsive flex layout.
-
-**Requirements:**
-- Aspect ratio options: Square (1:1, default), Landscape (16:9, 4:3), Portrait (3:4), Original
-- Layout variants:
-  - Grid (current behavior, improved)
-  - Masonry (Pinterest-style)
-  - Carousel/Slider (arrows or dots navigation)
-- Columns setting (2, 3, 4, auto)
-- Gap/spacing control
-- Lightbox option on click
-
-**Complexity:** Medium-High
-
----
-
 ### 26. Legal Pages for Child Sites
 
 **Problem:** Footer legal links (Privacy Policy, Terms) currently link to Site Engine's legal pages, not the child site's own policies.
@@ -133,6 +113,37 @@
 ---
 
 ## Completed Features
+
+### 24. Gallery Layout Options ✅ 2025-12-30
+
+**Problem:** Gallery had fixed layout (flex wrap, object-cover). No control over aspect ratio or display style.
+
+**Solution Implemented:**
+- [x] Aspect ratio options: Square (1:1), Landscape (16:9, 4:3), Portrait (3:4), Original
+- [x] Layout variants: Grid (improved), Masonry (Pinterest-style), Carousel (arrows + dots)
+- [x] Columns setting: 2, 3, 4, Auto
+- [x] Gap/spacing control: Small, Medium, Large
+- [x] Lightbox on click with keyboard navigation (arrows, escape)
+- [x] Touch swipe support for carousel and lightbox
+- [x] Responsive design (mobile-first breakpoints)
+- [x] 4 gallery templates: Portfolio (masonry), Team (grid), Showcase (carousel), Simple (grid)
+
+**Task Document:** `ai_docs/tasks/041_gallery_layout_options.md`
+
+**Files Created:**
+- `components/render/blocks/gallery/GalleryGrid.tsx` - Grid layout with aspect ratios and columns
+- `components/render/blocks/gallery/GalleryMasonry.tsx` - CSS columns masonry layout
+- `components/render/blocks/gallery/GalleryCarousel.tsx` - Slider with keyboard/touch nav
+- `components/render/blocks/gallery/GalleryLightbox.tsx` - Fullscreen modal with navigation
+
+**Files Modified:**
+- `lib/section-types.ts` - Added GalleryAspectRatio, GalleryLayout, GalleryColumns, GalleryGap types
+- `lib/section-defaults.ts` - Added default gallery settings
+- `lib/section-templates.ts` - Added 4 gallery templates with layout presets
+- `components/editor/blocks/GalleryEditor.tsx` - Added settings panel with dropdowns and toggle
+- `components/render/blocks/GalleryBlock.tsx` - Routes to layout variants, manages lightbox state
+
+---
 
 ### 25. Embed Block ✅ 2025-12-30
 
@@ -721,7 +732,7 @@
 
 ---
 
-**Last Updated:** 2025-12-30 (Completed #25 Embed Block)
+**Last Updated:** 2025-12-30 (Completed #24 Gallery Layout Options)
 
 ---
 

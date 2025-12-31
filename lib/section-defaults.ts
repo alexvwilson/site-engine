@@ -41,6 +41,13 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
 
   gallery: {
     images: [],
+    aspectRatio: "1:1",
+    layout: "grid",
+    columns: "auto",
+    gap: "medium",
+    lightbox: false,
+    autoRotate: false,
+    autoRotateInterval: 5,
   },
 
   features: {

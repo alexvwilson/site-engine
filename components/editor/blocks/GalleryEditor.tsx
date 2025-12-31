@@ -4,8 +4,24 @@ import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ImageUpload } from "@/components/editor/ImageUpload";
-import type { GalleryContent, GalleryImage } from "@/lib/section-types";
+import type {
+  GalleryContent,
+  GalleryImage,
+  GalleryAspectRatio,
+  GalleryLayout,
+  GalleryColumns,
+  GalleryGap,
+  GalleryAutoRotateInterval,
+} from "@/lib/section-types";
 
 interface GalleryEditorProps {
   content: GalleryContent;
@@ -48,8 +64,188 @@ export function GalleryEditor({
     onChange({ ...content, images: newImages });
   };
 
+  const layout = content.layout ?? "grid";
+  const aspectRatio = content.aspectRatio ?? "1:1";
+  const columns = content.columns ?? "auto";
+  const gap = content.gap ?? "medium";
+  const lightbox = content.lightbox ?? false;
+  const autoRotate = content.autoRotate ?? false;
+  const autoRotateInterval = content.autoRotateInterval ?? 5;
+
   return (
     <div className="space-y-6">
+      {/* Gallery Settings Panel */}
+      <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+        <h4 className="font-medium text-sm">Gallery Settings</h4>
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* Layout */}
+          <div className="space-y-2">
+            <Label>Layout</Label>
+            <Select
+              value={layout}
+              onValueChange={(value: GalleryLayout) =>
+                onChange({ ...content, layout: value })
+              }
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="grid">Grid</SelectItem>
+                <SelectItem value="masonry">Masonry</SelectItem>
+                <SelectItem value="carousel">Carousel</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Aspect Ratio */}
+          <div className="space-y-2">
+            <Label>Aspect Ratio</Label>
+            <Select
+              value={aspectRatio}
+              onValueChange={(value: GalleryAspectRatio) =>
+                onChange({ ...content, aspectRatio: value })
+              }
+              disabled={disabled || layout === "masonry"}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1:1">Square (1:1)</SelectItem>
+                <SelectItem value="16:9">Landscape (16:9)</SelectItem>
+                <SelectItem value="4:3">Landscape (4:3)</SelectItem>
+                <SelectItem value="3:4">Portrait (3:4)</SelectItem>
+                <SelectItem value="original">Original</SelectItem>
+              </SelectContent>
+            </Select>
+            {layout === "masonry" && (
+              <p className="text-xs text-muted-foreground">
+                Masonry uses original aspect ratios
+              </p>
+            )}
+          </div>
+
+          {/* Columns */}
+          <div className="space-y-2">
+            <Label>{layout === "carousel" ? "Visible Images" : "Columns"}</Label>
+            <Select
+              value={String(columns)}
+              onValueChange={(value) =>
+                onChange({
+                  ...content,
+                  columns:
+                    value === "auto" ? "auto" : (parseInt(value) as GalleryColumns),
+                })
+              }
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="auto">Auto</SelectItem>
+                <SelectItem value="2">2</SelectItem>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="4">4</SelectItem>
+              </SelectContent>
+            </Select>
+            {layout === "carousel" && (
+              <p className="text-xs text-muted-foreground">
+                Images visible at once
+              </p>
+            )}
+          </div>
+
+          {/* Gap */}
+          <div className="space-y-2">
+            <Label>Spacing</Label>
+            <Select
+              value={gap}
+              onValueChange={(value: GalleryGap) =>
+                onChange({ ...content, gap: value })
+              }
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="small">Small</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="large">Large</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Lightbox Toggle */}
+        <div className="flex items-center gap-3 pt-2">
+          <Switch
+            id="lightbox-toggle"
+            checked={lightbox}
+            onCheckedChange={(checked) =>
+              onChange({ ...content, lightbox: checked })
+            }
+            disabled={disabled}
+          />
+          <Label htmlFor="lightbox-toggle" className="cursor-pointer">
+            Enable lightbox (fullscreen on click)
+          </Label>
+        </div>
+
+        {/* Auto-Rotate (Carousel only) */}
+        {layout === "carousel" && (
+          <div className="space-y-3 pt-2 border-t">
+            <div className="flex items-center gap-3 pt-2">
+              <Switch
+                id="auto-rotate-toggle"
+                checked={autoRotate}
+                onCheckedChange={(checked) =>
+                  onChange({ ...content, autoRotate: checked })
+                }
+                disabled={disabled}
+              />
+              <Label htmlFor="auto-rotate-toggle" className="cursor-pointer">
+                Auto-rotate carousel
+              </Label>
+            </div>
+
+            {autoRotate && (
+              <div className="space-y-2 pl-10">
+                <Label>Interval</Label>
+                <Select
+                  value={String(autoRotateInterval)}
+                  onValueChange={(value) =>
+                    onChange({
+                      ...content,
+                      autoRotateInterval: parseInt(value) as GalleryAutoRotateInterval,
+                    })
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3">3 seconds</SelectItem>
+                    <SelectItem value="5">5 seconds</SelectItem>
+                    <SelectItem value="7">7 seconds</SelectItem>
+                    <SelectItem value="10">10 seconds</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Pauses on hover
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Image List */}
       {content.images.length === 0 && (
         <div className="text-center text-muted-foreground py-8 border-2 border-dashed rounded-lg">
           No images yet. Add your first image below.

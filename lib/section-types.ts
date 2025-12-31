@@ -58,8 +58,21 @@ export interface GalleryImage {
   caption?: string;
 }
 
+export type GalleryAspectRatio = "1:1" | "16:9" | "4:3" | "3:4" | "original";
+export type GalleryLayout = "grid" | "masonry" | "carousel";
+export type GalleryColumns = 2 | 3 | 4 | "auto";
+export type GalleryGap = "small" | "medium" | "large";
+export type GalleryAutoRotateInterval = 3 | 5 | 7 | 10;
+
 export interface GalleryContent {
   images: GalleryImage[];
+  aspectRatio?: GalleryAspectRatio;
+  layout?: GalleryLayout;
+  columns?: GalleryColumns;
+  gap?: GalleryGap;
+  lightbox?: boolean;
+  autoRotate?: boolean;
+  autoRotateInterval?: GalleryAutoRotateInterval;
 }
 
 export interface Feature {
