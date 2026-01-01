@@ -142,6 +142,35 @@ export interface Feature {
 
 export interface FeaturesContent {
   features: Feature[];
+
+  // Master styling toggle - when false, renders with fixed muted background
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options (for the features container)
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (for the features container)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Section background & overlay
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Feature card options
+  showCardBackground?: boolean; // When false, cards are transparent
+  cardBackgroundColor?: string; // Custom card background (empty = use theme)
+
+  // Typography
+  textSize?: TextSize;
 }
 
 export interface CTAContent {
@@ -149,6 +178,31 @@ export interface CTAContent {
   description: string;
   buttonText: string;
   buttonUrl: string;
+
+  // Master styling toggle - when false, renders with fixed primary background
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options (for the CTA container)
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (for the CTA container)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Section background & overlay
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Typography
+  textSize?: TextSize;
 }
 
 export interface Testimonial {
@@ -160,6 +214,35 @@ export interface Testimonial {
 
 export interface TestimonialsContent {
   testimonials: Testimonial[];
+
+  // Master styling toggle - when false, renders with theme background
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options (for the testimonials container)
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (for the testimonials container)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Section background & overlay
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Testimonial card options
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+
+  // Typography
+  textSize?: TextSize;
 }
 
 export type ContactVariant = "simple" | "detailed";
@@ -168,6 +251,35 @@ export interface ContactContent {
   heading: string;
   description: string;
   variant: ContactVariant;
+
+  // Master styling toggle - when false, renders with muted background
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options (for the contact container)
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (for the contact container)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Section background & overlay
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Form card options
+  showFormBackground?: boolean;
+  formBackgroundColor?: string;
+
+  // Typography
+  textSize?: TextSize;
 }
 
 export interface FooterLink {

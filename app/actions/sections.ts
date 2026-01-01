@@ -197,7 +197,9 @@ export async function updateSection(
     })
     .where(eq(sections.id, sectionId));
 
+  // Revalidate both editor and preview pages
   revalidatePath(`/app/sites/${page?.site_id}/pages/${existing.page_id}`);
+  revalidatePath(`/app/sites/${page?.site_id}/pages/${existing.page_id}/preview`);
 
   return { success: true };
 }
