@@ -12,6 +12,7 @@ export interface NavLink {
 
 export type HeaderLayout = "left" | "right" | "center";
 export type FooterLayout = "simple" | "columns" | "minimal";
+export type HeaderFooterBorderWidth = "thin" | "medium" | "thick";
 
 export interface HeaderContent {
   // Content (from site settings)
@@ -22,16 +23,41 @@ export interface HeaderContent {
   ctaText?: string;
   ctaUrl?: string;
 
-  // Styling options
+  // Layout options
   layout?: HeaderLayout;
   sticky?: boolean;
   showLogoText?: boolean;
+
+  // Logo size (24-80px)
+  logoSize?: number;
+
+  // Master styling toggle
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Background & overlay options
+  backgroundColor?: string;
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Border options (bottom border only, full-width)
+  showBorder?: boolean;
+  borderWidth?: HeaderFooterBorderWidth;
+  borderColor?: string;
+
+  // Typography
+  textSize?: TextSize;
 
   // Override flags (only for page-level sections)
   overrideLayout?: boolean;
   overrideSticky?: boolean;
   overrideShowLogoText?: boolean;
   overrideCta?: boolean;
+  overrideLogoSize?: boolean;
+  overrideStyling?: boolean;
 }
 
 // Hero title animation types
@@ -292,11 +318,32 @@ export interface FooterContent {
   copyright: string;
   links: FooterLink[];
 
-  // Styling options
+  // Layout options
   layout?: FooterLayout;
+
+  // Master styling toggle
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Background & overlay options
+  backgroundColor?: string;
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Border options (top border only, full-width)
+  showBorder?: boolean;
+  borderWidth?: HeaderFooterBorderWidth;
+  borderColor?: string;
+
+  // Typography
+  textSize?: TextSize;
 
   // Override flags (only for page-level sections)
   overrideLayout?: boolean;
+  overrideStyling?: boolean;
 }
 
 export type BlogFeaturedLayout = "split" | "stacked" | "hero" | "minimal";

@@ -20,6 +20,18 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     layout: "left",
     sticky: true,
     showLogoText: true,
+    // Logo size (24-80px)
+    logoSize: 32,
+    // Styling options (disabled by default)
+    enableStyling: false,
+    textColorMode: "auto",
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 50,
+    showBorder: true,
+    borderWidth: "thin",
+    borderColor: "",
+    textSize: "normal",
   },
 
   hero: {
@@ -198,6 +210,16 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
       { label: "Terms of Service", url: "/terms" },
     ],
     layout: "simple",
+    // Styling options (disabled by default)
+    enableStyling: false,
+    textColorMode: "auto",
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 50,
+    showBorder: false,
+    borderWidth: "thin",
+    borderColor: "",
+    textSize: "normal",
   },
 
   blog_featured: {

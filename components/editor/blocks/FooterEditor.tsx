@@ -1,9 +1,12 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Plus, Trash2, ChevronDown, Palette } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import {
   Select,
   SelectContent,
@@ -11,8 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { OverrideField } from "@/components/editor/OverrideField";
-import type { FooterContent, FooterLayout, FooterLink } from "@/lib/section-types";
+import { ImageUpload } from "@/components/editor/ImageUpload";
+import { cn } from "@/lib/utils";
+import type {
+  FooterContent,
+  FooterLayout,
+  FooterLink,
+  HeaderFooterBorderWidth,
+  TextColorMode,
+  TextSize,
+} from "@/lib/section-types";
 
 interface FooterEditorProps {
   content: FooterContent;
@@ -35,10 +52,20 @@ export function FooterEditor({
   content,
   onChange,
   disabled,
+  siteId,
   mode = "site",
 }: FooterEditorProps) {
+  const [stylingOpen, setStylingOpen] = useState(false);
+
   const handleCopyrightChange = (value: string): void => {
     onChange({ ...content, copyright: value });
+  };
+
+  const updateField = <K extends keyof FooterContent>(
+    field: K,
+    value: FooterContent[K]
+  ): void => {
+    onChange({ ...content, [field]: value });
   };
 
   const handleLinkChange = (
@@ -99,6 +126,131 @@ export function FooterEditor({
               <SelectItem value="minimal">Minimal - Copyright only</SelectItem>
             </SelectContent>
           </Select>
+        </OverrideField>
+
+        {/* Override: Styling */}
+        <OverrideField
+          id="override-footer-styling"
+          label="Footer Styling"
+          description="Use different styling on this page"
+          enabled={content.overrideStyling ?? false}
+          onEnabledChange={(enabled) =>
+            onChange({ ...content, overrideStyling: enabled })
+          }
+          disabled={disabled}
+        >
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm">Enable Styling</Label>
+              <Switch
+                checked={content.enableStyling ?? false}
+                onCheckedChange={(checked) => updateField("enableStyling", checked)}
+                disabled={disabled}
+              />
+            </div>
+
+            {content.enableStyling && (
+              <>
+                {/* Background Image */}
+                <div className="space-y-2">
+                  <Label className="text-xs">Background Image</Label>
+                  <ImageUpload
+                    value={content.backgroundImage || ""}
+                    onChange={(url) => updateField("backgroundImage", url)}
+                    siteId={siteId}
+                    disabled={disabled}
+                  />
+                </div>
+
+                {/* Overlay Controls */}
+                {content.backgroundImage && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-xs">Overlay Color</Label>
+                      <Input
+                        type="color"
+                        value={content.overlayColor || "#000000"}
+                        onChange={(e) => updateField("overlayColor", e.target.value)}
+                        disabled={disabled}
+                        className="h-10 p-1"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">Overlay ({content.overlayOpacity ?? 50}%)</Label>
+                      <Slider
+                        min={0}
+                        max={100}
+                        value={[content.overlayOpacity ?? 50]}
+                        onValueChange={([v]) => updateField("overlayOpacity", v)}
+                        disabled={disabled}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Border Controls */}
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Show Top Border</Label>
+                  <Switch
+                    checked={content.showBorder ?? false}
+                    onCheckedChange={(checked) => updateField("showBorder", checked)}
+                    disabled={disabled}
+                  />
+                </div>
+
+                {content.showBorder && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-xs">Border Width</Label>
+                      <Select
+                        value={content.borderWidth ?? "thin"}
+                        onValueChange={(v) => updateField("borderWidth", v as HeaderFooterBorderWidth)}
+                        disabled={disabled}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="thin">Thin (1px)</SelectItem>
+                          <SelectItem value="medium">Medium (2px)</SelectItem>
+                          <SelectItem value="thick">Thick (4px)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">Border Color</Label>
+                      <Input
+                        type="color"
+                        value={content.borderColor || "#e5e7eb"}
+                        onChange={(e) => updateField("borderColor", e.target.value)}
+                        disabled={disabled}
+                        className="h-10 p-1"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Text Color Mode */}
+                <div className="space-y-2">
+                  <Label className="text-xs">Text Color Mode</Label>
+                  <Select
+                    value={content.textColorMode ?? "auto"}
+                    onValueChange={(v) => updateField("textColorMode", v as TextColorMode)}
+                    disabled={disabled}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="auto">Auto (from theme)</SelectItem>
+                      <SelectItem value="light">Light text</SelectItem>
+                      <SelectItem value="dark">Dark text</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </>
+            )}
+          </div>
         </OverrideField>
       </div>
     );
@@ -194,6 +346,227 @@ export function FooterEditor({
           </Select>
         </div>
       </div>
+
+      {/* Styling Section */}
+      <Collapsible open={stylingOpen} onOpenChange={setStylingOpen}>
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="ghost"
+            className="w-full justify-between p-0 h-auto hover:bg-transparent"
+          >
+            <div className="flex items-center gap-2">
+              <Palette className="h-4 w-4" />
+              <span className="font-medium">Styling</span>
+            </div>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 transition-transform",
+                stylingOpen && "rotate-180"
+              )}
+            />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="pt-4 space-y-4">
+          {/* Border Controls - Always visible */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label>Show Top Border</Label>
+              <p className="text-xs text-muted-foreground">
+                Full-width border at top of footer
+              </p>
+            </div>
+            <Switch
+              checked={content.showBorder ?? false}
+              onCheckedChange={(checked) => updateField("showBorder", checked)}
+              disabled={disabled}
+            />
+          </div>
+
+          {content.showBorder && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Border Width</Label>
+                <Select
+                  value={content.borderWidth ?? "thin"}
+                  onValueChange={(v) => updateField("borderWidth", v as HeaderFooterBorderWidth)}
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="thin">Thin (1px)</SelectItem>
+                    <SelectItem value="medium">Medium (2px)</SelectItem>
+                    <SelectItem value="thick">Thick (4px)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Border Color</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    value={content.borderColor || "#8b5cf6"}
+                    onChange={(e) => updateField("borderColor", e.target.value)}
+                    disabled={disabled}
+                    className="h-10 w-16 p-1"
+                  />
+                  <Input
+                    type="text"
+                    value={content.borderColor || ""}
+                    onChange={(e) => updateField("borderColor", e.target.value)}
+                    placeholder="Theme primary"
+                    disabled={disabled}
+                    className="flex-1"
+                  />
+                  {content.borderColor && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => updateField("borderColor", "")}
+                      disabled={disabled}
+                    >
+                      Reset
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Leave empty to use theme primary color
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Enable Advanced Styling Toggle */}
+          <div className="flex items-center justify-between pt-4 border-t">
+            <div className="space-y-0.5">
+              <Label>Enable Advanced Styling</Label>
+              <p className="text-xs text-muted-foreground">
+                Background color, images, and text customization
+              </p>
+            </div>
+            <Switch
+              checked={content.enableStyling ?? false}
+              onCheckedChange={(checked) => updateField("enableStyling", checked)}
+              disabled={disabled}
+            />
+          </div>
+
+          {content.enableStyling && (
+            <>
+              {/* Background Color */}
+              <div className="space-y-2">
+                <Label>Background Color</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="color"
+                    value={content.backgroundColor || "#1a1a1a"}
+                    onChange={(e) => updateField("backgroundColor", e.target.value)}
+                    disabled={disabled}
+                    className="h-10 w-16 p-1"
+                  />
+                  <Input
+                    type="text"
+                    value={content.backgroundColor || ""}
+                    onChange={(e) => updateField("backgroundColor", e.target.value)}
+                    placeholder="Default (dark)"
+                    disabled={disabled}
+                    className="flex-1"
+                  />
+                  {content.backgroundColor && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => updateField("backgroundColor", "")}
+                      disabled={disabled}
+                    >
+                      Reset
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Leave empty to use default dark background
+                </p>
+              </div>
+
+              {/* Background Image */}
+              <div className="space-y-2">
+                <Label>Background Image</Label>
+                <ImageUpload
+                  value={content.backgroundImage || ""}
+                  onChange={(url) => updateField("backgroundImage", url)}
+                  siteId={siteId}
+                  disabled={disabled}
+                />
+              </div>
+
+              {/* Overlay Color & Opacity - show when background color or image is set */}
+              {(content.backgroundColor || content.backgroundImage) && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Overlay Color</Label>
+                    <Input
+                      type="color"
+                      value={content.overlayColor || "#000000"}
+                      onChange={(e) => updateField("overlayColor", e.target.value)}
+                      disabled={disabled}
+                      className="h-10 p-1"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Overlay Opacity ({content.overlayOpacity ?? 50}%)</Label>
+                    <Slider
+                      min={0}
+                      max={100}
+                      value={[content.overlayOpacity ?? 50]}
+                      onValueChange={([v]) => updateField("overlayOpacity", v)}
+                      disabled={disabled}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Text Color Mode */}
+              <div className="space-y-2">
+                <Label>Text Color Mode</Label>
+                <Select
+                  value={content.textColorMode ?? "auto"}
+                  onValueChange={(v) => updateField("textColorMode", v as TextColorMode)}
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="auto">Auto (from theme)</SelectItem>
+                    <SelectItem value="light">Light text</SelectItem>
+                    <SelectItem value="dark">Dark text</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Text Size */}
+              <div className="space-y-2">
+                <Label>Text Size</Label>
+                <Select
+                  value={content.textSize ?? "normal"}
+                  onValueChange={(v) => updateField("textSize", v as TextSize)}
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="small">Small</SelectItem>
+                    <SelectItem value="normal">Normal</SelectItem>
+                    <SelectItem value="large">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </>
+          )}
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }

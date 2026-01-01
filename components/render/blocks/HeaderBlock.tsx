@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import type { HeaderContent } from "@/lib/section-types";
+import type { HeaderContent, HeaderFooterBorderWidth } from "@/lib/section-types";
 import { getButtonStyles, getLinkStyles } from "../utilities/theme-styles";
 import { transformUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
@@ -12,12 +12,40 @@ interface HeaderBlockProps {
   basePath?: string;
 }
 
+const borderWidthMap: Record<HeaderFooterBorderWidth, string> = {
+  thin: "1px",
+  medium: "2px",
+  thick: "4px",
+};
+
+const textSizeScale = {
+  small: 0.875,
+  normal: 1,
+  large: 1.125,
+};
+
+function getTextColor(textColorMode: string | undefined): string {
+  switch (textColorMode) {
+    case "light":
+      return "#ffffff";
+    case "dark":
+      return "#000000";
+    default:
+      return "var(--color-foreground)";
+  }
+}
+
 export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps) {
   const layout = content.layout ?? "left";
   const isSticky = content.sticky ?? true;
   const showLogoText = content.showLogoText ?? true;
+  const logoSize = content.logoSize ?? 32;
+  const enableStyling = content.enableStyling ?? false;
+  const showBorder = content.showBorder ?? true;
+  const textColor = enableStyling ? getTextColor(content.textColorMode) : "var(--color-foreground)";
+  const sizeMultiplier = textSizeScale[content.textSize ?? "normal"];
 
-  // Logo/Brand component
+  // Logo/Brand component with dynamic sizing
   const LogoBrand = (
     <div className="flex items-center gap-2">
       {content.logoUrl &&
@@ -26,9 +54,14 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
           <Image
             src={content.logoUrl}
             alt={content.siteName}
-            width={120}
-            height={32}
-            className="h-8 w-auto"
+            width={Math.round(logoSize * 3.75)}
+            height={logoSize}
+            style={{
+              height: logoSize,
+              width: "auto",
+              maxHeight: logoSize,
+              objectFit: "contain"
+            }}
             unoptimized
           />
         )}
@@ -36,9 +69,9 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
         <span
           style={{
             fontFamily: "var(--font-heading)",
-            fontSize: theme.typography.scale.body,
+            fontSize: `calc(${theme.typography.scale.body} * ${sizeMultiplier})`,
             fontWeight: 600,
-            color: "var(--color-foreground)",
+            color: textColor,
           }}
         >
           {content.siteName}
@@ -60,9 +93,9 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
           className="hover:opacity-70 transition-opacity"
           style={{
             ...getLinkStyles(theme),
-            color: "var(--color-foreground)",
+            color: textColor,
             fontFamily: "var(--font-body)",
-            fontSize: theme.typography.scale.small,
+            fontSize: `calc(${theme.typography.scale.small} * ${sizeMultiplier})`,
             fontWeight: 500,
           }}
         >
@@ -98,21 +131,31 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
     />
   );
 
-  // Left layout: Logo | Nav Links | CTA
-  if (layout === "left") {
-    return (
-      <header
-        className={cn(
-          "top-0 z-50 w-full border-b",
-          isSticky && "sticky"
-        )}
-        style={{
-          backgroundColor: "var(--color-background)",
-          borderColor: "var(--color-border)",
-        }}
-      >
+  // Background and border styles
+  const hasBackgroundImage = enableStyling && content.backgroundImage;
+  const hasBackgroundColor = enableStyling && content.backgroundColor;
+  const borderWidth = borderWidthMap[content.borderWidth ?? "thin"];
+  const borderColor = content.borderColor || theme.colors.primary;
+
+  // Determine background color
+  const getBackgroundColor = (): string => {
+    if (hasBackgroundImage) return "transparent";
+    if (hasBackgroundColor) return content.backgroundColor!;
+    return "var(--color-background)";
+  };
+
+  // Calculate minimum header height based on logo size
+  const minHeaderHeight = Math.max(64, logoSize + 16); // Logo + 16px padding
+
+  // Render header content for each layout
+  const renderHeaderContent = (layoutType: "left" | "right" | "center") => {
+    if (layoutType === "left") {
+      return (
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex h-16 items-center justify-between">
+          <div
+            className="flex items-center justify-between py-2"
+            style={{ minHeight: minHeaderHeight }}
+          >
             {LogoBrand}
             {NavLinks}
             <div className="flex items-center gap-4">
@@ -121,25 +164,16 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
             </div>
           </div>
         </div>
-      </header>
-    );
-  }
+      );
+    }
 
-  // Right layout: CTA | Nav Links | Logo
-  if (layout === "right") {
-    return (
-      <header
-        className={cn(
-          "top-0 z-50 w-full border-b",
-          isSticky && "sticky"
-        )}
-        style={{
-          backgroundColor: "var(--color-background)",
-          borderColor: "var(--color-border)",
-        }}
-      >
+    if (layoutType === "right") {
+      return (
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex h-16 items-center justify-between">
+          <div
+            className="flex items-center justify-between py-2"
+            style={{ minHeight: minHeaderHeight }}
+          >
             <div className="flex items-center gap-4">
               {MobileMenuComponent}
               {CTAButton}
@@ -148,26 +182,17 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
             {LogoBrand}
           </div>
         </div>
-      </header>
-    );
-  }
+      );
+    }
 
-  // Center layout: Logo centered, nav below
-  return (
-    <header
-      className={cn(
-        "top-0 z-50 w-full border-b",
-        isSticky && "sticky"
-      )}
-      style={{
-        backgroundColor: "var(--color-background)",
-        borderColor: "var(--color-border)",
-      }}
-    >
+    // Center layout
+    return (
       <div className="max-w-6xl mx-auto px-6">
-        {/* Top row: Logo centered with CTA on right */}
-        <div className="flex h-14 items-center justify-between">
-          <div className="w-24 md:w-32" /> {/* Spacer for balance */}
+        <div
+          className="flex items-center justify-between py-2"
+          style={{ minHeight: minHeaderHeight }}
+        >
+          <div className="w-24 md:w-32" />
           <div className="flex-1 flex justify-center">
             {LogoBrand}
           </div>
@@ -176,13 +201,57 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
             {MobileMenuComponent}
           </div>
         </div>
-        {/* Bottom row: Nav links centered */}
         {content.links && content.links.length > 0 && (
           <div className="hidden md:flex justify-center pb-3">
             {NavLinks}
           </div>
         )}
       </div>
+    );
+  };
+
+  return (
+    <header
+      className={cn(
+        "relative top-0 z-50 w-full",
+        isSticky && "sticky"
+      )}
+      style={{
+        backgroundColor: getBackgroundColor(),
+        borderBottomWidth: showBorder ? borderWidth : 0,
+        borderBottomStyle: showBorder ? "solid" : "none",
+        borderBottomColor: showBorder ? borderColor : "transparent",
+      }}
+    >
+      {/* Background image with overlay */}
+      {hasBackgroundImage && (
+        <>
+          <div
+            className="absolute inset-0 bg-cover bg-center -z-10"
+            style={{ backgroundImage: `url(${content.backgroundImage})` }}
+          />
+          <div
+            className="absolute inset-0 -z-10"
+            style={{
+              backgroundColor: content.overlayColor || "#000000",
+              opacity: (content.overlayOpacity ?? 50) / 100,
+            }}
+          />
+        </>
+      )}
+
+      {/* Background color overlay (when no image) */}
+      {hasBackgroundColor && !hasBackgroundImage && content.overlayColor && (
+        <div
+          className="absolute inset-0 -z-10"
+          style={{
+            backgroundColor: content.overlayColor,
+            opacity: (content.overlayOpacity ?? 0) / 100,
+          }}
+        />
+      )}
+
+      {renderHeaderContent(layout)}
     </header>
   );
 }

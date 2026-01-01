@@ -11,6 +11,10 @@ export function mergeHeaderContent(
 ): HeaderContent {
   if (!pageHeader) return siteHeader;
 
+  // Check if page has styling override
+  const useSiteStyling = !pageHeader.overrideStyling;
+  const usePageStyling = pageHeader.overrideStyling;
+
   return {
     // Content always from site settings
     siteName: siteHeader.siteName,
@@ -22,7 +26,7 @@ export function mergeHeaderContent(
     ctaText: pageHeader.overrideCta ? pageHeader.ctaText : siteHeader.ctaText,
     ctaUrl: pageHeader.overrideCta ? pageHeader.ctaUrl : siteHeader.ctaUrl,
 
-    // Styling options - can be overridden at page level
+    // Layout options - can be overridden at page level
     layout: pageHeader.overrideLayout
       ? pageHeader.layout
       : (siteHeader.layout ?? "left"),
@@ -32,6 +36,43 @@ export function mergeHeaderContent(
     showLogoText: pageHeader.overrideShowLogoText
       ? pageHeader.showLogoText
       : (siteHeader.showLogoText ?? true),
+
+    // Logo size - can be overridden at page level
+    logoSize: pageHeader.overrideLogoSize
+      ? pageHeader.logoSize
+      : siteHeader.logoSize,
+
+    // Styling options - from site or page based on override flag
+    enableStyling: usePageStyling
+      ? pageHeader.enableStyling
+      : siteHeader.enableStyling,
+    backgroundColor: usePageStyling
+      ? pageHeader.backgroundColor
+      : siteHeader.backgroundColor,
+    backgroundImage: usePageStyling
+      ? pageHeader.backgroundImage
+      : siteHeader.backgroundImage,
+    overlayColor: usePageStyling
+      ? pageHeader.overlayColor
+      : siteHeader.overlayColor,
+    overlayOpacity: usePageStyling
+      ? pageHeader.overlayOpacity
+      : siteHeader.overlayOpacity,
+    showBorder: useSiteStyling
+      ? siteHeader.showBorder
+      : pageHeader.showBorder,
+    borderWidth: useSiteStyling
+      ? siteHeader.borderWidth
+      : pageHeader.borderWidth,
+    borderColor: useSiteStyling
+      ? siteHeader.borderColor
+      : pageHeader.borderColor,
+    textColorMode: usePageStyling
+      ? pageHeader.textColorMode
+      : siteHeader.textColorMode,
+    textSize: usePageStyling
+      ? pageHeader.textSize
+      : siteHeader.textSize,
   };
 }
 
@@ -46,14 +87,50 @@ export function mergeFooterContent(
 ): FooterContent {
   if (!pageFooter) return siteFooter;
 
+  // Check if page has styling override
+  const useSiteStyling = !pageFooter.overrideStyling;
+  const usePageStyling = pageFooter.overrideStyling;
+
   return {
     // Content always from site settings
     copyright: siteFooter.copyright,
     links: siteFooter.links,
 
-    // Styling options - can be overridden at page level
+    // Layout - can be overridden at page level
     layout: pageFooter.overrideLayout
       ? pageFooter.layout
       : (siteFooter.layout ?? "simple"),
+
+    // Styling options - from site or page based on override flag
+    enableStyling: usePageStyling
+      ? pageFooter.enableStyling
+      : siteFooter.enableStyling,
+    backgroundColor: usePageStyling
+      ? pageFooter.backgroundColor
+      : siteFooter.backgroundColor,
+    backgroundImage: usePageStyling
+      ? pageFooter.backgroundImage
+      : siteFooter.backgroundImage,
+    overlayColor: usePageStyling
+      ? pageFooter.overlayColor
+      : siteFooter.overlayColor,
+    overlayOpacity: usePageStyling
+      ? pageFooter.overlayOpacity
+      : siteFooter.overlayOpacity,
+    showBorder: useSiteStyling
+      ? siteFooter.showBorder
+      : pageFooter.showBorder,
+    borderWidth: useSiteStyling
+      ? siteFooter.borderWidth
+      : pageFooter.borderWidth,
+    borderColor: useSiteStyling
+      ? siteFooter.borderColor
+      : pageFooter.borderColor,
+    textColorMode: usePageStyling
+      ? pageFooter.textColorMode
+      : siteFooter.textColorMode,
+    textSize: usePageStyling
+      ? pageFooter.textSize
+      : siteFooter.textSize,
   };
 }
