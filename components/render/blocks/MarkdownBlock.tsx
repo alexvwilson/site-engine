@@ -158,12 +158,19 @@ export function MarkdownBlock({ content, theme }: MarkdownBlockProps) {
         color: var(--color-muted-foreground);
         margin: 1rem 0;
       }
-      .markdown-block-plain ul, .markdown-block-plain ol {
+      .markdown-block-plain ul {
         padding-left: 1.5rem;
         margin: 1rem 0;
+        list-style-type: disc;
+      }
+      .markdown-block-plain ol {
+        padding-left: 1.5rem;
+        margin: 1rem 0;
+        list-style-type: decimal;
       }
       .markdown-block-plain li {
         margin: 0.25rem 0;
+        display: list-item;
       }
       .markdown-block-plain hr {
         border: 0;
@@ -346,12 +353,19 @@ export function MarkdownBlock({ content, theme }: MarkdownBlockProps) {
       color: ${mutedColor};
       margin: 1rem 0;
     }
-    .markdown-block-styled ul, .markdown-block-styled ol {
+    .markdown-block-styled ul {
       padding-left: 1.5rem;
       margin: 1rem 0;
+      list-style-type: disc;
+    }
+    .markdown-block-styled ol {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+      list-style-type: decimal;
     }
     .markdown-block-styled li {
       margin: 0.25rem 0;
+      display: list-item;
     }
     .markdown-block-styled hr {
       border: 0;

@@ -109,12 +109,19 @@ export function TextBlock({ content, theme }: TextBlockProps) {
         font-style: italic;
         color: var(--color-muted-foreground);
       }
-      .text-block-plain ul, .text-block-plain ol {
+      .text-block-plain ul {
         padding-left: 1.5rem;
         margin: 1rem 0;
+        list-style-type: disc;
+      }
+      .text-block-plain ol {
+        padding-left: 1.5rem;
+        margin: 1rem 0;
+        list-style-type: decimal;
       }
       .text-block-plain li {
         margin: 0.25rem 0;
+        display: list-item;
       }
     `;
 
@@ -289,12 +296,19 @@ export function TextBlock({ content, theme }: TextBlockProps) {
       font-style: italic;
       color: ${mutedColor};
     }
-    .text-block-styled ul, .text-block-styled ol {
+    .text-block-styled ul {
       padding-left: 1.5rem;
       margin: 1rem 0;
+      list-style-type: disc;
+    }
+    .text-block-styled ol {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+      list-style-type: decimal;
     }
     .text-block-styled li {
       margin: 0.25rem 0;
+      display: list-item;
     }
   `;
 
