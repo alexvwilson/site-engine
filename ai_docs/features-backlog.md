@@ -88,7 +88,26 @@
 
 ## P2 - Medium Priority
 
-*(No items currently in P2)*
+### 37. Page Meta Field Character Count Guidance
+
+**Problem:** The Edit Page modal has Meta Title and Meta Description fields, but users don't know the ideal lengths for SEO. The SEO Health Check shows warnings when lengths are outside optimal ranges (50-60 chars for title, 120-160 chars for description), but users only discover this after saving.
+
+**Use Case:**
+- User fills in Meta Title as "Contact | MonkeyNutz" (20 chars)
+- SEO check shows warning: "20 characters (aim for 50-60)"
+- User has to go back and edit, trial-and-error
+
+**Proposed Solution:**
+- Add live character counter below Meta Title field showing "X/60 characters"
+- Add live character counter below Meta Description field showing "X/160 characters"
+- Color coding: green (optimal range), amber (outside range but acceptable), red (too long)
+- Optimal ranges displayed as helper text
+- Consider adding progress bar or visual indicator
+
+**Complexity:** Low
+
+**Files to Modify:**
+- `components/pages/EditPageModal.tsx` - Add character counters with color coding
 
 ---
 
@@ -175,6 +194,27 @@
 ---
 
 ## Completed Features
+
+### 38. Blog Page SEO Metadata ✅ 2026-01-01
+
+**Problem:** The main blog listing page (`/sites/[slug]/blog`) had hardcoded meta title and description ("Blog | {site name}" and "Latest blog posts from {site name}"). Site owners couldn't customize SEO metadata for their blog index page.
+
+**Solution Implemented:**
+- [x] Added `blog_meta_title` and `blog_meta_description` columns to sites table
+- [x] Added Blog Page Meta Title and Description fields in Settings → Blog Settings
+- [x] Character limits: 60 for title, 160 for description (with maxLength on inputs)
+- [x] Blog page uses custom values with fallback to default auto-generated text
+- [x] OpenGraph metadata also uses the custom values
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added blog_meta_title and blog_meta_description columns
+- `app/actions/sites.ts` - Handle new fields in updateSiteSettings
+- `components/sites/SettingsTab.tsx` - Added Blog SEO fields in Blog Settings card
+- `app/(sites)/sites/[siteSlug]/blog/page.tsx` - Use custom metadata with fallbacks
+
+**Database Migration:** `0023_equal_sandman` - Added blog_meta_title and blog_meta_description columns
+
+---
 
 ### 35. Markdown Detection & Conversion in Rich Text Editor ✅ 2026-01-01
 
@@ -1046,7 +1086,7 @@
 
 ---
 
-**Last Updated:** 2026-01-01 (Added #35 Markdown Detection & Conversion)
+**Last Updated:** 2026-01-01 (Added #38 Blog Page SEO Metadata, #37 Page Meta Character Count Guidance)
 
 ---
 
