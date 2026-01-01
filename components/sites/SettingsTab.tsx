@@ -41,6 +41,7 @@ import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
 import { ImageUpload } from "@/components/editor/ImageUpload";
 import { ImageLibraryModal } from "@/components/sites/ImageLibraryModal";
 import { LegalPagesCard } from "@/components/sites/LegalPagesCard";
+import { SeoScorecard } from "@/components/sites/SeoScorecard";
 import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
@@ -264,6 +265,26 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
       toast.error(result.error || "Verification failed");
     }
   };
+
+  // Reusable save button component
+  const SaveButton = () => (
+    <div className="flex justify-end">
+      <Button
+        type="submit"
+        disabled={loading || !hasChanges || !!slugError}
+        className="min-w-[120px]"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            Saving...
+          </>
+        ) : (
+          "Save Changes"
+        )}
+      </Button>
+    </div>
+  );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -592,6 +613,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
         </CardContent>
       </Card>
 
+      <SaveButton />
+
       {/* Under Construction */}
       <Card>
         <CardHeader>
@@ -649,64 +672,6 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
               </div>
             </>
           )}
-        </CardContent>
-      </Card>
-
-      {/* SEO Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5" />
-            SEO Settings
-          </CardTitle>
-          <CardDescription>
-            Optimize how your site appears in search engines
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="metaTitle">Meta Title</Label>
-            <Input
-              id="metaTitle"
-              placeholder={site.name}
-              value={metaTitle}
-              onChange={(e) => setMetaTitle(e.target.value)}
-              disabled={loading}
-              maxLength={60}
-            />
-            <p className="text-sm text-muted-foreground">
-              The title that appears in search results and browser tabs (max 60
-              characters). Defaults to your site name if empty.
-            </p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="metaDescription">Meta Description</Label>
-            <Textarea
-              id="metaDescription"
-              placeholder="A brief description of your site..."
-              value={metaDescription}
-              onChange={(e) => setMetaDescription(e.target.value)}
-              disabled={loading}
-              rows={3}
-              maxLength={160}
-            />
-            <p className="text-sm text-muted-foreground">
-              A brief summary shown in search results (max 160 characters).
-              Defaults to your site description if empty.
-            </p>
-          </div>
-
-          {/* SEO Preview */}
-          <div className="p-4 bg-muted/50 rounded-lg space-y-1">
-            <p className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
-              {metaTitle || site.name}
-            </p>
-            <p className="text-xs text-green-700">{publicUrl}</p>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {metaDescription || site.description || "No description set"}
-            </p>
-          </div>
         </CardContent>
       </Card>
 
@@ -861,6 +826,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
         </CardContent>
       </Card>
 
+      <SaveButton />
+
       {/* Legal Pages */}
       <LegalPagesCard site={site} />
 
@@ -905,6 +872,71 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
         </CardContent>
       </Card>
 
+      <SaveButton />
+
+      {/* SEO Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Search className="h-5 w-5" />
+            SEO Settings
+          </CardTitle>
+          <CardDescription>
+            Optimize how your site appears in search engines
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="metaTitle">Meta Title</Label>
+            <Input
+              id="metaTitle"
+              placeholder={site.name}
+              value={metaTitle}
+              onChange={(e) => setMetaTitle(e.target.value)}
+              disabled={loading}
+              maxLength={60}
+            />
+            <p className="text-sm text-muted-foreground">
+              The title that appears in search results and browser tabs (max 60
+              characters). Defaults to your site name if empty.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="metaDescription">Meta Description</Label>
+            <Textarea
+              id="metaDescription"
+              placeholder="A brief description of your site..."
+              value={metaDescription}
+              onChange={(e) => setMetaDescription(e.target.value)}
+              disabled={loading}
+              rows={3}
+              maxLength={160}
+            />
+            <p className="text-sm text-muted-foreground">
+              A brief summary shown in search results (max 160 characters).
+              Defaults to your site description if empty.
+            </p>
+          </div>
+
+          {/* SEO Preview */}
+          <div className="p-4 bg-muted/50 rounded-lg space-y-1">
+            <p className="text-sm font-medium text-blue-600 hover:underline cursor-pointer">
+              {metaTitle || site.name}
+            </p>
+            <p className="text-xs text-green-700">{publicUrl}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {metaDescription || site.description || "No description set"}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* SEO Health Check */}
+      <SeoScorecard siteId={site.id} />
+
+      <SaveButton />
+
       {/* Image Library */}
       <Card>
         <CardHeader>
@@ -920,24 +952,6 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
           <ImageLibraryModal siteId={site.id} />
         </CardContent>
       </Card>
-
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button
-          type="submit"
-          disabled={loading || !hasChanges || !!slugError}
-          className="min-w-[120px]"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
-      </div>
     </form>
   );
 }

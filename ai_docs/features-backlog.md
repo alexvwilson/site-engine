@@ -16,65 +16,18 @@
 
 ## P1 - High Priority
 
-### 29. Gallery Styling Options
+### 31b. SEO AI-Powered Analysis
 
-**Problem:** Gallery images have fixed borders and gaps. Users want seamless/compact gallery options.
-
-**Requirements:**
-- Toggle to show/hide image borders (default: show)
-- Toggle for gap between images (default: with gap)
-- Apply to all gallery layouts: Grid, Masonry, Carousel
-- Independent controls (can have no border but still have gap, etc.)
-
-**Complexity:** Low
-
----
-
-### 30. Block Styling Options (Multi-Block)
-
-**Problem:** Sections look uniform. Users want visual variety between sections to guide visitors through the page.
+**Problem:** While the manual SEO checklist provides immediate feedback, site owners may benefit from deeper AI-powered analysis of their content.
 
 **Requirements:**
-- Add styling options to most block types (similar to Text block #28)
-- Border options: Top border, bottom border, or both
-- Border width: Thin/Medium/Thick
-- Border color: Theme primary or custom
-- Background color option (solid color from theme or custom)
-- Background image with overlay (like Text block)
-- Blocks to update: Hero, Features, CTA, Testimonials, Contact, Image, Gallery
-- Collapsible "Styling" section in each editor
-
-**Implementation Approach:**
-- Do ONE block at a time to avoid unexpected side effects
-- Test thoroughly after each block before moving to next
-- Suggested order: Features → CTA → Testimonials → Contact → Image → Gallery → Hero
-- Hero last since it already has background image support (may need different treatment)
-
-**Complexity:** Medium-High (multiple blocks, consistent pattern)
-
----
-
-### 31. SEO Guidance & Suggestions
-
-**Problem:** Site owners don't know if their child sites are well-optimized for search engines.
-
-**Requirements:**
-
-*Manual Checklist (immediate feedback):*
-- SEO checklist/score card in Settings tab
-- Check for: meta titles, descriptions, alt text, headings structure
-- Per-page SEO status indicators (✓/✗ badges)
-- Guidance text explaining each SEO factor and why it matters
-- Visual progress indicator (e.g., "7/10 SEO checks passed")
-
-*AI-Powered Analysis (deeper insights):*
 - "Analyze SEO" button triggers Trigger.dev background task
 - AI reviews site content and suggests specific improvements
 - Recommendations for: keyword optimization, content gaps, meta description rewrites
 - Priority-ranked suggestions (high/medium/low impact)
 - Actionable feedback users can implement
 
-**Complexity:** Medium
+**Complexity:** Medium-High
 
 ---
 
@@ -167,6 +120,91 @@
 ---
 
 ## Completed Features
+
+### 31a. SEO Checklist & Guidance ✅ 2025-12-31
+
+**Problem:** Site owners don't know if their child sites are well-optimized for search engines.
+
+**Solution Implemented:**
+- [x] SEO Health Check card in Settings tab (after SEO Settings)
+- [x] Progress bar with score (0-100%) and color coding (green/yellow/red)
+- [x] Site-level checks: meta title, meta description, favicon
+- [x] Page-level checks: per-page meta title and description
+- [x] Content checks: image alt text, logo alt text
+- [x] Collapsible sections for each check category
+- [x] Expandable guidance text for each failed/warning check
+- [x] Refresh button to re-run audit after making changes
+
+**Task Document:** `ai_docs/tasks/047_seo_checklist_guidance.md`
+
+**Files Created:**
+- `lib/seo-checks.ts` - Check definitions and analysis logic
+- `lib/queries/seo.ts` - Data fetching for SEO audit
+- `app/actions/seo.ts` - Server action to run audit
+- `components/sites/SeoScorecard.tsx` - Main scorecard UI
+- `components/sites/SeoCheckItem.tsx` - Individual check display
+
+**Files Modified:**
+- `components/sites/SettingsTab.tsx` - Added SeoScorecard component
+
+---
+
+### 29. Gallery Styling Options ✅ 2025-12-31
+
+**Problem:** Gallery images have fixed borders and gaps. Users want seamless/compact gallery options.
+
+**Solution Implemented:**
+- [x] Toggle to show/hide image borders (default: show)
+- [x] Toggle for gap between images (default: with gap)
+- [x] Apply to all gallery layouts: Grid, Masonry, Carousel
+- [x] Independent controls (can have no border but still have gap, etc.)
+- [x] Border options: None, Thin, Medium, Thick with border radius
+- [x] Gap options: None, Small, Medium, Large
+
+**Files Modified:**
+- `lib/section-types.ts` - Added GalleryBorderWidth type, extended GalleryContent with border/gap toggles
+- `lib/section-defaults.ts` - Added default border/gap values
+- `components/editor/blocks/GalleryEditor.tsx` - Added border and gap toggle controls
+- `components/render/blocks/gallery/GalleryGrid.tsx` - Applied border/gap styling
+- `components/render/blocks/gallery/GalleryMasonry.tsx` - Applied border/gap styling
+- `components/render/blocks/gallery/GalleryCarousel.tsx` - Applied border/gap styling
+
+---
+
+### 30. Block Styling Options (Multi-Block) ✅ 2025-12-31
+
+**Problem:** Sections look uniform. Users want visual variety between sections to guide visitors through the page.
+
+**Solution Implemented:**
+- [x] Added styling options to 4 block types following Text block (#28) pattern
+- [x] Features block: border, background image/overlay, card backgrounds, typography
+- [x] CTA block: border, background image/overlay, box background, typography
+- [x] Testimonials block: border, background image/overlay, card backgrounds, typography
+- [x] Contact block: border, background image/overlay, form card background, typography
+- [x] Each block has master `enableStyling` toggle (disabled by default)
+- [x] Border controls: show/hide, width (thin/medium/thick), radius, color
+- [x] Box background: theme-adaptive or custom with opacity
+- [x] Section background image with overlay color/opacity
+- [x] Card/Form background controls for nested elements
+- [x] Typography: text size scaling, text color mode (auto/light/dark)
+- [x] Fixed ContactBlockPublished to support styling on published sites
+- [x] Fixed preview page revalidation when section content is updated
+
+**Files Modified:**
+- `lib/section-types.ts` - Extended content interfaces with styling fields
+- `lib/section-defaults.ts` - Added default styling values
+- `components/editor/blocks/FeaturesEditor.tsx` - Added styling controls
+- `components/editor/blocks/CTAEditor.tsx` - Added styling controls
+- `components/editor/blocks/TestimonialsEditor.tsx` - Added styling controls
+- `components/editor/blocks/ContactEditor.tsx` - Added styling controls
+- `components/render/blocks/FeaturesBlock.tsx` - Plain/styled mode rendering
+- `components/render/blocks/CTABlock.tsx` - Plain/styled mode rendering
+- `components/render/blocks/TestimonialsBlock.tsx` - Plain/styled mode rendering
+- `components/render/blocks/ContactBlock.tsx` - Plain/styled mode rendering
+- `components/render/blocks/ContactBlockPublished.tsx` - Added full styling support
+- `app/actions/sections.ts` - Added preview page revalidation
+
+---
 
 ### 26. Legal Pages for Child Sites ✅ 2025-12-31
 
@@ -863,7 +901,7 @@
 
 ---
 
-**Last Updated:** 2025-12-31 (Added #29 Gallery Styling, #30 Block Styling, #31 SEO Guidance, #32 Media Players; Completed #26 Legal Pages)
+**Last Updated:** 2025-12-31 (Completed #31a SEO Checklist & Guidance)
 
 ---
 
