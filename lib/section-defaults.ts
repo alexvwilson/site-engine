@@ -74,6 +74,43 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     textSize: "normal",
   },
 
+  markdown: {
+    markdown: `# Hello World
+
+Start writing your markdown content here.
+
+## Features
+
+- **Bold** and *italic* text
+- [Links](https://example.com)
+- Code blocks with syntax highlighting
+
+\`\`\`javascript
+const greeting = 'Hello, World!';
+console.log(greeting);
+\`\`\`
+`,
+    // Master styling toggle (disabled by default for plain markdown)
+    enableStyling: false,
+    textColorMode: "auto",
+    // Border options (disabled by default)
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    // Background & overlay (disabled by default)
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    // Layout
+    contentWidth: "narrow",
+    // Typography
+    textSize: "normal",
+  },
+
   image: {
     src: "",
     alt: "Image description",

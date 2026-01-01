@@ -5,6 +5,7 @@ import { getTypedContent } from "@/lib/section-types";
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
 import { TextBlock } from "./blocks/TextBlock";
+import { MarkdownBlock } from "./blocks/MarkdownBlock";
 import { ImageBlock } from "./blocks/ImageBlock";
 import { GalleryBlock } from "./blocks/GalleryBlock";
 import { FeaturesBlock } from "./blocks/FeaturesBlock";
@@ -55,6 +56,13 @@ export async function BlockRenderer({
     case "text":
       return (
         <TextBlock content={getTypedContent("text", content)} theme={theme} />
+      );
+    case "markdown":
+      return (
+        <MarkdownBlock
+          content={getTypedContent("markdown", content)}
+          theme={theme}
+        />
       );
     case "image":
       return (

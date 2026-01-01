@@ -16,18 +16,35 @@
 
 ## P1 - High Priority
 
-### 31b. SEO AI-Powered Analysis
+### 34. Markdown Block Type
 
-**Problem:** While the manual SEO checklist provides immediate feedback, site owners may benefit from deeper AI-powered analysis of their content.
+**Problem:** Users want to add AI-generated content or write in Markdown format and have it render as styled HTML on published pages.
 
-**Requirements:**
-- "Analyze SEO" button triggers Trigger.dev background task
-- AI reviews site content and suggests specific improvements
-- Recommendations for: keyword optimization, content gaps, meta description rewrites
-- Priority-ranked suggestions (high/medium/low impact)
-- Actionable feedback users can implement
+**Use Case:** LLMs naturally output Markdown, making this ideal for AI-generated content workflows.
 
-**Complexity:** Medium-High
+**Proposed Solution:**
+- New `markdown` block type with raw Markdown input
+- Markdown editor with preview capability
+- Full GFM support (tables, code blocks, task lists)
+- Styling options matching other blocks (border, background, typography)
+- `react-markdown` for rendering with theme-aware styles
+
+**Styling Options (matching Text block pattern):**
+- Border (show/hide, width, radius, color)
+- Background image with overlay color/opacity
+- Content width (narrow/medium/full)
+- Text color mode (auto/light/dark)
+- Text size scaling
+
+**Complexity:** Medium
+
+**Files to Create/Modify:**
+- `lib/section-types.ts` - Add MarkdownContent interface
+- `lib/section-defaults.ts` - Add markdown defaults
+- `lib/section-templates.ts` - Add markdown templates
+- `components/editor/blocks/MarkdownEditor.tsx` - New editor
+- `components/render/blocks/MarkdownBlock.tsx` - New renderer
+- Schema, BlockRenderer, SectionEditor routing updates
 
 ---
 
@@ -120,6 +137,72 @@
 ---
 
 ## Completed Features
+
+### 33. Header & Footer Styling Options ✅ 2025-12-31
+
+**Problem:** Header had a fixed small logo (32px), and neither header nor footer had styling customization options like background color, borders, or text customization.
+
+**Solution Implemented:**
+- [x] Logo size slider (24-80px) with dynamic header height adjustment
+- [x] Background color picker for header/footer
+- [x] Full-width border controls (bottom for header, top for footer)
+- [x] Border width options: Thin (1px), Medium (2px), Thick (4px)
+- [x] Border color picker with theme primary as default
+- [x] Background image upload with overlay color/opacity
+- [x] Text color mode: Auto (from theme), Light, Dark
+- [x] Text size scaling: Small, Normal, Large
+- [x] "Enable Advanced Styling" toggle for background/text options
+- [x] Border controls accessible without enabling advanced styling
+- [x] Page-level override support for styling options
+- [x] Reset button for border color to revert to theme primary
+
+**Task Document:** `ai_docs/tasks/048_header_footer_styling_options.md`
+
+**Files Modified:**
+- `lib/section-types.ts` - Added backgroundColor field, HeaderFooterBorderWidth type
+- `lib/section-defaults.ts` - Added default styling values
+- `lib/header-footer-utils.ts` - Updated merge functions to pass through all styling fields
+- `components/editor/blocks/HeaderEditor.tsx` - Added logo slider and styling controls
+- `components/editor/blocks/FooterEditor.tsx` - Added styling controls
+- `components/render/blocks/HeaderBlock.tsx` - Dynamic height, background/border rendering
+- `components/render/blocks/FooterBlock.tsx` - Background/border rendering
+
+---
+
+### 31b. SEO AI-Powered Analysis ✅ 2025-12-31
+
+**Problem:** While the manual SEO checklist provides immediate feedback, site owners may benefit from deeper AI-powered analysis of their content.
+
+**Solution Implemented:**
+- [x] "Analyze with AI" button in SEO Health Check card
+- [x] Trigger.dev background task analyzes site content with GPT-4o
+- [x] AI reviews all pages, sections, and meta data
+- [x] Returns overall score (0-100) with color-coded badge
+- [x] Summary of findings and list of strengths
+- [x] Priority-ranked recommendations (high/medium/low)
+- [x] Recommendations categorized: content, technical, keywords, meta
+- [x] Expandable recommendation items with current state and suggested fix
+- [x] Page-specific recommendations tagged with page slug
+- [x] Progress bar during analysis (30-60 seconds)
+- [x] Re-analyze button to run fresh analysis
+- [x] Previous analysis results persist and display on return
+
+**Task Document:** `ai_docs/tasks/047_seo_checklist_guidance.md`
+
+**Files Created:**
+- `lib/drizzle/schema/seo-analysis-jobs.ts` - Job tracking table schema
+- `trigger/tasks/analyze-seo.ts` - Trigger.dev background task
+- `trigger/utils/seo-prompts.ts` - AI prompts and Zod schemas
+
+**Files Modified:**
+- `app/actions/seo.ts` - Added startSeoAnalysis, getSeoAnalysisJob, getLatestSeoAnalysisForSite
+- `components/sites/SeoScorecard.tsx` - Added AI analysis section with full UI
+- `trigger/index.ts` - Registered new task and prompts
+- `lib/drizzle/schema/index.ts` - Export seo-analysis-jobs schema
+
+**Database Migration:** `0022_needy_tony_stark` - Added seo_analysis_jobs table
+
+---
 
 ### 31a. SEO Checklist & Guidance ✅ 2025-12-31
 
@@ -901,7 +984,7 @@
 
 ---
 
-**Last Updated:** 2025-12-31 (Completed #31a SEO Checklist & Guidance)
+**Last Updated:** 2025-12-31 (Added #34 Markdown Block Type)
 
 ---
 

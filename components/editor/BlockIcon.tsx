@@ -3,6 +3,7 @@
 import {
   Layout,
   Type,
+  FileText,
   Image,
   Grid3X3,
   Sparkles,
@@ -27,6 +28,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   header: PanelTop,
   hero: Layout,
   text: Type,
+  markdown: FileText,
   image: Image,
   gallery: Grid3X3,
   features: Sparkles,

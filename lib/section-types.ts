@@ -125,6 +125,38 @@ export interface TextContent {
   textSize?: TextSize;
 }
 
+export interface MarkdownContent {
+  markdown: string;
+
+  // Master styling toggle - when false, renders as plain markdown with theme colors
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (when border is shown)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Background & overlay options (for section background)
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Layout options
+  contentWidth?: TextContentWidth;
+
+  // Typography options
+  textSize?: TextSize;
+}
+
 export interface ImageContent {
   src: string;
   alt: string;
@@ -383,6 +415,7 @@ export type SectionContent =
   | HeaderContent
   | HeroContent
   | TextContent
+  | MarkdownContent
   | ImageContent
   | GalleryContent
   | FeaturesContent
@@ -401,6 +434,7 @@ export interface ContentTypeMap {
   header: HeaderContent;
   hero: HeroContent;
   text: TextContent;
+  markdown: MarkdownContent;
   image: ImageContent;
   gallery: GalleryContent;
   features: FeaturesContent;
@@ -451,6 +485,12 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Text",
     description: "Rich text content block",
     icon: "type",
+  },
+  {
+    type: "markdown",
+    label: "Markdown",
+    description: "Write content in Markdown with live preview",
+    icon: "file-text",
   },
   {
     type: "image",

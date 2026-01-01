@@ -197,6 +197,109 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
   ],
 
   // ============================================================================
+  // Markdown Templates
+  // ============================================================================
+  markdown: [
+    {
+      id: "markdown-blank",
+      name: "Blank",
+      description: "Empty markdown block",
+      content: {
+        markdown: "",
+      },
+    },
+    {
+      id: "markdown-article",
+      name: "Article",
+      description: "Blog post or article format",
+      content: {
+        markdown: `# Article Title
+
+Write your introduction paragraph here. This template is perfect for blog posts, articles, or any long-form content.
+
+## Section Heading
+
+Add your content with **bold**, *italic*, and [links](https://example.com).
+
+### Subsection
+
+- Bullet point one
+- Bullet point two
+- Bullet point three
+
+> This is a blockquote for highlighting important quotes or callouts.
+
+## Conclusion
+
+Wrap up your article with a conclusion paragraph.`,
+      },
+    },
+    {
+      id: "markdown-documentation",
+      name: "Documentation",
+      description: "Technical documentation with code examples",
+      content: {
+        markdown: `# Getting Started
+
+Welcome to the documentation. Follow these steps to get started.
+
+## Installation
+
+\`\`\`bash
+npm install your-package
+\`\`\`
+
+## Usage
+
+\`\`\`typescript
+import { something } from 'your-package';
+
+const result = something();
+console.log(result);
+\`\`\`
+
+## API Reference
+
+| Method | Description | Returns |
+|--------|-------------|---------|
+| \`init()\` | Initialize the library | \`void\` |
+| \`getData()\` | Fetch data | \`Promise<Data>\` |
+
+## Notes
+
+- [x] Feature one is complete
+- [x] Feature two is complete
+- [ ] Feature three is in progress`,
+      },
+    },
+    {
+      id: "markdown-code-snippet",
+      name: "Code Snippet",
+      description: "Focused code example with explanation",
+      content: {
+        markdown: `## Code Example
+
+Here's how to implement this feature:
+
+\`\`\`javascript
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+
+// Usage
+const message = greet('World');
+console.log(message); // Output: Hello, World!
+\`\`\`
+
+**Key points:**
+- The function takes a \`name\` parameter
+- It returns a formatted greeting string
+- Template literals make string interpolation easy`,
+      },
+    },
+  ],
+
+  // ============================================================================
   // Image Templates
   // ============================================================================
   image: [
