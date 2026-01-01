@@ -76,6 +76,10 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
   const [defaultBlogCategoryId, setDefaultBlogCategoryId] = useState<string | null>(
     site.default_blog_category_id ?? null
   );
+  const [blogMetaTitle, setBlogMetaTitle] = useState(site.blog_meta_title || "");
+  const [blogMetaDescription, setBlogMetaDescription] = useState(
+    site.blog_meta_description || ""
+  );
 
   // Contact form settings
   const [contactNotificationEmail, setContactNotificationEmail] = useState(
@@ -138,6 +142,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     constructionDescription !== (site.construction_description || "") ||
     showBlogAuthor !== site.show_blog_author ||
     defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
+    blogMetaTitle !== (site.blog_meta_title || "") ||
+    blogMetaDescription !== (site.blog_meta_description || "") ||
     contactNotificationEmail !== (site.contact_notification_email || "") ||
     faviconUrl !== (site.favicon_url || "") ||
     useSeparateFavicon !== site.use_separate_favicon ||
@@ -164,6 +170,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setConstructionDescription(site.construction_description || "");
     setShowBlogAuthor(site.show_blog_author);
     setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
+    setBlogMetaTitle(site.blog_meta_title || "");
+    setBlogMetaDescription(site.blog_meta_description || "");
     setContactNotificationEmail(site.contact_notification_email || "");
     setFaviconUrl(site.favicon_url || "");
     setUseSeparateFavicon(site.use_separate_favicon);
@@ -196,6 +204,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
       constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
       showBlogAuthor: showBlogAuthor !== site.show_blog_author ? showBlogAuthor : undefined,
       defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
+      blogMetaTitle: blogMetaTitle !== (site.blog_meta_title || "") ? blogMetaTitle || null : undefined,
+      blogMetaDescription: blogMetaDescription !== (site.blog_meta_description || "") ? blogMetaDescription || null : undefined,
       contactNotificationEmail: contactNotificationEmail !== (site.contact_notification_email || "") ? contactNotificationEmail || null : undefined,
       faviconUrl: faviconUrl !== (site.favicon_url || "") ? faviconUrl || null : undefined,
       useSeparateFavicon: useSeparateFavicon !== site.use_separate_favicon ? useSeparateFavicon : undefined,
@@ -791,6 +801,39 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
             </Select>
             <p className="text-sm text-muted-foreground">
               New blog posts will be assigned this category by default. You can create categories when editing a post.
+            </p>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label htmlFor="blogMetaTitle">Blog Page Meta Title</Label>
+            <Input
+              id="blogMetaTitle"
+              placeholder={`Blog | ${site.name}`}
+              value={blogMetaTitle}
+              onChange={(e) => setBlogMetaTitle(e.target.value)}
+              disabled={loading}
+              maxLength={60}
+            />
+            <p className="text-sm text-muted-foreground">
+              The title shown in search results for your main blog page (max 60 characters).
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="blogMetaDescription">Blog Page Meta Description</Label>
+            <Textarea
+              id="blogMetaDescription"
+              placeholder={`Latest blog posts from ${site.name}`}
+              value={blogMetaDescription}
+              onChange={(e) => setBlogMetaDescription(e.target.value)}
+              disabled={loading}
+              rows={3}
+              maxLength={160}
+            />
+            <p className="text-sm text-muted-foreground">
+              A brief summary of your blog shown in search results (max 160 characters).
             </p>
           </div>
         </CardContent>

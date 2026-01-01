@@ -234,6 +234,8 @@ export interface UpdateSiteSettingsData {
   constructionDescription?: string | null;
   showBlogAuthor?: boolean;
   defaultBlogCategoryId?: string | null;
+  blogMetaTitle?: string | null;
+  blogMetaDescription?: string | null;
   brandPersonality?: BrandPersonality | null;
   contactNotificationEmail?: string | null;
   faviconUrl?: string | null;
@@ -328,6 +330,12 @@ export async function updateSiteSettings(
   }
   if (data.defaultBlogCategoryId !== undefined) {
     updateData.default_blog_category_id = data.defaultBlogCategoryId;
+  }
+  if (data.blogMetaTitle !== undefined) {
+    updateData.blog_meta_title = data.blogMetaTitle?.trim() || null;
+  }
+  if (data.blogMetaDescription !== undefined) {
+    updateData.blog_meta_description = data.blogMetaDescription?.trim() || null;
   }
   if (data.brandPersonality !== undefined) {
     if (data.brandPersonality === null || BRAND_PERSONALITIES.includes(data.brandPersonality)) {

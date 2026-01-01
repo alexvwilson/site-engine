@@ -31,12 +31,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Not Found" };
   }
 
+  const title = site.blog_meta_title || `Blog | ${site.meta_title || site.name}`;
+  const description = site.blog_meta_description || `Latest blog posts from ${site.name}`;
+
   return {
-    title: `Blog | ${site.meta_title || site.name}`,
-    description: `Latest blog posts from ${site.name}`,
+    title,
+    description,
     openGraph: {
-      title: `Blog | ${site.meta_title || site.name}`,
-      description: `Latest blog posts from ${site.name}`,
+      title,
+      description,
       type: "website",
     },
     ...(site.favicon_url && {

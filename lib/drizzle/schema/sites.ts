@@ -60,6 +60,9 @@ export const sites = pgTable(
     show_blog_author: boolean("show_blog_author").notNull().default(true),
     // Default category for new blog posts (FK to blog_categories.id, set via migration)
     default_blog_category_id: uuid("default_blog_category_id"),
+    // Blog page SEO metadata
+    blog_meta_title: text("blog_meta_title"),
+    blog_meta_description: text("blog_meta_description"),
     // Brand personality for AI features (logo generation, etc.)
     brand_personality: text("brand_personality", { enum: BRAND_PERSONALITIES }),
     // Email address for contact form notifications
