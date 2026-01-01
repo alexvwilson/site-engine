@@ -1,5 +1,5 @@
 import type { BlockType } from "@/lib/drizzle/schema/sections";
-import type { ContentTypeMap } from "./section-types";
+import type { ContentTypeMap, HeadingLevel, HeadingAlignment, TextColorMode } from "./section-types";
 
 /**
  * Default content for each block type when a new section is created.
@@ -32,6 +32,14 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     borderWidth: "thin",
     borderColor: "",
     textSize: "normal",
+  },
+
+  heading: {
+    title: "Page Title",
+    subtitle: "",
+    level: 1 as HeadingLevel,
+    alignment: "center" as HeadingAlignment,
+    textColorMode: "auto" as TextColorMode,
   },
 
   hero: {

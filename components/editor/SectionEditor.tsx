@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { HeaderEditor } from "./blocks/HeaderEditor";
+import { HeadingEditor } from "./blocks/HeadingEditor";
 import { HeroEditor } from "./blocks/HeroEditor";
 import { TextEditor } from "./blocks/TextEditor";
 import { MarkdownEditor } from "./blocks/MarkdownEditor";
@@ -130,6 +131,9 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
 
       {section.block_type === "header" && (
         <HeaderEditor {...editorProps} content={content as Parameters<typeof HeaderEditor>[0]["content"]} mode="page" />
+      )}
+      {section.block_type === "heading" && (
+        <HeadingEditor {...editorProps} content={content as Parameters<typeof HeadingEditor>[0]["content"]} />
       )}
       {section.block_type === "hero" && (
         <HeroEditor {...editorProps} content={content as Parameters<typeof HeroEditor>[0]["content"]} />

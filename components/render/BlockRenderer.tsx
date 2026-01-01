@@ -3,6 +3,7 @@ import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import { getTypedContent } from "@/lib/section-types";
 
 import { HeaderBlock } from "./blocks/HeaderBlock";
+import { HeadingBlock } from "./blocks/HeadingBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
 import { TextBlock } from "./blocks/TextBlock";
 import { MarkdownBlock } from "./blocks/MarkdownBlock";
@@ -43,6 +44,13 @@ export async function BlockRenderer({
           content={getTypedContent("header", content)}
           theme={theme}
           basePath={basePath}
+        />
+      );
+    case "heading":
+      return (
+        <HeadingBlock
+          content={getTypedContent("heading", content)}
+          theme={theme}
         />
       );
     case "hero":

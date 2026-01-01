@@ -13,6 +13,7 @@ import { pages } from "./pages";
 
 export const BLOCK_TYPES = [
   "header",
+  "heading",
   "hero",
   "text",
   "markdown",

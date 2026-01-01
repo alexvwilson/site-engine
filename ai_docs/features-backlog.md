@@ -16,6 +16,44 @@
 
 ## P1 - High Priority
 
+### 36. Heading Block Type
+
+**Problem:** Not every page has a Hero section, but every page needs an H1 for SEO. Pages like About, Services, or simple content pages often just have a Header, Text blocks, and Footer - leaving no H1 on the page.
+
+**Use Case:**
+- About page with Header + Text blocks + Footer (no H1)
+- Section dividers between content blocks
+- Landing pages that need a simple title without full Hero overhead
+
+**Proposed Solution:**
+- New `heading` block type with configurable heading level (H1, H2, H3)
+- Title field (required) + optional subtitle field
+- Alignment options (left, center, right)
+- Simple styling: text color mode only (no background/border complexity)
+- Uses theme heading font and colors
+
+**Content Structure:**
+- `title` (string, required) - The main heading text
+- `subtitle` (string, optional) - Supporting text below heading
+- `level` (1 | 2 | 3) - HTML heading level
+- `alignment` ("left" | "center" | "right")
+- `textColorMode` ("auto" | "light" | "dark")
+
+**Complexity:** Low
+
+**Files to Create/Modify:**
+- `lib/drizzle/schema/sections.ts` - Add "heading" to BLOCK_TYPES
+- `lib/section-types.ts` - Add HeadingContent interface
+- `lib/section-defaults.ts` - Add heading defaults
+- `lib/section-templates.ts` - Add heading templates
+- `components/editor/blocks/HeadingEditor.tsx` - New editor
+- `components/render/blocks/HeadingBlock.tsx` - New renderer
+- `components/editor/BlockIcon.tsx` - Add heading icon
+- `components/editor/SectionEditor.tsx` - Add HeadingEditor routing
+- `components/render/BlockRenderer.tsx` - Add HeadingBlock routing
+
+---
+
 ### 34. Markdown Block Type
 
 **Problem:** Users want to add AI-generated content or write in Markdown format and have it render as styled HTML on published pages.

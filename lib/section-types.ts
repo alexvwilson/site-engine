@@ -86,6 +86,18 @@ export interface HeroContent {
   rotatingTitle?: RotatingTitleConfig;
 }
 
+// Heading block types
+export type HeadingLevel = 1 | 2 | 3;
+export type HeadingAlignment = "left" | "center" | "right";
+
+export interface HeadingContent {
+  title: string;
+  subtitle?: string;
+  level: HeadingLevel;
+  alignment: HeadingAlignment;
+  textColorMode?: TextColorMode;
+}
+
 // Text block styling types
 export type TextBorderWidth = "thin" | "medium" | "thick";
 export type TextBorderRadius = "none" | "small" | "medium" | "large" | "full";
@@ -413,6 +425,7 @@ export interface EmbedContent {
  */
 export type SectionContent =
   | HeaderContent
+  | HeadingContent
   | HeroContent
   | TextContent
   | MarkdownContent
@@ -432,6 +445,7 @@ export type SectionContent =
  */
 export interface ContentTypeMap {
   header: HeaderContent;
+  heading: HeadingContent;
   hero: HeroContent;
   text: TextContent;
   markdown: MarkdownContent;
@@ -473,6 +487,12 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Header",
     description: "Site navigation with logo and links",
     icon: "panel-top",
+  },
+  {
+    type: "heading",
+    label: "Heading",
+    description: "Page title or section heading with optional subtitle",
+    icon: "heading",
   },
   {
     type: "hero",

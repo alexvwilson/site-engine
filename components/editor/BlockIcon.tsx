@@ -15,6 +15,7 @@ import {
   Newspaper,
   LayoutGrid,
   Code,
+  Heading1,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ interface BlockIconProps {
 
 const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = {
   header: PanelTop,
+  heading: Heading1,
   hero: Layout,
   text: Type,
   markdown: FileText,

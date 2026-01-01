@@ -9,6 +9,7 @@ import {
 } from "@/lib/section-types";
 
 import { HeaderBlock } from "./blocks/HeaderBlock";
+import { HeadingBlock } from "./blocks/HeadingBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
 import { TextBlock } from "./blocks/TextBlock";
 import { MarkdownBlock } from "./blocks/MarkdownBlock";
@@ -40,6 +41,13 @@ export function PreviewBlockRenderer({
       return (
         <HeaderBlock
           content={getTypedContent("header", content)}
+          theme={theme}
+        />
+      );
+    case "heading":
+      return (
+        <HeadingBlock
+          content={getTypedContent("heading", content)}
           theme={theme}
         />
       );

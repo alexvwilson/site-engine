@@ -57,6 +57,48 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
   ],
 
   // ============================================================================
+  // Heading Templates
+  // ============================================================================
+  heading: [
+    {
+      id: "heading-page-title",
+      name: "Page Title",
+      description: "Centered H1 for page titles",
+      content: {
+        title: "About Us",
+        subtitle: "Learn more about our story and mission",
+        level: 1 as const,
+        alignment: "center" as const,
+        textColorMode: "auto" as const,
+      },
+    },
+    {
+      id: "heading-section",
+      name: "Section Divider",
+      description: "Left-aligned H2 for content sections",
+      content: {
+        title: "Our Services",
+        subtitle: "",
+        level: 2 as const,
+        alignment: "left" as const,
+        textColorMode: "auto" as const,
+      },
+    },
+    {
+      id: "heading-minimal",
+      name: "Minimal",
+      description: "Simple centered heading without subtitle",
+      content: {
+        title: "Welcome",
+        subtitle: "",
+        level: 1 as const,
+        alignment: "center" as const,
+        textColorMode: "auto" as const,
+      },
+    },
+  ],
+
+  // ============================================================================
   // Hero Templates
   // ============================================================================
   hero: [
