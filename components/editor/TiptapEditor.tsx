@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   Bold,
   Italic,
@@ -17,6 +17,8 @@ import {
   Undo,
   Redo,
   Unlink,
+  AlertCircle,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { detectMarkdown, convertMarkdownToHtml } from "@/lib/markdown-utils";
 
 interface TiptapEditorProps {
   value: string;
@@ -95,6 +98,9 @@ export function TiptapEditor({
 }: TiptapEditorProps) {
   const [linkUrl, setLinkUrl] = useState("");
   const [linkPopoverOpen, setLinkPopoverOpen] = useState(false);
+  const [showMarkdownBanner, setShowMarkdownBanner] = useState(false);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const lastCheckedContent = useRef<string>("");
 
   // Normalize content on initial load
   const normalizedValue = normalizeContent(value);
@@ -120,7 +126,18 @@ export function TiptapEditor({
     content: normalizedValue,
     editable: !disabled,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      const html = editor.getHTML();
+      onChange(html);
+
+      // Check for markdown patterns if banner hasn't been dismissed
+      // and content has meaningfully changed
+      if (!bannerDismissed && html !== lastCheckedContent.current) {
+        lastCheckedContent.current = html;
+        // Get the plain text to check for markdown
+        const text = editor.getText();
+        const hasMarkdown = detectMarkdown(text);
+        setShowMarkdownBanner(hasMarkdown);
+      }
     },
     editorProps: {
       attributes: {
@@ -165,6 +182,33 @@ export function TiptapEditor({
     setLinkUrl(previousUrl);
     setLinkPopoverOpen(true);
   }, [editor]);
+
+  // Handle markdown conversion
+  const handleConvertMarkdown = useCallback(() => {
+    if (!editor) return;
+
+    // Get the plain text content
+    const text = editor.getText();
+
+    // Convert markdown to HTML
+    const html = convertMarkdownToHtml(text);
+
+    // Set the converted content
+    editor.commands.setContent(html);
+
+    // Update parent with new content
+    onChange(html);
+
+    // Hide the banner
+    setShowMarkdownBanner(false);
+    setBannerDismissed(true);
+  }, [editor, onChange]);
+
+  // Handle banner dismissal
+  const handleDismissBanner = useCallback(() => {
+    setShowMarkdownBanner(false);
+    setBannerDismissed(true);
+  }, []);
 
   if (!editor) {
     return (
@@ -321,6 +365,35 @@ export function TiptapEditor({
           <Redo className="h-4 w-4" />
         </ToolbarButton>
       </div>
+
+      {/* Markdown Detection Banner */}
+      {showMarkdownBanner && (
+        <div className="flex items-center justify-between gap-3 px-3 py-2 bg-amber-500/10 border-b border-amber-500/20">
+          <div className="flex items-center gap-2 text-sm">
+            <AlertCircle className="h-4 w-4 text-amber-500 shrink-0" />
+            <span className="text-amber-700 dark:text-amber-400">
+              This content has special formatting.
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleConvertMarkdown}
+              className="h-7 text-xs border-amber-500/30 hover:bg-amber-500/10"
+            >
+              Convert to Text
+            </Button>
+            <button
+              onClick={handleDismissBanner}
+              className="p-1 rounded hover:bg-amber-500/20 text-amber-700 dark:text-amber-400"
+              title="Dismiss"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Editor Content */}
       <EditorContent editor={editor} />

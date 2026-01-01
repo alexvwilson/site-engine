@@ -138,6 +138,30 @@
 
 ## Completed Features
 
+### 35. Markdown Detection & Conversion in Rich Text Editor ✅ 2026-01-01
+
+**Problem:** Users pasting AI-generated content (which is typically in Markdown format) into text blocks or blog posts would see malformed rendering (e.g., text appearing as blockquotes with italic styling) because the editor stored raw markdown syntax as HTML.
+
+**Solution Implemented:**
+- [x] Automatic markdown pattern detection in TiptapEditor
+- [x] Detects headers (`#`), bold (`**`), italic (`*`), lists (`-`, `1.`), links, blockquotes, code blocks
+- [x] Amber warning banner: "This content has special formatting"
+- [x] One-click "Convert to Text" button converts markdown to proper HTML
+- [x] Dismiss button to keep content as-is
+- [x] Works in both Text blocks and Blog post editor (shared TiptapEditor component)
+- [x] Uses `marked` library for accurate markdown-to-HTML conversion
+- [x] Converts h1 → h2, h4+ → h3 to match TipTap's supported heading levels
+
+**Files Created:**
+- `lib/markdown-utils.ts` - Detection and conversion utilities
+
+**Files Modified:**
+- `components/editor/TiptapEditor.tsx` - Added banner UI and conversion logic
+
+**Dependencies Added:** `marked`
+
+---
+
 ### 33. Header & Footer Styling Options ✅ 2025-12-31
 
 **Problem:** Header had a fixed small logo (32px), and neither header nor footer had styling customization options like background color, borders, or text customization.
@@ -984,7 +1008,7 @@
 
 ---
 
-**Last Updated:** 2025-12-31 (Added #34 Markdown Block Type)
+**Last Updated:** 2026-01-01 (Added #35 Markdown Detection & Conversion)
 
 ---
 
