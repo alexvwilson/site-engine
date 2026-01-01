@@ -145,6 +145,7 @@ export function TiptapEditor({
           "prose prose-sm max-w-none focus:outline-none min-h-[150px] px-3 py-2",
           "prose-headings:font-semibold prose-h2:text-xl prose-h3:text-lg",
           "prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0",
+          "prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6",
           "prose-blockquote:border-l-2 prose-blockquote:border-muted-foreground prose-blockquote:pl-4 prose-blockquote:italic"
         ),
       },
@@ -394,6 +395,26 @@ export function TiptapEditor({
           </div>
         </div>
       )}
+
+      {/* Editor List Styles - ensures bullets/numbers show in editor */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .ProseMirror ul {
+          list-style-type: disc;
+          padding-left: 1.5rem;
+          margin: 0.5rem 0;
+        }
+        .ProseMirror ol {
+          list-style-type: decimal;
+          padding-left: 1.5rem;
+          margin: 0.5rem 0;
+        }
+        .ProseMirror li {
+          display: list-item;
+        }
+        .ProseMirror li p {
+          margin: 0;
+        }
+      `}} />
 
       {/* Editor Content */}
       <EditorContent editor={editor} />
