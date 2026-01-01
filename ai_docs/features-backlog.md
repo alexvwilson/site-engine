@@ -16,98 +16,13 @@
 
 ## P1 - High Priority
 
-### 36. Heading Block Type
-
-**Problem:** Not every page has a Hero section, but every page needs an H1 for SEO. Pages like About, Services, or simple content pages often just have a Header, Text blocks, and Footer - leaving no H1 on the page.
-
-**Use Case:**
-- About page with Header + Text blocks + Footer (no H1)
-- Section dividers between content blocks
-- Landing pages that need a simple title without full Hero overhead
-
-**Proposed Solution:**
-- New `heading` block type with configurable heading level (H1, H2, H3)
-- Title field (required) + optional subtitle field
-- Alignment options (left, center, right)
-- Simple styling: text color mode only (no background/border complexity)
-- Uses theme heading font and colors
-
-**Content Structure:**
-- `title` (string, required) - The main heading text
-- `subtitle` (string, optional) - Supporting text below heading
-- `level` (1 | 2 | 3) - HTML heading level
-- `alignment` ("left" | "center" | "right")
-- `textColorMode` ("auto" | "light" | "dark")
-
-**Complexity:** Low
-
-**Files to Create/Modify:**
-- `lib/drizzle/schema/sections.ts` - Add "heading" to BLOCK_TYPES
-- `lib/section-types.ts` - Add HeadingContent interface
-- `lib/section-defaults.ts` - Add heading defaults
-- `lib/section-templates.ts` - Add heading templates
-- `components/editor/blocks/HeadingEditor.tsx` - New editor
-- `components/render/blocks/HeadingBlock.tsx` - New renderer
-- `components/editor/BlockIcon.tsx` - Add heading icon
-- `components/editor/SectionEditor.tsx` - Add HeadingEditor routing
-- `components/render/BlockRenderer.tsx` - Add HeadingBlock routing
-
----
-
-### 34. Markdown Block Type
-
-**Problem:** Users want to add AI-generated content or write in Markdown format and have it render as styled HTML on published pages.
-
-**Use Case:** LLMs naturally output Markdown, making this ideal for AI-generated content workflows.
-
-**Proposed Solution:**
-- New `markdown` block type with raw Markdown input
-- Markdown editor with preview capability
-- Full GFM support (tables, code blocks, task lists)
-- Styling options matching other blocks (border, background, typography)
-- `react-markdown` for rendering with theme-aware styles
-
-**Styling Options (matching Text block pattern):**
-- Border (show/hide, width, radius, color)
-- Background image with overlay color/opacity
-- Content width (narrow/medium/full)
-- Text color mode (auto/light/dark)
-- Text size scaling
-
-**Complexity:** Medium
-
-**Files to Create/Modify:**
-- `lib/section-types.ts` - Add MarkdownContent interface
-- `lib/section-defaults.ts` - Add markdown defaults
-- `lib/section-templates.ts` - Add markdown templates
-- `components/editor/blocks/MarkdownEditor.tsx` - New editor
-- `components/render/blocks/MarkdownBlock.tsx` - New renderer
-- Schema, BlockRenderer, SectionEditor routing updates
+_No items currently in P1._
 
 ---
 
 ## P2 - Medium Priority
 
-### 37. Page Meta Field Character Count Guidance
-
-**Problem:** The Edit Page modal has Meta Title and Meta Description fields, but users don't know the ideal lengths for SEO. The SEO Health Check shows warnings when lengths are outside optimal ranges (50-60 chars for title, 120-160 chars for description), but users only discover this after saving.
-
-**Use Case:**
-- User fills in Meta Title as "Contact | MonkeyNutz" (20 chars)
-- SEO check shows warning: "20 characters (aim for 50-60)"
-- User has to go back and edit, trial-and-error
-
-**Proposed Solution:**
-- Add live character counter below Meta Title field showing "X/60 characters"
-- Add live character counter below Meta Description field showing "X/160 characters"
-- Color coding: green (optimal range), amber (outside range but acceptable), red (too long)
-- Optimal ranges displayed as helper text
-- Consider adding progress bar or visual indicator
-
-**Complexity:** Low
-
-**Files to Modify:**
-- `components/pages/EditPageModal.tsx` - Add character counters with color coding
+_No items currently in P2._
 
 ---
 
@@ -134,22 +49,6 @@
 
 ---
 
-### 7. Custom Domain Support
-
-**Problem:** Sites only accessible via `/sites/[slug]`. Users want custom domains.
-
-**Current State:** `custom_domain` field exists in sites table but unused.
-
-**Requirements:**
-- DNS configuration UI
-- SSL certificate provisioning (via hosting platform)
-- Domain verification flow
-- Middleware updates for domain routing
-
-**Complexity:** High (infrastructure-dependent)
-
----
-
 ### 8. Site Analytics
 
 **Problem:** No visibility into site traffic/engagement.
@@ -159,17 +58,6 @@
 - Build simple internal analytics
 
 **Complexity:** Medium-High
-
----
-
-### 9. SEO Enhancements
-
-- Sitemap generation
-- robots.txt configuration
-- Structured data / JSON-LD
-- Social sharing previews
-
-**Complexity:** Medium
 
 ---
 
@@ -194,6 +82,131 @@
 ---
 
 ## Completed Features
+
+### 9. SEO Enhancements ✅ 2026-01-01
+
+**Problem:** Search engines had difficulty discovering all pages on child sites without a sitemap.
+
+**Solution Implemented:**
+- [x] Structured data / JSON-LD (Article schema on blog posts) - previously done
+- [x] Social sharing previews (OpenGraph metadata on all pages) - previously done
+- [x] Dynamic sitemap.xml per child site (`/sites/[slug]/sitemap.xml`)
+- [x] Dynamic robots.txt per child site (`/sites/[slug]/robots.txt`)
+- [x] Sitemap includes: homepage, pages, blog listing, posts, categories
+- [x] Custom domain URLs used when configured
+- [x] 1-hour cache revalidation for auto-updates
+- [x] SEO Files links shown in Settings when domain is verified (quick access to sitemap.xml and robots.txt)
+
+**Task Document:** `ai_docs/tasks/051_sitemap_robots_txt.md`
+
+**Files Created:**
+- `lib/queries/sitemap.ts` - Efficient sitemap data fetching
+- `app/(sites)/sites/[siteSlug]/sitemap.xml/route.ts` - Dynamic XML sitemap
+- `app/(sites)/sites/[siteSlug]/robots.txt/route.ts` - Dynamic robots.txt
+
+**Files Modified:**
+- `components/sites/SettingsTab.tsx` - Added SEO Files links section for verified domains
+
+---
+
+### 7. Custom Domain Support ✅ 2025-12-30
+
+**Problem:** Sites only accessible via `/sites/[slug]`. Users wanted custom domains for professional branding.
+
+**Solution Implemented:**
+- [x] User can enter custom domain in Settings
+- [x] Domain added to Vercel project via API
+- [x] DNS instructions shown when manual verification needed
+- [x] Background task polls for verification status (Trigger.dev)
+- [x] Verified domains route correctly via middleware
+- [x] SSL certificates provisioned automatically by Vercel
+- [x] Both custom domain AND `/sites/[slug]` URLs work
+- [x] User can remove a custom domain
+
+**Task Document:** `ai_docs/tasks/032_custom_domain_support.md`
+
+**Files Created:**
+- `app/actions/domains.ts` - Domain management server actions
+- `trigger/tasks/verify-domain.ts` - Background verification polling
+- `lib/vercel.ts` - Vercel API client
+- `lib/domain-utils.ts` - Domain validation utilities
+- `components/sites/DnsInstructionsCard.tsx` - DNS configuration display
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added domain verification columns
+- `middleware.ts` - Custom domain routing
+- `components/sites/SettingsTab.tsx` - Domain configuration UI
+
+---
+
+### 37. Page Meta Field Character Count Guidance ✅ 2026-01-01
+
+**Problem:** The Edit Page modal had Meta Title and Meta Description fields with no indication of ideal lengths for SEO. Users discovered length issues only after saving via the SEO Health Check.
+
+**Solution Implemented:**
+- [x] Live character counter below Meta Title field showing "X/60 characters (aim for 50-60)"
+- [x] Live character counter below Meta Description field showing "X/160 characters (aim for 120-160)"
+- [x] Color coding: green (optimal range), amber (too short or slightly over), red (too long)
+- [x] Helper function for determining color based on SEO optimal ranges
+
+**Files Modified:**
+- `components/pages/EditPageModal.tsx` - Added getCharCountColor helper and character counters
+
+---
+
+### 34. Markdown Block Type ✅ 2026-01-01
+
+**Problem:** Users want to add AI-generated content or write in Markdown format and have it render as styled HTML on published pages.
+
+**Solution Implemented:**
+- [x] New `markdown` block type with raw Markdown input
+- [x] Markdown editor with live preview toggle
+- [x] Full GFM support (tables, code blocks, task lists)
+- [x] Styling options matching Text block (border, background, typography)
+- [x] `react-markdown` for rendering with theme-aware styles
+- [x] 4 templates: Blank, Article, Documentation, Code Snippet
+
+**Files Created:**
+- `components/editor/blocks/MarkdownEditor.tsx` - Editor with preview toggle
+- `components/render/blocks/MarkdownBlock.tsx` - Renderer with react-markdown
+
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added "markdown" to BLOCK_TYPES
+- `lib/section-types.ts` - Added MarkdownContent interface
+- `lib/section-defaults.ts` - Added markdown defaults
+- `lib/section-templates.ts` - Added markdown templates
+- `components/editor/BlockIcon.tsx` - Added FileText icon
+- `components/editor/SectionEditor.tsx` - Added MarkdownEditor routing
+- `components/render/BlockRenderer.tsx` - Added MarkdownBlock routing
+
+---
+
+### 36. Heading Block Type ✅ 2026-01-01
+
+**Problem:** Not every page has a Hero section, but every page needs an H1 for SEO. Pages like About, Services, or simple content pages often just have a Header, Text blocks, and Footer - leaving no H1 on the page.
+
+**Solution Implemented:**
+- [x] New `heading` block type with configurable heading level (H1, H2, H3)
+- [x] Title field (required) + optional subtitle field
+- [x] Alignment options (left, center, right)
+- [x] Text color mode (auto/light/dark)
+- [x] Uses theme heading font and colors
+- [x] 3 templates: Page Title, Section Divider, Minimal
+
+**Files Created:**
+- `components/editor/blocks/HeadingEditor.tsx` - Editor component
+- `components/render/blocks/HeadingBlock.tsx` - Renderer component
+
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added "heading" to BLOCK_TYPES
+- `lib/section-types.ts` - Added HeadingContent interface
+- `lib/section-defaults.ts` - Added heading defaults
+- `lib/section-templates.ts` - Added heading templates
+- `components/editor/BlockIcon.tsx` - Added Heading1 icon
+- `components/editor/SectionEditor.tsx` - Added HeadingEditor routing
+- `components/render/BlockRenderer.tsx` - Added HeadingBlock routing
+
+---
 
 ### 38. Blog Page SEO Metadata ✅ 2026-01-01
 
@@ -1086,7 +1099,7 @@
 
 ---
 
-**Last Updated:** 2026-01-01 (Added #38 Blog Page SEO Metadata, #37 Page Meta Character Count Guidance)
+**Last Updated:** 2026-01-01 (Added SEO file links to Settings for verified domains)
 
 ---
 

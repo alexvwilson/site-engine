@@ -17,6 +17,25 @@ import { Label } from "@/components/ui/label";
 import { updatePage } from "@/app/actions/pages";
 import type { Page } from "@/lib/drizzle/schema/pages";
 
+/**
+ * Get color class for character count based on SEO optimal ranges
+ * @param count Current character count
+ * @param optimalMin Minimum optimal characters
+ * @param optimalMax Maximum optimal characters (also soft limit)
+ * @param hardMax Characters beyond this are definitely too long
+ */
+function getCharCountColor(
+  count: number,
+  optimalMin: number,
+  optimalMax: number,
+  hardMax: number
+): string {
+  if (count === 0) return "text-muted-foreground";
+  if (count >= optimalMin && count <= optimalMax) return "text-green-600";
+  if (count > hardMax) return "text-red-600";
+  return "text-amber-600"; // Too short or slightly over optimal
+}
+
 interface EditPageModalProps {
   page: Page;
   open: boolean;
@@ -126,6 +145,9 @@ export function EditPageModal({ page, open, onOpenChange }: EditPageModalProps) 
               onChange={(e) => setMetaTitle(e.target.value)}
               disabled={loading}
             />
+            <p className={`text-xs ${getCharCountColor(metaTitle.length, 50, 60, 70)}`}>
+              {metaTitle.length}/60 characters (aim for 50-60)
+            </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="edit-meta-description">
@@ -139,6 +161,9 @@ export function EditPageModal({ page, open, onOpenChange }: EditPageModalProps) 
               disabled={loading}
               rows={3}
             />
+            <p className={`text-xs ${getCharCountColor(metaDescription.length, 120, 160, 200)}`}>
+              {metaDescription.length}/160 characters (aim for 120-160)
+            </p>
           </div>
           <DialogFooter>
             <Button

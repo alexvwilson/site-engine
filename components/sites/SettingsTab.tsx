@@ -442,46 +442,76 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
 
             {/* Domain verified */}
             {domainFeatureAvailable && site.custom_domain && site.domain_verification_status === "verified" && (
-              <div className="flex items-center justify-between gap-4 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-900">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
-                  <div>
-                    <a
-                      href={`https://${site.custom_domain}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-medium hover:underline flex items-center gap-1"
-                    >
-                      {site.custom_domain}
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
-                        Verified
-                      </Badge>
-                      {site.domain_ssl_status === "issued" && (
-                        <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
-                          <Shield className="h-3 w-3 mr-1" />
-                          SSL Active
+              <div className="space-y-3">
+                <div className="flex items-center justify-between gap-4 p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-200 dark:border-green-900">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div>
+                      <a
+                        href={`https://${site.custom_domain}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium hover:underline flex items-center gap-1"
+                      >
+                        {site.custom_domain}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">
+                          Verified
                         </Badge>
-                      )}
+                        {site.domain_ssl_status === "issued" && (
+                          <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
+                            <Shield className="h-3 w-3 mr-1" />
+                            SSL Active
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleRemoveDomain}
+                    disabled={domainLoading}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    {domainLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleRemoveDomain}
-                  disabled={domainLoading}
-                  className="text-destructive hover:text-destructive"
-                >
-                  {domainLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-4 w-4" />
-                  )}
-                </Button>
+
+                {/* SEO Files */}
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p className="text-sm font-medium mb-2">SEO Files</p>
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    <a
+                      href={`https://${site.custom_domain}/sitemap.xml`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline flex items-center gap-1"
+                    >
+                      sitemap.xml
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                    <a
+                      href={`https://${site.custom_domain}/robots.txt`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline flex items-center gap-1"
+                    >
+                      robots.txt
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Auto-generated for search engine optimization
+                  </p>
+                </div>
               </div>
             )}
 
