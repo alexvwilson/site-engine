@@ -276,30 +276,49 @@ export function HeroEditor({
         />
       </div>
 
-      {/* CTA Buttons */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="hero-cta-text">Button Text</Label>
-          <Input
-            id="hero-cta-text"
-            value={content.ctaText}
-            onChange={(e) => handleChange("ctaText", e.target.value)}
-            placeholder="Get Started"
-            disabled={disabled}
-          />
+      {/* CTA Toggle */}
+      <div className="flex items-center justify-between rounded-lg border p-3">
+        <div className="space-y-0.5">
+          <Label>Show Button</Label>
+          <p className="text-xs text-muted-foreground">
+            Display a call-to-action button
+          </p>
         </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="hero-cta-url">Button URL</Label>
-          <Input
-            id="hero-cta-url"
-            value={content.ctaUrl}
-            onChange={(e) => handleChange("ctaUrl", e.target.value)}
-            placeholder="#"
-            disabled={disabled}
-          />
-        </div>
+        <Switch
+          checked={content.showCta ?? true}
+          onCheckedChange={(checked) =>
+            onChange({ ...content, showCta: checked })
+          }
+          disabled={disabled}
+        />
       </div>
+
+      {/* CTA Buttons - only show when enabled */}
+      {(content.showCta ?? true) && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="hero-cta-text">Button Text</Label>
+            <Input
+              id="hero-cta-text"
+              value={content.ctaText}
+              onChange={(e) => handleChange("ctaText", e.target.value)}
+              placeholder="Get Started"
+              disabled={disabled}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="hero-cta-url">Button URL</Label>
+            <Input
+              id="hero-cta-url"
+              value={content.ctaUrl}
+              onChange={(e) => handleChange("ctaUrl", e.target.value)}
+              placeholder="#"
+              disabled={disabled}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Background Image */}
       <div className="space-y-2">

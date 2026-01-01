@@ -77,6 +77,7 @@ export interface RotatingTitleConfig {
 export interface HeroContent {
   heading: string;
   subheading: string;
+  showCta?: boolean;
   ctaText: string;
   ctaUrl: string;
   backgroundImage?: string;

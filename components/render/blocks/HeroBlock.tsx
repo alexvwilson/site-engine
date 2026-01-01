@@ -83,7 +83,7 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
           </p>
         )}
 
-        {content.ctaText && content.ctaUrl && (
+        {(content.showCta ?? true) && content.ctaText && content.ctaUrl && (
           <a
             href={transformUrl(basePath, content.ctaUrl)}
             className="inline-block mt-8 hover:opacity-90 transition-opacity"
