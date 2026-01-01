@@ -1,7 +1,18 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { Search, RefreshCw, ChevronDown, Loader2 } from "lucide-react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  Search,
+  RefreshCw,
+  ChevronDown,
+  Loader2,
+  Sparkles,
+  CheckCircle2,
+  AlertTriangle,
+  AlertCircle,
+  Lightbulb,
+  ThumbsUp,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,8 +27,14 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { runSeoAuditAction } from "@/app/actions/seo";
+import {
+  runSeoAuditAction,
+  startSeoAnalysis,
+  getSeoAnalysisJob,
+  getLatestSeoAnalysisForSite,
+} from "@/app/actions/seo";
 import { SeoCheckItem } from "@/components/sites/SeoCheckItem";
 import {
   groupResultsByCategory,
@@ -26,6 +43,7 @@ import {
   type SeoAuditSummary,
   type SeoCheckResult,
 } from "@/lib/seo-checks";
+import type { SeoAnalysisJob } from "@/lib/drizzle/schema/seo-analysis-jobs";
 
 interface SeoScorecardProps {
   siteId: string;
@@ -35,6 +53,13 @@ export function SeoScorecard({ siteId }: SeoScorecardProps) {
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState<SeoAuditSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // AI Analysis state
+  const [aiJob, setAiJob] = useState<SeoAnalysisJob | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiAnalysisOpen, setAiAnalysisOpen] = useState(true);
+  const pollingRef = useRef<NodeJS.Timeout | null>(null);
 
   // Collapsible states
   const [siteOpen, setSiteOpen] = useState(true);
@@ -56,9 +81,70 @@ export function SeoScorecard({ siteId }: SeoScorecardProps) {
     setLoading(false);
   }, [siteId]);
 
+  // Fetch latest AI analysis
+  const fetchLatestAiAnalysis = useCallback(async () => {
+    const result = await getLatestSeoAnalysisForSite(siteId);
+    if (result.success && result.job) {
+      setAiJob(result.job);
+      // If job is still pending or analyzing, start polling
+      if (result.job.status === "pending" || result.job.status === "analyzing") {
+        startPolling(result.job.id);
+      }
+    }
+  }, [siteId]);
+
+  // Poll for job status
+  const startPolling = useCallback((jobId: string) => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+    }
+
+    pollingRef.current = setInterval(async () => {
+      const result = await getSeoAnalysisJob(jobId);
+      if (result.success && result.job) {
+        setAiJob(result.job);
+        // Stop polling when complete or failed
+        if (result.job.status === "completed" || result.job.status === "failed") {
+          if (pollingRef.current) {
+            clearInterval(pollingRef.current);
+            pollingRef.current = null;
+          }
+          setAiLoading(false);
+        }
+      }
+    }, 2000); // Poll every 2 seconds
+  }, []);
+
+  // Start AI analysis
+  const handleStartAnalysis = async () => {
+    setAiLoading(true);
+    setAiError(null);
+
+    const result = await startSeoAnalysis(siteId);
+
+    if (result.success && result.jobId) {
+      // Fetch the job and start polling
+      const jobResult = await getSeoAnalysisJob(result.jobId);
+      if (jobResult.success && jobResult.job) {
+        setAiJob(jobResult.job);
+        startPolling(result.jobId);
+      }
+    } else {
+      setAiError(result.error || "Failed to start analysis");
+      setAiLoading(false);
+    }
+  };
+
   useEffect(() => {
     runAudit();
-  }, [runAudit]);
+    fetchLatestAiAnalysis();
+
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+      }
+    };
+  }, [runAudit, fetchLatestAiAnalysis]);
 
   const scoreColor = summary ? getScoreColor(summary.score) : "red";
   const scoreColorClass = {
@@ -255,6 +341,18 @@ export function SeoScorecard({ siteId }: SeoScorecardProps) {
             No SEO checks available. Add pages and content to get started.
           </p>
         )}
+
+        {/* AI Analysis Section */}
+        <div className="border-t pt-6">
+          <AiAnalysisSection
+            job={aiJob}
+            isLoading={aiLoading}
+            error={aiError}
+            isOpen={aiAnalysisOpen}
+            onOpenChange={setAiAnalysisOpen}
+            onStartAnalysis={handleStartAnalysis}
+          />
+        </div>
       </CardContent>
     </Card>
   );
@@ -362,6 +460,311 @@ function PageSection({ pageName, results }: PageSectionProps) {
           {results.map((result, idx) => (
             <SeoCheckItem key={idx} result={result} />
           ))}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+// ============================================================================
+// AI Analysis Section
+// ============================================================================
+
+interface AiAnalysisSectionProps {
+  job: SeoAnalysisJob | null;
+  isLoading: boolean;
+  error: string | null;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onStartAnalysis: () => void;
+}
+
+interface SeoRecommendation {
+  id: string;
+  category: "content" | "technical" | "keywords" | "meta";
+  priority: "high" | "medium" | "low";
+  title: string;
+  description: string;
+  currentState?: string;
+  suggestedFix: string;
+  pageSlug?: string;
+}
+
+interface AiAnalysisResult {
+  overallScore: number;
+  recommendations: SeoRecommendation[];
+  summary: string;
+  strengths: string[];
+  analyzedAt: string;
+}
+
+function AiAnalysisSection({
+  job,
+  isLoading,
+  error,
+  isOpen,
+  onOpenChange,
+  onStartAnalysis,
+}: AiAnalysisSectionProps) {
+  const isAnalyzing = job?.status === "pending" || job?.status === "analyzing";
+  const hasResults = job?.status === "completed" && job?.result;
+
+  // Parse the result if available
+  const result = hasResults ? (job.result as AiAnalysisResult) : null;
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={onOpenChange}>
+      <CollapsibleTrigger className="w-full">
+        <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 hover:from-purple-100 hover:to-blue-100 dark:hover:from-purple-950/50 dark:hover:to-blue-950/50 transition-colors">
+          <div className="flex flex-col items-start gap-0.5">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+              <span className="font-medium text-sm">AI SEO Analysis</span>
+              {hasResults && result && (
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    "text-xs",
+                    result.overallScore >= 80
+                      ? "border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950/30 dark:text-green-400"
+                      : result.overallScore >= 60
+                        ? "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+                        : "border-red-300 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/30 dark:text-red-400"
+                  )}
+                >
+                  Score: {result.overallScore}/100
+                </Badge>
+              )}
+              {isAnalyzing && (
+                <Badge variant="outline" className="text-xs border-purple-300 bg-purple-50 text-purple-700 dark:border-purple-700 dark:bg-purple-950/30 dark:text-purple-400">
+                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                  Analyzing...
+                </Badge>
+              )}
+            </div>
+            <span className="text-xs text-muted-foreground text-left">
+              Get personalized AI recommendations to improve your search rankings
+            </span>
+          </div>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 text-muted-foreground transition-transform shrink-0",
+              isOpen && "rotate-180"
+            )}
+          />
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="pt-4 space-y-4">
+          {/* Error state */}
+          {error && (
+            <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {error}
+            </div>
+          )}
+
+          {/* Job failed state */}
+          {job?.status === "failed" && (
+            <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 p-3 rounded-lg">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {job.error_message || "Analysis failed. Please try again."}
+            </div>
+          )}
+
+          {/* Analyzing state */}
+          {isAnalyzing && (
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                <Loader2 className="h-5 w-5 animate-spin text-purple-600" />
+                <span>AI is analyzing your site content...</span>
+              </div>
+              <Progress
+                value={job?.progress_percentage ?? 0}
+                className="h-2 [&>div]:bg-purple-600"
+              />
+              <p className="text-xs text-muted-foreground">
+                This usually takes 30-60 seconds.
+              </p>
+            </div>
+          )}
+
+          {/* Results state */}
+          {hasResults && result && (
+            <div className="space-y-6">
+              {/* Summary */}
+              <div className="bg-muted/50 p-4 rounded-lg space-y-3">
+                <p className="text-sm">{result.summary}</p>
+
+                {/* Strengths */}
+                {result.strengths.length > 0 && (
+                  <div className="pt-2 border-t">
+                    <div className="flex items-center gap-2 text-sm font-medium text-green-700 dark:text-green-400 mb-2">
+                      <ThumbsUp className="h-4 w-4" />
+                      Strengths
+                    </div>
+                    <ul className="space-y-1">
+                      {result.strengths.map((strength, idx) => (
+                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
+                          <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0 mt-0.5" />
+                          {strength}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Recommendations */}
+              {result.recommendations.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <Lightbulb className="h-4 w-4 text-amber-500" />
+                    Recommendations ({result.recommendations.length})
+                  </div>
+                  <div className="space-y-2">
+                    {result.recommendations.map((rec) => (
+                      <RecommendationItem key={rec.id} recommendation={rec} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Last analyzed */}
+              <p className="text-xs text-muted-foreground">
+                Last analyzed: {new Date(result.analyzedAt).toLocaleString()}
+              </p>
+            </div>
+          )}
+
+          {/* No results state - show analyze button */}
+          {!isAnalyzing && !hasResults && (
+            <div className="text-center py-4 space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Get AI-powered recommendations to improve your site&apos;s SEO performance.
+              </p>
+              <Button
+                onClick={onStartAnalysis}
+                disabled={isLoading}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Sparkles className="h-4 w-4 mr-2" />
+                )}
+                Analyze with AI
+              </Button>
+            </div>
+          )}
+
+          {/* Has results - show re-analyze button */}
+          {hasResults && (
+            <div className="flex justify-center pt-2 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onStartAnalysis}
+                disabled={isLoading || isAnalyzing}
+              >
+                {isLoading || isAnalyzing ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                )}
+                Re-analyze
+              </Button>
+            </div>
+          )}
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+// ============================================================================
+// Recommendation Item
+// ============================================================================
+
+interface RecommendationItemProps {
+  recommendation: SeoRecommendation;
+}
+
+function RecommendationItem({ recommendation }: RecommendationItemProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const priorityConfig = {
+    high: {
+      icon: AlertCircle,
+      badge: "bg-red-100 text-red-700 dark:bg-red-950/30 dark:text-red-400",
+      label: "High Priority",
+    },
+    medium: {
+      icon: AlertTriangle,
+      badge: "bg-amber-100 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400",
+      label: "Medium Priority",
+    },
+    low: {
+      icon: Lightbulb,
+      badge: "bg-blue-100 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
+      label: "Low Priority",
+    },
+  };
+
+  const config = priorityConfig[recommendation.priority];
+  const Icon = config.icon;
+
+  const categoryLabels = {
+    content: "Content",
+    technical: "Technical",
+    keywords: "Keywords",
+    meta: "Meta Tags",
+  };
+
+  return (
+    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+      <CollapsibleTrigger className="w-full">
+        <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors text-left">
+          <Icon className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-sm font-medium">{recommendation.title}</span>
+              <Badge variant="outline" className={cn("text-xs", config.badge)}>
+                {config.label}
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {categoryLabels[recommendation.category]}
+              </Badge>
+              {recommendation.pageSlug && (
+                <Badge variant="secondary" className="text-xs">
+                  /{recommendation.pageSlug}
+                </Badge>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              {recommendation.description}
+            </p>
+          </div>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 text-muted-foreground transition-transform shrink-0 mt-0.5",
+              isOpen && "rotate-180"
+            )}
+          />
+        </div>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <div className="px-3 pb-3 pt-2 ml-7 space-y-3 border-l-2 border-muted">
+          {recommendation.currentState && (
+            <div>
+              <span className="text-xs font-medium text-muted-foreground">Current:</span>
+              <p className="text-sm text-muted-foreground">{recommendation.currentState}</p>
+            </div>
+          )}
+          <div>
+            <span className="text-xs font-medium text-green-700 dark:text-green-400">Suggested Fix:</span>
+            <p className="text-sm">{recommendation.suggestedFix}</p>
+          </div>
         </div>
       </CollapsibleContent>
     </Collapsible>

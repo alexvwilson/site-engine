@@ -99,6 +99,12 @@ export * from "./logo-generation-jobs";
  */
 export * from "./legal-generation-jobs";
 
+/**
+ * SEO analysis jobs table - Tracks AI-powered SEO analysis requests
+ * Generates recommendations for content, keywords, and technical SEO improvements
+ */
+export * from "./seo-analysis-jobs";
+
 // ============================================================================
 // Domain Management
 // ============================================================================

@@ -24,6 +24,9 @@ export * from "./tasks/generate-logo-prompts";
 // Legal page generation task
 export * from "./tasks/generate-legal-pages";
 
+// SEO analysis task
+export * from "./tasks/analyze-seo";
+
 // ============================================================================
 // Utilities
 // ============================================================================
@@ -54,3 +57,6 @@ export * from "./utils/logo-prompts";
 
 // Legal page generation prompts
 export * from "./utils/legal-prompts";
+
+// SEO analysis prompts
+export * from "./utils/seo-prompts";
