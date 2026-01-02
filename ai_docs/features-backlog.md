@@ -22,7 +22,24 @@ _No items currently in P1._
 
 ## P2 - Medium Priority
 
-_No items currently in P2._
+### 39. Image Library Albums / Categories
+
+**Problem:** As users upload more images, the flat image library becomes hard to navigate. Users want to organize images into folders/albums for easier management (e.g., "Blog Photos", "Logos", "Team Headshots").
+
+**Proposed Solution:**
+- Allow creating named albums/folders within the image library
+- Images can be assigned to one album (or "Uncategorized" default)
+- Album dropdown filter in ImageLibraryManager
+- Ability to move images between albums
+- Albums stored as subdirectories in storage path: `userId/siteId/albumName/filename`
+
+**Implementation Considerations:**
+- Storage path structure change (backwards compatible with existing flat structure)
+- Album metadata could be stored in database or inferred from storage paths
+- Migration for existing images (keep in "Uncategorized" or root)
+- ImageUpload component needs album selector when uploading
+
+**Complexity:** Medium
 
 ---
 
@@ -1101,7 +1118,7 @@ _No items currently in P2._
 
 ---
 
-**Last Updated:** 2026-01-01 (Added SEO file links to Settings for verified domains)
+**Last Updated:** 2026-01-01 (Added #39 Image Library Albums/Categories to P2 backlog)
 
 ---
 
