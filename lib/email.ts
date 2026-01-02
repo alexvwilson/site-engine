@@ -30,7 +30,8 @@ export async function sendContactNotification({
 
   try {
     const { error } = await resend.emails.send({
-      from: "Site Engine <onboarding@resend.dev>",
+      from: `${siteName} Contact <noreply@updates.alexvwilson.com>`,
+      replyTo: contact.email,
       to,
       subject: `New Contact Submission - ${siteName}`,
       text: `

@@ -716,6 +716,8 @@ _No items currently in P2._
 - [x] Submissions stored in database (unique per email per site, upsert pattern)
 - [x] Fixed contact fields: Name, Email (required), Company, Phone
 - [x] Email notifications via Resend (optional - works without API key)
+- [x] Configured to send from verified domain: `noreply@updates.alexvwilson.com`
+- [x] Reply-To header set to contact's email for easy replies
 - [x] Spam protection: Honeypot field + rate limiting (5 per IP per 15 min)
 - [x] Notification email configurable per site in Settings
 - [x] Success/error feedback on form submission
