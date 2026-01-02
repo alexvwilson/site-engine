@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createSupabaseServerAdminClient } from "@/lib/supabase/admin";
 import { requireUserId } from "@/lib/auth";
 
 const STORAGE_BUCKET = "media-uploads";
@@ -93,15 +94,22 @@ export interface ListImagesResult {
 }
 
 export async function deleteImage(imagePath: string): Promise<DeleteResult> {
-  await requireUserId();
+  const userId = await requireUserId();
 
   // Extract path from full URL if needed
   const pathMatch = imagePath.match(/media-uploads\/(.+)$/);
   const path = pathMatch ? pathMatch[1] : imagePath;
 
-  const supabase = await createClient();
+  // Security check: verify path belongs to the current user
+  // Path format is: userId/siteId/filename
+  if (!path.startsWith(`${userId}/`)) {
+    console.error("Unauthorized delete attempt:", { userId, path });
+    return { success: false, error: "Unauthorized: Cannot delete images you don't own" };
+  }
 
-  const { error } = await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+  // Use admin client to bypass storage RLS policies
+  const adminClient = createSupabaseServerAdminClient();
+  const { error } = await adminClient.storage.from(STORAGE_BUCKET).remove([path]);
 
   if (error) {
     console.error("Storage delete error:", error);
@@ -154,9 +162,10 @@ export async function listSiteImages(siteId: string): Promise<ListImagesResult> 
 
 /**
  * Delete multiple images from a site's storage folder.
+ * Uses the admin client (bypasses RLS) but verifies ownership first.
  */
 export async function deleteImages(imageUrls: string[]): Promise<DeleteResult> {
-  await requireUserId();
+  const userId = await requireUserId();
 
   if (imageUrls.length === 0) {
     return { success: false, error: "No images selected" };
@@ -166,13 +175,23 @@ export async function deleteImages(imageUrls: string[]): Promise<DeleteResult> {
     return { success: false, error: "Cannot delete more than 100 images at once" };
   }
 
+  // Extract paths from URLs
   const paths = imageUrls.map((url) => {
     const match = url.match(/media-uploads\/(.+)$/);
     return match ? match[1] : url;
   });
 
-  const supabase = await createClient();
-  const { error } = await supabase.storage.from(STORAGE_BUCKET).remove(paths);
+  // Security check: verify all paths belong to the current user
+  // Path format is: userId/siteId/filename
+  const unauthorizedPaths = paths.filter((path) => !path.startsWith(`${userId}/`));
+  if (unauthorizedPaths.length > 0) {
+    console.error("Unauthorized delete attempt:", { userId, unauthorizedPaths });
+    return { success: false, error: "Unauthorized: Cannot delete images you don't own" };
+  }
+
+  // Use admin client to bypass storage RLS policies
+  const adminClient = createSupabaseServerAdminClient();
+  const { error } = await adminClient.storage.from(STORAGE_BUCKET).remove(paths);
 
   if (error) {
     console.error("Storage bulk delete error:", error);
