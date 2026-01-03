@@ -56,6 +56,22 @@ export * from "./blog-categories";
 export * from "./contact-submissions";
 
 // ============================================================================
+// Media Management
+// ============================================================================
+
+/**
+ * Image Albums table - Folders for organizing uploaded images
+ * Each album belongs to one site, images can be assigned to one album
+ */
+export * from "./image-albums";
+
+/**
+ * Images table - Tracks uploaded images with album assignments
+ * Syncs with Supabase Storage, enables filtering and organization
+ */
+export * from "./images";
+
+// ============================================================================
 // Theme Management
 // ============================================================================
 

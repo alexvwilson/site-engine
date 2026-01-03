@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { uploadImage } from "@/app/actions/storage";
 import { ImageLibrary } from "./ImageLibrary";
+import { AlbumSelector, UNCATEGORIZED_VALUE, toListImagesAlbumId } from "./AlbumSelector";
 
 interface ImageUploadProps {
   value: string;
@@ -17,6 +18,8 @@ interface ImageUploadProps {
   disabled?: boolean;
   placeholder?: string;
   className?: string;
+  /** Show album selector for organizing uploads */
+  showAlbumSelector?: boolean;
 }
 
 export function ImageUpload({
@@ -26,6 +29,7 @@ export function ImageUpload({
   disabled,
   placeholder = "Drag & drop an image, or click to browse",
   className,
+  showAlbumSelector = false,
 }: ImageUploadProps): React.JSX.Element {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -33,6 +37,7 @@ export function ImageUpload({
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<"upload" | "library" | "url">("upload");
   const [urlInput, setUrlInput] = useState(value);
+  const [selectedAlbum, setSelectedAlbum] = useState<string>(UNCATEGORIZED_VALUE);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragOver = useCallback(
@@ -62,6 +67,11 @@ export function ImageUpload({
       const formData = new FormData();
       formData.append("file", file);
       formData.append("siteId", siteId);
+      // Convert album value to albumId (null for uncategorized, string for specific album)
+      const albumId = toListImagesAlbumId(selectedAlbum);
+      if (albumId) {
+        formData.append("albumId", albumId);
+      }
 
       const result = await uploadImage(formData);
 
@@ -78,7 +88,7 @@ export function ImageUpload({
         setUploadProgress(0);
       }
     },
-    [siteId, onChange]
+    [siteId, selectedAlbum, onChange]
   );
 
   const handleDrop = useCallback(
@@ -152,7 +162,16 @@ export function ImageUpload({
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="upload" className="mt-3">
+        <TabsContent value="upload" className="mt-3 space-y-3">
+          {showAlbumSelector && (
+            <AlbumSelector
+              siteId={siteId}
+              value={selectedAlbum}
+              onChange={setSelectedAlbum}
+              disabled={disabled || isUploading}
+              placeholder="Upload to album..."
+            />
+          )}
           {value ? (
             <div className="relative border rounded-lg overflow-hidden bg-muted/50 h-48">
               <Image

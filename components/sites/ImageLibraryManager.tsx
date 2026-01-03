@@ -9,6 +9,7 @@ import {
   Trash2,
   CheckSquare,
   Square,
+  FolderInput,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -27,10 +28,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   listSiteImages,
   deleteImages,
+  updateImagesAlbum,
   type ImageFile,
 } from "@/app/actions/storage";
+import { getAlbumsForSite } from "@/app/actions/albums";
+import { AlbumSelector, ALL_IMAGES_VALUE, toListImagesAlbumId } from "@/components/editor/AlbumSelector";
+import type { ImageAlbum } from "@/lib/drizzle/schema/image-albums";
 
 interface ImageLibraryManagerProps {
   siteId: string;
@@ -49,31 +60,50 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString();
 }
 
+type AlbumWithCount = ImageAlbum & { imageCount: number };
+
 export function ImageLibraryManager({
   siteId,
 }: ImageLibraryManagerProps): React.ReactElement {
   const [images, setImages] = useState<ImageFile[]>([]);
+  const [albums, setAlbums] = useState<AlbumWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
+  const [moving, setMoving] = useState(false);
+  const [albumFilter, setAlbumFilter] = useState<string>(ALL_IMAGES_VALUE);
+
+  const loadAlbums = useCallback(async () => {
+    const result = await getAlbumsForSite(siteId);
+    if (result.success && result.albums) {
+      setAlbums(result.albums);
+    }
+  }, [siteId]);
 
   const loadImages = useCallback(async () => {
     setLoading(true);
     setError(null);
-    const result = await listSiteImages(siteId);
+    const result = await listSiteImages(siteId, toListImagesAlbumId(albumFilter));
     if (result.success) {
       setImages(result.images ?? []);
     } else {
       setError(result.error ?? "Failed to load images");
     }
     setLoading(false);
-  }, [siteId]);
+  }, [siteId, albumFilter]);
 
   useEffect(() => {
+    loadAlbums();
     loadImages();
-  }, [loadImages]);
+  }, [loadAlbums, loadImages]);
+
+  // Handle album filter changes - clears selection when filter changes
+  const handleAlbumFilterChange = (value: string): void => {
+    setAlbumFilter(value);
+    setSelected(new Set());
+  };
 
   const filteredImages = images.filter((img) =>
     img.name.toLowerCase().includes(search.toLowerCase())
@@ -116,6 +146,34 @@ export function ImageLibraryManager({
     setDeleting(false);
   };
 
+  const handleMoveToAlbum = async (targetAlbumId: string | null): Promise<void> => {
+    if (selected.size === 0) return;
+
+    // Get image IDs from selected URLs
+    const imageIds = images
+      .filter((img) => selected.has(img.url))
+      .map((img) => img.id);
+
+    if (imageIds.length === 0) return;
+
+    setMoving(true);
+    const result = await updateImagesAlbum(imageIds, targetAlbumId);
+
+    if (result.success) {
+      const albumName = targetAlbumId
+        ? albums.find((a) => a.id === targetAlbumId)?.name || "album"
+        : "Uncategorized";
+      toast.success(`Moved ${imageIds.length} image${imageIds.length > 1 ? "s" : ""} to ${albumName}`);
+      setSelected(new Set());
+      // Reload to reflect new album assignments
+      loadImages();
+      loadAlbums();
+    } else {
+      toast.error(result.error ?? "Move failed");
+    }
+    setMoving(false);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -132,8 +190,16 @@ export function ImageLibraryManager({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Search and actions bar */}
-      <div className="flex items-center gap-2">
+      {/* Album filter and search bar */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <AlbumSelector
+          siteId={siteId}
+          value={albumFilter}
+          onChange={handleAlbumFilterChange}
+          showAllOption
+          placeholder="Filter by album..."
+          className="w-full sm:w-48"
+        />
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -162,39 +228,69 @@ export function ImageLibraryManager({
         )}
       </div>
 
-      {/* Delete bar */}
+      {/* Selection action bar */}
       {selected.size > 0 && (
         <div className="flex items-center justify-between rounded-lg border bg-muted/50 px-3 py-2">
           <span className="text-sm text-muted-foreground">
             {selected.size} image{selected.size > 1 ? "s" : ""} selected
           </span>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm" disabled={deleting}>
-                {deleting ? (
-                  <Loader2 className="mr-1 h-4 w-4 animate-spin" />
-                ) : (
-                  <Trash2 className="mr-1 h-4 w-4" />
-                )}
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Delete {selected.size} image{selected.size > 1 ? "s" : ""}?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. The selected images will be
-                  permanently deleted from storage.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex items-center gap-2">
+            {/* Move to Album dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" disabled={moving}>
+                  {moving ? (
+                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  ) : (
+                    <FolderInput className="mr-1 h-4 w-4" />
+                  )}
+                  Move to...
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => handleMoveToAlbum(null)}>
+                  Uncategorized
+                </DropdownMenuItem>
+                {albums.map((album) => (
+                  <DropdownMenuItem
+                    key={album.id}
+                    onClick={() => handleMoveToAlbum(album.id)}
+                  >
+                    {album.name}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Delete button */}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm" disabled={deleting}>
+                  {deleting ? (
+                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-1 h-4 w-4" />
+                  )}
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Delete {selected.size} image{selected.size > 1 ? "s" : ""}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. The selected images will be
+                    permanently deleted from storage.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       )}
 

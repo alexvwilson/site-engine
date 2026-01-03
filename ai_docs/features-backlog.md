@@ -22,24 +22,7 @@ _No P1 items currently_
 
 ## P2 - Medium Priority
 
-### 39. Image Library Albums / Categories
-
-**Problem:** As users upload more images, the flat image library becomes hard to navigate. Users want to organize images into folders/albums for easier management (e.g., "Blog Photos", "Logos", "Team Headshots").
-
-**Proposed Solution:**
-- Allow creating named albums/folders within the image library
-- Images can be assigned to one album (or "Uncategorized" default)
-- Album dropdown filter in ImageLibraryManager
-- Ability to move images between albums
-- Albums stored as subdirectories in storage path: `userId/siteId/albumName/filename`
-
-**Implementation Considerations:**
-- Storage path structure change (backwards compatible with existing flat structure)
-- Album metadata could be stored in database or inferred from storage paths
-- Migration for existing images (keep in "Uncategorized" or root)
-- ImageUpload component needs album selector when uploading
-
-**Complexity:** Medium
+_No P2 items currently_
 
 ---
 
@@ -99,6 +82,42 @@ _No P1 items currently_
 ---
 
 ## Completed Features
+
+### 39. Image Library Albums / Categories ✅ 2026-01-03
+
+**Problem:** As users upload more images, the flat image library becomes hard to navigate. Users wanted to organize images into folders/albums for easier management.
+
+**Solution Implemented:**
+- [x] Database-backed album system (`image_albums` and `images` tables)
+- [x] Album CRUD in Settings > Image Library (create, rename, delete)
+- [x] Album selector dropdown in ImageUpload (`showAlbumSelector` prop)
+- [x] Album filter in ImageLibrary picker and ImageLibraryManager
+- [x] "Move to Album" bulk action for selected images
+- [x] Lazy sync: existing storage images auto-imported to database
+- [x] ON DELETE SET NULL: deleted albums leave images as Uncategorized
+- [x] One album per image (folder-like organization)
+- [x] Albums scoped per-site with unique names
+
+**Task Document:** `ai_docs/tasks/057_image_library_albums.md`
+
+**Files Created:**
+- `lib/drizzle/schema/image-albums.ts` - Album table schema
+- `lib/drizzle/schema/images.ts` - Image tracking table schema
+- `app/actions/albums.ts` - Album CRUD server actions
+- `components/sites/AlbumManager.tsx` - Album management UI
+- `components/editor/AlbumSelector.tsx` - Reusable album dropdown
+
+**Files Modified:**
+- `lib/drizzle/schema/index.ts` - Added exports
+- `app/actions/storage.ts` - Database integration, album support
+- `components/editor/ImageUpload.tsx` - Album selector integration
+- `components/editor/ImageLibrary.tsx` - Album filter
+- `components/sites/ImageLibraryManager.tsx` - Filter + move actions
+- `components/sites/SettingsTab.tsx` - AlbumManager integration
+
+**Database Migration:** `0026_overjoyed_apocalypse` - Added image_albums and images tables
+
+---
 
 ### 43. Blog Author Toggle Per-Block ✅ 2026-01-03
 
@@ -1263,7 +1282,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-03 (Completed #43 Blog Author Toggle Per-Block)
+**Last Updated:** 2026-01-03 (Completed #39 Image Library Albums)
 
 ---
 

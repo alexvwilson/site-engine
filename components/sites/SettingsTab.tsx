@@ -40,6 +40,7 @@ import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
 import { ImageUpload } from "@/components/editor/ImageUpload";
 import { ImageLibraryModal } from "@/components/sites/ImageLibraryModal";
+import { AlbumManager } from "@/components/sites/AlbumManager";
 import { LegalPagesCard } from "@/components/sites/LegalPagesCard";
 import { SeoScorecard } from "@/components/sites/SeoScorecard";
 import { sectionDefaults } from "@/lib/section-defaults";
@@ -1018,11 +1019,23 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
             Image Library
           </CardTitle>
           <CardDescription>
-            View and manage all uploaded images for this site.
+            Organize images into albums and manage all uploaded images for this site.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <ImageLibraryModal siteId={site.id} />
+        <CardContent className="space-y-6">
+          {/* Album Management */}
+          <div>
+            <h4 className="text-sm font-medium mb-3">Albums</h4>
+            <AlbumManager siteId={site.id} />
+          </div>
+
+          <Separator />
+
+          {/* Image Library Modal */}
+          <div>
+            <h4 className="text-sm font-medium mb-3">All Images</h4>
+            <ImageLibraryModal siteId={site.id} />
+          </div>
         </CardContent>
       </Card>
     </form>
