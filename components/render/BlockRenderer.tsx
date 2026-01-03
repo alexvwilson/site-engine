@@ -24,7 +24,6 @@ interface BlockRendererProps {
   theme: ThemeData;
   siteId?: string;
   basePath?: string;
-  showBlogAuthor?: boolean;
   pageId?: string;
 }
 
@@ -33,7 +32,6 @@ export async function BlockRenderer({
   theme,
   siteId,
   basePath = "",
-  showBlogAuthor = true,
   pageId,
 }: BlockRendererProps) {
   const { block_type, content, anchor_id } = section;
@@ -145,7 +143,6 @@ export async function BlockRenderer({
           content={getTypedContent("blog_featured", content)}
           theme={theme}
           basePath={basePath}
-          showAuthor={showBlogAuthor}
         />
       );
     case "blog_grid":
@@ -162,7 +159,6 @@ export async function BlockRenderer({
           theme={theme}
           siteId={siteId}
           basePath={basePath}
-          showAuthor={showBlogAuthor}
           pageId={pageId}
         />
       );

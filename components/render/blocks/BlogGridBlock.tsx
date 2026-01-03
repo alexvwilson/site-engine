@@ -9,7 +9,6 @@ interface BlogGridBlockProps {
   theme: ThemeData;
   siteId: string;
   basePath: string;
-  showAuthor?: boolean;
   pageId?: string;
 }
 
@@ -17,9 +16,10 @@ export async function BlogGridBlock({
   content,
   siteId,
   basePath,
-  showAuthor = true,
   pageId,
 }: BlogGridBlockProps) {
+  // Per-block author toggle (defaults to true for backwards compatibility)
+  const showAuthor = content.showAuthor ?? true;
   // Resolve pageFilter to effective pageId for query
   let effectivePageId: string | null | undefined;
 

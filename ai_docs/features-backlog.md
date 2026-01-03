@@ -22,20 +22,6 @@ _No P1 items currently_
 
 ## P2 - Medium Priority
 
-### 43. Blog Author Toggle Per-Block
-
-**Problem:** The "Show Author" toggle is currently at the site level, but it would be more flexible as a per-block setting. This allows showing author on some blog displays but not others.
-
-**Proposed Solution:**
-- Move `showAuthor` from site settings to blog-related blocks (post grid, post page)
-- Default to ON (current behavior)
-- Author info still configured at blog/site level, but visibility controlled per-block
-- Deprecate site-level toggle (or keep as default for new blocks)
-
-**Complexity:** Low
-
----
-
 ### 39. Image Library Albums / Categories
 
 **Problem:** As users upload more images, the flat image library becomes hard to navigate. Users want to organize images into folders/albums for easier management (e.g., "Blog Photos", "Logos", "Team Headshots").
@@ -113,6 +99,35 @@ _No P1 items currently_
 ---
 
 ## Completed Features
+
+### 43. Blog Author Toggle Per-Block ✅ 2026-01-03
+
+**Problem:** The "Show Author" toggle was at the site level only, but users wanted per-block control to show author on some blog displays but not others.
+
+**Solution Implemented:**
+- [x] Added `showAuthor` field to BlogGridContent and BlogFeaturedContent types
+- [x] Added "Show Author" toggle to BlogGridEditor and BlogFeaturedEditor
+- [x] Blog blocks now use `content.showAuthor ?? true` (backwards compatible)
+- [x] Removed `showBlogAuthor` prop chain from PageRenderer/BlockRenderer
+- [x] Site-level setting retained for individual post pages only
+- [x] Updated SettingsTab label to clarify scope
+
+**Task Document:** `ai_docs/tasks/056_blog_author_toggle_per_block.md`
+
+**Files Modified:**
+- `lib/section-types.ts` - Added showAuthor to BlogGridContent and BlogFeaturedContent
+- `lib/section-defaults.ts` - Added showAuthor: true defaults
+- `components/editor/BlogGridEditor.tsx` - Added Show Author toggle
+- `components/editor/BlogFeaturedEditor.tsx` - Added Show Author toggle
+- `components/render/blocks/BlogGridBlock.tsx` - Use content.showAuthor
+- `components/render/blocks/BlogFeaturedBlock.tsx` - Use content.showAuthor
+- `components/render/BlockRenderer.tsx` - Removed showBlogAuthor prop
+- `components/render/PageRenderer.tsx` - Removed showBlogAuthor prop
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Removed showBlogAuthor from PageRenderer
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Removed showBlogAuthor from PageRenderer
+- `components/sites/SettingsTab.tsx` - Clarified setting scope in UI
+
+---
 
 ### 44. Blog Page Assignment (Blog Feeds per Page) ✅ 2026-01-03
 
@@ -1248,7 +1263,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-03 (Completed #44 Blog Page Assignment - Public Feeds)
+**Last Updated:** 2026-01-03 (Completed #43 Blog Author Toggle Per-Block)
 
 ---
 

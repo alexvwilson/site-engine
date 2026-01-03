@@ -8,7 +8,6 @@ interface BlogFeaturedBlockProps {
   content: BlogFeaturedContent;
   theme: ThemeData;
   basePath: string;
-  showAuthor?: boolean;
 }
 
 interface PostWithCategory {
@@ -71,7 +70,6 @@ function hexToRgba(hex: string, opacity: number): string {
 export async function BlogFeaturedBlock({
   content,
   basePath,
-  showAuthor = true,
 }: BlogFeaturedBlockProps) {
   // Merge with defaults for backwards compatibility
   const settings: Required<BlogFeaturedContent> = {
@@ -81,6 +79,7 @@ export async function BlogFeaturedBlock({
     contentLimit: content.contentLimit ?? 0,
     showReadMore: content.showReadMore ?? true,
     showCategory: content.showCategory ?? true,
+    showAuthor: content.showAuthor ?? true,
     overlayColor: content.overlayColor ?? "#000000",
     overlayOpacity: content.overlayOpacity ?? 50,
   };
@@ -138,13 +137,13 @@ export async function BlogFeaturedBlock({
 
   switch (settings.layout) {
     case "stacked":
-      return <StackedLayout {...layoutProps} showAuthor={showAuthor} />;
+      return <StackedLayout {...layoutProps} showAuthor={settings.showAuthor} />;
     case "hero":
-      return <HeroLayout {...layoutProps} showAuthor={showAuthor} />;
+      return <HeroLayout {...layoutProps} showAuthor={settings.showAuthor} />;
     case "minimal":
-      return <MinimalLayout {...layoutProps} showAuthor={showAuthor} />;
+      return <MinimalLayout {...layoutProps} showAuthor={settings.showAuthor} />;
     default:
-      return <SplitLayout {...layoutProps} showAuthor={showAuthor} />;
+      return <SplitLayout {...layoutProps} showAuthor={settings.showAuthor} />;
   }
 }
 

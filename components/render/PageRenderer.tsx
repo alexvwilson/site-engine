@@ -8,7 +8,6 @@ interface PageRendererProps {
   theme: ThemeData;
   siteId?: string;
   basePath?: string;
-  showBlogAuthor?: boolean;
   pageId?: string;
 }
 
@@ -17,7 +16,6 @@ export async function PageRenderer({
   theme,
   siteId,
   basePath = "",
-  showBlogAuthor = true,
   pageId,
 }: PageRendererProps) {
   if (sections.length === 0) {
@@ -42,7 +40,6 @@ export async function PageRenderer({
           theme={theme}
           siteId={siteId}
           basePath={basePath}
-          showBlogAuthor={showBlogAuthor}
           pageId={pageId}
         />
       ))}

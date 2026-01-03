@@ -140,6 +140,23 @@ export function BlogGridEditor({
           }
         />
       </div>
+
+      {/* Show Author */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-0.5">
+          <Label htmlFor="show-author">Show Author</Label>
+          <p className="text-xs text-muted-foreground">
+            Display author name on post cards
+          </p>
+        </div>
+        <Switch
+          id="show-author"
+          checked={content.showAuthor ?? true}
+          onCheckedChange={(checked) =>
+            onChange({ ...content, showAuthor: checked })
+          }
+        />
+      </div>
     </div>
   );
 }

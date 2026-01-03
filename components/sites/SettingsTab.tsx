@@ -795,9 +795,9 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="showBlogAuthor">Show Author on Posts</Label>
+              <Label htmlFor="showBlogAuthor">Show Author on Post Pages</Label>
               <p className="text-sm text-muted-foreground">
-                Display the author name and date on published blog posts
+                Display author info on individual blog post pages. Blog Grid and Featured blocks have their own author toggle.
               </p>
             </div>
             <Switch

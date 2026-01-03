@@ -432,6 +432,7 @@ export interface BlogFeaturedContent {
   contentLimit: number; // Character limit (0 = no limit)
   showReadMore: boolean;
   showCategory: boolean;
+  showAuthor?: boolean; // Per-block author toggle (default: true)
   // Hero layout specific
   overlayColor: string; // Hex color, e.g., "#000000"
   overlayOpacity: number; // 0-100
@@ -442,6 +443,7 @@ export type BlogGridPageFilter = "all" | "current" | "unassigned" | string;
 export interface BlogGridContent {
   postCount: 3 | 6 | 9;
   showExcerpt: boolean;
+  showAuthor?: boolean; // Per-block author toggle (default: true)
   pageFilter?: BlogGridPageFilter;
 }
 

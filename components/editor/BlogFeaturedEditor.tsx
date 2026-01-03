@@ -79,6 +79,7 @@ export function BlogFeaturedEditor({
     contentLimit: content.contentLimit ?? 0,
     showReadMore: content.showReadMore ?? true,
     showCategory: content.showCategory ?? true,
+    showAuthor: content.showAuthor ?? true,
     overlayColor: content.overlayColor ?? "#000000",
     overlayOpacity: content.overlayOpacity ?? 50,
   };
@@ -248,6 +249,24 @@ export function BlogFeaturedEditor({
             checked={settings.showCategory}
             onCheckedChange={(checked) =>
               updateSettings({ showCategory: checked })
+            }
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label htmlFor="showAuthor" className="cursor-pointer">
+              Show Author
+            </Label>
+            <p className="text-xs text-muted-foreground">
+              Display author name and date
+            </p>
+          </div>
+          <Switch
+            id="showAuthor"
+            checked={settings.showAuthor}
+            onCheckedChange={(checked) =>
+              updateSettings({ showAuthor: checked })
             }
           />
         </div>

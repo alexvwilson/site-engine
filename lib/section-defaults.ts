@@ -290,6 +290,7 @@ console.log(greeting);
     contentLimit: 0,
     showReadMore: true,
     showCategory: true,
+    showAuthor: true,
     overlayColor: "#000000",
     overlayOpacity: 50,
   },
@@ -297,6 +298,7 @@ console.log(greeting);
   blog_grid: {
     postCount: 6,
     showExcerpt: true,
+    showAuthor: true,
     pageFilter: "current",
   },
 
