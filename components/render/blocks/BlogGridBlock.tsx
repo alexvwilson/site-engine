@@ -10,6 +10,7 @@ interface BlogGridBlockProps {
   siteId: string;
   basePath: string;
   showAuthor?: boolean;
+  pageId?: string;
 }
 
 export async function BlogGridBlock({
@@ -17,8 +18,29 @@ export async function BlogGridBlock({
   siteId,
   basePath,
   showAuthor = true,
+  pageId,
 }: BlogGridBlockProps) {
-  const posts = await getPublishedPostsBySite(siteId, content.postCount, 0);
+  // Resolve pageFilter to effective pageId for query
+  let effectivePageId: string | null | undefined;
+
+  const pageFilter = content.pageFilter ?? "all"; // Backwards compat for existing blocks
+
+  if (pageFilter === "all") {
+    effectivePageId = undefined; // No filter - all posts
+  } else if (pageFilter === "current") {
+    effectivePageId = pageId; // Use current page (undefined if no page context)
+  } else if (pageFilter === "unassigned") {
+    effectivePageId = null; // Only posts with no page assignment
+  } else {
+    effectivePageId = pageFilter; // Specific page ID
+  }
+
+  const posts = await getPublishedPostsBySite(
+    siteId,
+    content.postCount,
+    0,
+    effectivePageId
+  );
 
   if (posts.length === 0) {
     return (

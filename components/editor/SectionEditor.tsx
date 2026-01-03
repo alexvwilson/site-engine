@@ -169,7 +169,11 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
         <BlogFeaturedEditor {...editorProps} content={content as Parameters<typeof BlogFeaturedEditor>[0]["content"]} />
       )}
       {section.block_type === "blog_grid" && (
-        <BlogGridEditor {...editorProps} content={content as Parameters<typeof BlogGridEditor>[0]["content"]} />
+        <BlogGridEditor
+          {...editorProps}
+          content={content as Parameters<typeof BlogGridEditor>[0]["content"]}
+          currentPageId={section.page_id}
+        />
       )}
       {section.block_type === "embed" && (
         <EmbedEditor {...editorProps} content={content as Parameters<typeof EmbedEditor>[0]["content"]} />

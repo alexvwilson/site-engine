@@ -405,3 +405,25 @@ export async function reorderPages(
   revalidatePath(`/app/sites/${siteId}`);
   return { success: true };
 }
+
+/**
+ * Get all pages for a site (for dropdowns/selectors in editors)
+ */
+export async function getPagesForSite(
+  siteId: string
+): Promise<{ id: string; title: string; slug: string; is_home: boolean }[]> {
+  const userId = await requireUserId();
+
+  const results = await db
+    .select({
+      id: pages.id,
+      title: pages.title,
+      slug: pages.slug,
+      is_home: pages.is_home,
+    })
+    .from(pages)
+    .where(and(eq(pages.site_id, siteId), eq(pages.user_id, userId)))
+    .orderBy(pages.display_order, pages.created_at);
+
+  return results;
+}

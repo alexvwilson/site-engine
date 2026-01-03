@@ -25,6 +25,7 @@ interface BlockRendererProps {
   siteId?: string;
   basePath?: string;
   showBlogAuthor?: boolean;
+  pageId?: string;
 }
 
 export async function BlockRenderer({
@@ -33,6 +34,7 @@ export async function BlockRenderer({
   siteId,
   basePath = "",
   showBlogAuthor = true,
+  pageId,
 }: BlockRendererProps) {
   const { block_type, content, anchor_id } = section;
 
@@ -161,6 +163,7 @@ export async function BlockRenderer({
           siteId={siteId}
           basePath={basePath}
           showAuthor={showBlogAuthor}
+          pageId={pageId}
         />
       );
     default:

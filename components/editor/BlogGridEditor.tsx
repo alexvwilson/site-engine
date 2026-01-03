@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -8,17 +9,98 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import type { BlogGridContent } from "@/lib/section-types";
+import type { BlogGridContent, BlogGridPageFilter } from "@/lib/section-types";
+import { getPagesForSite } from "@/app/actions/pages";
+
+interface PageOption {
+  id: string;
+  title: string;
+  slug: string;
+  is_home: boolean;
+}
 
 interface BlogGridEditorProps {
   content: BlogGridContent;
   onChange: (content: BlogGridContent) => void;
+  siteId: string;
+  currentPageId?: string;
 }
 
-export function BlogGridEditor({ content, onChange }: BlogGridEditorProps) {
+export function BlogGridEditor({
+  content,
+  onChange,
+  siteId,
+  currentPageId,
+}: BlogGridEditorProps) {
+  const [pages, setPages] = useState<PageOption[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch pages for the dropdown
+  useEffect(() => {
+    async function fetchPages() {
+      try {
+        const result = await getPagesForSite(siteId);
+        setPages(result);
+      } catch (error) {
+        console.error("Failed to fetch pages:", error);
+      }
+      setIsLoading(false);
+    }
+    fetchPages();
+  }, [siteId]);
+
+  // Get current page name for display
+  const currentPageName = pages.find((p) => p.id === currentPageId)?.title;
+
+  // Get display label for current filter value
+  const getFilterLabel = (filter: BlogGridPageFilter | undefined): string => {
+    if (!filter || filter === "all") return "All Pages";
+    if (filter === "current") return currentPageName ? `This Page (${currentPageName})` : "This Page";
+    if (filter === "unassigned") return "Unassigned Posts";
+    const page = pages.find((p) => p.id === filter);
+    return page?.title || "Unknown Page";
+  };
+
   return (
     <div className="space-y-4">
+      {/* Page Filter */}
+      <div className="space-y-2">
+        <Label>Show Posts From</Label>
+        <Select
+          value={content.pageFilter ?? "all"}
+          onValueChange={(value) =>
+            onChange({ ...content, pageFilter: value as BlogGridPageFilter })
+          }
+          disabled={isLoading}
+        >
+          <SelectTrigger>
+            <SelectValue>
+              {isLoading ? "Loading pages..." : getFilterLabel(content.pageFilter)}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Pages</SelectItem>
+            <SelectItem value="current">
+              This Page{currentPageName ? ` (${currentPageName})` : ""}
+            </SelectItem>
+            <SelectItem value="unassigned">Unassigned Posts</SelectItem>
+            {pages.length > 0 && <Separator className="my-1" />}
+            {pages.map((page) => (
+              <SelectItem key={page.id} value={page.id}>
+                {page.title}{page.is_home ? " (Home)" : ""}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">
+          Filter posts by their page assignment. &quot;This Page&quot; shows posts assigned to
+          the current page.
+        </p>
+      </div>
+
+      {/* Number of Posts */}
       <div className="space-y-2">
         <Label>Number of Posts</Label>
         <Select
@@ -42,6 +124,7 @@ export function BlogGridEditor({ content, onChange }: BlogGridEditorProps) {
         </p>
       </div>
 
+      {/* Show Excerpts */}
       <div className="flex items-center justify-between">
         <div className="space-y-0.5">
           <Label htmlFor="show-excerpt">Show Excerpts</Label>

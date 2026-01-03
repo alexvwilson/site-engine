@@ -437,9 +437,12 @@ export interface BlogFeaturedContent {
   overlayOpacity: number; // 0-100
 }
 
+export type BlogGridPageFilter = "all" | "current" | "unassigned" | string;
+
 export interface BlogGridContent {
   postCount: 3 | 6 | 9;
   showExcerpt: boolean;
+  pageFilter?: BlogGridPageFilter;
 }
 
 export type EmbedAspectRatio = "16:9" | "4:3" | "1:1" | "custom";

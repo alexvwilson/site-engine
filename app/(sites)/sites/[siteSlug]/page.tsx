@@ -126,6 +126,7 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
           siteId={site.id}
           basePath={basePath}
           showBlogAuthor={site.show_blog_author}
+          pageId={page.id}
         />
         {finalFooter && <FooterBlock content={finalFooter} theme={theme} basePath={basePath} />}
       </div>

@@ -36,22 +36,6 @@ _No P1 items currently_
 
 ---
 
-### 44. Blog Page Assignment (Blog Feeds per Page)
-
-**Problem:** Currently all blog posts appear in one blog listing. Users want to show different blog posts on different pages (e.g., "Featured" posts on homepage, "About" posts on about page).
-
-**Proposed Solution:**
-- ~~Add `blog_feed` or `blog_tag` field to pages table~~ → `page_id` column added to blog_posts (Task 054)
-- Blog grid block can filter by page assignment
-- Example: Homepage shows posts assigned to "Home" page, About page shows "About" posts
-- Default shows all posts (backwards compatible)
-
-**Current State:** Database foundation complete (page_id column exists, dashboard filtering works). Remaining: public-facing page-specific blog feeds.
-
-**Complexity:** Low (remaining work)
-
----
-
 ### 39. Image Library Albums / Categories
 
 **Problem:** As users upload more images, the flat image library becomes hard to navigate. Users want to organize images into folders/albums for easier management (e.g., "Blog Photos", "Logos", "Team Headshots").
@@ -129,6 +113,38 @@ _No P1 items currently_
 ---
 
 ## Completed Features
+
+### 44. Blog Page Assignment (Blog Feeds per Page) ✅ 2026-01-03
+
+**Problem:** Blog posts could be assigned to pages in the dashboard, but this assignment had no effect on the public site. The Blog Grid block always showed all published posts, ignoring page assignments.
+
+**Solution Implemented:**
+- [x] Added `pageFilter` field to BlogGridContent type with options: All Posts, This Page (current), Unassigned, or specific page ID
+- [x] Blog Grid block auto-detects current page context when set to "This Page"
+- [x] BlogGridEditor shows page filter dropdown with all available options
+- [x] Default behavior for NEW blocks is "This Page" (auto-detect)
+- [x] Existing blocks continue to show all posts (backwards compatible via "all" default)
+- [x] PageId flows from page route → PageRenderer → BlockRenderer → BlogGridBlock
+- [x] Query function `getPublishedPostsBySite` supports optional pageId parameter
+- [x] API route supports `pageId` query parameter for infinite scroll compatibility
+
+**Task Document:** `ai_docs/tasks/055_blog_page_assignment_public.md`
+
+**Files Modified:**
+- `lib/section-types.ts` - Added BlogGridPageFilter type and pageFilter field to BlogGridContent
+- `lib/section-defaults.ts` - Set pageFilter default to "current" for new blocks
+- `lib/queries/blog.ts` - Added optional pageId parameter to getPublishedPostsBySite
+- `app/api/blog/[siteId]/posts/route.ts` - Added pageId query param support
+- `components/render/PageRenderer.tsx` - Added pageId prop
+- `components/render/BlockRenderer.tsx` - Added pageId prop, passes to BlogGridBlock
+- `components/render/blocks/BlogGridBlock.tsx` - Resolves pageFilter to query filter
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Passes page.id to PageRenderer
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Passes page.id to PageRenderer
+- `app/actions/pages.ts` - Added getPagesForSite server action
+- `components/editor/BlogGridEditor.tsx` - Added page filter dropdown with all options
+- `components/editor/SectionEditor.tsx` - Passes currentPageId to BlogGridEditor
+
+---
 
 ### 42. Blog Post Sorting Options & Page Filter ✅ 2026-01-02
 
@@ -1232,7 +1248,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-02 (Completed #42 Blog Post Sorting & Page Filter)
+**Last Updated:** 2026-01-03 (Completed #44 Blog Page Assignment - Public Feeds)
 
 ---
 

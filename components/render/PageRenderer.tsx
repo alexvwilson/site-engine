@@ -9,6 +9,7 @@ interface PageRendererProps {
   siteId?: string;
   basePath?: string;
   showBlogAuthor?: boolean;
+  pageId?: string;
 }
 
 export async function PageRenderer({
@@ -17,6 +18,7 @@ export async function PageRenderer({
   siteId,
   basePath = "",
   showBlogAuthor = true,
+  pageId,
 }: PageRendererProps) {
   if (sections.length === 0) {
     return (
@@ -41,6 +43,7 @@ export async function PageRenderer({
           siteId={siteId}
           basePath={basePath}
           showBlogAuthor={showBlogAuthor}
+          pageId={pageId}
         />
       ))}
     </div>

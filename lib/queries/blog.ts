@@ -7,7 +7,7 @@ import {
 import { sites } from "@/lib/drizzle/schema/sites";
 import { users } from "@/lib/drizzle/schema/users";
 import { pages } from "@/lib/drizzle/schema/pages";
-import { eq, and, desc, lt, gt, lte } from "drizzle-orm";
+import { eq, and, desc, lt, gt, lte, isNull } from "drizzle-orm";
 
 /**
  * Sort options for blog posts in dashboard
@@ -47,12 +47,30 @@ export async function getPostsBySite(
 
 /**
  * Get published posts for a site (public view) with author names and category
+ * @param pageId - undefined: all posts, null: unassigned posts only, string: specific page
  */
 export async function getPublishedPostsBySite(
   siteId: string,
   limit: number = 10,
-  offset: number = 0
+  offset: number = 0,
+  pageId?: string | null
 ): Promise<(BlogPost & { authorName: string | null; categoryName: string | null; categorySlug: string | null })[]> {
+  const conditions = [
+    eq(blogPosts.site_id, siteId),
+    eq(blogPosts.status, "published"),
+    lte(blogPosts.published_at, new Date()),
+  ];
+
+  // Add page filter if specified
+  if (pageId === null) {
+    // "unassigned" - posts with no page assignment
+    conditions.push(isNull(blogPosts.page_id));
+  } else if (pageId !== undefined) {
+    // Specific page ID
+    conditions.push(eq(blogPosts.page_id, pageId));
+  }
+  // If pageId is undefined, no filter applied (all posts)
+
   const results = await db
     .select({
       post: blogPosts,
@@ -63,13 +81,7 @@ export async function getPublishedPostsBySite(
     .from(blogPosts)
     .leftJoin(users, eq(blogPosts.author_id, users.id))
     .leftJoin(blogCategories, eq(blogPosts.category_id, blogCategories.id))
-    .where(
-      and(
-        eq(blogPosts.site_id, siteId),
-        eq(blogPosts.status, "published"),
-        lte(blogPosts.published_at, new Date())
-      )
-    )
+    .where(and(...conditions))
     .orderBy(desc(blogPosts.published_at))
     .limit(limit)
     .offset(offset);

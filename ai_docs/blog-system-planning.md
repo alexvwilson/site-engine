@@ -156,6 +156,70 @@ The Blog System extends Site Engine with content management capabilities, allowi
 
 ---
 
+### Phase 6: Publications & Archetypes (Future)
+
+**Scope:** Transform the single "Blog" into multiple "Publications" per site, each with a selectable archetype that controls presentation.
+
+**Problem:** Traditional blogs are chronological and ephemeral. Users building evergreen content (books, knowledge bases, resource libraries) need different organizational structures while using the same underlying content system.
+
+**Core Concept:** Instead of one Blog per site, users create multiple **Publications**, each with a chosen **archetype**:
+
+```
+My Site
+├── "Web Dev Fundamentals" (archetype: book)
+│   └── Posts displayed as chapters with ToC, prev/next navigation
+├── "Code Snippets" (archetype: library)
+│   └── Posts displayed as searchable/filterable cards
+└── "Random Thoughts" (archetype: blog)
+    └── Posts displayed chronologically, traditional blog
+```
+
+**Key Insight:** Flat data, flexible presentation. The underlying post data stays simple (title, content, slug, metadata). The archetype controls:
+- Landing page layout (Table of Contents vs Card Grid vs Chronological List)
+- Navigation within posts (Chapter 1 of 12 vs Related Resources vs Newer/Older)
+- What metadata is emphasized (chapter number vs tags vs publish date)
+
+**Archetypes:**
+
+| Archetype | Landing Page | Post Navigation | Emphasis |
+|-----------|--------------|-----------------|----------|
+| **book** | Table of Contents, sequential chapters | Prev/Next chapter, progress indicator | Chapter order, reading flow |
+| **library** | Filterable card grid, search | Related resources, categories | Tags, types, findability |
+| **blog** | Chronological list, pagination | Newer/Older posts | Publish date, recency |
+
+**Data Model Changes:**
+
+New `publications` table:
+- `id`, `site_id`, `name`, `slug`, `description`, `cover_image`
+- `archetype` (enum: 'book', 'library', 'blog')
+- `created_at`, `updated_at`
+
+Modified `blog_posts` table:
+- Add `publication_id` (FK to publications, replaces implicit single blog)
+- Add `display_order` (for manual ordering in book/library archetypes)
+- Existing `category_id` remains for sub-grouping within a publication
+
+**URL Structure:**
+```
+/sites/[siteSlug]/[publicationSlug]              # Publication landing
+/sites/[siteSlug]/[publicationSlug]/[postSlug]   # Individual post
+```
+
+**Implementation Phases:**
+1. Publications table + management UI + Book archetype
+2. Library archetype
+3. Migration of existing blog → default "Blog" publication
+4. Refinements based on usage
+
+**Complexity:** Medium-High
+
+**Design Decisions:**
+- 1:1 relationship: A post belongs to exactly one publication
+- Hierarchy is presentation only, not nested data structures
+- Categories can still exist within publications for additional grouping
+
+---
+
 ### Phase 5: Featured Post Block Enhancements ✅ COMPLETE
 
 **Scope:** Enhance the `blog_featured` block to display full post content inline with multiple layout options.
@@ -312,8 +376,8 @@ export interface BlogFeaturedContent {
 ---
 
 **Created:** 2025-12-28
-**Updated:** 2025-12-29
-**Status:** Phase 1, 1.5, 2, 3 & SEO Complete
+**Updated:** 2026-01-02
+**Status:** Phase 1, 1.5, 2, 3, 5 & SEO Complete | Phase 6 (Publications) planned
 **Priority:** P2 - Medium (larger initiative)
 
 ---

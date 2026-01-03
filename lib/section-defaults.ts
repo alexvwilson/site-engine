@@ -297,6 +297,7 @@ console.log(greeting);
   blog_grid: {
     postCount: 6,
     showExcerpt: true,
+    pageFilter: "current",
   },
 
   embed: {
