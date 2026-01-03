@@ -5,7 +5,7 @@ import { db } from "@/lib/drizzle/db";
 import { pages } from "@/lib/drizzle/schema/pages";
 import { sites } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
-import { eq, and, count } from "drizzle-orm";
+import { eq, and, count, max } from "drizzle-orm";
 
 /**
  * Generate a URL-safe slug from a title
@@ -112,13 +112,17 @@ export async function createPage(
     return { success: false, error: "A page with this slug already exists" };
   }
 
-  // Check if this is the first page (should become homepage)
-  const [pageCountResult] = await db
-    .select({ count: count() })
+  // Check if this is the first page (should become homepage) and get max display_order
+  const [pageStats] = await db
+    .select({
+      count: count(),
+      maxOrder: max(pages.display_order),
+    })
     .from(pages)
     .where(eq(pages.site_id, siteId));
 
-  const isFirstPage = (pageCountResult?.count ?? 0) === 0;
+  const isFirstPage = (pageStats?.count ?? 0) === 0;
+  const nextOrder = (pageStats?.maxOrder ?? -1) + 1;
 
   const [page] = await db
     .insert(pages)
@@ -128,6 +132,7 @@ export async function createPage(
       title,
       slug,
       is_home: isFirstPage,
+      display_order: nextOrder,
     })
     .returning({ id: pages.id });
 
@@ -355,5 +360,48 @@ export async function setAsHomePage(pageId: string): Promise<ActionResult> {
 
   revalidatePath("/app");
   revalidatePath(`/app/sites/${page.site_id}`);
+  return { success: true };
+}
+
+/**
+ * Reorder pages by updating their display_order
+ */
+export async function reorderPages(
+  siteId: string,
+  pageIds: string[]
+): Promise<ActionResult> {
+  const userId = await requireUserId();
+
+  // Verify site ownership
+  const ownsSite = await verifySiteOwnership(siteId, userId);
+  if (!ownsSite) {
+    return { success: false, error: "Site not found" };
+  }
+
+  // Verify all pages belong to this site and user
+  const existingPages = await db
+    .select({ id: pages.id })
+    .from(pages)
+    .where(and(eq(pages.site_id, siteId), eq(pages.user_id, userId)));
+
+  const existingIds = new Set(existingPages.map((p) => p.id));
+
+  for (const id of pageIds) {
+    if (!existingIds.has(id)) {
+      return { success: false, error: "Invalid page in reorder list" };
+    }
+  }
+
+  // Update display_order in a transaction
+  await db.transaction(async (tx) => {
+    for (let i = 0; i < pageIds.length; i++) {
+      await tx
+        .update(pages)
+        .set({ display_order: i, updated_at: new Date() })
+        .where(eq(pages.id, pageIds[i]));
+    }
+  });
+
+  revalidatePath(`/app/sites/${siteId}`);
   return { success: true };
 }

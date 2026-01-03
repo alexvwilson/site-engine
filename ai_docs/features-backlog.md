@@ -16,11 +16,86 @@
 
 ## P1 - High Priority
 
-_No items currently in P1._
+### 40. Manual Page Ordering
+
+**Problem:** Pages are displayed in a fixed order (likely by creation date). Users want to organize pages in their own preferred order, similar to how navigation links can be reordered.
+
+**Proposed Solution:**
+- Add `display_order` column to pages table
+- Drag-and-drop reordering in Pages list
+- Order persists and reflects in navigation/dashboard
+
+**Complexity:** Low-Medium
+
+---
+
+### 41. Image Block Enhancements
+
+**Problem:** The Image block lacks styling options (unlike Text, Features, CTA blocks) and has no layout flexibility. Users want:
+- Full-width/size options
+- Styling options (border, background, overlay)
+- Optional text/caption field for longer descriptions
+- Layout options for image + text positioning
+
+**Proposed Solution:**
+- Add `enableStyling` toggle with border, background image/overlay options (matching other blocks)
+- Add `displaySize` option: Contained, Wide, Full-width
+- Add optional `description` text field (rich text or plain)
+- Add `layout` option: Image Only, Image Left + Text Right, Image Right + Text Left, Image Top + Text Bottom, Text Top + Image Bottom
+- Text field only visible when layout includes text
+
+**Complexity:** Medium
 
 ---
 
 ## P2 - Medium Priority
+
+### 42. Blog Post Sorting Options
+
+**Problem:** Blog posts in the dashboard/editor have no sort options. Users want to view posts by different criteria for easier management.
+
+**Proposed Solution:**
+- Sort dropdown in blog posts list
+- Options: Newest first (default), Oldest first, Alphabetical (A-Z), By category, By status (draft/published)
+- Persist user's sort preference
+
+**Complexity:** Low
+
+---
+
+### 43. Blog Author Toggle Per-Block
+
+**Problem:** The "Show Author" toggle is currently at the site level, but it would be more flexible as a per-block setting. This allows showing author on some blog displays but not others.
+
+**Proposed Solution:**
+- Move `showAuthor` from site settings to blog-related blocks (post grid, post page)
+- Default to ON (current behavior)
+- Author info still configured at blog/site level, but visibility controlled per-block
+- Deprecate site-level toggle (or keep as default for new blocks)
+
+**Complexity:** Low
+
+---
+
+### 44. Blog Page Assignment (Blog Feeds per Page)
+
+**Problem:** Currently all blog posts appear in one blog listing. Users want to show different blog posts on different pages (e.g., "Featured" posts on homepage, "About" posts on about page).
+
+**Proposed Solution:**
+- Add `blog_feed` or `blog_tag` field to pages table
+- Blog posts can be tagged/assigned to specific feeds
+- Blog grid block can filter by feed/tag
+- Example: Homepage shows "featured" posts, About page shows "company-news" posts
+- Default feed shows all posts (backwards compatible)
+
+**Implementation Considerations:**
+- Could use existing category system or create separate "feed" concept
+- May need many-to-many relationship (post can appear in multiple feeds)
+- Consider if this overlaps with categories (could extend categories instead)
+
+**Complexity:** Medium
+
+---
 
 ### 39. Image Library Albums / Categories
 
@@ -1118,7 +1193,7 @@ _No items currently in P1._
 
 ---
 
-**Last Updated:** 2026-01-01 (Added #39 Image Library Albums/Categories to P2 backlog)
+**Last Updated:** 2026-01-02 (Added #40-44: Page ordering, Image block enhancements, Blog sorting/author/feeds)
 
 ---
 

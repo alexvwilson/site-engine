@@ -4,6 +4,7 @@ import {
   timestamp,
   uuid,
   boolean,
+  integer,
   index,
   unique,
 } from "drizzle-orm/pg-core";
@@ -37,6 +38,7 @@ export const pages = pgTable(
       .defaultNow()
       .notNull(),
     published_at: timestamp("published_at", { withTimezone: true }),
+    display_order: integer("display_order").notNull().default(0),
   },
   (t) => [
     index("pages_site_id_idx").on(t.site_id),

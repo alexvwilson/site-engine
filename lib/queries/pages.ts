@@ -1,6 +1,6 @@
 import { db } from "@/lib/drizzle/db";
 import { pages, type Page } from "@/lib/drizzle/schema/pages";
-import { eq, and, desc, count } from "drizzle-orm";
+import { eq, and, asc, count } from "drizzle-orm";
 
 /**
  * Get all pages for a site with ownership verification
@@ -13,7 +13,7 @@ export async function getPagesBySite(
     .select()
     .from(pages)
     .where(and(eq(pages.site_id, siteId), eq(pages.user_id, userId)))
-    .orderBy(desc(pages.updated_at));
+    .orderBy(asc(pages.display_order), asc(pages.created_at));
 }
 
 /**
