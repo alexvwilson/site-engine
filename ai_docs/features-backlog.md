@@ -16,19 +16,6 @@
 
 ## P1 - High Priority
 
-### 40. Manual Page Ordering
-
-**Problem:** Pages are displayed in a fixed order (likely by creation date). Users want to organize pages in their own preferred order, similar to how navigation links can be reordered.
-
-**Proposed Solution:**
-- Add `display_order` column to pages table
-- Drag-and-drop reordering in Pages list
-- Order persists and reflects in navigation/dashboard
-
-**Complexity:** Low-Medium
-
----
-
 ### 41. Image Block Enhancements
 
 **Problem:** The Image block lacks styling options (unlike Text, Features, CTA blocks) and has no layout flexibility. Users want:
@@ -174,6 +161,35 @@
 ---
 
 ## Completed Features
+
+### 40. Manual Page Ordering ✅ 2026-01-02
+
+**Problem:** Pages were displayed in a fixed order (by updated date). Users wanted to organize pages in their own preferred order for better site organization.
+
+**Solution Implemented:**
+- [x] Added `display_order` column to pages table
+- [x] Drag-and-drop reordering in Pages list using dnd-kit
+- [x] Converted PagesList from table to card layout
+- [x] Order persists in database and reflects in navigation
+- [x] New pages added to end of list
+- [x] Home page freely reorderable (not locked)
+
+**Task Document:** `ai_docs/tasks/052_manual_page_ordering.md`
+
+**Files Created:**
+- `drizzle/migrations/0024_freezing_peter_parker.sql` - Add display_order column
+- `drizzle/migrations/0024_freezing_peter_parker/down.sql` - Rollback migration
+
+**Files Modified:**
+- `lib/drizzle/schema/pages.ts` - Added display_order column
+- `lib/queries/pages.ts` - Changed ordering to display_order ASC
+- `app/actions/pages.ts` - Added reorderPages(), updated createPage()
+- `components/pages/PagesList.tsx` - Card layout with dnd-kit
+- `components/pages/PageRow.tsx` - Sortable card with drag handle
+
+**Database Migration:** `0024_freezing_peter_parker` - Added display_order column to pages table
+
+---
 
 ### 9. SEO Enhancements ✅ 2026-01-01
 
@@ -1193,7 +1209,7 @@
 
 ---
 
-**Last Updated:** 2026-01-02 (Added #40-44: Page ordering, Image block enhancements, Blog sorting/author/feeds)
+**Last Updated:** 2026-01-02 (Completed #40 Manual Page Ordering)
 
 ---
 
