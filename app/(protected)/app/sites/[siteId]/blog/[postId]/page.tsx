@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { requireUserId } from "@/lib/auth";
 import { getSiteById } from "@/lib/queries/sites";
 import { getPostById, getCategoriesBySite } from "@/lib/queries/blog";
+import { getPagesBySite } from "@/lib/queries/pages";
 import { PostEditor } from "@/components/blog";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
 
@@ -19,10 +20,11 @@ export default async function PostEditorPage({ params }: PostEditorPageProps) {
     notFound();
   }
 
-  // Get the post and categories
-  const [post, categories] = await Promise.all([
+  // Get the post, categories, and pages
+  const [post, categories, pages] = await Promise.all([
     getPostById(postId),
     getCategoriesBySite(siteId),
+    getPagesBySite(siteId, userId),
   ]);
 
   if (!post || post.site_id !== siteId) {
@@ -40,7 +42,7 @@ export default async function PostEditorPage({ params }: PostEditorPageProps) {
     <div className="flex flex-col h-full">
       <Breadcrumbs items={breadcrumbs} />
       <div className="container mx-auto px-4 py-8">
-        <PostEditor post={post} siteId={siteId} categories={categories} />
+        <PostEditor post={post} siteId={siteId} categories={categories} pages={pages} />
       </div>
     </div>
   );

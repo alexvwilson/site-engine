@@ -15,7 +15,7 @@ import type { Theme } from "@/lib/drizzle/schema/themes";
 interface SiteTabsProps {
   site: Site;
   pages: Page[];
-  posts: BlogPost[];
+  posts: (BlogPost & { categoryName: string | null; pageName: string | null })[];
   categories: BlogCategory[];
   themes: Theme[];
   activeTheme: Theme | null;
@@ -51,7 +51,7 @@ export function SiteTabs({ site, pages, posts, categories, themes, activeTheme }
         <PagesList pages={pages} siteId={site.id} />
       </TabsContent>
       <TabsContent value="blog">
-        <BlogTab siteId={site.id} posts={posts} />
+        <BlogTab siteId={site.id} posts={posts} pages={pages} />
       </TabsContent>
       <TabsContent value="theme">
         <ThemeTab site={site} themes={themes} activeTheme={activeTheme} />

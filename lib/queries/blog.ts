@@ -6,27 +6,42 @@ import {
 } from "@/lib/drizzle/schema/blog-categories";
 import { sites } from "@/lib/drizzle/schema/sites";
 import { users } from "@/lib/drizzle/schema/users";
+import { pages } from "@/lib/drizzle/schema/pages";
 import { eq, and, desc, lt, gt, lte } from "drizzle-orm";
 
 /**
+ * Sort options for blog posts in dashboard
+ */
+export type BlogSortOption =
+  | "newest"
+  | "oldest"
+  | "updated"
+  | "alphabetical"
+  | "status";
+
+/**
  * Get all posts for a site (admin view - includes drafts)
+ * Includes category and page names for display
  */
 export async function getPostsBySite(
   siteId: string
-): Promise<(BlogPost & { categoryName: string | null })[]> {
+): Promise<(BlogPost & { categoryName: string | null; pageName: string | null })[]> {
   const results = await db
     .select({
       post: blogPosts,
       categoryName: blogCategories.name,
+      pageName: pages.title,
     })
     .from(blogPosts)
     .leftJoin(blogCategories, eq(blogPosts.category_id, blogCategories.id))
+    .leftJoin(pages, eq(blogPosts.page_id, pages.id))
     .where(eq(blogPosts.site_id, siteId))
     .orderBy(desc(blogPosts.updated_at));
 
   return results.map((row) => ({
     ...row.post,
     categoryName: row.categoryName,
+    pageName: row.pageName,
   }));
 }
 

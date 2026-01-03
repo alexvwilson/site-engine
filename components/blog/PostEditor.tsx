@@ -29,8 +29,10 @@ import {
 } from "@/app/actions/blog";
 import { ImageUpload } from "@/components/editor/ImageUpload";
 import { CategorySelector } from "@/components/blog/CategorySelector";
+import { PageSelector } from "@/components/blog/PageSelector";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
+import type { Page } from "@/lib/drizzle/schema/pages";
 import dynamic from "next/dynamic";
 
 const TiptapEditor = dynamic(
@@ -45,9 +47,10 @@ interface PostEditorProps {
   post: BlogPost;
   siteId: string;
   categories: BlogCategory[];
+  pages: Page[];
 }
 
-export function PostEditor({ post, siteId, categories }: PostEditorProps) {
+export function PostEditor({ post, siteId, categories, pages }: PostEditorProps) {
   const router = useRouter();
   const [title, setTitle] = useState(post.title);
   const [slug, setSlug] = useState(post.slug);
@@ -57,6 +60,7 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
   const [categoryId, setCategoryId] = useState<string | null>(
     post.category_id ?? null
   );
+  const [pageId, setPageId] = useState<string | null>(post.page_id ?? null);
   const [metaTitle, setMetaTitle] = useState(post.meta_title || "");
   const [metaDescription, setMetaDescription] = useState(post.meta_description || "");
   const [localCategories, setLocalCategories] =
@@ -77,6 +81,7 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
       content: { html: content },
       featured_image: featuredImage || null,
       category_id: categoryId,
+      page_id: pageId,
       meta_title: metaTitle || null,
       meta_description: metaDescription || null,
     });
@@ -88,7 +93,7 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
       toast.error(result.error || "Failed to save post");
     }
     return result.success;
-  }, [post.id, title, slug, excerpt, content, featuredImage, categoryId, metaTitle, metaDescription]);
+  }, [post.id, title, slug, excerpt, content, featuredImage, categoryId, pageId, metaTitle, metaDescription]);
 
   const handlePublish = async () => {
     setIsPublishing(true);
@@ -283,6 +288,23 @@ export function PostEditor({ post, siteId, categories }: PostEditorProps) {
                     );
                   }}
                 />
+              </CardContent>
+            </Card>
+
+            {/* Page Assignment */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium">Page</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <PageSelector
+                  pages={pages}
+                  value={pageId}
+                  onChange={setPageId}
+                />
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Assign this post to a page for filtering
+                </p>
               </CardContent>
             </Card>
 

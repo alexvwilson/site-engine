@@ -22,19 +22,6 @@ _No P1 items currently_
 
 ## P2 - Medium Priority
 
-### 42. Blog Post Sorting Options
-
-**Problem:** Blog posts in the dashboard/editor have no sort options. Users want to view posts by different criteria for easier management.
-
-**Proposed Solution:**
-- Sort dropdown in blog posts list
-- Options: Newest first (default), Oldest first, Alphabetical (A-Z), By category, By status (draft/published)
-- Persist user's sort preference
-
-**Complexity:** Low
-
----
-
 ### 43. Blog Author Toggle Per-Block
 
 **Problem:** The "Show Author" toggle is currently at the site level, but it would be more flexible as a per-block setting. This allows showing author on some blog displays but not others.
@@ -54,18 +41,14 @@ _No P1 items currently_
 **Problem:** Currently all blog posts appear in one blog listing. Users want to show different blog posts on different pages (e.g., "Featured" posts on homepage, "About" posts on about page).
 
 **Proposed Solution:**
-- Add `blog_feed` or `blog_tag` field to pages table
-- Blog posts can be tagged/assigned to specific feeds
-- Blog grid block can filter by feed/tag
-- Example: Homepage shows "featured" posts, About page shows "company-news" posts
-- Default feed shows all posts (backwards compatible)
+- ~~Add `blog_feed` or `blog_tag` field to pages table~~ → `page_id` column added to blog_posts (Task 054)
+- Blog grid block can filter by page assignment
+- Example: Homepage shows posts assigned to "Home" page, About page shows "About" posts
+- Default shows all posts (backwards compatible)
 
-**Implementation Considerations:**
-- Could use existing category system or create separate "feed" concept
-- May need many-to-many relationship (post can appear in multiple feeds)
-- Consider if this overlaps with categories (could extend categories instead)
+**Current State:** Database foundation complete (page_id column exists, dashboard filtering works). Remaining: public-facing page-specific blog feeds.
 
-**Complexity:** Medium
+**Complexity:** Low (remaining work)
 
 ---
 
@@ -146,6 +129,37 @@ _No P1 items currently_
 ---
 
 ## Completed Features
+
+### 42. Blog Post Sorting Options & Page Filter ✅ 2026-01-02
+
+**Problem:** Blog posts in the dashboard had no sort options. Users wanted to view posts by different criteria and filter by page assignment.
+
+**Solution Implemented:**
+- [x] Sort dropdown with 5 options: Newest, Oldest, Recently Updated, Alphabetical (A-Z), By Status
+- [x] Page filter dropdown: All Pages, Unassigned, or specific page
+- [x] Sort/filter preferences persist per site in localStorage
+- [x] Added `page_id` column to blog_posts with FK to pages table
+- [x] Page assignment in post editor sidebar
+- [x] BlogFilterBar component for sort/filter controls
+
+**Task Document:** `ai_docs/tasks/054_blog_post_sorting_page_filter.md`
+
+**Files Created:**
+- `components/blog/BlogFilterBar.tsx` - Sort and page filter dropdowns
+- `components/blog/PageSelector.tsx` - Page assignment dropdown
+
+**Files Modified:**
+- `lib/drizzle/schema/blog-posts.ts` - Added page_id column with FK
+- `lib/queries/blog.ts` - Added pageName to query results via JOIN
+- `components/blog/BlogTab.tsx` - Filter state, localStorage persistence
+- `components/blog/PostEditor.tsx` - Page assignment in sidebar
+- `components/sites/SiteTabs.tsx` - Pass pages prop to BlogTab
+- `app/actions/blog.ts` - Handle page_id in updatePost
+- `app/(protected)/app/sites/[siteId]/blog/[postId]/page.tsx` - Pass pages to PostEditor
+
+**Database Migration:** `0025_handy_shen` - Added page_id column to blog_posts table
+
+---
 
 ### 41. Image Block Enhancements ✅ 2026-01-02
 
@@ -1218,7 +1232,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-02 (Completed #41 Image Block Enhancements)
+**Last Updated:** 2026-01-02 (Completed #42 Blog Post Sorting & Page Filter)
 
 ---
 

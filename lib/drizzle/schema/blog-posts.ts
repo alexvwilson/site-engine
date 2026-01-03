@@ -11,6 +11,7 @@ import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { users } from "./users";
 import { sites } from "./sites";
 import { blogCategories } from "./blog-categories";
+import { pages } from "./pages";
 
 export const POST_STATUSES = ["draft", "published"] as const;
 export type PostStatus = (typeof POST_STATUSES)[number];
@@ -26,6 +27,9 @@ export const blogPosts = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     category_id: uuid("category_id").references(() => blogCategories.id, {
+      onDelete: "set null",
+    }),
+    page_id: uuid("page_id").references(() => pages.id, {
       onDelete: "set null",
     }),
     title: text("title").notNull(),
@@ -50,6 +54,7 @@ export const blogPosts = pgTable(
     index("blog_posts_category_id_idx").on(t.category_id),
     index("blog_posts_status_idx").on(t.status),
     index("blog_posts_published_at_idx").on(t.published_at),
+    index("blog_posts_page_id_idx").on(t.page_id),
     unique("blog_posts_site_slug_unique").on(t.site_id, t.slug),
   ]
 );
