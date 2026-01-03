@@ -173,6 +173,29 @@ export interface ImageContent {
   src: string;
   alt: string;
   caption?: string;
+
+  // Layout options
+  imageWidth?: ImageWidth;
+  textWidth?: ImageWidth; // Only used for side-by-side layouts (image-left, image-right)
+  layout?: ImageLayout;
+  description?: string; // Rich text HTML for text layouts
+
+  // Master styling toggle
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Background & overlay options
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
 }
 
 export interface GalleryImage {
@@ -180,6 +203,15 @@ export interface GalleryImage {
   alt: string;
   caption?: string;
 }
+
+// Image block types
+export type ImageWidth = 10 | 25 | 50 | 75 | 100;
+export type ImageLayout =
+  | "image-only"
+  | "image-left"
+  | "image-right"
+  | "image-top"
+  | "image-bottom";
 
 export type GalleryAspectRatio = "1:1" | "16:9" | "4:3" | "3:4" | "original";
 export type GalleryLayout = "grid" | "masonry" | "carousel";

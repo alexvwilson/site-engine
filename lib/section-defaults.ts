@@ -123,6 +123,21 @@ console.log(greeting);
     src: "",
     alt: "Image description",
     caption: "",
+    // Layout options
+    imageWidth: 50,
+    textWidth: 50,
+    layout: "image-only",
+    description: "",
+    // Styling options (disabled by default)
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
   },
 
   gallery: {

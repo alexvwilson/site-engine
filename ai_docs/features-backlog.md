@@ -16,22 +16,7 @@
 
 ## P1 - High Priority
 
-### 41. Image Block Enhancements
-
-**Problem:** The Image block lacks styling options (unlike Text, Features, CTA blocks) and has no layout flexibility. Users want:
-- Full-width/size options
-- Styling options (border, background, overlay)
-- Optional text/caption field for longer descriptions
-- Layout options for image + text positioning
-
-**Proposed Solution:**
-- Add `enableStyling` toggle with border, background image/overlay options (matching other blocks)
-- Add `displaySize` option: Contained, Wide, Full-width
-- Add optional `description` text field (rich text or plain)
-- Add `layout` option: Image Only, Image Left + Text Right, Image Right + Text Left, Image Top + Text Bottom, Text Top + Image Bottom
-- Text field only visible when layout includes text
-
-**Complexity:** Medium
+_No P1 items currently_
 
 ---
 
@@ -161,6 +146,30 @@
 ---
 
 ## Completed Features
+
+### 41. Image Block Enhancements ✅ 2026-01-02
+
+**Problem:** The Image block lacked styling options (unlike Text, Features, CTA blocks) and had no layout flexibility.
+
+**Solution Implemented:**
+- [x] Percentage-based image width control (10%, 25%, 50%, 75%, 100%)
+- [x] Layout options: Image Only, Image Left + Text Right, Image Right + Text Left, Image Top + Text Below, Text Top + Image Below
+- [x] Separate text width control for side-by-side layouts (10-100%)
+- [x] Warning when image + text widths exceed 100%
+- [x] Rich text description field using TipTap (only shown for layouts with text)
+- [x] Styling options: border (width, radius, color), background image with overlay, text color mode
+- [x] 6 templates: Simple, Small, Card, Feature Image (50/50), Profile (25/75), Full-width Banner
+
+**Task Document:** `ai_docs/tasks/053_image_block_enhancements.md`
+
+**Files Modified:**
+- `lib/section-types.ts` - Added ImageWidth, ImageLayout types; extended ImageContent with textWidth and styling fields
+- `lib/section-defaults.ts` - Updated image defaults with new fields
+- `lib/section-templates.ts` - Added 6 image templates including Profile layout
+- `components/editor/blocks/ImageEditor.tsx` - Complete rewrite with all controls
+- `components/render/blocks/ImageBlock.tsx` - Complete rewrite with layout variants and flex-based sizing
+
+---
 
 ### 40. Manual Page Ordering ✅ 2026-01-02
 
@@ -1209,7 +1218,7 @@
 
 ---
 
-**Last Updated:** 2026-01-02 (Completed #40 Manual Page Ordering)
+**Last Updated:** 2026-01-02 (Completed #41 Image Block Enhancements)
 
 ---
 
