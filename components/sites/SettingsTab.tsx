@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { DnsInstructionsCard } from "@/components/sites/DnsInstructionsCard";
 import { formatDnsInstructions, type DnsInstruction } from "@/lib/domain-utils";
 import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
+import type { Theme } from "@/lib/drizzle/schema/themes";
 import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
@@ -49,6 +50,7 @@ import { sectionDefaults } from "@/lib/section-defaults";
 interface SettingsTabProps {
   site: Site;
   categories?: BlogCategory[];
+  activeTheme: Theme | null;
 }
 
 // Helper to compare objects for change detection
@@ -56,7 +58,12 @@ function deepEqual(a: unknown, b: unknown): boolean {
   return JSON.stringify(a) === JSON.stringify(b);
 }
 
-export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
+// Default theme primary color used as fallback
+const DEFAULT_PRIMARY_COLOR = "#2563eb";
+
+export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabProps) {
+  // Extract primary color from active theme, falling back to default
+  const themePrimaryColor = activeTheme?.data?.colors?.primary ?? DEFAULT_PRIMARY_COLOR;
   const [loading, setLoading] = useState(false);
   const [slug, setSlug] = useState(site.slug);
   const [metaTitle, setMetaTitle] = useState(site.meta_title || "");
@@ -689,6 +696,7 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
             onLinksChange={setSocialLinks}
             onIconStyleChange={setSocialIconStyle}
             disabled={loading}
+            primaryColor={themePrimaryColor}
           />
         </CardContent>
       </Card>

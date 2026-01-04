@@ -57,7 +57,7 @@ export function SiteTabs({ site, pages, posts, categories, themes, activeTheme }
         <ThemeTab site={site} themes={themes} activeTheme={activeTheme} />
       </TabsContent>
       <TabsContent value="settings">
-        <SettingsTab site={site} categories={categories} />
+        <SettingsTab site={site} categories={categories} activeTheme={activeTheme} />
       </TabsContent>
     </Tabs>
   );

@@ -337,6 +337,36 @@ console.log(greeting);
     overlayColor: "#000000",
     overlayOpacity: 0,
   },
+
+  product_grid: {
+    // Optional section header
+    sectionTitle: "",
+    sectionSubtitle: "",
+    // Items (empty by default, user adds them)
+    items: [],
+    // Card display options
+    showItemTitles: true,
+    showItemDescriptions: true,
+    // Layout
+    columns: 3,
+    gap: "medium",
+    // Icon styling
+    iconStyle: "brand",
+    // Block styling (disabled by default)
+    enableStyling: false,
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    textColorMode: "auto",
+    // Card styling
+    showCardBackground: true,
+    cardBackgroundColor: "",
+    cardBackgroundOpacity: 100,
+  },
 };
 
 /**

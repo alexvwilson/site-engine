@@ -788,6 +788,36 @@ console.log(message); // Output: Hello, World!
   // Social links block - uses site-level social links, no templates needed
   social_links: [],
 
+  // Product grid templates
+  product_grid: [
+    {
+      id: "product-grid-music-catalog",
+      name: "Music Catalog",
+      description: "Display albums with streaming links",
+      content: {
+        sectionTitle: "Our Music",
+        sectionSubtitle: "Listen on your favorite platform",
+        items: [],
+        columns: 3,
+        gap: "medium",
+        iconStyle: "brand",
+      },
+    },
+    {
+      id: "product-grid-portfolio",
+      name: "Portfolio Showcase",
+      description: "Display projects or products with action links",
+      content: {
+        sectionTitle: "Our Work",
+        sectionSubtitle: "",
+        items: [],
+        columns: 4,
+        gap: "medium",
+        iconStyle: "monochrome",
+      },
+    },
+  ],
+
   // Embed templates
   embed: [
     {

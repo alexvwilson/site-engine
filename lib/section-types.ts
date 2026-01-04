@@ -526,6 +526,86 @@ export interface SocialLinksContent {
   overlayOpacity?: number;
 }
 
+// ============== PRODUCT GRID TYPES ==============
+
+// Platform types for product/catalog action links
+export const PRODUCT_PLATFORMS = [
+  "amazon",
+  "itunes",
+  "apple_music",
+  "spotify",
+  "youtube",
+  "soundcloud",
+  "tidal",
+  "bandcamp",
+  "custom",
+] as const;
+
+export type ProductPlatform = (typeof PRODUCT_PLATFORMS)[number];
+
+// Individual action link for a product
+export interface ProductLink {
+  platform: ProductPlatform;
+  url: string;
+  label?: string; // Custom label for "custom" platform
+}
+
+// Single product/catalog item
+export interface ProductItem {
+  id: string; // UUID for drag-drop reordering
+  image?: string;
+  title?: string;
+  description?: string;
+  links: ProductLink[];
+  featuredLinkIndex?: number; // Index of the link to use when clicking the image
+}
+
+// Icon style options (same as social links)
+export type ProductIconStyle = "brand" | "monochrome" | "primary";
+
+// Column options
+export type ProductGridColumns = 2 | 3 | 4 | "auto";
+
+// Gap options
+export type ProductGridGap = "small" | "medium" | "large";
+
+// Full product grid block content
+export interface ProductGridContent {
+  // Optional section header
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  // Items array
+  items: ProductItem[];
+
+  // Card display options
+  showItemTitles?: boolean;
+  showItemDescriptions?: boolean;
+
+  // Layout
+  columns: ProductGridColumns;
+  gap: ProductGridGap;
+
+  // Icon styling
+  iconStyle: ProductIconStyle;
+
+  // Block styling (following established pattern)
+  enableStyling?: boolean;
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+  textColorMode?: TextColorMode;
+
+  // Card styling
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+  cardBackgroundOpacity?: number;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -545,7 +625,8 @@ export type SectionContent =
   | BlogFeaturedContent
   | BlogGridContent
   | EmbedContent
-  | SocialLinksContent;
+  | SocialLinksContent
+  | ProductGridContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -567,6 +648,7 @@ export interface ContentTypeMap {
   blog_grid: BlogGridContent;
   embed: EmbedContent;
   social_links: SocialLinksContent;
+  product_grid: ProductGridContent;
 }
 
 /**
@@ -685,5 +767,11 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Social Links",
     description: "Display social media links with icons",
     icon: "share-2",
+  },
+  {
+    type: "product_grid",
+    label: "Product Grid",
+    description: "Display products or items with action links",
+    icon: "shopping-bag",
   },
 ];

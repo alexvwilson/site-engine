@@ -19,6 +19,7 @@ import { EmbedBlock } from "./blocks/EmbedBlock";
 import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
 import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
+import { ProductGridBlock } from "./blocks/ProductGridBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -178,6 +179,13 @@ export async function BlockRenderer({
           theme={theme}
           socialLinks={socialLinks}
           siteIconStyle={socialIconStyle}
+        />
+      );
+    case "product_grid":
+      return (
+        <ProductGridBlock
+          content={getTypedContent("product_grid", content)}
+          theme={theme}
         />
       );
     default:

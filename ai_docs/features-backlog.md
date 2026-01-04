@@ -48,30 +48,6 @@ Enhance the existing TipTap editor with image insertion capabilities:
 
 ---
 
-### 47. Product/Catalog Grid Block
-
-**Problem:** No way to display products, albums, or items with purchase/action links. The Gallery block shows images but doesn't support titles or clickable action buttons (like "Buy on Amazon" or "Listen on Spotify").
-
-**Use Case Example:** Music label displaying album covers with Amazon/iTunes purchase buttons beneath each album.
-
-**Solution:**
-New "Product Grid" or "Catalog" block type:
-- Each item has: Image, Title (optional), Description (optional)
-- Multiple action links per item with icon + URL (Amazon, iTunes, Spotify, YouTube, custom)
-- Predefined icon set for common platforms + custom URL option
-- Layout options: Grid (2/3/4 columns), card style
-- Link display: Icon buttons below image, or overlay on hover
-
-**Implementation Notes:**
-- New `ProductGridContent` type with `items[]` array
-- Each item: `{ image, title?, description?, links: { platform, url, label? }[] }`
-- `IconPicker` reuse or new platform-specific picker
-- Templates: Music Catalog, Product Showcase, Portfolio with Links
-
-**Complexity:** Medium
-
----
-
 ## P3 - Low Priority / Future
 
 ### 32. Media Player Blocks (Exploratory)
@@ -128,6 +104,39 @@ New "Product Grid" or "Catalog" block type:
 ---
 
 ## Completed Features
+
+### 47. Product/Catalog Grid Block ✅ 2026-01-03
+
+**Problem:** No way to display products, albums, or items with purchase/action links. The Gallery block shows images but doesn't support titles or clickable action buttons (like "Buy on Amazon" or "Listen on Spotify").
+
+**Solution Implemented:**
+- [x] New `product_grid` block type with ProductGridContent interface
+- [x] Each item has: Image, Title (optional), Description (optional), up to 5 action links
+- [x] Predefined platform icons: Amazon, iTunes, Apple Music, Spotify, YouTube, SoundCloud, Tidal, Bandcamp, Custom
+- [x] Icon style options: Brand colors, Monochrome, Theme primary
+- [x] Layout options: 2/3/4/auto columns with small/medium/large gap
+- [x] Card display toggles for title and description visibility
+- [x] Drag-drop reordering for items and action links within items
+- [x] Featured link option: designate one link to make image clickable
+- [x] Templates: Music Catalog, Portfolio Showcase
+
+**Task Document:** `ai_docs/tasks/059_product_catalog_grid_block.md`
+
+**Files Created:**
+- `lib/product-icons.tsx` - Platform icons component with brand SVGs
+- `components/editor/blocks/ProductGridEditor.tsx` - Full editor with item dialog, drag-drop
+- `components/render/blocks/ProductGridBlock.tsx` - Grid renderer with clickable images
+
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added "product_grid" to BLOCK_TYPES
+- `lib/section-types.ts` - Added ProductGridContent, ProductItem, ProductLink, ProductPlatform types
+- `lib/section-defaults.ts` - Added product_grid defaults
+- `lib/section-templates.ts` - Added Music Catalog and Portfolio Showcase templates
+- `components/editor/SectionEditor.tsx` - Added ProductGridEditor routing
+- `components/editor/BlockIcon.tsx` - Added ShoppingBag icon for product_grid
+- `components/render/BlockRenderer.tsx` - Added ProductGridBlock routing
+
+---
 
 ### 45. Social Links (Settings + Header/Footer/Block) ✅ 2026-01-03
 
@@ -1371,7 +1380,7 @@ New "Product Grid" or "Catalog" block type:
 
 ---
 
-**Last Updated:** 2026-01-03 (Completed #45 Social Links; Added #46 Rich Content Editor, #47 Product/Catalog Grid)
+**Last Updated:** 2026-01-03 (Completed #47 Product/Catalog Grid Block, #45 Social Links)
 
 ---
 
