@@ -126,7 +126,9 @@ export function getBadgeStyles(theme: ThemeData): CSSProperties {
 
 /**
  * Generate inline styles for page/section backgrounds
+ * Note: theme parameter kept for API consistency but uses CSS variables
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getPageStyles(_theme: ThemeData): CSSProperties {
   return {
     backgroundColor: "var(--color-background)",
@@ -137,7 +139,9 @@ export function getPageStyles(_theme: ThemeData): CSSProperties {
 
 /**
  * Generate inline styles for muted background sections
+ * Note: theme parameter kept for API consistency but uses CSS variables
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getMutedSectionStyles(_theme: ThemeData): CSSProperties {
   return {
     backgroundColor: "var(--color-muted)",
@@ -147,7 +151,9 @@ export function getMutedSectionStyles(_theme: ThemeData): CSSProperties {
 
 /**
  * Generate inline styles for links
+ * Note: theme parameter kept for API consistency but uses CSS variables
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getLinkStyles(_theme: ThemeData): CSSProperties {
   return {
     color: "var(--color-primary)",

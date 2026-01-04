@@ -81,18 +81,6 @@ export function SeoScorecard({ siteId }: SeoScorecardProps) {
     setLoading(false);
   }, [siteId]);
 
-  // Fetch latest AI analysis
-  const fetchLatestAiAnalysis = useCallback(async () => {
-    const result = await getLatestSeoAnalysisForSite(siteId);
-    if (result.success && result.job) {
-      setAiJob(result.job);
-      // If job is still pending or analyzing, start polling
-      if (result.job.status === "pending" || result.job.status === "analyzing") {
-        startPolling(result.job.id);
-      }
-    }
-  }, [siteId]);
-
   // Poll for job status
   const startPolling = useCallback((jobId: string) => {
     if (pollingRef.current) {
@@ -114,6 +102,18 @@ export function SeoScorecard({ siteId }: SeoScorecardProps) {
       }
     }, 2000); // Poll every 2 seconds
   }, []);
+
+  // Fetch latest AI analysis
+  const fetchLatestAiAnalysis = useCallback(async () => {
+    const result = await getLatestSeoAnalysisForSite(siteId);
+    if (result.success && result.job) {
+      setAiJob(result.job);
+      // If job is still pending or analyzing, start polling
+      if (result.job.status === "pending" || result.job.status === "analyzing") {
+        startPolling(result.job.id);
+      }
+    }
+  }, [siteId, startPolling]);
 
   // Start AI analysis
   const handleStartAnalysis = async () => {

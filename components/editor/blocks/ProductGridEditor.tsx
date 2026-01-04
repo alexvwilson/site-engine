@@ -50,7 +50,6 @@ import type {
   ProductGridContent,
   ProductItem,
   ProductLink,
-  ProductPlatform,
   ProductIconStyle,
   ProductGridColumns,
   ProductGridGap,

@@ -106,6 +106,7 @@ export function RotatingText({
     isPaused,
     prefersReducedMotion,
     effect,
+    animationDuration,
   ]);
 
   // Typing effect - character by character typing
@@ -134,7 +135,7 @@ export function RotatingText({
         clearTimeout(typingTimeoutRef.current);
       }
     };
-  }, [effect, typingPhase, displayedText, currentWord, prefersReducedMotion, isPaused]);
+  }, [effect, typingPhase, displayedText, currentWord, prefersReducedMotion, isPaused, typingSpeed]);
 
   // Typing effect - visible phase (pause)
   useEffect(() => {
@@ -169,7 +170,7 @@ export function RotatingText({
         clearTimeout(typingTimeoutRef.current);
       }
     };
-  }, [effect, typingPhase, displayedText, prefersReducedMotion, isPaused]);
+  }, [effect, typingPhase, displayedText, prefersReducedMotion, isPaused, deletingSpeed]);
 
   // Typing effect - hidden phase (change word)
   useEffect(() => {
