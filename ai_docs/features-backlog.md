@@ -22,29 +22,7 @@ _No P1 items currently_
 
 ## P2 - Medium Priority
 
-### 46. Rich Content Editor (TipTap with Inline Images)
-
-**Problem:** Current Text block only supports formatted text. Users can't create article-style layouts with images floating alongside text (like an About page with a photo next to a bio). Currently requires stacking separate Image + Text blocks which doesn't allow text wrapping.
-
-**Solution:**
-Enhance the existing TipTap editor with image insertion capabilities:
-- Add image button to TipTap toolbar (upload new or pick from Image Library)
-- Image alignment options: Left float, Right float, Center, Full-width
-- Text wraps around floated images naturally
-- Responsive behavior: images stack on mobile
-
-**Implementation Notes:**
-- Add `@tiptap/extension-image` to TipTap configuration
-- Custom image node with alignment attribute
-- ImageUpload integration within TipTap (modal or inline)
-- CSS for float behaviors with proper clearing
-- Consider renaming "Text" block to "Content" or "Article" block
-
-**Alternatives Considered:**
-- New "Article" block type (rejected: duplicates Text block functionality)
-- Notion-like block editor (rejected: too large a change, learning curve)
-
-**Complexity:** Medium-High
+_No P2 items currently_
 
 ---
 
@@ -104,6 +82,48 @@ Enhance the existing TipTap editor with image insertion capabilities:
 ---
 
 ## Completed Features
+
+### 46. Rich Content Editor - Article Block ✅ 2026-01-03
+
+**Problem:** Current Text block only supports formatted text. Users couldn't create article-style layouts with images floating alongside text (like an About page with a photo next to a bio).
+
+**Solution Implemented:**
+- [x] New "Article" block type with extended TipTap editor
+- [x] Image button in toolbar opens ImageInsertModal
+- [x] Image sources: Upload new, select from Image Library, or enter URL
+- [x] 4 alignment options: Left float, Right float, Center, Full-width
+- [x] 4 width presets: 25%, 50%, 75%, 100%
+- [x] Text wraps around floated images naturally (CSS with !important for reliable float behavior)
+- [x] Responsive: floated images stack above text on mobile (< 640px)
+- [x] Image rounding option: Configurable border-radius for inline images
+- [x] Full styling options: border, background, overlay, typography
+- [x] 4 templates: Basic Article, Tutorial, Featured Article, Card Style
+- [x] Click-to-edit image popover: Click any image to change alignment, width, or delete
+- [x] WYSIWYG editor styling: H2, H3, blockquotes, lists render styled in editor
+- [x] HTML source mode: Toggle to view/edit raw HTML directly
+- [x] Multiple images supported: Insert at cursor position, not replacing existing
+
+**Task Document:** `ai_docs/tasks/060_article_block_inline_images.md`
+
+**Files Created:**
+- `components/editor/ArticleTiptapEditor.tsx` - Extended TipTap with custom Image extension, WYSIWYG CSS, HTML mode
+- `components/editor/ArticleImageNodeView.tsx` - React NodeView with click-to-edit popover
+- `components/editor/ImageInsertModal.tsx` - Image insertion dialog with alignment/width controls
+- `components/editor/blocks/ArticleEditor.tsx` - Block editor component
+- `components/render/blocks/ArticleBlock.tsx` - Block renderer with CSS float behavior
+
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added "article" to BLOCK_TYPES
+- `lib/section-types.ts` - Added ArticleContent interface, ArticleImageAlignment, ArticleImageWidth types
+- `lib/section-defaults.ts` - Added article defaults
+- `lib/section-templates.ts` - Added 4 article templates
+- `components/editor/SectionEditor.tsx` - Added ArticleEditor routing
+- `components/editor/BlockIcon.tsx` - Added BookOpen icon for article
+- `components/render/BlockRenderer.tsx` - Added ArticleBlock routing
+
+**Dependencies Added:** `@tiptap/extension-image`
+
+---
 
 ### 47. Product/Catalog Grid Block ✅ 2026-01-03
 
@@ -1380,7 +1400,7 @@ Enhance the existing TipTap editor with image insertion capabilities:
 
 ---
 
-**Last Updated:** 2026-01-03 (Completed #47 Product/Catalog Grid Block, #45 Social Links)
+**Last Updated:** 2026-01-03 (Completed #46 Article Block with Inline Images, #47 Product/Catalog Grid Block, #45 Social Links)
 
 ---
 

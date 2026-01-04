@@ -29,6 +29,7 @@ export const BLOCK_TYPES = [
   "embed",
   "social_links",
   "product_grid",
+  "article",
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];

@@ -857,6 +857,66 @@ console.log(message); // Output: Hello, World!
       },
     },
   ],
+
+  // ============================================================================
+  // Article Templates
+  // ============================================================================
+  article: [
+    {
+      id: "article-basic",
+      name: "Basic Article",
+      description: "Simple article layout for long-form content",
+      content: {
+        body: "<h2>Article Title</h2><p>Start writing your article here. Use the toolbar to format text, add headings, lists, and insert images that text can wrap around.</p><p>The article block is designed for longer content like blog posts, news articles, or documentation. Add inline images using the image button in the toolbar.</p>",
+        contentWidth: "medium",
+        textSize: "normal",
+      },
+    },
+    {
+      id: "article-tutorial",
+      name: "Tutorial",
+      description: "Step-by-step guide with sections",
+      content: {
+        body: "<h2>Getting Started Guide</h2><p>Welcome to this tutorial. Follow the steps below to get started.</p><h3>Step 1: Setup</h3><p>Begin by setting up your environment. Make sure you have all the necessary tools installed.</p><h3>Step 2: Configuration</h3><p>Configure your settings according to your needs. You can customize various options to match your preferences.</p><h3>Step 3: Implementation</h3><p>Now you're ready to implement. Follow the guidelines below for best practices.</p><blockquote>Tip: Take your time with each step. It's better to understand fully than to rush through.</blockquote>",
+        contentWidth: "medium",
+        textSize: "normal",
+      },
+    },
+    {
+      id: "article-featured",
+      name: "Featured Article",
+      description: "Article with background image and overlay",
+      content: {
+        body: "<h2>Featured Story</h2><p>This template is perfect for featured articles that need to stand out. Add a background image and adjust the overlay to ensure text readability.</p><p>The light text mode makes your content pop against darker backgrounds, creating a dramatic visual effect for important stories.</p>",
+        enableStyling: true,
+        textColorMode: "light" as const,
+        showBorder: false,
+        backgroundImage: "",
+        overlayColor: "#000000",
+        overlayOpacity: 50,
+        contentWidth: "medium",
+        textSize: "large",
+      },
+    },
+    {
+      id: "article-card",
+      name: "Card Style",
+      description: "Article in a bordered card container",
+      content: {
+        body: "<h2>Card Article</h2><p>This article style features a subtle border and background, making it stand out from the surrounding content. Great for highlighting important information or creating visual separation.</p><p>The card adapts to your theme's light or dark mode automatically.</p>",
+        enableStyling: true,
+        textColorMode: "auto" as const,
+        showBorder: true,
+        borderWidth: "thin" as const,
+        borderRadius: "medium" as const,
+        borderColor: "",
+        useThemeBackground: true,
+        boxBackgroundOpacity: 100,
+        contentWidth: "medium",
+        textSize: "normal",
+      },
+    },
+  ],
 };
 
 /**

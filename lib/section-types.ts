@@ -569,6 +569,10 @@ export type ProductGridColumns = 2 | 3 | 4 | "auto";
 // Gap options
 export type ProductGridGap = "small" | "medium" | "large";
 
+// Article block types for inline images
+export type ArticleImageAlignment = "left" | "right" | "center" | "full";
+export type ArticleImageWidth = 25 | 50 | 75 | 100;
+
 // Full product grid block content
 export interface ProductGridContent {
   // Optional section header
@@ -606,6 +610,43 @@ export interface ProductGridContent {
   cardBackgroundOpacity?: number;
 }
 
+// Article block content - rich text with inline images
+export interface ArticleContent {
+  // HTML content from TipTap (includes image nodes with alignment/width)
+  body: string;
+
+  // Image styling for inline images
+  imageRounding?: TextBorderRadius;
+
+  // Master styling toggle - when false, renders as plain article with theme colors
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (when border is shown)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Background & overlay options (for section background)
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Layout options
+  contentWidth?: TextContentWidth;
+
+  // Typography options
+  textSize?: TextSize;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -626,7 +667,8 @@ export type SectionContent =
   | BlogGridContent
   | EmbedContent
   | SocialLinksContent
-  | ProductGridContent;
+  | ProductGridContent
+  | ArticleContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -649,6 +691,7 @@ export interface ContentTypeMap {
   embed: EmbedContent;
   social_links: SocialLinksContent;
   product_grid: ProductGridContent;
+  article: ArticleContent;
 }
 
 /**
@@ -773,5 +816,11 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Product Grid",
     description: "Display products or items with action links",
     icon: "shopping-bag",
+  },
+  {
+    type: "article",
+    label: "Article",
+    description: "Rich content with inline images and text wrapping",
+    icon: "book-open",
   },
 ];

@@ -1,9 +1,11 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, ReactNodeViewRenderer } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
+import { ArticleImageNodeView } from "./ArticleImageNodeView";
 import { useState, useCallback, useEffect, useRef } from "react";
 import {
   Bold,
@@ -17,6 +19,7 @@ import {
   Undo,
   Redo,
   Unlink,
+  ImageIcon,
   AlertCircle,
   X,
   Code,
@@ -34,38 +37,34 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { detectMarkdown, convertMarkdownToHtml } from "@/lib/markdown-utils";
+import { ImageInsertModal } from "./ImageInsertModal";
+import type { ArticleImageAlignment, ArticleImageWidth } from "@/lib/section-types";
 
-interface TiptapEditorProps {
+interface ArticleTiptapEditorProps {
   value: string;
   onChange: (html: string) => void;
+  siteId: string;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  imageRounding?: string;
 }
 
 /**
  * Normalize content to proper HTML paragraphs.
- * - Plain text with newlines becomes separate <p> tags
- * - HTML content with <br> tags gets split into separate paragraphs
- * - Already properly structured HTML is returned as-is
  */
 function normalizeContent(content: string): string {
   if (!content || content.trim() === "") {
     return "";
   }
 
-  // Check if content already has HTML block tags
-  const hasHtmlBlocks = /<(p|h[1-6]|ul|ol|li|blockquote|div)[\s>]/i.test(content);
+  const hasHtmlBlocks = /<(p|h[1-6]|ul|ol|li|blockquote|div|img)[\s>]/i.test(content);
 
   if (hasHtmlBlocks) {
-    // Content has HTML structure, but check if we need to split <br> into paragraphs
-    // If a <p> tag contains multiple <br>, split them into separate paragraphs
     return content.replace(
       /<p>([^<]*(?:<(?!\/p>)[^<]*)*)<\/p>/gi,
       (match, inner) => {
-        // Check if this paragraph has <br> tags
         if (/<br\s*\/?>/i.test(inner)) {
-          // Split on <br> and create separate paragraphs
           const parts = inner.split(/<br\s*\/?>/i);
           return parts
             .map((part: string) => part.trim())
@@ -78,8 +77,6 @@ function normalizeContent(content: string): string {
     );
   }
 
-  // Convert plain text to paragraphs
-  // Split on newlines for paragraph breaks
   const paragraphs = content
     .split(/\n+/)
     .map((para) => {
@@ -92,22 +89,60 @@ function normalizeContent(content: string): string {
   return paragraphs.join("");
 }
 
-export function TiptapEditor({
+// Custom Image extension with alignment and width attributes
+const ArticleImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      alignment: {
+        default: "center",
+        parseHTML: (element) => element.getAttribute("data-alignment") || "center",
+        renderHTML: (attributes) => ({
+          "data-alignment": attributes.alignment,
+        }),
+      },
+      width: {
+        default: 50,
+        parseHTML: (element) => parseInt(element.getAttribute("data-width") || "50"),
+        renderHTML: (attributes) => ({
+          "data-width": attributes.width,
+          style: `width: ${attributes.width}%`,
+        }),
+      },
+    };
+  },
+  addNodeView() {
+    return ReactNodeViewRenderer(ArticleImageNodeView);
+  },
+});
+
+// Border radius mappings (matching ArticleBlock.tsx)
+const BORDER_RADII: Record<string, string> = {
+  none: "0",
+  small: "4px",
+  medium: "8px",
+  large: "16px",
+  full: "9999px",
+};
+
+export function ArticleTiptapEditor({
   value,
   onChange,
-  placeholder = "Enter your content...",
+  siteId,
+  placeholder = "Write your article content...",
   disabled = false,
   className,
-}: TiptapEditorProps) {
+  imageRounding = "medium",
+}: ArticleTiptapEditorProps): React.JSX.Element {
   const [linkUrl, setLinkUrl] = useState("");
   const [linkPopoverOpen, setLinkPopoverOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const [showMarkdownBanner, setShowMarkdownBanner] = useState(false);
   const [bannerDismissed, setBannerDismissed] = useState(false);
   const [htmlMode, setHtmlMode] = useState(false);
   const [htmlSource, setHtmlSource] = useState("");
   const lastCheckedContent = useRef<string>("");
 
-  // Normalize content on initial load
   const normalizedValue = normalizeContent(value);
 
   const editor = useEditor({
@@ -124,6 +159,13 @@ export function TiptapEditor({
           class: "text-primary underline",
         },
       }),
+      ArticleImage.configure({
+        inline: false,
+        allowBase64: false,
+        HTMLAttributes: {
+          class: "article-inline-image",
+        },
+      }),
       Placeholder.configure({
         placeholder,
       }),
@@ -134,30 +176,15 @@ export function TiptapEditor({
       const html = editor.getHTML();
       onChange(html);
 
-      // Check for markdown patterns if banner hasn't been dismissed
-      // and content has meaningfully changed
       if (!bannerDismissed && html !== lastCheckedContent.current) {
         lastCheckedContent.current = html;
-        // Get the plain text to check for markdown
         const text = editor.getText();
         const hasMarkdown = detectMarkdown(text);
         setShowMarkdownBanner(hasMarkdown);
       }
     },
-    editorProps: {
-      attributes: {
-        class: cn(
-          "prose prose-sm max-w-none focus:outline-none min-h-[150px] px-3 py-2",
-          "prose-headings:font-semibold prose-h2:text-xl prose-h3:text-lg",
-          "prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-0",
-          "prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6",
-          "prose-blockquote:border-l-2 prose-blockquote:border-muted-foreground prose-blockquote:pl-4 prose-blockquote:italic"
-        ),
-      },
-    },
   });
 
-  // Sync external value changes
   useEffect(() => {
     if (editor && normalizedValue !== editor.getHTML()) {
       editor.commands.setContent(normalizedValue);
@@ -170,32 +197,6 @@ export function TiptapEditor({
       setHtmlSource(editor.getHTML());
     }
   }, [htmlMode, editor]);
-
-  // Toggle HTML mode
-  const toggleHtmlMode = useCallback(() => {
-    if (htmlMode && editor) {
-      // Switching from HTML to visual - apply changes
-      editor.commands.setContent(htmlSource);
-      onChange(htmlSource);
-    }
-    setHtmlMode(!htmlMode);
-  }, [htmlMode, htmlSource, editor, onChange]);
-
-  // Handle HTML source changes
-  const handleHtmlSourceChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setHtmlSource(e.target.value);
-    },
-    []
-  );
-
-  // Apply HTML changes without leaving HTML mode
-  const applyHtmlChanges = useCallback(() => {
-    if (editor) {
-      editor.commands.setContent(htmlSource);
-      onChange(htmlSource);
-    }
-  }, [editor, htmlSource, onChange]);
 
   const setLink = useCallback(() => {
     if (!editor || !linkUrl) return;
@@ -222,44 +223,82 @@ export function TiptapEditor({
     setLinkPopoverOpen(true);
   }, [editor]);
 
-  // Handle markdown conversion
+  const handleImageInsert = useCallback(
+    (src: string, alt: string, alignment: ArticleImageAlignment, width: ArticleImageWidth) => {
+      if (!editor) return;
+      // Use insertContent to properly insert at cursor position without replacing
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: "image",
+          attrs: {
+            src,
+            alt,
+            alignment,
+            width,
+          },
+        })
+        .run();
+      setImageModalOpen(false);
+    },
+    [editor]
+  );
+
   const handleConvertMarkdown = useCallback(() => {
     if (!editor) return;
-
-    // Get the plain text content
     const text = editor.getText();
-
-    // Convert markdown to HTML
     const html = convertMarkdownToHtml(text);
-
-    // Set the converted content
     editor.commands.setContent(html);
-
-    // Update parent with new content
     onChange(html);
-
-    // Hide the banner
     setShowMarkdownBanner(false);
     setBannerDismissed(true);
   }, [editor, onChange]);
 
-  // Handle banner dismissal
   const handleDismissBanner = useCallback(() => {
     setShowMarkdownBanner(false);
     setBannerDismissed(true);
   }, []);
 
+  // Toggle HTML mode
+  const toggleHtmlMode = useCallback(() => {
+    if (htmlMode && editor) {
+      // Switching from HTML to visual - apply changes
+      editor.commands.setContent(htmlSource);
+      onChange(htmlSource);
+    }
+    setHtmlMode(!htmlMode);
+  }, [htmlMode, htmlSource, editor, onChange]);
+
+  // Handle HTML source changes
+  const handleHtmlSourceChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setHtmlSource(e.target.value);
+  }, []);
+
+  // Apply HTML changes without leaving HTML mode
+  const applyHtmlChanges = useCallback(() => {
+    if (editor) {
+      editor.commands.setContent(htmlSource);
+      onChange(htmlSource);
+    }
+  }, [editor, htmlSource, onChange]);
+
   if (!editor) {
     return (
-      <div className={cn("border rounded-md bg-muted/50 min-h-[200px]", className)}>
+      <div className={cn("border rounded-md bg-muted/50 min-h-[250px]", className)}>
         <div className="h-10 border-b bg-muted/30" />
         <div className="p-3 text-muted-foreground text-sm">Loading editor...</div>
       </div>
     );
   }
 
+  const roundingValue = BORDER_RADII[imageRounding] || BORDER_RADII.medium;
+
   return (
-    <div className={cn("border rounded-md overflow-hidden", className)}>
+    <div
+      className={cn("border rounded-md overflow-hidden", className)}
+      style={{ "--article-image-rounding": roundingValue } as React.CSSProperties}
+    >
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 p-1 border-b bg-muted/30">
         {/* Text Formatting */}
@@ -388,6 +427,17 @@ export function TiptapEditor({
 
         <Separator orientation="vertical" className="h-6 mx-1" />
 
+        {/* Image Button */}
+        <ToolbarButton
+          onClick={() => setImageModalOpen(true)}
+          disabled={disabled || htmlMode}
+          title="Insert Image"
+        >
+          <ImageIcon className="h-4 w-4" />
+        </ToolbarButton>
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
+
         {/* Undo/Redo */}
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
@@ -447,23 +497,137 @@ export function TiptapEditor({
         </div>
       )}
 
-      {/* Editor List Styles - ensures bullets/numbers show in editor */}
+      {/* WYSIWYG Editor Styles */}
       <style dangerouslySetInnerHTML={{ __html: `
+        /* Base prose styling */
+        .ProseMirror {
+          padding: 0.75rem;
+          min-height: 200px;
+          outline: none;
+          font-size: 0.9375rem;
+          line-height: 1.6;
+        }
+
+        /* Headings - WYSIWYG styling */
+        .ProseMirror h2 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 1.25rem 0 0.5rem 0;
+          color: var(--foreground);
+          border-bottom: 1px solid var(--border);
+          padding-bottom: 0.25rem;
+        }
+        .ProseMirror h2:first-child {
+          margin-top: 0;
+        }
+        .ProseMirror h3 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 1rem 0 0.5rem 0;
+          color: var(--foreground);
+        }
+        .ProseMirror h3:first-child {
+          margin-top: 0;
+        }
+
+        /* Paragraphs */
+        .ProseMirror p {
+          margin: 0.75rem 0;
+        }
+        .ProseMirror p:first-child {
+          margin-top: 0;
+        }
+        .ProseMirror p:last-child {
+          margin-bottom: 0;
+        }
+
+        /* Blockquotes - WYSIWYG styling */
+        .ProseMirror blockquote {
+          border-left: 4px solid hsl(var(--primary));
+          padding-left: 1rem;
+          margin: 1rem 0;
+          font-style: italic;
+          color: hsl(var(--muted-foreground));
+          background: hsl(var(--muted) / 0.3);
+          padding: 0.75rem 1rem;
+          border-radius: 0 0.375rem 0.375rem 0;
+        }
+        .ProseMirror blockquote p {
+          margin: 0;
+        }
+
+        /* Lists */
         .ProseMirror ul {
           list-style-type: disc;
           padding-left: 1.5rem;
-          margin: 0.5rem 0;
+          margin: 0.75rem 0;
         }
         .ProseMirror ol {
           list-style-type: decimal;
           padding-left: 1.5rem;
-          margin: 0.5rem 0;
+          margin: 0.75rem 0;
         }
         .ProseMirror li {
           display: list-item;
+          margin: 0.25rem 0;
         }
         .ProseMirror li p {
           margin: 0;
+        }
+
+        /* Bold and Italic */
+        .ProseMirror strong {
+          font-weight: 600;
+        }
+        .ProseMirror em {
+          font-style: italic;
+        }
+
+        /* Links */
+        .ProseMirror a {
+          color: hsl(var(--primary));
+          text-decoration: underline;
+        }
+
+        /* Images - Float support */
+        .ProseMirror .article-inline-image-wrapper[data-alignment="left"] {
+          float: left;
+          margin: 0 1rem 0.5rem 0;
+        }
+        .ProseMirror .article-inline-image-wrapper[data-alignment="right"] {
+          float: right;
+          margin: 0 0 0.5rem 1rem;
+        }
+        .ProseMirror .article-inline-image-wrapper[data-alignment="center"] {
+          display: block;
+          margin: 1rem auto;
+          clear: both;
+        }
+        .ProseMirror .article-inline-image-wrapper[data-alignment="full"] {
+          display: block;
+          width: 100%;
+          margin: 1rem 0;
+          clear: both;
+        }
+        /* Image rounding - uses CSS variable from container */
+        .ProseMirror .article-inline-image-wrapper img {
+          border-radius: var(--article-image-rounding, 8px);
+        }
+
+        /* Ensure container clears all floats at the end */
+        .ProseMirror::after {
+          content: "";
+          display: table;
+          clear: both;
+        }
+
+        /* Placeholder styling */
+        .ProseMirror p.is-editor-empty:first-child::before {
+          content: attr(data-placeholder);
+          float: left;
+          color: hsl(var(--muted-foreground));
+          pointer-events: none;
+          height: 0;
         }
       `}} />
 
@@ -473,7 +637,7 @@ export function TiptapEditor({
           <Textarea
             value={htmlSource}
             onChange={handleHtmlSourceChange}
-            className="min-h-[200px] font-mono text-sm"
+            className="min-h-[300px] font-mono text-sm"
             placeholder="<p>Enter HTML here...</p>"
             disabled={disabled}
           />
@@ -497,6 +661,14 @@ export function TiptapEditor({
       ) : (
         <EditorContent editor={editor} />
       )}
+
+      {/* Image Insert Modal */}
+      <ImageInsertModal
+        open={imageModalOpen}
+        onOpenChange={setImageModalOpen}
+        siteId={siteId}
+        onInsert={handleImageInsert}
+      />
     </div>
   );
 }
@@ -515,7 +687,7 @@ function ToolbarButton({
   disabled,
   title,
   children,
-}: ToolbarButtonProps) {
+}: ToolbarButtonProps): React.JSX.Element {
   return (
     <Button
       variant="ghost"

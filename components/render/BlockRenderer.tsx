@@ -20,6 +20,7 @@ import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
 import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
+import { ArticleBlock } from "./blocks/ArticleBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -185,6 +186,13 @@ export async function BlockRenderer({
       return (
         <ProductGridBlock
           content={getTypedContent("product_grid", content)}
+          theme={theme}
+        />
+      );
+    case "article":
+      return (
+        <ArticleBlock
+          content={getTypedContent("article", content)}
           theme={theme}
         />
       );

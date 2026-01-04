@@ -367,6 +367,31 @@ console.log(greeting);
     cardBackgroundColor: "",
     cardBackgroundOpacity: 100,
   },
+
+  article: {
+    body: "<p>Start writing your article here. Use the image button in the toolbar to add inline images that text will wrap around.</p>",
+    // Image styling
+    imageRounding: "medium",
+    // Master styling toggle (disabled by default for plain article)
+    enableStyling: false,
+    textColorMode: "auto",
+    // Border options (disabled by default)
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    // Background & overlay (disabled by default)
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    // Layout
+    contentWidth: "medium",
+    // Typography
+    textSize: "normal",
+  },
 };
 
 /**

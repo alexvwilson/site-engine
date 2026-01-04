@@ -18,6 +18,7 @@ import {
   Heading1,
   Share2,
   ShoppingBag,
+  BookOpen,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -45,6 +46,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   embed: Code,
   social_links: Share2,
   product_grid: ShoppingBag,
+  article: BookOpen,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {
