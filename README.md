@@ -2,65 +2,104 @@
 
 A personal AI-powered website builder built with Next.js 15. Create, customize, and publish websites with AI-generated themes, visual section editing, and a full-featured blog system.
 
+**Live Demo**: [https://headstringweb.com](https://headstringweb.com)
+
 ## What It Does
 
 Site Engine lets you build complete websites without writing code:
 
-- **Create sites** with a visual page builder using 12 different section types
+- **Create sites** with a visual page builder using 18 different section types
 - **Generate themes** using AI that understands your brand requirements
-- **Write content** with a rich text editor and drag-and-drop section management
-- **Publish blogs** with categories, RSS feeds, and SEO optimization
-- **Preview changes** across desktop, tablet, and mobile before publishing
-- **Publish instantly** to `/sites/[your-slug]` with one click
+- **Write content** with a rich text editor, markdown support, and drag-and-drop section management
+- **Publish blogs** with categories, RSS feeds, page assignments, and SEO optimization
+- **Preview changes** across desktop, tablet, and mobile with light/dark mode toggle
+- **Publish instantly** to `/sites/[your-slug]` or your own custom domain
 
 ## Features
 
 ### Site Building
 
-- **12 Block Types**: Hero, Header, Footer, Text, Image, Gallery, Features, CTA, Testimonials, Contact, Blog Featured, Blog Grid
-- **Drag-and-Drop**: Reorder sections visually with automatic saving
-- **Section Templates**: Pre-designed starting points for each block type
+- **18 Block Types**: Hero, Header, Footer, Text, Image, Gallery, Features, CTA, Testimonials, Contact, Blog Featured, Blog Grid, Embed, Markdown, Heading, Article, Product Grid, Social Links
+- **Drag-and-Drop**: Reorder sections and pages visually with automatic saving
+- **Section Templates**: Pre-designed starting points for each block type (2-6 per type)
+- **Block Styling**: Borders, background images, overlays, and typography controls per section
 - **Undo/Redo**: 50-step history with keyboard shortcuts (Cmd/Ctrl+Z)
 - **Auto-Save**: Changes save automatically with debouncing
-- **Global Header/Footer**: Configure once, apply to all pages
+- **Global Header/Footer**: Configure once, apply to all pages with per-page overrides
+- **Anchor Links**: Create same-page navigation with smooth scrolling
+
+### Block Types
+
+| Block | Description |
+|-------|-------------|
+| **Hero** | Landing section with rotating text animation (clip/typing effects) |
+| **Header** | Navigation with logo, links, CTA, and social icons |
+| **Footer** | Site footer with multiple layout variants and social links |
+| **Text** | Rich text with styling options (borders, backgrounds, overlays) |
+| **Image** | Single image with 5 layout options and text descriptions |
+| **Gallery** | Grid, masonry, or carousel layouts with lightbox |
+| **Features** | Feature cards with icon picker (65+ icons) |
+| **CTA** | Call-to-action with styling controls |
+| **Testimonials** | Customer quotes with avatars |
+| **Contact** | Functional forms (simple/detailed) with spam protection |
+| **Blog Featured** | Display a post with 4 layout options (split, stacked, hero, minimal) |
+| **Blog Grid** | Grid of recent posts with page filtering |
+| **Embed** | YouTube, Vimeo, Google Maps, Spotify, SoundCloud |
+| **Markdown** | Full GFM support with syntax highlighting |
+| **Heading** | SEO-friendly page headers (H1-H3) |
+| **Article** | Rich text with inline floating images |
+| **Product Grid** | Product/catalog display with platform action links |
+| **Social Links** | Social media icons with brand colors |
 
 ### AI Features
 
 - **Theme Generation**: Describe your brand and get a complete color palette, typography, and component styles
 - **Layout Suggestions**: Describe your page purpose and get AI-recommended section structures
 - **Logo Prompt Generator**: Get ChatGPT-ready prompts for logo creation based on your brand
+- **SEO Analysis**: AI-powered content analysis with prioritized recommendations
+- **Legal Page Generator**: AI-generated Privacy Policy, Terms of Service, and Cookie Policy
 
 ### Theme System
 
 - **Manual Editing**: Fine-tune colors, fonts, and border radius after generation
-- **Light/Dark Mode**: Site-level control with system preference support
+- **Light/Dark Mode**: Site-level control (always light, always dark, system default, user choice)
 - **Live Preview**: See theme changes in real-time before saving
 - **Multiple Themes**: Save and switch between different theme variations
+- **Preview Mode Toggle**: Test both light and dark modes in the editor
 
 ### Blog System
 
 - **Full Blog**: Create, edit, schedule, and publish posts
-- **Categories**: Organize posts with site-level categories
+- **Categories**: Organize posts with site-level categories and filtering
+- **Page Assignment**: Assign posts to specific pages for filtered blog grids
 - **RSS Feed**: Auto-generated at `/sites/[slug]/blog/rss.xml`
 - **SEO**: Custom meta tags, JSON-LD structured data, auto-generated sitemaps
-- **Blog Blocks**: Embed featured posts or post grids on any page
+- **Blog Blocks**: Embed featured posts or post grids on any page with layout options
 - **Reading Time**: Automatic estimation displayed on posts
 - **Social Sharing**: Built-in share buttons for Twitter, Facebook, LinkedIn
+- **Post Navigation**: Previous/Next post links
+- **Markdown Detection**: Auto-converts pasted markdown to rich text
 
 ### Publishing
 
 - **Draft/Published States**: Control visibility at site, page, and section levels
 - **Under Construction Mode**: Show a coming soon page while you build
-- **Custom Domains**: Connect your own domain via Vercel
-- **SEO Settings**: Meta titles, descriptions, and Open Graph support
+- **Custom Domains**: Connect your own domain via Vercel with automatic SSL
+- **SEO Settings**: Meta titles, descriptions, Open Graph, and Twitter cards
+- **SEO Health Check**: Automated checklist with AI-powered analysis
+- **Dynamic Sitemap**: Auto-generated at `/sites/[slug]/sitemap.xml`
+- **Robots.txt**: Auto-generated at `/sites/[slug]/robots.txt`
 - **Contact Forms**: Functional forms with spam protection and email notifications
 
 ### Content Management
 
 - **Image Upload**: Drag-and-drop with Supabase Storage
 - **Image Library**: Browse and reuse previously uploaded images
+- **Image Albums**: Organize images into folders/albums
 - **Rich Text Editor**: Bold, italic, headings, lists, links, blockquotes
+- **Article Editor**: Insert and position images inline with text
 - **Device Preview**: Test layouts on desktop, tablet, and mobile
+- **Manual Page Ordering**: Drag-and-drop page reordering
 
 ## Tech Stack
 
@@ -227,9 +266,11 @@ trigger/
 
 **Theme System**: CSS variables enable runtime theme switching without rebuilds. Themes include light and dark color palettes with automatic dark mode generation.
 
-**Blog Integration**: Blog posts exist as a separate entity from pages, with dedicated section blocks for embedding posts anywhere in your site.
+**Blog Integration**: Blog posts exist as a separate entity from pages, with dedicated section blocks for embedding posts anywhere in your site. Posts can be assigned to specific pages for filtered displays.
 
-**Background Jobs**: AI operations (theme generation, layout suggestions, logo prompts) run as Trigger.dev tasks with real-time progress tracking.
+**Background Jobs**: AI operations (theme generation, layout suggestions, logo prompts, SEO analysis, legal page generation) run as Trigger.dev tasks with real-time progress tracking.
+
+**SEO**: Each published site gets auto-generated sitemap.xml and robots.txt, plus AI-powered SEO analysis with actionable recommendations.
 
 ---
 
