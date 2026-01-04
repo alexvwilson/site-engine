@@ -22,7 +22,53 @@ _No P1 items currently_
 
 ## P2 - Medium Priority
 
-_No P2 items currently_
+### 46. Rich Content Editor (TipTap with Inline Images)
+
+**Problem:** Current Text block only supports formatted text. Users can't create article-style layouts with images floating alongside text (like an About page with a photo next to a bio). Currently requires stacking separate Image + Text blocks which doesn't allow text wrapping.
+
+**Solution:**
+Enhance the existing TipTap editor with image insertion capabilities:
+- Add image button to TipTap toolbar (upload new or pick from Image Library)
+- Image alignment options: Left float, Right float, Center, Full-width
+- Text wraps around floated images naturally
+- Responsive behavior: images stack on mobile
+
+**Implementation Notes:**
+- Add `@tiptap/extension-image` to TipTap configuration
+- Custom image node with alignment attribute
+- ImageUpload integration within TipTap (modal or inline)
+- CSS for float behaviors with proper clearing
+- Consider renaming "Text" block to "Content" or "Article" block
+
+**Alternatives Considered:**
+- New "Article" block type (rejected: duplicates Text block functionality)
+- Notion-like block editor (rejected: too large a change, learning curve)
+
+**Complexity:** Medium-High
+
+---
+
+### 47. Product/Catalog Grid Block
+
+**Problem:** No way to display products, albums, or items with purchase/action links. The Gallery block shows images but doesn't support titles or clickable action buttons (like "Buy on Amazon" or "Listen on Spotify").
+
+**Use Case Example:** Music label displaying album covers with Amazon/iTunes purchase buttons beneath each album.
+
+**Solution:**
+New "Product Grid" or "Catalog" block type:
+- Each item has: Image, Title (optional), Description (optional)
+- Multiple action links per item with icon + URL (Amazon, iTunes, Spotify, YouTube, custom)
+- Predefined icon set for common platforms + custom URL option
+- Layout options: Grid (2/3/4 columns), card style
+- Link display: Icon buttons below image, or overlay on hover
+
+**Implementation Notes:**
+- New `ProductGridContent` type with `items[]` array
+- Each item: `{ image, title?, description?, links: { platform, url, label? }[] }`
+- `IconPicker` reuse or new platform-specific picker
+- Templates: Music Catalog, Product Showcase, Portfolio with Links
+
+**Complexity:** Medium
 
 ---
 
@@ -82,6 +128,49 @@ _No P2 items currently_
 ---
 
 ## Completed Features
+
+### 45. Social Links (Settings + Header/Footer/Block) ✅ 2026-01-03
+
+**Problem:** No way to add social media links to sites. Users need to manually add social icons/links in footer content or create custom solutions.
+
+**Solution Implemented:**
+- [x] Settings → Social Links card with platform URL configuration
+- [x] Supported platforms: Facebook, Instagram, X/Twitter, LinkedIn, YouTube, TikTok, Threads, Pinterest, GitHub, Website
+- [x] Site-level icon style setting (Brand colors / Monochrome / Theme primary)
+- [x] Header integration with toggle, position (left/right), and size options
+- [x] Footer integration with toggle, position (above/below), alignment (left/center/right), and size
+- [x] New "Social Links" block type for standalone use anywhere on page
+- [x] Block styling options: border, background image, overlay, text color mode
+- [x] Custom SVG icons for each platform with brand colors
+- [x] Page-level header/footer merge preserves social link settings
+
+**Task Document:** `ai_docs/tasks/058_social_links.md`
+
+**Files Created:**
+- `lib/social-icons.tsx` - Social icon component with platform SVGs
+- `components/sites/SocialLinksManager.tsx` - Settings UI for managing links
+- `components/editor/blocks/SocialLinksEditor.tsx` - Block editor
+- `components/render/blocks/SocialLinksBlock.tsx` - Block renderer
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added social_links JSONB, social_icon_style columns
+- `lib/drizzle/schema/sections.ts` - Added "social_links" block type
+- `lib/section-types.ts` - Added SocialLinksContent, SocialLink, SocialIconStyle types
+- `lib/section-defaults.ts` - Added social_links defaults
+- `lib/section-templates.ts` - Added social links templates
+- `lib/header-footer-utils.ts` - Added social link fields to merge functions
+- `components/sites/SettingsTab.tsx` - Added SocialLinksManager
+- `components/editor/blocks/HeaderEditor.tsx` - Added social links controls
+- `components/editor/blocks/FooterEditor.tsx` - Added social links controls with alignment
+- `components/render/blocks/HeaderBlock.tsx` - Social icons rendering
+- `components/render/blocks/FooterBlock.tsx` - Social icons rendering with alignment
+- `components/render/BlockRenderer.tsx` - SocialLinksBlock routing
+- `components/editor/SectionEditor.tsx` - SocialLinksEditor routing
+- `components/editor/BlockIcon.tsx` - Added Share2 icon
+
+**Database Migration:** `0027_light_boom_boom` - Added social_links and social_icon_style columns
+
+---
 
 ### 39. Image Library Albums / Categories ✅ 2026-01-03
 
@@ -1282,7 +1371,7 @@ _No P2 items currently_
 
 ---
 
-**Last Updated:** 2026-01-03 (Completed #39 Image Library Albums)
+**Last Updated:** 2026-01-03 (Completed #45 Social Links; Added #46 Rich Content Editor, #47 Product/Catalog Grid)
 
 ---
 

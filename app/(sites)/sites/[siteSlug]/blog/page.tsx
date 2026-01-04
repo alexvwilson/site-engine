@@ -13,7 +13,7 @@ import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { BlogListingPage } from "@/components/render/blog/BlogListingPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { getBasePath } from "@/lib/url-utils";
-import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
 
@@ -83,6 +83,8 @@ export default async function PublishedBlogPage({ params }: PageProps) {
 
   const siteHeader = site.header_content as HeaderContent | null;
   const siteFooter = site.footer_content as FooterContent | null;
+  const socialLinks = (site.social_links as SocialLink[]) ?? [];
+  const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
 
   return (
     <>
@@ -94,7 +96,7 @@ export default async function PublishedBlogPage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} />}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
         <main className="flex-1">
           <BlogListingPage
             initialPosts={posts}
@@ -106,7 +108,7 @@ export default async function PublishedBlogPage({ params }: PageProps) {
             postsPerPage={POSTS_PER_PAGE}
           />
         </main>
-        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} />}
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
       </div>
     </>
   );

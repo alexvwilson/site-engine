@@ -14,6 +14,7 @@ import { TestimonialsEditor } from "./blocks/TestimonialsEditor";
 import { ContactEditor } from "./blocks/ContactEditor";
 import { FooterEditor } from "./blocks/FooterEditor";
 import { EmbedEditor } from "./blocks/EmbedEditor";
+import { SocialLinksEditor } from "./blocks/SocialLinksEditor";
 import { BlogFeaturedEditor } from "./BlogFeaturedEditor";
 import { BlogGridEditor } from "./BlogGridEditor";
 import { SaveIndicator } from "./SaveIndicator";
@@ -177,6 +178,9 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       )}
       {section.block_type === "embed" && (
         <EmbedEditor {...editorProps} content={content as Parameters<typeof EmbedEditor>[0]["content"]} />
+      )}
+      {section.block_type === "social_links" && (
+        <SocialLinksEditor {...editorProps} content={content as Parameters<typeof SocialLinksEditor>[0]["content"]} />
       )}
     </div>
   );

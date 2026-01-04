@@ -19,7 +19,7 @@ import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { PostContent } from "@/components/render/blog/PostContent";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { getBasePath, getPublicSiteUrl } from "@/lib/url-utils";
-import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
 
@@ -106,6 +106,8 @@ export default async function PublishedPostPage({ params }: PageProps) {
 
   const siteHeader = site.header_content as HeaderContent | null;
   const siteFooter = site.footer_content as FooterContent | null;
+  const socialLinks = (site.social_links as SocialLink[]) ?? [];
+  const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
 
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
@@ -159,7 +161,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} />}
+        {siteHeader && <HeaderBlock content={siteHeader} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
         <main className="flex-1" style={{ backgroundColor: "var(--theme-background)" }}>
           <article className="py-12 md:py-16">
             <div className="container mx-auto px-4 max-w-4xl">
@@ -259,7 +261,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
             </div>
           </article>
         </main>
-        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} />}
+        {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
       </div>
     </>
   );

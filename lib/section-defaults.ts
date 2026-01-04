@@ -32,6 +32,10 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     borderWidth: "thin",
     borderColor: "",
     textSize: "normal",
+    // Social links
+    showSocialLinks: true,
+    socialLinksPosition: "right",
+    socialLinksSize: "medium",
   },
 
   heading: {
@@ -281,6 +285,11 @@ console.log(greeting);
     borderWidth: "thin",
     borderColor: "",
     textSize: "normal",
+    // Social links
+    showSocialLinks: true,
+    socialLinksPosition: "above",
+    socialLinksAlignment: "center",
+    socialLinksSize: "medium",
   },
 
   blog_featured: {
@@ -308,6 +317,25 @@ console.log(greeting);
     aspectRatio: "16:9",
     customHeight: 400,
     title: "",
+  },
+
+  social_links: {
+    alignment: "center",
+    size: "medium",
+    iconStyle: "brand",
+    // Styling options (disabled by default)
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
   },
 };
 

@@ -15,7 +15,7 @@ import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { mergeHeaderContent, mergeFooterContent } from "@/lib/header-footer-utils";
 import { getBasePath } from "@/lib/url-utils";
-import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
 
 // Ensure fresh data on every request for published sites
 export const dynamic = "force-dynamic";
@@ -85,9 +85,11 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
   const theme = activeTheme?.data ?? DEFAULT_THEME;
   const colorMode = site.color_mode;
 
-  // Get site-level header/footer
+  // Get site-level header/footer and social links
   const siteHeader = site.header_content as HeaderContent | null;
   const siteFooter = site.footer_content as FooterContent | null;
+  const socialLinks = (site.social_links as SocialLink[]) ?? [];
+  const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
 
   // Find page-level header/footer sections for potential overrides
   const pageHeaderSection = allSections.find((s) => s.block_type === "header");
@@ -119,15 +121,17 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
             <ColorModeToggle />
           </div>
         )}
-        {finalHeader && <HeaderBlock content={finalHeader} theme={theme} basePath={basePath} />}
+        {finalHeader && <HeaderBlock content={finalHeader} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
         <PageRenderer
           sections={sections}
           theme={theme}
           siteId={site.id}
           basePath={basePath}
           pageId={page.id}
+          socialLinks={socialLinks}
+          socialIconStyle={socialIconStyle}
         />
-        {finalFooter && <FooterBlock content={finalFooter} theme={theme} basePath={basePath} />}
+        {finalFooter && <FooterBlock content={finalFooter} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
       </div>
     </>
   );

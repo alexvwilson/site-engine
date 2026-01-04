@@ -10,6 +10,32 @@ export interface NavLink {
   url: string;
 }
 
+// Social link types
+export type SocialPlatform =
+  | "facebook"
+  | "instagram"
+  | "x"
+  | "linkedin"
+  | "youtube"
+  | "tiktok"
+  | "threads"
+  | "pinterest"
+  | "github"
+  | "discord"
+  | "snapchat"
+  | "whatsapp"
+  | "telegram"
+  | "twitch"
+  | "website";
+
+export interface SocialLink {
+  platform: SocialPlatform;
+  url: string;
+}
+
+export type SocialIconStyle = "brand" | "monochrome" | "primary";
+export type SocialIconSize = "small" | "medium" | "large";
+
 export type HeaderLayout = "left" | "right" | "center";
 export type FooterLayout = "simple" | "columns" | "minimal";
 export type HeaderFooterBorderWidth = "thin" | "medium" | "thick";
@@ -58,6 +84,12 @@ export interface HeaderContent {
   overrideCta?: boolean;
   overrideLogoSize?: boolean;
   overrideStyling?: boolean;
+  overrideSocialLinks?: boolean;
+
+  // Social links options
+  showSocialLinks?: boolean;
+  socialLinksPosition?: "left" | "right";
+  socialLinksSize?: SocialIconSize;
 }
 
 // Hero title animation types
@@ -421,6 +453,13 @@ export interface FooterContent {
   // Override flags (only for page-level sections)
   overrideLayout?: boolean;
   overrideStyling?: boolean;
+  overrideSocialLinks?: boolean;
+
+  // Social links options
+  showSocialLinks?: boolean;
+  socialLinksPosition?: "above" | "below";
+  socialLinksAlignment?: "left" | "center" | "right";
+  socialLinksSize?: SocialIconSize;
 }
 
 export type BlogFeaturedLayout = "split" | "stacked" | "hero" | "minimal";
@@ -457,6 +496,36 @@ export interface EmbedContent {
   title?: string;
 }
 
+export interface SocialLinksContent {
+  alignment?: "left" | "center" | "right";
+  size?: SocialIconSize;
+
+  // Icon style override (if not set, uses site-level style)
+  iconStyle?: SocialIconStyle;
+
+  // Master styling toggle - follows same pattern as other blocks
+  enableStyling?: boolean;
+
+  // Text/icon color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Section background & overlay
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -475,7 +544,8 @@ export type SectionContent =
   | FooterContent
   | BlogFeaturedContent
   | BlogGridContent
-  | EmbedContent;
+  | EmbedContent
+  | SocialLinksContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -496,6 +566,7 @@ export interface ContentTypeMap {
   blog_featured: BlogFeaturedContent;
   blog_grid: BlogGridContent;
   embed: EmbedContent;
+  social_links: SocialLinksContent;
 }
 
 /**
@@ -608,5 +679,11 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Embed",
     description: "Embed YouTube, Google Maps, and other content",
     icon: "code",
+  },
+  {
+    type: "social_links",
+    label: "Social Links",
+    description: "Display social media links with icons",
+    icon: "share-2",
   },
 ];

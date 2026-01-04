@@ -785,6 +785,9 @@ console.log(message); // Output: Hello, World!
   blog_featured: [],
   blog_grid: [],
 
+  // Social links block - uses site-level social links, no templates needed
+  social_links: [],
+
   // Embed templates
   embed: [
     {

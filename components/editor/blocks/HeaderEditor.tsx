@@ -46,7 +46,9 @@ import type {
   HeaderFooterBorderWidth,
   TextColorMode,
   TextSize,
+  SocialIconSize,
 } from "@/lib/section-types";
+import { SOCIAL_ICON_SIZES } from "@/lib/social-icons";
 
 interface HeaderEditorProps {
   content: HeaderContent;
@@ -658,6 +660,62 @@ export function HeaderEditor({
             />
           </div>
         </div>
+      </div>
+
+      {/* Social Links Section */}
+      <div className="space-y-4 pt-4 border-t">
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label htmlFor="header-showSocialLinks">Show Social Links</Label>
+            <p className="text-xs text-muted-foreground">
+              Display social media icons from Site Settings
+            </p>
+          </div>
+          <Switch
+            id="header-showSocialLinks"
+            checked={content.showSocialLinks ?? false}
+            onCheckedChange={(checked) => handleBooleanChange("showSocialLinks", checked)}
+            disabled={disabled}
+          />
+        </div>
+
+        {content.showSocialLinks && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="header-socialLinksPosition">Position</Label>
+              <Select
+                value={content.socialLinksPosition ?? "right"}
+                onValueChange={(value) => updateField("socialLinksPosition", value as "left" | "right")}
+                disabled={disabled}
+              >
+                <SelectTrigger id="header-socialLinksPosition">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left side</SelectItem>
+                  <SelectItem value="right">Right side</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="header-socialLinksSize">Icon Size</Label>
+              <Select
+                value={content.socialLinksSize ?? "medium"}
+                onValueChange={(value) => updateField("socialLinksSize", value as SocialIconSize)}
+                disabled={disabled}
+              >
+                <SelectTrigger id="header-socialLinksSize">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small ({SOCIAL_ICON_SIZES.small}px)</SelectItem>
+                  <SelectItem value="medium">Medium ({SOCIAL_ICON_SIZES.medium}px)</SelectItem>
+                  <SelectItem value="large">Large ({SOCIAL_ICON_SIZES.large}px)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Header Styling Options */}

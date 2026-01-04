@@ -73,6 +73,17 @@ export function mergeHeaderContent(
     textSize: usePageStyling
       ? pageHeader.textSize
       : siteHeader.textSize,
+
+    // Social links - always from site settings (can be overridden if page wants to hide them)
+    showSocialLinks: pageHeader.overrideSocialLinks
+      ? pageHeader.showSocialLinks
+      : siteHeader.showSocialLinks,
+    socialLinksPosition: pageHeader.overrideSocialLinks
+      ? pageHeader.socialLinksPosition
+      : siteHeader.socialLinksPosition,
+    socialLinksSize: pageHeader.overrideSocialLinks
+      ? pageHeader.socialLinksSize
+      : siteHeader.socialLinksSize,
   };
 }
 
@@ -132,5 +143,19 @@ export function mergeFooterContent(
     textSize: usePageStyling
       ? pageFooter.textSize
       : siteFooter.textSize,
+
+    // Social links - always from site settings (can be overridden if page wants to hide them)
+    showSocialLinks: pageFooter.overrideSocialLinks
+      ? pageFooter.showSocialLinks
+      : siteFooter.showSocialLinks,
+    socialLinksPosition: pageFooter.overrideSocialLinks
+      ? pageFooter.socialLinksPosition
+      : siteFooter.socialLinksPosition,
+    socialLinksSize: pageFooter.overrideSocialLinks
+      ? pageFooter.socialLinksSize
+      : siteFooter.socialLinksSize,
+    socialLinksAlignment: pageFooter.overrideSocialLinks
+      ? pageFooter.socialLinksAlignment
+      : siteFooter.socialLinksAlignment,
   };
 }

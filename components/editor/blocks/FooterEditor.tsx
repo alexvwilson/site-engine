@@ -29,7 +29,9 @@ import type {
   HeaderFooterBorderWidth,
   TextColorMode,
   TextSize,
+  SocialIconSize,
 } from "@/lib/section-types";
+import { SOCIAL_ICON_SIZES } from "@/lib/social-icons";
 
 interface FooterEditorProps {
   content: FooterContent;
@@ -322,6 +324,79 @@ export function FooterEditor({
           <Plus className="h-4 w-4 mr-2" />
           Add Link
         </Button>
+      </div>
+
+      {/* Social Links Section */}
+      <div className="space-y-4 pt-4 border-t">
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <Label htmlFor="footer-showSocialLinks">Show Social Links</Label>
+            <p className="text-xs text-muted-foreground">
+              Display social media icons from Site Settings
+            </p>
+          </div>
+          <Switch
+            id="footer-showSocialLinks"
+            checked={content.showSocialLinks ?? false}
+            onCheckedChange={(checked) => updateField("showSocialLinks", checked)}
+            disabled={disabled}
+          />
+        </div>
+
+        {content.showSocialLinks && (
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="footer-socialLinksPosition">Position</Label>
+              <Select
+                value={content.socialLinksPosition ?? "above"}
+                onValueChange={(value) => updateField("socialLinksPosition", value as "above" | "below")}
+                disabled={disabled}
+              >
+                <SelectTrigger id="footer-socialLinksPosition">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="above">Above</SelectItem>
+                  <SelectItem value="below">Below</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="footer-socialLinksAlignment">Alignment</Label>
+              <Select
+                value={content.socialLinksAlignment ?? "center"}
+                onValueChange={(value) => updateField("socialLinksAlignment", value as "left" | "center" | "right")}
+                disabled={disabled}
+              >
+                <SelectTrigger id="footer-socialLinksAlignment">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="left">Left</SelectItem>
+                  <SelectItem value="center">Center</SelectItem>
+                  <SelectItem value="right">Right</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="footer-socialLinksSize">Icon Size</Label>
+              <Select
+                value={content.socialLinksSize ?? "medium"}
+                onValueChange={(value) => updateField("socialLinksSize", value as SocialIconSize)}
+                disabled={disabled}
+              >
+                <SelectTrigger id="footer-socialLinksSize">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small ({SOCIAL_ICON_SIZES.small}px)</SelectItem>
+                  <SelectItem value="medium">Medium ({SOCIAL_ICON_SIZES.medium}px)</SelectItem>
+                  <SelectItem value="large">Large ({SOCIAL_ICON_SIZES.large}px)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer Styling Options */}

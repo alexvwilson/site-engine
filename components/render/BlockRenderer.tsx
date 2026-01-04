@@ -1,6 +1,6 @@
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import { getTypedContent } from "@/lib/section-types";
+import { getTypedContent, type SocialLink, type SocialIconStyle } from "@/lib/section-types";
 
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeadingBlock } from "./blocks/HeadingBlock";
@@ -18,6 +18,7 @@ import { FooterBlock } from "./blocks/FooterBlock";
 import { EmbedBlock } from "./blocks/EmbedBlock";
 import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
+import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -25,6 +26,8 @@ interface BlockRendererProps {
   siteId?: string;
   basePath?: string;
   pageId?: string;
+  socialLinks?: SocialLink[];
+  socialIconStyle?: SocialIconStyle;
 }
 
 export async function BlockRenderer({
@@ -33,6 +36,8 @@ export async function BlockRenderer({
   siteId,
   basePath = "",
   pageId,
+  socialLinks = [],
+  socialIconStyle = "brand",
 }: BlockRendererProps) {
   const { block_type, content, anchor_id } = section;
 
@@ -44,6 +49,8 @@ export async function BlockRenderer({
           content={getTypedContent("header", content)}
           theme={theme}
           basePath={basePath}
+          socialLinks={socialLinks}
+          socialIconStyle={socialIconStyle}
         />
       );
     case "heading":
@@ -128,6 +135,8 @@ export async function BlockRenderer({
           content={getTypedContent("footer", content)}
           theme={theme}
           basePath={basePath}
+          socialLinks={socialLinks}
+          socialIconStyle={socialIconStyle}
         />
       );
     case "embed":
@@ -160,6 +169,15 @@ export async function BlockRenderer({
           siteId={siteId}
           basePath={basePath}
           pageId={pageId}
+        />
+      );
+    case "social_links":
+      return (
+        <SocialLinksBlock
+          content={getTypedContent("social_links", content)}
+          theme={theme}
+          socialLinks={socialLinks}
+          siteIconStyle={socialIconStyle}
         />
       );
     default:

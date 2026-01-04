@@ -5,7 +5,8 @@ import { db } from "@/lib/drizzle/db";
 import { sites, type ColorMode, COLOR_MODES, type BrandPersonality, BRAND_PERSONALITIES } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, ne } from "drizzle-orm";
-import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
+import { SOCIAL_ICON_STYLES } from "@/lib/drizzle/schema/sites";
 
 /**
  * Generate a URL-safe slug from a name
@@ -240,6 +241,8 @@ export interface UpdateSiteSettingsData {
   contactNotificationEmail?: string | null;
   faviconUrl?: string | null;
   useSeparateFavicon?: boolean;
+  socialLinks?: SocialLink[];
+  socialIconStyle?: SocialIconStyle;
 }
 
 /**
@@ -350,6 +353,14 @@ export async function updateSiteSettings(
   }
   if (data.useSeparateFavicon !== undefined) {
     updateData.use_separate_favicon = data.useSeparateFavicon;
+  }
+  if (data.socialLinks !== undefined) {
+    updateData.social_links = data.socialLinks;
+  }
+  if (data.socialIconStyle !== undefined) {
+    if (SOCIAL_ICON_STYLES.includes(data.socialIconStyle)) {
+      updateData.social_icon_style = data.socialIconStyle;
+    }
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

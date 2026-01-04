@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid, index, jsonb, boolean } from "drizzle-orm/pg-core";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { users } from "./users";
-import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink } from "@/lib/section-types";
 
 export const SITE_STATUSES = ["draft", "published"] as const;
 export type SiteStatus = (typeof SITE_STATUSES)[number];
@@ -17,6 +17,8 @@ export type DomainVerificationStatus = (typeof DOMAIN_VERIFICATION_STATUSES)[num
 
 export const DOMAIN_SSL_STATUSES = ["pending", "issued", "failed"] as const;
 export type DomainSslStatus = (typeof DOMAIN_SSL_STATUSES)[number];
+
+export const SOCIAL_ICON_STYLES = ["brand", "monochrome", "primary"] as const;
 
 // Vercel API verification challenge structure
 export interface VercelVerificationChallenge {
@@ -71,6 +73,10 @@ export const sites = pgTable(
     favicon_url: text("favicon_url"),
     // When false, logo is used as favicon; when true, use separate favicon_url
     use_separate_favicon: boolean("use_separate_favicon").notNull().default(false),
+    // Social links - array of {platform, url} objects for site-wide social media
+    social_links: jsonb("social_links").$type<SocialLink[]>().default([]),
+    // Icon style for social links (brand colors, monochrome, or theme primary)
+    social_icon_style: text("social_icon_style", { enum: SOCIAL_ICON_STYLES }).default("brand"),
     // Custom domain verification fields
     domain_verification_status: text("domain_verification_status", {
       enum: DOMAIN_VERIFICATION_STATUSES,

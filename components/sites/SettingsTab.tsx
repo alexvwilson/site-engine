@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,7 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { DnsInstructionsCard } from "@/components/sites/DnsInstructionsCard";
 import { formatDnsInstructions, type DnsInstruction } from "@/lib/domain-utils";
 import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
-import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
 import { ImageUpload } from "@/components/editor/ImageUpload";
@@ -43,6 +43,7 @@ import { ImageLibraryModal } from "@/components/sites/ImageLibraryModal";
 import { AlbumManager } from "@/components/sites/AlbumManager";
 import { LegalPagesCard } from "@/components/sites/LegalPagesCard";
 import { SeoScorecard } from "@/components/sites/SeoScorecard";
+import { SocialLinksManager } from "@/components/sites/SocialLinksManager";
 import { sectionDefaults } from "@/lib/section-defaults";
 
 interface SettingsTabProps {
@@ -99,6 +100,14 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     site.footer_content ?? sectionDefaults.footer
   );
 
+  // Social links configuration
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(
+    (site.social_links as SocialLink[]) ?? []
+  );
+  const [socialIconStyle, setSocialIconStyle] = useState<SocialIconStyle>(
+    (site.social_icon_style as SocialIconStyle) ?? "brand"
+  );
+
   // Custom domain management (separate from main form)
   const [domainInput, setDomainInput] = useState("");
   const [domainLoading, setDomainLoading] = useState(false);
@@ -131,6 +140,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
   // Track if any changes have been made
   const initialHeader = site.header_content ?? { ...sectionDefaults.header, siteName: site.name };
   const initialFooter = site.footer_content ?? sectionDefaults.footer;
+  const initialSocialLinks = (site.social_links as SocialLink[]) ?? [];
+  const initialSocialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
 
   const hasChanges =
     slug !== site.slug ||
@@ -149,7 +160,9 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     faviconUrl !== (site.favicon_url || "") ||
     useSeparateFavicon !== site.use_separate_favicon ||
     !deepEqual(headerContent, initialHeader) ||
-    !deepEqual(footerContent, initialFooter);
+    !deepEqual(footerContent, initialFooter) ||
+    !deepEqual(socialLinks, initialSocialLinks) ||
+    socialIconStyle !== initialSocialIconStyle;
 
   // Validate slug format
   const slugError =
@@ -178,6 +191,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
     setUseSeparateFavicon(site.use_separate_favicon);
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
+    setSocialLinks((site.social_links as SocialLink[]) ?? []);
+    setSocialIconStyle((site.social_icon_style as SocialIconStyle) ?? "brand");
     setDomainInput("");
   }, [site]);
 
@@ -212,6 +227,8 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
       useSeparateFavicon: useSeparateFavicon !== site.use_separate_favicon ? useSeparateFavicon : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
+      socialLinks: !deepEqual(socialLinks, initialSocialLinks) ? socialLinks : undefined,
+      socialIconStyle: socialIconStyle !== initialSocialIconStyle ? socialIconStyle : undefined,
     });
     setLoading(false);
 
@@ -651,6 +668,28 @@ export function SettingsTab({ site, categories = [] }: SettingsTabProps) {
               </div>
             )}
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Social Links */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Share2 className="h-5 w-5" />
+            Social Links
+          </CardTitle>
+          <CardDescription>
+            Add links to your social media profiles. These can be displayed in your header, footer, or as a standalone block.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SocialLinksManager
+            links={socialLinks}
+            iconStyle={socialIconStyle}
+            onLinksChange={setSocialLinks}
+            onIconStyleChange={setSocialIconStyle}
+            disabled={loading}
+          />
         </CardContent>
       </Card>
 

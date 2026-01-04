@@ -16,6 +16,7 @@ import {
   LayoutGrid,
   Code,
   Heading1,
+  Share2,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -41,6 +42,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   blog_featured: Newspaper,
   blog_grid: LayoutGrid,
   embed: Code,
+  social_links: Share2,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {

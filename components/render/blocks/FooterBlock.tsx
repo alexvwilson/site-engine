@@ -1,12 +1,15 @@
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import type { FooterContent, HeaderFooterBorderWidth } from "@/lib/section-types";
+import type { FooterContent, HeaderFooterBorderWidth, SocialLink, SocialIconStyle } from "@/lib/section-types";
 import { getSmallStyles, getLinkStyles } from "../utilities/theme-styles";
 import { transformUrl } from "@/lib/url-utils";
+import { SocialIcon } from "@/lib/social-icons";
 
 interface FooterBlockProps {
   content: FooterContent;
   theme: ThemeData;
   basePath?: string;
+  socialLinks?: SocialLink[];
+  socialIconStyle?: SocialIconStyle;
 }
 
 const borderWidthMap: Record<HeaderFooterBorderWidth, string> = {
@@ -32,12 +35,49 @@ function getTextColor(textColorMode: string | undefined): string {
   }
 }
 
-export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps) {
+export function FooterBlock({ content, theme, basePath = "", socialLinks = [], socialIconStyle = "brand" }: FooterBlockProps) {
   const layout = content.layout ?? "simple";
   const enableStyling = content.enableStyling ?? false;
   const showBorder = content.showBorder ?? false;
   const textColor = enableStyling ? getTextColor(content.textColorMode) : "var(--color-background)";
   const sizeMultiplier = textSizeScale[content.textSize ?? "normal"];
+
+  // Social links settings
+  const showSocialLinks = content.showSocialLinks ?? false;
+  const socialLinksPosition = content.socialLinksPosition ?? "above";
+  const socialLinksAlignment = content.socialLinksAlignment ?? "center";
+  const socialLinksSize = content.socialLinksSize ?? "medium";
+  const hasSocialLinks = showSocialLinks && socialLinks.length > 0;
+
+  // Alignment class map
+  const alignmentClasses = {
+    left: "justify-start",
+    center: "justify-center",
+    right: "justify-end",
+  };
+
+  // Social icons component
+  const SocialLinksRow = hasSocialLinks && (
+    <div className={`flex items-center gap-4 ${alignmentClasses[socialLinksAlignment]}`}>
+      {socialLinks.map((link) => (
+        <a
+          key={`${link.platform}-${link.url}`}
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="opacity-70 hover:opacity-100 transition-opacity"
+        >
+          <SocialIcon
+            platform={link.platform}
+            style={socialIconStyle}
+            size={socialLinksSize}
+            primaryColor={theme.colors.primary}
+            monochromeColor={textColor}
+          />
+        </a>
+      ))}
+    </div>
+  );
 
   // Background and border styles
   const hasBackgroundImage = enableStyling && content.backgroundImage;
@@ -57,7 +97,8 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
     // Minimal layout: Copyright only
     if (layout === "minimal") {
       return (
-        <div className="max-w-6xl mx-auto text-center py-6 px-6">
+        <div className="max-w-6xl mx-auto text-center py-6 px-6 space-y-4">
+          {socialLinksPosition === "above" && SocialLinksRow}
           <p
             className="opacity-70"
             style={{
@@ -68,6 +109,7 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
           >
             {content.copyright}
           </p>
+          {socialLinksPosition === "below" && SocialLinksRow}
         </div>
       );
     }
@@ -76,6 +118,9 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
     if (layout === "columns") {
       return (
         <div className="max-w-6xl mx-auto py-12 px-6">
+          {socialLinksPosition === "above" && (
+            <div className="mb-8">{SocialLinksRow}</div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             {/* Links column */}
             <div>
@@ -110,7 +155,7 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
             </div>
           </div>
           {/* Bottom row with copyright */}
-          <div className="pt-8 border-t border-white/20">
+          <div className="pt-8 border-t border-white/20 space-y-4">
             <p
               className="opacity-70 text-center md:text-left"
               style={{
@@ -121,6 +166,7 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
             >
               {content.copyright}
             </p>
+            {socialLinksPosition === "below" && SocialLinksRow}
           </div>
         </div>
       );
@@ -128,7 +174,8 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
 
     // Simple layout (default): Single row layout
     return (
-      <div className="max-w-6xl mx-auto py-8 px-6">
+      <div className="max-w-6xl mx-auto py-8 px-6 space-y-4">
+        {socialLinksPosition === "above" && SocialLinksRow}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p
             className="opacity-70"
@@ -160,6 +207,7 @@ export function FooterBlock({ content, theme, basePath = "" }: FooterBlockProps)
             </nav>
           )}
         </div>
+        {socialLinksPosition === "below" && SocialLinksRow}
       </div>
     );
   };

@@ -1,15 +1,18 @@
 import Image from "next/image";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import type { HeaderContent, HeaderFooterBorderWidth } from "@/lib/section-types";
+import type { HeaderContent, HeaderFooterBorderWidth, SocialLink, SocialIconStyle } from "@/lib/section-types";
 import { getButtonStyles, getLinkStyles } from "../utilities/theme-styles";
 import { transformUrl } from "@/lib/url-utils";
 import { cn } from "@/lib/utils";
 import { MobileMenu } from "./MobileMenu";
+import { SocialIcon } from "@/lib/social-icons";
 
 interface HeaderBlockProps {
   content: HeaderContent;
   theme: ThemeData;
   basePath?: string;
+  socialLinks?: SocialLink[];
+  socialIconStyle?: SocialIconStyle;
 }
 
 const borderWidthMap: Record<HeaderFooterBorderWidth, string> = {
@@ -35,7 +38,7 @@ function getTextColor(textColorMode: string | undefined): string {
   }
 }
 
-export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps) {
+export function HeaderBlock({ content, theme, basePath = "", socialLinks = [], socialIconStyle = "brand" }: HeaderBlockProps) {
   const layout = content.layout ?? "left";
   const isSticky = content.sticky ?? true;
   const showLogoText = content.showLogoText ?? true;
@@ -44,6 +47,35 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
   const showBorder = content.showBorder ?? true;
   const textColor = enableStyling ? getTextColor(content.textColorMode) : "var(--color-foreground)";
   const sizeMultiplier = textSizeScale[content.textSize ?? "normal"];
+
+  // Social links settings
+  const showSocialLinks = content.showSocialLinks ?? false;
+  const socialLinksPosition = content.socialLinksPosition ?? "right";
+  const socialLinksSize = content.socialLinksSize ?? "medium";
+  const hasSocialLinks = showSocialLinks && socialLinks.length > 0;
+
+  // Social icons component
+  const SocialLinksRow = hasSocialLinks && (
+    <div className="hidden md:flex items-center gap-3">
+      {socialLinks.map((link) => (
+        <a
+          key={`${link.platform}-${link.url}`}
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:opacity-70 transition-opacity"
+        >
+          <SocialIcon
+            platform={link.platform}
+            style={socialIconStyle}
+            size={socialLinksSize}
+            primaryColor={theme.colors.primary}
+            monochromeColor={textColor}
+          />
+        </a>
+      ))}
+    </div>
+  );
 
   // Logo/Brand component with dynamic sizing
   const LogoBrand = (
@@ -156,9 +188,13 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
             className="flex items-center justify-between py-2"
             style={{ minHeight: minHeaderHeight }}
           >
-            {LogoBrand}
+            <div className="flex items-center gap-4">
+              {LogoBrand}
+              {socialLinksPosition === "left" && SocialLinksRow}
+            </div>
             {NavLinks}
             <div className="flex items-center gap-4">
+              {socialLinksPosition === "right" && SocialLinksRow}
               {CTAButton}
               {MobileMenuComponent}
             </div>
@@ -177,9 +213,13 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
             <div className="flex items-center gap-4">
               {MobileMenuComponent}
               {CTAButton}
+              {socialLinksPosition === "left" && SocialLinksRow}
             </div>
             {NavLinks}
-            {LogoBrand}
+            <div className="flex items-center gap-4">
+              {socialLinksPosition === "right" && SocialLinksRow}
+              {LogoBrand}
+            </div>
           </div>
         </div>
       );
@@ -192,11 +232,14 @@ export function HeaderBlock({ content, theme, basePath = "" }: HeaderBlockProps)
           className="flex items-center justify-between py-2"
           style={{ minHeight: minHeaderHeight }}
         >
-          <div className="w-24 md:w-32" />
+          <div className="w-24 md:w-32 flex items-center gap-4">
+            {socialLinksPosition === "left" && SocialLinksRow}
+          </div>
           <div className="flex-1 flex justify-center">
             {LogoBrand}
           </div>
           <div className="w-24 md:w-32 flex justify-end items-center gap-4">
+            {socialLinksPosition === "right" && SocialLinksRow}
             {CTAButton}
             {MobileMenuComponent}
           </div>
