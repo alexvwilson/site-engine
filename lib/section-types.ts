@@ -26,7 +26,8 @@ export type SocialPlatform =
   | "whatsapp"
   | "telegram"
   | "twitch"
-  | "website";
+  | "website"
+  | "email";
 
 export interface SocialLink {
   platform: SocialPlatform;
