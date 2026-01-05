@@ -5,18 +5,22 @@ import { createSupabaseServerAdminClient } from "@/lib/supabase/admin";
 import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/drizzle/db";
 import { images } from "@/lib/drizzle/schema/images";
+import { documents } from "@/lib/drizzle/schema/documents";
 import { eq, and, desc, isNull, inArray } from "drizzle-orm";
 
 const STORAGE_BUCKET = "media-uploads";
 
-const VALID_TYPES = [
+const VALID_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",
   "image/gif",
   "image/webp",
   "image/svg+xml",
 ];
-const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const VALID_DOCUMENT_TYPES = ["application/pdf"];
+const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024; // 10MB
 
 // ============================================================================
 // Types
@@ -56,6 +60,20 @@ interface UpdateAlbumResult {
 interface SyncResult {
   success: boolean;
   imported: number;
+  error?: string;
+}
+
+export interface DocumentFile {
+  id: string;
+  name: string;
+  url: string;
+  createdAt: string;
+  size: number;
+}
+
+export interface ListDocumentsResult {
+  success: boolean;
+  documents?: DocumentFile[];
   error?: string;
 }
 
@@ -152,14 +170,14 @@ export async function uploadImage(formData: FormData): Promise<UploadResult> {
     return { success: false, error: "No site ID provided" };
   }
 
-  if (!VALID_TYPES.includes(file.type)) {
+  if (!VALID_IMAGE_TYPES.includes(file.type)) {
     return {
       success: false,
       error: "Invalid file type. Use JPG, PNG, GIF, WebP, or SVG.",
     };
   }
 
-  if (file.size > MAX_SIZE) {
+  if (file.size > MAX_IMAGE_SIZE) {
     return { success: false, error: "File too large. Maximum size is 5MB." };
   }
 
@@ -379,6 +397,137 @@ export async function deleteImages(imageUrls: string[]): Promise<DeleteResult> {
 
   if (error) {
     console.error("Storage bulk delete error:", error);
+    return { success: false, error: "Delete failed. Please try again." };
+  }
+
+  return { success: true };
+}
+
+// ============================================================================
+// Document Upload
+// ============================================================================
+
+export async function uploadDocument(formData: FormData): Promise<UploadResult> {
+  const userId = await requireUserId();
+
+  const file = formData.get("file") as File | null;
+  const siteId = formData.get("siteId") as string | null;
+
+  if (!file) {
+    return { success: false, error: "No file provided" };
+  }
+
+  if (!siteId) {
+    return { success: false, error: "No site ID provided" };
+  }
+
+  if (!VALID_DOCUMENT_TYPES.includes(file.type)) {
+    return {
+      success: false,
+      error: "Invalid file type. Only PDF files are supported.",
+    };
+  }
+
+  if (file.size > MAX_DOCUMENT_SIZE) {
+    return { success: false, error: "File too large. Maximum size is 10MB." };
+  }
+
+  // Generate unique filename: userId/siteId/documents/timestamp-random.pdf
+  const storagePath = `${userId}/${siteId}/documents/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.pdf`;
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .upload(storagePath, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (error) {
+    console.error("Storage upload error:", error.message, error);
+    return { success: false, error: `Upload failed: ${error.message}` };
+  }
+
+  const { data: urlData } = supabase.storage
+    .from(STORAGE_BUCKET)
+    .getPublicUrl(data.path);
+
+  // Create database record to track the document
+  try {
+    await db.insert(documents).values({
+      site_id: siteId,
+      storage_path: storagePath,
+      url: urlData.publicUrl,
+      filename: file.name,
+      file_size: file.size,
+      mime_type: file.type,
+    });
+  } catch (dbError) {
+    console.error("Database insert error (document still uploaded):", dbError);
+  }
+
+  return { success: true, url: urlData.publicUrl };
+}
+
+// ============================================================================
+// Document Listing
+// ============================================================================
+
+export async function listSiteDocuments(
+  siteId: string
+): Promise<ListDocumentsResult> {
+  await requireUserId();
+
+  const results = await db
+    .select()
+    .from(documents)
+    .where(eq(documents.site_id, siteId))
+    .orderBy(desc(documents.created_at));
+
+  const documentFiles: DocumentFile[] = results.map((doc) => ({
+    id: doc.id,
+    name: doc.filename,
+    url: doc.url,
+    createdAt: doc.created_at.toISOString(),
+    size: doc.file_size ?? 0,
+  }));
+
+  return { success: true, documents: documentFiles };
+}
+
+// ============================================================================
+// Document Deletion
+// ============================================================================
+
+export async function deleteDocument(documentId: string): Promise<DeleteResult> {
+  const userId = await requireUserId();
+
+  // Get document from database
+  const [doc] = await db
+    .select()
+    .from(documents)
+    .where(eq(documents.id, documentId));
+
+  if (!doc) {
+    return { success: false, error: "Document not found" };
+  }
+
+  // Security check: verify path belongs to the current user
+  if (!doc.storage_path.startsWith(`${userId}/`)) {
+    console.error("Unauthorized delete attempt:", { userId, path: doc.storage_path });
+    return { success: false, error: "Unauthorized: Cannot delete documents you don't own" };
+  }
+
+  // Delete from database first
+  await db.delete(documents).where(eq(documents.id, documentId));
+
+  // Use admin client to bypass storage RLS policies
+  const adminClient = createSupabaseServerAdminClient();
+  const { error } = await adminClient.storage.from(STORAGE_BUCKET).remove([doc.storage_path]);
+
+  if (error) {
+    console.error("Storage delete error:", error);
     return { success: false, error: "Delete failed. Please try again." };
   }
 

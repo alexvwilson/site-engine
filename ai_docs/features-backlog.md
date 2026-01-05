@@ -100,6 +100,81 @@ _No P1 items currently_
 
 ## Completed Features
 
+### 54. PDF Document Upload ✅ 2026-01-05
+
+**Problem:** Users building portfolio sites needed to upload and share PDF documents (resumes, portfolios, brochures) but could only upload images. No way to get downloadable document URLs for use in header links, CTA buttons, or footer.
+
+**Solution Implemented:**
+- [x] New `documents` database table to track uploaded PDFs
+- [x] PDF upload via drag-and-drop or file picker (10MB max)
+- [x] Documents section in Site Settings (after Image Library)
+- [x] List of uploaded documents with filename, size, date
+- [x] Full URL displayed for each document
+- [x] "Copy URL" button for easy copying to use anywhere
+- [x] Open in new tab button to preview PDF
+- [x] Delete button to remove documents
+- [x] Same Supabase Storage bucket as images (`media-uploads`)
+- [x] Storage path: `{userId}/{siteId}/documents/`
+
+**Files Created:**
+- `lib/drizzle/schema/documents.ts` - Documents table schema
+- `components/editor/DocumentUpload.tsx` - Upload component with list/copy/delete UI
+- `drizzle/migrations/0029_dazzling_grey_gargoyle.sql` - Database migration
+- `drizzle/migrations/0029_dazzling_grey_gargoyle/down.sql` - Rollback migration
+
+**Files Modified:**
+- `lib/drizzle/schema/index.ts` - Export documents schema
+- `app/actions/storage.ts` - Added `uploadDocument()`, `listSiteDocuments()`, `deleteDocument()`
+- `components/sites/SettingsTab.tsx` - Added Documents card section
+
+**Database Migration:** `0029_dazzling_grey_gargoyle` - Added documents table
+
+**Supabase Configuration:** Added `application/pdf` to allowed MIME types in `media-uploads` bucket
+
+---
+
+### 52. Hero Multi-Button Support ✅ 2026-01-05
+
+**Problem:** Hero section only supported a single CTA button. Users wanted multiple buttons (e.g., "Get Started" primary + "Learn More" secondary).
+
+**Solution Implemented:**
+- [x] New `HeroButton` interface with id, text, url, and variant (primary/secondary)
+- [x] `buttons` array replaces legacy single button fields (backwards compatible)
+- [x] Maximum of 4 buttons per hero section
+- [x] Primary buttons render with filled style, secondary with outline style
+- [x] Secondary buttons adapt to white outline when hero has background image
+- [x] Add/remove buttons dynamically in editor
+- [x] Per-button style selector (Primary/Secondary)
+- [x] Buttons render in flex container with gap, wrap on mobile
+
+**Files Modified:**
+- `lib/section-types.ts` - Added HeroButton, HeroButtonVariant types, MAX_HERO_BUTTONS constant
+- `lib/section-defaults.ts` - Updated hero defaults to use buttons array
+- `components/editor/blocks/HeroEditor.tsx` - Multi-button management UI
+- `components/render/blocks/HeroBlock.tsx` - Multi-button rendering with variant styles
+
+---
+
+### 53. Features Block Section Header + Per-Feature Subtitles ✅ 2026-01-05
+
+**Problem:** Features block had no section title/subtitle, and individual features only had title + description with no way to add a short tagline.
+
+**Solution Implemented:**
+- [x] Added optional `sectionTitle` and `sectionSubtitle` to FeaturesContent
+- [x] Section header renders centered above feature cards when provided
+- [x] Added optional `subtitle` field to Feature interface
+- [x] Per-feature subtitle renders in theme primary color between title and description
+- [x] Works in both plain mode and styled mode
+- [x] Subtitle inherits text size scaling in styled mode
+
+**Files Modified:**
+- `lib/section-types.ts` - Added sectionTitle, sectionSubtitle to FeaturesContent; subtitle to Feature
+- `lib/section-defaults.ts` - Added default empty values for new fields
+- `components/editor/blocks/FeaturesEditor.tsx` - Added section header inputs and per-feature subtitle field
+- `components/render/blocks/FeaturesBlock.tsx` - Renders section header and feature subtitles
+
+---
+
 ### 49 & 50. Landing Page Contact Form + Showcase Section ✅ 2026-01-05
 
 **Problem:** Sign-ups were disabled but visitors had no way to reach out. Landing page CTAs led nowhere, and there was no social proof showing sites built with the platform.
@@ -1485,7 +1560,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-05 (Completed #49 & #50 Landing Contact + Showcase)
+**Last Updated:** 2026-01-05 (Completed #52 Hero Multi-Button, #53 Features Subtitles)
 
 ---
 

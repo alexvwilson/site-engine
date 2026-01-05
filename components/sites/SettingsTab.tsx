@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon, Share2 } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon, Share2, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,7 @@ import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "
 import { HeaderEditor } from "@/components/editor/blocks/HeaderEditor";
 import { FooterEditor } from "@/components/editor/blocks/FooterEditor";
 import { ImageUpload } from "@/components/editor/ImageUpload";
+import { DocumentUpload } from "@/components/editor/DocumentUpload";
 import { ImageLibraryModal } from "@/components/sites/ImageLibraryModal";
 import { AlbumManager } from "@/components/sites/AlbumManager";
 import { LegalPagesCard } from "@/components/sites/LegalPagesCard";
@@ -1083,6 +1084,22 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
             <h4 className="text-sm font-medium mb-3">All Images</h4>
             <ImageLibraryModal siteId={site.id} />
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Documents */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Documents
+          </CardTitle>
+          <CardDescription>
+            Upload PDFs and documents. Copy URLs to use in header links, CTA buttons, or footer.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DocumentUpload siteId={site.id} disabled={loading} />
         </CardContent>
       </Card>
     </form>

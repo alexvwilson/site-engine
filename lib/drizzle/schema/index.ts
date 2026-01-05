@@ -77,6 +77,12 @@ export * from "./image-albums";
  */
 export * from "./images";
 
+/**
+ * Documents table - Tracks uploaded documents (PDFs, etc.)
+ * Syncs with Supabase Storage, enables URL management for downloads
+ */
+export * from "./documents";
+
 // ============================================================================
 // Theme Management
 // ============================================================================
