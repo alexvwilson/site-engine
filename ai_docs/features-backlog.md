@@ -1,4 +1,4 @@
-# Site Engine - Features Backlog
+# Headstring Web - Features Backlog
 
 > Post-MVP feature requests and enhancements, organized by priority.
 > When ready to implement, create a task document in `ai_docs/tasks/`.
@@ -82,6 +82,32 @@ _No P2 items currently_
 ---
 
 ## Completed Features
+
+### 48. Rebrand to Headstring Web + Emerald Theme ✅ 2026-01-04
+
+**Problem:** App was branded as "Site Engine" with a purple/violet color scheme. Needed to rebrand to "Headstring Web" with emerald green (#10B981) to match the new logo.
+
+**Solution Implemented:**
+- [x] Updated primary color from violet (hsl 265) to emerald green (hsl 160, #10B981)
+- [x] Updated all CSS variables in globals.css (light and dark mode)
+- [x] Updated default-theme.ts with new emerald color palette
+- [x] Renamed "Site Engine" to "Headstring Web" across all user-facing components
+- [x] Updated Logo component with larger size (68x68) and new branding
+- [x] Updated metadata.ts for SEO (title, OpenGraph, Twitter cards)
+- [x] Updated landing page components (Footer, FAQSection, ProblemSection)
+- [x] Updated section defaults for hero subheading
+
+**Files Modified:**
+- `app/globals.css` - Emerald green color scheme for light/dark modes
+- `lib/default-theme.ts` - Updated default theme colors
+- `lib/metadata.ts` - SEO metadata rebrand
+- `lib/section-defaults.ts` - Updated hero default subheading
+- `components/Logo.tsx` - New branding, larger logo size
+- `components/landing/Footer.tsx` - Headstring Web branding
+- `components/landing/FAQSection.tsx` - Updated references
+- `components/landing/ProblemSection.tsx` - Updated references
+
+---
 
 ### 46. Rich Content Editor - Article Block ✅ 2026-01-03
 
@@ -1400,7 +1426,7 @@ _No P2 items currently_
 
 ---
 
-**Last Updated:** 2026-01-03 (Completed #46 Article Block with Inline Images, #47 Product/Catalog Grid Block, #45 Social Links)
+**Last Updated:** 2026-01-04 (Completed #48 Rebrand to Headstring Web + Emerald Theme)
 
 ---
 

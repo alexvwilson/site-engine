@@ -7,7 +7,7 @@ const Footer = () => {
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-8 sm:gap-12 mb-8 sm:mb-12">
           <div className="text-center sm:text-left">
             <div className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">
-              Site Engine
+              Headstring Web
             </div>
             <p className="text-muted-foreground mb-4 sm:mb-6 max-w-sm text-sm sm:text-base">
               AI-powered website builder for creators and businesses.

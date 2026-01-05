@@ -9,15 +9,15 @@ import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 
 export const DEFAULT_THEME: ThemeData = {
   colors: {
-    primary: "#2563eb",
+    primary: "#10B981",
     secondary: "#64748b",
-    accent: "#f59e0b",
+    accent: "#0ea5e9",
     background: "#ffffff",
     foreground: "#0f172a",
     muted: "#f1f5f9",
     mutedForeground: "#64748b",
     border: "#e2e8f0",
-    rationale: "Default professional color palette with blue primary.",
+    rationale: "Professional emerald green color palette for trust and growth.",
   },
   typography: {
     headingFont: {
@@ -50,7 +50,7 @@ export const DEFAULT_THEME: ThemeData = {
       paddingY: "0.5rem",
       variants: {
         default: {
-          bg: "#2563eb",
+          bg: "#10B981",
           text: "#ffffff",
         },
         secondary: {
@@ -59,8 +59,8 @@ export const DEFAULT_THEME: ThemeData = {
         },
         outline: {
           bg: "transparent",
-          text: "#2563eb",
-          border: "#2563eb",
+          text: "#10B981",
+          border: "#10B981",
         },
         ghost: {
           bg: "transparent",
@@ -77,7 +77,7 @@ export const DEFAULT_THEME: ThemeData = {
     input: {
       borderRadius: "0.375rem",
       borderColor: "#e2e8f0",
-      focusRing: "#2563eb",
+      focusRing: "#10B981",
       padding: "0.75rem",
     },
     badge: {
@@ -88,15 +88,15 @@ export const DEFAULT_THEME: ThemeData = {
   },
   tailwindExtends: {
     colors: {
-      primary: "#2563eb",
+      primary: "#10B981",
       secondary: "#64748b",
-      accent: "#f59e0b",
+      accent: "#0ea5e9",
     },
   },
   cssVariables: `
-    --color-primary: #2563eb;
+    --color-primary: #10B981;
     --color-secondary: #64748b;
-    --color-accent: #f59e0b;
+    --color-accent: #0ea5e9;
     --color-background: #ffffff;
     --color-foreground: #0f172a;
     --color-muted: #f1f5f9;

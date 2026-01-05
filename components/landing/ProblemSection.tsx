@@ -24,7 +24,7 @@ export default function ProblemSection() {
             Website Building Made Simple
           </h2>
           <p className="mt-4 text-lg text-muted-foreground md:text-xl">
-            See how Site Engine puts you in control
+            See how Headstring Web puts you in control
           </p>
         </div>
 
@@ -65,7 +65,7 @@ export default function ProblemSection() {
             <div className="space-y-6">
               <div className="space-y-4">
                 <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                  Start Building Smarter with Site Engine
+                  Start Building Smarter with Headstring Web
                 </h2>
                 <p className="text-lg text-muted-foreground">
                   Take control of your website with AI-powered tools that make

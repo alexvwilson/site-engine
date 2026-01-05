@@ -21,7 +21,7 @@ const FAQSection = () => {
     {
       question: "Do I need coding experience?",
       answer:
-        "Not at all. Site Engine is designed for content managers and creators who want full control without writing code. Everything is visual - drag sections, click to edit text, and see changes in real-time.",
+        "Not at all. Headstring Web is designed for content managers and creators who want full control without writing code. Everything is visual - drag sections, click to edit text, and see changes in real-time.",
     },
     {
       question: "What types of pages can I create?",
@@ -51,7 +51,7 @@ const FAQSection = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400">
-            Everything you need to know about building with Site Engine.
+            Everything you need to know about building with Headstring Web.
           </p>
         </div>
 

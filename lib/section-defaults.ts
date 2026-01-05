@@ -48,7 +48,7 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
 
   hero: {
     heading: "Welcome to Your Site",
-    subheading: "Create something amazing with Site Engine",
+    subheading: "Create something amazing with Headstring Web",
     showCta: true,
     ctaText: "Get Started",
     ctaUrl: "#",

@@ -7,8 +7,8 @@ const defaultUrl = process.env.VERCEL_URL
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
   title: {
-    template: "%s | Site Engine",
-    default: "Site Engine - AI-Powered Website Builder",
+    template: "%s | Headstring Web",
+    default: "Headstring Web - AI-Powered Website Builder",
   },
   description:
     "Build beautiful websites without code. AI-powered theme generation and intuitive content management for creators and businesses.",
@@ -25,17 +25,17 @@ export const metadata: Metadata = {
     "Small Business Website",
   ],
   openGraph: {
-    title: "Site Engine - AI-Powered Website Builder",
+    title: "Headstring Web - AI-Powered Website Builder",
     description:
       "Build beautiful websites without code. AI-powered theme generation and intuitive content management.",
     url: new URL(defaultUrl),
-    siteName: "Site Engine",
+    siteName: "Headstring Web",
     images: [
       {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Site Engine - AI-powered website builder",
+        alt: "Headstring Web - AI-powered website builder",
       },
     ],
     locale: "en_US",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Site Engine - AI-Powered Website Builder",
+    title: "Headstring Web - AI-Powered Website Builder",
     description:
       "Build beautiful websites without code. AI-powered theme generation and intuitive content management.",
     images: ["/twitter-image.png"],
@@ -69,14 +69,14 @@ export const generateLegalMetadata = (
   description: string,
 ): Metadata => {
   return {
-    title: `${title} | Site Engine`,
+    title: `${title} | Headstring Web`,
     description,
     robots: {
       index: true,
       follow: true,
     },
     openGraph: {
-      title: `${title} | Site Engine`,
+      title: `${title} | Headstring Web`,
       description,
       type: "website",
     },
