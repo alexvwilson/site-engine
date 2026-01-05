@@ -94,6 +94,31 @@ export function FeaturesEditor({
 
   return (
     <div className="space-y-6">
+      {/* Section Header */}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="section-title">Section Title (optional)</Label>
+          <Input
+            id="section-title"
+            value={content.sectionTitle || ""}
+            onChange={(e) => updateField("sectionTitle", e.target.value)}
+            placeholder="Our Features"
+            disabled={disabled}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="section-subtitle">Section Subtitle (optional)</Label>
+          <Textarea
+            id="section-subtitle"
+            value={content.sectionSubtitle || ""}
+            onChange={(e) => updateField("sectionSubtitle", e.target.value)}
+            placeholder="A brief description of what makes us special"
+            rows={2}
+            disabled={disabled}
+          />
+        </div>
+      </div>
+
       {/* Feature List */}
       {content.features.map((feature, index) => (
         <div key={index} className="border rounded-lg p-4 space-y-3">
@@ -135,6 +160,19 @@ export function FeaturesEditor({
                 disabled={disabled}
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor={`feature-${index}-subtitle`}>Subtitle (optional)</Label>
+            <Input
+              id={`feature-${index}-subtitle`}
+              value={feature.subtitle || ""}
+              onChange={(e) =>
+                handleFeatureChange(index, "subtitle", e.target.value)
+              }
+              placeholder="A short tagline"
+              disabled={disabled}
+            />
           </div>
 
           <div className="space-y-2">

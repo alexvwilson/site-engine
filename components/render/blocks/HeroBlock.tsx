@@ -1,12 +1,36 @@
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import type { HeroContent } from "@/lib/section-types";
+import type { HeroContent, HeroButton } from "@/lib/section-types";
 import {
   getHeadingStyles,
   getBodyStyles,
   getButtonStyles,
+  getOutlineButtonStyles,
 } from "../utilities/theme-styles";
 import { transformUrl } from "@/lib/url-utils";
 import { RotatingText } from "./RotatingText";
+
+// Get buttons from content, handling legacy format
+function getButtons(content: HeroContent): HeroButton[] {
+  // If buttons array exists, use it
+  if (content.buttons && content.buttons.length > 0) {
+    return content.buttons;
+  }
+
+  // Migrate from legacy showCta/ctaText/ctaUrl format
+  if (content.showCta !== false && content.ctaText && content.ctaUrl) {
+    return [
+      {
+        id: "legacy-btn",
+        text: content.ctaText,
+        url: content.ctaUrl,
+        variant: "primary",
+      },
+    ];
+  }
+
+  // No buttons
+  return [];
+}
 
 interface HeroBlockProps {
   content: HeroContent;
@@ -24,6 +48,26 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
     content.titleMode === "rotating" &&
     content.rotatingTitle &&
     content.rotatingTitle.words.length > 0;
+
+  const buttons = getButtons(content);
+
+  // Get button styles based on variant and background
+  const getButtonStyle = (variant: "primary" | "secondary") => {
+    if (variant === "primary") {
+      return getButtonStyles(theme);
+    }
+    // Secondary/outline button
+    const outlineStyles = getOutlineButtonStyles(theme);
+    // When on background image, use white outline
+    if (hasBackgroundImage) {
+      return {
+        ...outlineStyles,
+        color: "#FFFFFF",
+        borderColor: "#FFFFFF",
+      };
+    }
+    return outlineStyles;
+  };
 
   return (
     <section
@@ -83,14 +127,19 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
           </p>
         )}
 
-        {(content.showCta ?? true) && content.ctaText && content.ctaUrl && (
-          <a
-            href={transformUrl(basePath, content.ctaUrl)}
-            className="inline-block mt-8 hover:opacity-90 transition-opacity"
-            style={getButtonStyles(theme)}
-          >
-            {content.ctaText}
-          </a>
+        {buttons.length > 0 && (
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            {buttons.map((button) => (
+              <a
+                key={button.id}
+                href={transformUrl(basePath, button.url)}
+                className="hover:opacity-90 transition-opacity"
+                style={getButtonStyle(button.variant)}
+              >
+                {button.text}
+              </a>
+            ))}
+          </div>
         )}
       </div>
     </section>

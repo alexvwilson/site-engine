@@ -57,6 +57,9 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
     );
   }
 
+  // Check if section header should be shown
+  const hasSectionHeader = content.sectionTitle || content.sectionSubtitle;
+
   // Plain mode (styling disabled) - original behavior
   if (!content.enableStyling) {
     return (
@@ -65,6 +68,33 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
         style={{ backgroundColor: "var(--color-muted)" }}
       >
         <div className="max-w-6xl mx-auto">
+          {/* Section Header */}
+          {hasSectionHeader && (
+            <div className="text-center mb-12">
+              {content.sectionTitle && (
+                <h2
+                  className="mb-3"
+                  style={getHeadingStyles(theme, "h2")}
+                >
+                  {content.sectionTitle}
+                </h2>
+              )}
+              {content.sectionSubtitle && (
+                <p
+                  style={{
+                    ...getBodyStyles(theme),
+                    color: "var(--color-muted-foreground)",
+                    maxWidth: "600px",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                  }}
+                >
+                  {content.sectionSubtitle}
+                </p>
+              )}
+            </div>
+          )}
+
           <div
             style={{
               display: "flex",
@@ -90,13 +120,26 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
                   <Icon name={feature.icon} className="text-white" size={28} />
                 </div>
                 <h3
-                  className="mb-2"
+                  className="mb-1"
                   style={{
                     ...getHeadingStyles(theme, "h4"),
                   }}
                 >
                   {feature.title}
                 </h3>
+                {feature.subtitle && (
+                  <p
+                    className="mb-2"
+                    style={{
+                      ...getBodyStyles(theme),
+                      color: "var(--color-primary)",
+                      fontWeight: 500,
+                      fontSize: theme.typography.scale.small,
+                    }}
+                  >
+                    {feature.subtitle}
+                  </p>
+                )}
                 <p
                   style={{
                     ...getBodyStyles(theme),
@@ -219,6 +262,38 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
         className="relative z-10 max-w-6xl mx-auto"
         style={containerStyles}
       >
+        {/* Section Header */}
+        {hasSectionHeader && (
+          <div className="text-center mb-12">
+            {content.sectionTitle && (
+              <h2
+                className="mb-3"
+                style={{
+                  ...getHeadingStyles(theme, "h2"),
+                  color: titleColor,
+                  fontSize: `calc(${getHeadingStyles(theme, "h2").fontSize} * ${textScale})`,
+                }}
+              >
+                {content.sectionTitle}
+              </h2>
+            )}
+            {content.sectionSubtitle && (
+              <p
+                style={{
+                  ...getBodyStyles(theme),
+                  color: descriptionColor,
+                  maxWidth: "600px",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  fontSize: `calc(${getBodyStyles(theme).fontSize || "1rem"} * ${textScale})`,
+                }}
+              >
+                {content.sectionSubtitle}
+              </p>
+            )}
+          </div>
+        )}
+
         <div
           style={{
             display: "flex",
@@ -243,7 +318,7 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
                 <Icon name={feature.icon} className="text-white" size={28} />
               </div>
               <h3
-                className="mb-2"
+                className="mb-1"
                 style={{
                   ...getHeadingStyles(theme, "h4"),
                   color: titleColor,
@@ -252,6 +327,19 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
               >
                 {feature.title}
               </h3>
+              {feature.subtitle && (
+                <p
+                  className="mb-2"
+                  style={{
+                    ...getBodyStyles(theme),
+                    color: "var(--color-primary)",
+                    fontWeight: 500,
+                    fontSize: `calc(${theme.typography.scale.small} * ${textScale})`,
+                  }}
+                >
+                  {feature.subtitle}
+                </p>
+              )}
               <p
                 style={{
                   ...getBodyStyles(theme),

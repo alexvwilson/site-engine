@@ -49,9 +49,9 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
   hero: {
     heading: "Welcome to Your Site",
     subheading: "Create something amazing with Headstring Web",
-    showCta: true,
-    ctaText: "Get Started",
-    ctaUrl: "#",
+    buttons: [
+      { id: "btn-1", text: "Get Started", url: "#", variant: "primary" },
+    ],
     titleMode: "static",
     rotatingTitle: {
       beforeText: "We specialize in",
@@ -160,6 +160,9 @@ console.log(greeting);
   },
 
   features: {
+    // Optional section header
+    sectionTitle: "",
+    sectionSubtitle: "",
     features: [
       {
         icon: "star",

@@ -16,10 +16,13 @@ import { ImageUpload } from "@/components/editor/ImageUpload";
 import { Plus, Trash2 } from "lucide-react";
 import type {
   HeroContent,
+  HeroButton,
+  HeroButtonVariant,
   RotatingTitleConfig,
   HeroAnimationEffect,
   HeroAnimationMode,
 } from "@/lib/section-types";
+import { MAX_HERO_BUTTONS } from "@/lib/section-types";
 
 interface HeroEditorProps {
   content: HeroContent;
@@ -36,6 +39,34 @@ const DEFAULT_ROTATING_CONFIG: RotatingTitleConfig = {
   displayTime: 2000,
   animationMode: "loop",
 };
+
+// Generate a unique ID for new buttons
+function generateButtonId(): string {
+  return `btn-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+// Migrate legacy single button to new buttons array format
+function getButtons(content: HeroContent): HeroButton[] {
+  // If buttons array exists, use it
+  if (content.buttons && content.buttons.length > 0) {
+    return content.buttons;
+  }
+
+  // Migrate from legacy showCta/ctaText/ctaUrl format
+  if (content.showCta !== false && content.ctaText && content.ctaUrl) {
+    return [
+      {
+        id: generateButtonId(),
+        text: content.ctaText,
+        url: content.ctaUrl,
+        variant: "primary",
+      },
+    ];
+  }
+
+  // No buttons
+  return [];
+}
 
 export function HeroEditor({
   content,
@@ -86,6 +117,47 @@ export function HeroEditor({
   const handleRemoveWord = (index: number): void => {
     const newWords = rotatingConfig.words.filter((_, i) => i !== index);
     handleRotatingChange("words", newWords);
+  };
+
+  // Button management handlers
+  const buttons = getButtons(content);
+
+  const handleButtonsChange = (newButtons: HeroButton[]): void => {
+    onChange({
+      ...content,
+      buttons: newButtons,
+      // Clear legacy fields when using new buttons array
+      showCta: undefined,
+      ctaText: undefined,
+      ctaUrl: undefined,
+    });
+  };
+
+  const handleAddButton = (): void => {
+    if (buttons.length >= MAX_HERO_BUTTONS) return;
+    const newButton: HeroButton = {
+      id: generateButtonId(),
+      text: "",
+      url: "#",
+      variant: buttons.length === 0 ? "primary" : "secondary",
+    };
+    handleButtonsChange([...buttons, newButton]);
+  };
+
+  const handleRemoveButton = (id: string): void => {
+    handleButtonsChange(buttons.filter((btn) => btn.id !== id));
+  };
+
+  const handleButtonChange = (
+    id: string,
+    field: keyof Omit<HeroButton, "id">,
+    value: string
+  ): void => {
+    handleButtonsChange(
+      buttons.map((btn) =>
+        btn.id === id ? { ...btn, [field]: value } : btn
+      )
+    );
   };
 
   return (
@@ -276,49 +348,106 @@ export function HeroEditor({
         />
       </div>
 
-      {/* CTA Toggle */}
-      <div className="flex items-center justify-between rounded-lg border p-3">
-        <div className="space-y-0.5">
-          <Label>Show Button</Label>
-          <p className="text-xs text-muted-foreground">
-            Display a call-to-action button
+      {/* Buttons Section */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label>Buttons</Label>
+          <span className="text-xs text-muted-foreground">
+            {buttons.length} / {MAX_HERO_BUTTONS}
+          </span>
+        </div>
+
+        {/* Button List */}
+        {buttons.length > 0 && (
+          <div className="space-y-3">
+            {buttons.map((button, index) => (
+              <div
+                key={button.id}
+                className="rounded-lg border bg-muted/30 p-3 space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">
+                    Button {index + 1}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveButton(button.id)}
+                    disabled={disabled}
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Text</Label>
+                    <Input
+                      value={button.text}
+                      onChange={(e) =>
+                        handleButtonChange(button.id, "text", e.target.value)
+                      }
+                      placeholder="Get Started"
+                      disabled={disabled}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">URL</Label>
+                    <Input
+                      value={button.url}
+                      onChange={(e) =>
+                        handleButtonChange(button.id, "url", e.target.value)
+                      }
+                      placeholder="#"
+                      disabled={disabled}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Style</Label>
+                  <Select
+                    value={button.variant}
+                    onValueChange={(value: HeroButtonVariant) =>
+                      handleButtonChange(button.id, "variant", value)
+                    }
+                    disabled={disabled}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="primary">Primary (Filled)</SelectItem>
+                      <SelectItem value="secondary">Secondary (Outline)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Add Button */}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleAddButton}
+          disabled={disabled || buttons.length >= MAX_HERO_BUTTONS}
+          className="w-full"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Add Button
+        </Button>
+
+        {buttons.length === 0 && (
+          <p className="text-xs text-muted-foreground text-center">
+            No buttons added. Click above to add a call-to-action button.
           </p>
-        </div>
-        <Switch
-          checked={content.showCta ?? true}
-          onCheckedChange={(checked) =>
-            onChange({ ...content, showCta: checked })
-          }
-          disabled={disabled}
-        />
+        )}
       </div>
-
-      {/* CTA Buttons - only show when enabled */}
-      {(content.showCta ?? true) && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="hero-cta-text">Button Text</Label>
-            <Input
-              id="hero-cta-text"
-              value={content.ctaText}
-              onChange={(e) => handleChange("ctaText", e.target.value)}
-              placeholder="Get Started"
-              disabled={disabled}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="hero-cta-url">Button URL</Label>
-            <Input
-              id="hero-cta-url"
-              value={content.ctaUrl}
-              onChange={(e) => handleChange("ctaUrl", e.target.value)}
-              placeholder="#"
-              disabled={disabled}
-            />
-          </div>
-        </div>
-      )}
 
       {/* Background Image */}
       <div className="space-y-2">

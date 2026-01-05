@@ -106,12 +106,27 @@ export interface RotatingTitleConfig {
   animationMode: HeroAnimationMode;
 }
 
+// Hero button types
+export type HeroButtonVariant = "primary" | "secondary";
+
+export interface HeroButton {
+  id: string;
+  text: string;
+  url: string;
+  variant: HeroButtonVariant;
+}
+
+export const MAX_HERO_BUTTONS = 4;
+
 export interface HeroContent {
   heading: string;
   subheading: string;
+  // Multi-button support
+  buttons?: HeroButton[];
+  // Legacy single button fields (for backward compatibility)
   showCta?: boolean;
-  ctaText: string;
-  ctaUrl: string;
+  ctaText?: string;
+  ctaUrl?: string;
   backgroundImage?: string;
   // Rotating title configuration
   titleMode?: HeroTitleMode;
@@ -272,10 +287,15 @@ export interface GalleryContent {
 export interface Feature {
   icon: string;
   title: string;
+  subtitle?: string;
   description: string;
 }
 
 export interface FeaturesContent {
+  // Optional section header
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
   features: Feature[];
 
   // Master styling toggle - when false, renders with fixed muted background
