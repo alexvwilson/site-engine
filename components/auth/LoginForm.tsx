@@ -91,12 +91,12 @@ export function LoginForm({
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+              Interested in Headstring Web?{" "}
               <Link
-                href="/auth/sign-up"
+                href="/contact"
                 className="underline underline-offset-4"
               >
-                Sign up
+                Let&apos;s Talk
               </Link>
             </div>
           </form>

@@ -14,6 +14,12 @@
 
 ---
 
+## P0 - Critical (Pre-Launch)
+
+_No P0 items currently_
+
+---
+
 ## P1 - High Priority
 
 _No P1 items currently_
@@ -22,7 +28,18 @@ _No P1 items currently_
 
 ## P2 - Medium Priority
 
-_No P2 items currently_
+### 51. Admin Landing Page Content Management
+
+**Problem:** Landing page content (FAQ, features, etc.) is hardcoded in components. When users submit questions via the contact form, there's no easy way to update the FAQ or other landing page content without code changes.
+
+**Solution:**
+- Admin-only content management for landing page sections
+- Editable FAQ entries (add/edit/delete/reorder)
+- Editable features list
+- Possibly editable testimonials/social proof
+- Store in database, render dynamically
+
+**Complexity:** Medium
 
 ---
 
@@ -82,6 +99,48 @@ _No P2 items currently_
 ---
 
 ## Completed Features
+
+### 49 & 50. Landing Page Contact Form + Showcase Section ✅ 2026-01-05
+
+**Problem:** Sign-ups were disabled but visitors had no way to reach out. Landing page CTAs led nowhere, and there was no social proof showing sites built with the platform.
+
+**Solution Implemented:**
+- [x] New `/contact` page with form (Name, Email, Company optional, Message)
+- [x] `landing_contacts` table stores name, email, company (not message)
+- [x] Email notification via Resend to alex@headstringweb.com
+- [x] Honeypot + rate limiting spam protection
+- [x] All 3 CTAs changed: "Get Started Free" → "Let's Talk" → `/contact`
+- [x] "Built with Headstring Web" showcase section on landing page
+- [x] Queries sites with verified custom domains
+- [x] Auto-hides if no verified sites exist
+- [x] Login page: "Sign up" link → "Let's Talk" → `/contact`
+- [x] Sign-up page redirects to `/contact` (sign-ups disabled)
+- [x] Added `/contact` to public routes in middleware
+
+**Task Document:** `ai_docs/tasks/062_landing_contact_and_showcase.md`
+
+**Files Created:**
+- `lib/drizzle/schema/landing-contacts.ts` - Landing contacts table schema
+- `app/actions/landing-contact.ts` - Contact form server action
+- `lib/queries/showcase.ts` - Verified sites query
+- `components/landing/ContactForm.tsx` - Contact form component
+- `components/landing/ShowcaseSection.tsx` - Sites showcase grid
+- `app/(public)/contact/page.tsx` - Contact page
+
+**Files Modified:**
+- `lib/drizzle/schema/index.ts` - Export landing-contacts
+- `lib/email.ts` - Added `sendLandingContactNotification()`
+- `components/landing/Navbar.tsx` - CTA → "Let's Talk"
+- `components/landing/HeroSection.tsx` - CTA → "Let's Talk"
+- `components/landing/CTASection.tsx` - CTA → "Let's Talk"
+- `app/(public)/page.tsx` - Added ShowcaseSection
+- `components/auth/LoginForm.tsx` - Sign up link → Let's Talk
+- `app/(auth)/auth/sign-up/page.tsx` - Redirect to /contact
+- `lib/supabase/middleware.ts` - Added /contact to public routes
+
+**Database Migration:** `0028_glorious_blonde_phantom` - Added landing_contacts table
+
+---
 
 ### 48. Rebrand to Headstring Web + Emerald Theme ✅ 2026-01-04
 
@@ -1426,7 +1485,7 @@ _No P2 items currently_
 
 ---
 
-**Last Updated:** 2026-01-04 (Completed #48 Rebrand to Headstring Web + Emerald Theme)
+**Last Updated:** 2026-01-05 (Completed #49 & #50 Landing Contact + Showcase)
 
 ---
 

@@ -55,6 +55,12 @@ export * from "./blog-categories";
  */
 export * from "./contact-submissions";
 
+/**
+ * Landing Contacts table - Interest submissions from landing page
+ * Unique per email, stores contact info for lead generation
+ */
+export * from "./landing-contacts";
+
 // ============================================================================
 // Media Management
 // ============================================================================

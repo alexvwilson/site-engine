@@ -46,7 +46,7 @@ Message:
 ${contact.message}
 
 ---
-This email was sent by Site Engine.
+This email was sent by Headstring Web.
       `.trim(),
     });
 
@@ -58,6 +58,67 @@ This email was sent by Site Engine.
     return { success: true };
   } catch (error) {
     console.error("Failed to send contact notification:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to send email",
+    };
+  }
+}
+
+interface LandingContactNotificationParams {
+  contact: {
+    name: string;
+    email: string;
+    company?: string;
+    message: string;
+  };
+}
+
+/**
+ * Send email notification for landing page contact form submissions.
+ * Sends to alex@headstringweb.com
+ */
+export async function sendLandingContactNotification({
+  contact,
+}: LandingContactNotificationParams): Promise<{
+  success: boolean;
+  error?: string;
+}> {
+  // Skip if Resend is not configured
+  if (!resend) {
+    logger.info("Email notifications disabled (RESEND_API_KEY not configured)");
+    return { success: true };
+  }
+
+  try {
+    const { error } = await resend.emails.send({
+      from: "Headstring Web <noreply@updates.alexvwilson.com>",
+      replyTo: contact.email,
+      to: "alex@headstringweb.com",
+      subject: "New Interest - Headstring Web",
+      text: `
+You have a new interested contact on Headstring Web:
+
+Name: ${contact.name}
+Email: ${contact.email}
+Company: ${contact.company || "Not provided"}
+
+Message:
+${contact.message}
+
+---
+This email was sent by Headstring Web.
+      `.trim(),
+    });
+
+    if (error) {
+      console.error("Failed to send landing contact notification:", error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to send landing contact notification:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to send email",

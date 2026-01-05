@@ -41,7 +41,7 @@ const Navbar = () => {
               asChild
               className="hidden sm:inline-flex bg-primary hover:bg-primary-600 text-white text-sm sm:text-base"
             >
-              <Link href="/auth/sign-up">Get Started Free</Link>
+              <Link href="/contact">Let&apos;s Talk</Link>
             </Button>
           </div>
         </div>

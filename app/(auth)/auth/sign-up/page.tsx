@@ -1,21 +1,11 @@
-import { SignUpForm } from "@/components/auth/SignUpForm";
-import { getCurrentUserId } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Sign-ups are currently disabled.
+ * Redirect visitors to the contact page instead.
+ */
 export default async function Page() {
-  // Redirect authenticated users to main app
-  const userId = await getCurrentUserId();
-  if (userId) {
-    redirect("/app");
-  }
-
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <SignUpForm />
-      </div>
-    </div>
-  );
+  redirect("/contact");
 }
