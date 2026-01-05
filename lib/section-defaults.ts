@@ -323,6 +323,8 @@ console.log(greeting);
   },
 
   social_links: {
+    title: "",
+    subtitle: "",
     alignment: "center",
     size: "medium",
     iconStyle: "brand",

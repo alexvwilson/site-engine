@@ -518,6 +518,10 @@ export interface EmbedContent {
 }
 
 export interface SocialLinksContent {
+  // Section title and subtitle
+  title?: string;
+  subtitle?: string;
+
   alignment?: "left" | "center" | "right";
   size?: SocialIconSize;
 

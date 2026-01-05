@@ -37,6 +37,12 @@ const alignmentMap = {
   right: "justify-end",
 };
 
+const textAlignmentMap = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+};
+
 export function SocialLinksBlock({
   content,
   theme,
@@ -53,28 +59,56 @@ export function SocialLinksBlock({
   const iconStyle = content.iconStyle ?? siteIconStyle;
   const themePrimaryColor = theme.colors.primary;
 
+  const hasTitle = content.title && content.title.trim().length > 0;
+  const hasSubtitle = content.subtitle && content.subtitle.trim().length > 0;
+
   // Plain mode (styling disabled) - simple social links row
   if (!content.enableStyling) {
     return (
       <section className="py-12 px-6" style={{ backgroundColor: "var(--theme-background)" }}>
-        <div className={`max-w-4xl mx-auto flex flex-wrap gap-4 ${alignmentMap[alignment]}`}>
-          {socialLinks.map((link) => (
-            <a
-              key={link.platform}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="transition-opacity hover:opacity-80"
-              aria-label={link.platform}
-            >
-              <SocialIcon
-                platform={link.platform}
-                size={size}
-                style={iconStyle}
-                primaryColor={themePrimaryColor}
-              />
-            </a>
-          ))}
+        <div className="max-w-4xl mx-auto">
+          {/* Title and Subtitle */}
+          {(hasTitle || hasSubtitle) && (
+            <div className={`mb-8 ${textAlignmentMap[alignment]}`}>
+              {hasTitle && (
+                <h2
+                  className="text-2xl md:text-3xl font-bold mb-2"
+                  style={{ color: "var(--theme-text)" }}
+                >
+                  {content.title}
+                </h2>
+              )}
+              {hasSubtitle && (
+                <p
+                  className="text-base md:text-lg opacity-80"
+                  style={{ color: "var(--theme-text)" }}
+                >
+                  {content.subtitle}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Social Icons */}
+          <div className={`flex flex-wrap gap-4 ${alignmentMap[alignment]}`}>
+            {socialLinks.map((link) => (
+              <a
+                key={link.platform}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-opacity hover:opacity-80"
+                aria-label={link.platform}
+              >
+                <SocialIcon
+                  platform={link.platform}
+                  size={size}
+                  style={iconStyle}
+                  primaryColor={themePrimaryColor}
+                />
+              </a>
+            ))}
+          </div>
         </div>
       </section>
     );
@@ -150,6 +184,18 @@ export function SocialLinksBlock({
     // Otherwise keep the user's chosen icon style (brand, primary, or monochrome)
   }
 
+  // Get text color for title/subtitle based on textColorMode
+  let textColor: string;
+  if (content.textColorMode === "light") {
+    textColor = "#FFFFFF";
+  } else if (content.textColorMode === "dark") {
+    textColor = "#1F2937";
+  } else {
+    // Auto mode
+    const hasDarkBackground = hasBackgroundImage || (hasOverlay && (content.overlayOpacity ?? 0) > 30);
+    textColor = hasDarkBackground ? "#FFFFFF" : "var(--theme-text)";
+  }
+
   return (
     <section className="py-12 px-6" style={sectionStyles}>
       {/* Overlay layer */}
@@ -162,9 +208,32 @@ export function SocialLinksBlock({
 
       {/* Content container */}
       <div
-        className={`relative z-10 max-w-4xl mx-auto ${alignmentMap[alignment]}`}
+        className={`relative z-10 max-w-4xl mx-auto`}
         style={containerStyles}
       >
+        {/* Title and Subtitle */}
+        {(hasTitle || hasSubtitle) && (
+          <div className={`mb-8 ${textAlignmentMap[alignment]}`}>
+            {hasTitle && (
+              <h2
+                className="text-2xl md:text-3xl font-bold mb-2"
+                style={{ color: textColor }}
+              >
+                {content.title}
+              </h2>
+            )}
+            {hasSubtitle && (
+              <p
+                className="text-base md:text-lg opacity-80"
+                style={{ color: textColor }}
+              >
+                {content.subtitle}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Social Icons */}
         <div className={`flex flex-wrap gap-4 ${alignmentMap[alignment]}`}>
           {socialLinks.map((link) => (
             <a

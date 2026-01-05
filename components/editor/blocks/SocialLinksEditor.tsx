@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, Palette, Link as LinkIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import {
   Select,
@@ -42,6 +44,8 @@ export function SocialLinksEditor({
 }: SocialLinksEditorProps) {
   // Ensure content has all required fields with defaults
   const content: SocialLinksContent = {
+    title: "",
+    subtitle: "",
     alignment: "center",
     size: "medium",
     enableStyling: false,
@@ -89,6 +93,36 @@ export function SocialLinksEditor({
             This block displays your site&apos;s social links. Configure your social
             profiles in <strong>Site Settings</strong> to add or edit links.
           </p>
+        </div>
+      </div>
+
+      {/* Title & Subtitle Section */}
+      <div className="space-y-4">
+        <Label className="text-xs uppercase text-muted-foreground tracking-wide">
+          Content
+        </Label>
+
+        <div className="space-y-2">
+          <Label htmlFor="title">Section Title</Label>
+          <Input
+            id="title"
+            value={content.title ?? ""}
+            onChange={(e) => updateField("title", e.target.value)}
+            placeholder="e.g., Connect With Us"
+            disabled={disabled}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="subtitle">Subtitle</Label>
+          <Textarea
+            id="subtitle"
+            value={content.subtitle ?? ""}
+            onChange={(e) => updateField("subtitle", e.target.value)}
+            placeholder="e.g., Follow us on social media for updates and news"
+            rows={2}
+            disabled={disabled}
+          />
         </div>
       </div>
 
