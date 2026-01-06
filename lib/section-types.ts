@@ -119,6 +119,12 @@ export interface HeroButton {
 
 export const MAX_HERO_BUTTONS = 4;
 
+// Hero image styling types
+export type HeroImageRounding = "none" | "small" | "medium" | "large" | "full";
+export type HeroImagePosition = "left" | "right" | "top" | "bottom" | "after-title";
+export type HeroImageBorderWidth = "none" | "thin" | "medium" | "thick";
+export type HeroImageShadow = "none" | "small" | "medium" | "large" | "xl";
+
 export interface HeroContent {
   heading: string;
   subheading: string;
@@ -132,6 +138,15 @@ export interface HeroContent {
   // Rotating title configuration
   titleMode?: HeroTitleMode;
   rotatingTitle?: RotatingTitleConfig;
+  // Hero image (profile/feature image, not background)
+  image?: string;
+  imageAlt?: string;
+  imagePosition?: HeroImagePosition;
+  imageRounding?: HeroImageRounding;
+  imageBorderWidth?: HeroImageBorderWidth;
+  imageBorderColor?: string;
+  imageShadow?: HeroImageShadow;
+  imageSize?: number; // Size in pixels (e.g., 150, 200, 300)
 }
 
 // Heading block types

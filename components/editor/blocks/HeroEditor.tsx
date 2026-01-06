@@ -21,8 +21,13 @@ import type {
   RotatingTitleConfig,
   HeroAnimationEffect,
   HeroAnimationMode,
+  HeroImageRounding,
+  HeroImagePosition,
+  HeroImageBorderWidth,
+  HeroImageShadow,
 } from "@/lib/section-types";
 import { MAX_HERO_BUTTONS } from "@/lib/section-types";
+import { Slider } from "@/components/ui/slider";
 
 interface HeroEditorProps {
   content: HeroContent;
@@ -346,6 +351,203 @@ export function HeroEditor({
           rows={2}
           disabled={disabled}
         />
+      </div>
+
+      {/* Hero Image (Profile/Feature Image) */}
+      <div className="space-y-4 rounded-lg border p-4">
+        <div className="space-y-0.5">
+          <Label>Profile / Feature Image</Label>
+          <p className="text-xs text-muted-foreground">
+            Add an image that appears alongside your hero content
+          </p>
+        </div>
+
+        <ImageUpload
+          value={content.image ?? ""}
+          onChange={(url) => handleChange("image", url)}
+          siteId={siteId}
+          disabled={disabled}
+          placeholder="Drag & drop a profile or feature image"
+        />
+
+        {content.image && (
+          <div className="space-y-4">
+            {/* Image Alt Text */}
+            <div className="space-y-2">
+              <Label htmlFor="hero-image-alt">Alt Text</Label>
+              <Input
+                id="hero-image-alt"
+                value={content.imageAlt ?? ""}
+                onChange={(e) => handleChange("imageAlt", e.target.value)}
+                placeholder="Describe the image for accessibility"
+                disabled={disabled}
+              />
+            </div>
+
+            {/* Image Position */}
+            <div className="space-y-2">
+              <Label>Position</Label>
+              <Select
+                value={content.imagePosition ?? "top"}
+                onValueChange={(value: HeroImagePosition) =>
+                  onChange({ ...content, imagePosition: value })
+                }
+                disabled={disabled}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="top">Above Text</SelectItem>
+                  <SelectItem value="after-title">After Title</SelectItem>
+                  <SelectItem value="bottom">Below Text</SelectItem>
+                  <SelectItem value="left">Left of Text</SelectItem>
+                  <SelectItem value="right">Right of Text</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Image Size */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label>Size</Label>
+                <span className="text-xs text-muted-foreground">
+                  {content.imageSize ?? 200}px
+                </span>
+              </div>
+              <Slider
+                value={[content.imageSize ?? 200]}
+                onValueChange={([value]) =>
+                  onChange({ ...content, imageSize: value })
+                }
+                min={80}
+                max={400}
+                step={10}
+                disabled={disabled}
+              />
+            </div>
+
+            {/* Image Rounding */}
+            <div className="space-y-2">
+              <Label>Rounding</Label>
+              <Select
+                value={content.imageRounding ?? "none"}
+                onValueChange={(value: HeroImageRounding) =>
+                  onChange({ ...content, imageRounding: value })
+                }
+                disabled={disabled}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None (Square)</SelectItem>
+                  <SelectItem value="small">Small</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="large">Large</SelectItem>
+                  <SelectItem value="full">Full (Circle/Pill)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Image Border */}
+            <div className="space-y-3">
+              <Label>Border</Label>
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs">Width</Label>
+                  <Select
+                    value={content.imageBorderWidth ?? "none"}
+                    onValueChange={(value: HeroImageBorderWidth) =>
+                      onChange({ ...content, imageBorderWidth: value })
+                    }
+                    disabled={disabled}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      <SelectItem value="thin">Thin (1px)</SelectItem>
+                      <SelectItem value="medium">Medium (2px)</SelectItem>
+                      <SelectItem value="thick">Thick (4px)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {content.imageBorderWidth && content.imageBorderWidth !== "none" && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs">Color</Label>
+                    <Select
+                      value={content.imageBorderColor ? "custom" : "theme"}
+                      onValueChange={(value) =>
+                        onChange({
+                          ...content,
+                          imageBorderColor: value === "theme" ? "" : "#3b82f6",
+                        })
+                      }
+                      disabled={disabled}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="theme">Theme Primary</SelectItem>
+                        <SelectItem value="custom">Custom Color</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    {content.imageBorderColor && (
+                      <div className="flex gap-2 mt-2">
+                        <Input
+                          type="color"
+                          value={content.imageBorderColor}
+                          onChange={(e) =>
+                            onChange({ ...content, imageBorderColor: e.target.value })
+                          }
+                          disabled={disabled}
+                          className="w-12 h-9 p-1 cursor-pointer"
+                        />
+                        <Input
+                          value={content.imageBorderColor}
+                          onChange={(e) =>
+                            onChange({ ...content, imageBorderColor: e.target.value })
+                          }
+                          placeholder="#3b82f6"
+                          disabled={disabled}
+                          className="flex-1"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Image Shadow */}
+            <div className="space-y-2">
+              <Label>Shadow</Label>
+              <Select
+                value={content.imageShadow ?? "none"}
+                onValueChange={(value: HeroImageShadow) =>
+                  onChange({ ...content, imageShadow: value })
+                }
+                disabled={disabled}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="small">Small</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="large">Large</SelectItem>
+                  <SelectItem value="xl">Extra Large</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Buttons Section */}

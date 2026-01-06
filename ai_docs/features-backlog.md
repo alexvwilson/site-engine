@@ -100,6 +100,29 @@ _No P1 items currently_
 
 ## Completed Features
 
+### 56. Hero Block Profile/Feature Image ✅ 2026-01-06
+
+**Problem:** Hero section only supported a background image. Users building portfolios wanted to add a profile photo or feature image alongside their hero content with styling options like borders and rounding.
+
+**Solution Implemented:**
+- [x] New profile/feature image upload (separate from background image)
+- [x] Position options: Above Text, After Title, Below Text, Left of Text, Right of Text
+- [x] Size control slider (80px to 400px)
+- [x] Rounding options: None, Small, Medium, Large, Full (circle/pill for profile pics)
+- [x] Border width options: None, Thin (1px), Medium (2px), Thick (4px)
+- [x] Border color: Theme Primary or Custom color picker
+- [x] Shadow options: None, Small, Medium, Large, Extra Large (using CSS filter drop-shadow)
+- [x] Alt text field for accessibility
+- [x] Responsive layout handling for horizontal (left/right) vs vertical (top/bottom/after-title) positions
+
+**Files Modified:**
+- `lib/section-types.ts` - Added HeroImageRounding, HeroImagePosition, HeroImageBorderWidth, HeroImageShadow types and fields to HeroContent
+- `lib/section-defaults.ts` - Added default values for new image fields
+- `components/editor/blocks/HeroEditor.tsx` - Added image upload, position, size, rounding, border, and shadow controls
+- `components/render/blocks/HeroBlock.tsx` - Renders image with configured styles, handles all position layouts
+
+---
+
 ### 55. Social Links Block Enhancements ✅ 2026-01-05
 
 **Problem:** Social links block had no section title/subtitle, and email wasn't available as a social link option.
@@ -1584,7 +1607,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-05 (Completed #55 Social Links Block Enhancements)
+**Last Updated:** 2026-01-06 (Completed #56 Hero Block Profile/Feature Image)
 
 ---
 

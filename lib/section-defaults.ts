@@ -61,6 +61,15 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
       displayTime: 2000,
       animationMode: "loop",
     },
+    // Hero image defaults (profile/feature image)
+    image: "",
+    imageAlt: "",
+    imagePosition: "top",
+    imageRounding: "none",
+    imageBorderWidth: "none",
+    imageBorderColor: "",
+    imageShadow: "none",
+    imageSize: 200,
   },
 
   text: {
