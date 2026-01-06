@@ -113,6 +113,7 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
   // Hero image settings
   const hasHeroImage = content.image && content.image.trim() !== "";
   const imagePosition = content.imagePosition ?? "top";
+  const imageMobileStack = content.imageMobileStack ?? "above";
   const imageSize = content.imageSize ?? 200;
   const imageRounding = content.imageRounding ?? "none";
   const imageBorderWidth = content.imageBorderWidth ?? "none";
@@ -228,9 +229,9 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
     </div>
   ) : null;
 
-  // Text content (used for horizontal layouts)
+  // Text content
   const TextContent = (
-    <div className={isHorizontalLayout ? "flex-1" : ""}>
+    <div>
       {HeadingElement}
       {imagePosition === "after-title" && HeroImage && (
         <div className="my-6 flex justify-center">{HeroImage}</div>
@@ -260,14 +261,19 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
       )}
 
       {isHorizontalLayout ? (
-        // Horizontal layout: Image on left or right
+        // Horizontal layout: Image on left or right, stacks on mobile
         <div
-          className={`relative z-10 max-w-4xl mx-auto flex items-center gap-8 md:gap-12 ${
-            imagePosition === "right" ? "flex-row-reverse" : ""
+          className={`relative z-10 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-12 ${
+            imagePosition === "right" ? "md:flex-row-reverse" : ""
           }`}
         >
-          {HeroImage}
-          {TextContent}
+          {/* On mobile, use order classes to control stacking */}
+          <div className={imageMobileStack === "below" ? "order-2 md:order-none" : ""}>
+            {HeroImage}
+          </div>
+          <div className={`flex-1 text-center md:text-left ${imageMobileStack === "below" ? "order-1 md:order-none" : ""}`}>
+            {TextContent}
+          </div>
         </div>
       ) : (
         // Vertical layout: Image on top or bottom

@@ -25,6 +25,7 @@ import type {
   HeroImagePosition,
   HeroImageBorderWidth,
   HeroImageShadow,
+  HeroImageMobileStack,
 } from "@/lib/section-types";
 import { MAX_HERO_BUTTONS } from "@/lib/section-types";
 import { Slider } from "@/components/ui/slider";
@@ -406,6 +407,31 @@ export function HeroEditor({
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Mobile Stacking - only for left/right positions */}
+            {(content.imagePosition === "left" || content.imagePosition === "right") && (
+              <div className="space-y-2">
+                <Label>On Mobile</Label>
+                <Select
+                  value={content.imageMobileStack ?? "above"}
+                  onValueChange={(value: HeroImageMobileStack) =>
+                    onChange({ ...content, imageMobileStack: value })
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="above">Image Above Text</SelectItem>
+                    <SelectItem value="below">Image Below Text</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  How the image stacks on small screens
+                </p>
+              </div>
+            )}
 
             {/* Image Size */}
             <div className="space-y-2">

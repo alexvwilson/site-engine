@@ -124,6 +124,7 @@ export type HeroImageRounding = "none" | "small" | "medium" | "large" | "full";
 export type HeroImagePosition = "left" | "right" | "top" | "bottom" | "after-title";
 export type HeroImageBorderWidth = "none" | "thin" | "medium" | "thick";
 export type HeroImageShadow = "none" | "small" | "medium" | "large" | "xl";
+export type HeroImageMobileStack = "above" | "below";
 
 export interface HeroContent {
   heading: string;
@@ -142,6 +143,7 @@ export interface HeroContent {
   image?: string;
   imageAlt?: string;
   imagePosition?: HeroImagePosition;
+  imageMobileStack?: HeroImageMobileStack; // For left/right positions: where image goes on mobile
   imageRounding?: HeroImageRounding;
   imageBorderWidth?: HeroImageBorderWidth;
   imageBorderColor?: string;

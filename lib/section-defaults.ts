@@ -65,6 +65,7 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     image: "",
     imageAlt: "",
     imagePosition: "top",
+    imageMobileStack: "above",
     imageRounding: "none",
     imageBorderWidth: "none",
     imageBorderColor: "",
