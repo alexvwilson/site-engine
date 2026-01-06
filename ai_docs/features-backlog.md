@@ -114,9 +114,10 @@ _No P1 items currently_
 - [x] Shadow options: None, Small, Medium, Large, Extra Large (using CSS filter drop-shadow)
 - [x] Alt text field for accessibility
 - [x] Responsive layout handling for horizontal (left/right) vs vertical (top/bottom/after-title) positions
+- [x] Mobile stacking option for left/right positions: choose image above or below text on small screens
 
 **Files Modified:**
-- `lib/section-types.ts` - Added HeroImageRounding, HeroImagePosition, HeroImageBorderWidth, HeroImageShadow types and fields to HeroContent
+- `lib/section-types.ts` - Added HeroImageRounding, HeroImagePosition, HeroImageBorderWidth, HeroImageShadow, HeroImageMobileStack types and fields to HeroContent
 - `lib/section-defaults.ts` - Added default values for new image fields
 - `components/editor/blocks/HeroEditor.tsx` - Added image upload, position, size, rounding, border, and shadow controls
 - `components/render/blocks/HeroBlock.tsx` - Renders image with configured styles, handles all position layouts
