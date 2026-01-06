@@ -100,6 +100,30 @@ _No P1 items currently_
 
 ## Completed Features
 
+### 55. Social Links Block Enhancements ✅ 2026-01-05
+
+**Problem:** Social links block had no section title/subtitle, and email wasn't available as a social link option.
+
+**Solution Implemented:**
+- [x] Added "email" to SocialPlatform type
+- [x] Email brand color (#EA4335 - Gmail red)
+- [x] Email placeholder: `mailto:hello@example.com`
+- [x] Envelope icon SVG for email
+- [x] Added optional `title` field to SocialLinksContent
+- [x] Added optional `subtitle` field to SocialLinksContent
+- [x] Title/subtitle render above social icons with alignment support
+- [x] Text color adapts to styling mode (auto/light/dark)
+- [x] Works in both plain mode and styled mode
+
+**Files Modified:**
+- `lib/section-types.ts` - Added email to SocialPlatform, title/subtitle to SocialLinksContent
+- `lib/social-icons.tsx` - Added email brand color, label, placeholder, icon path
+- `lib/section-defaults.ts` - Added title/subtitle defaults
+- `components/editor/blocks/SocialLinksEditor.tsx` - Added title/subtitle inputs
+- `components/render/blocks/SocialLinksBlock.tsx` - Renders title/subtitle with alignment
+
+---
+
 ### 54. PDF Document Upload ✅ 2026-01-05
 
 **Problem:** Users building portfolio sites needed to upload and share PDF documents (resumes, portfolios, brochures) but could only upload images. No way to get downloadable document URLs for use in header links, CTA buttons, or footer.
@@ -1560,7 +1584,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-05 (Completed #52 Hero Multi-Button, #53 Features Subtitles)
+**Last Updated:** 2026-01-05 (Completed #55 Social Links Block Enhancements)
 
 ---
 
