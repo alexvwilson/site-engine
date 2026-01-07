@@ -17,7 +17,7 @@ import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { CategoryListingPage } from "@/components/render/blog/CategoryListingPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { getBasePath } from "@/lib/url-utils";
-import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle, ImageFit } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
 
@@ -97,6 +97,7 @@ export default async function CategoryArchivePage({ params }: PageProps) {
   const siteFooter = site.footer_content as FooterContent | null;
   const socialLinks = (site.social_links as SocialLink[]) ?? [];
   const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
+  const blogImageFit = (site.blog_image_fit as ImageFit) ?? "cover";
 
   return (
     <>
@@ -118,6 +119,7 @@ export default async function CategoryArchivePage({ params }: PageProps) {
             showAuthor={site.show_blog_author}
             totalCount={totalCount}
             postsPerPage={POSTS_PER_PAGE}
+            imageFit={blogImageFit}
           />
         </main>
         {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}

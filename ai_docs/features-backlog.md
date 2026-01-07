@@ -112,6 +112,41 @@ _No P0 items currently_
 
 ## Completed Features
 
+### 61. Blog Image Fit Setting ✅ 2026-01-07
+
+**Problem:** Blog featured images with non-16:9 aspect ratios (e.g., 1200x800 = 3:2) were being cropped when displayed in blog posts, blog listing pages, and blog grid blocks due to hardcoded `aspect-video` (16:9) with `object-cover`.
+
+**Solution Implemented:**
+- [x] New site-level "Featured Image Display" setting in Blog Settings
+- [x] Three options: Cover (crops to fill), Contain (shows full image), Fill (stretches)
+- [x] Applied to: individual blog posts, blog listing page, category listing page, Blog Grid block, Blog Featured block
+- [x] Per-block override option in Blog Featured Editor for split/stacked layouts
+- [x] Contain mode adds muted background color for letterboxing effect
+- [x] Setting flows through PageRenderer → BlockRenderer → BlogGridBlock chain
+
+**Files Modified:**
+- `lib/section-types.ts` - Added `ImageFit` type, `imageFit` field to `BlogFeaturedContent`
+- `lib/drizzle/schema/sites.ts` - Added `blog_image_fit` column with `BLOG_IMAGE_FIT_OPTIONS`
+- `app/actions/sites.ts` - Added `blogImageFit` to `UpdateSiteSettingsData`
+- `components/sites/SettingsTab.tsx` - Added Featured Image Display dropdown in Blog Settings
+- `app/(sites)/sites/[siteSlug]/blog/[postSlug]/page.tsx` - Uses site imageFit setting
+- `app/(sites)/sites/[siteSlug]/blog/page.tsx` - Passes imageFit to BlogListingPage
+- `app/(sites)/sites/[siteSlug]/blog/category/[categorySlug]/page.tsx` - Passes imageFit to CategoryListingPage
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Passes imageFit to PageRenderer
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Passes imageFit to PageRenderer
+- `components/render/PageRenderer.tsx` - Added imageFit prop
+- `components/render/BlockRenderer.tsx` - Added imageFit prop, passes to BlogGridBlock
+- `components/render/blocks/BlogGridBlock.tsx` - Uses imageFit for post card images
+- `components/render/blocks/BlogFeaturedBlock.tsx` - Uses imageFit for split/stacked layouts
+- `components/render/blog/PublicPostCard.tsx` - Added imageFit prop
+- `components/render/blog/BlogListingPage.tsx` - Added imageFit prop
+- `components/render/blog/CategoryListingPage.tsx` - Added imageFit prop
+- `components/editor/BlogFeaturedEditor.tsx` - Added Image Display dropdown for per-block override
+
+**Database Migration:** `0030_plain_squadron_supreme` - Added `blog_image_fit` column to sites table
+
+---
+
 ### 60. Features Block Optional Button ✅ 2026-01-07
 
 **Problem:** The Features block allows adding feature cards with icon, title, subtitle, and description, but there's no way to add a call-to-action button to individual features.
@@ -1666,7 +1701,7 @@ _No P0 items currently_
 
 ---
 
-**Last Updated:** 2026-01-07 (Completed #57, #58, #60: Blog formatting fixes, Features block buttons. #59 rotating text fix reverted - known limitation)
+**Last Updated:** 2026-01-07 (Completed #61: Blog Image Fit Setting - prevents cropping of non-16:9 featured images)
 
 ---
 

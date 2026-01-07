@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getPublishedPostsBySite } from "@/lib/queries/blog";
-import type { BlogGridContent } from "@/lib/section-types";
+import type { BlogGridContent, ImageFit } from "@/lib/section-types";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 
 interface BlogGridBlockProps {
@@ -10,6 +10,7 @@ interface BlogGridBlockProps {
   siteId: string;
   basePath: string;
   pageId?: string;
+  imageFit?: ImageFit;
 }
 
 export async function BlogGridBlock({
@@ -17,6 +18,7 @@ export async function BlogGridBlock({
   siteId,
   basePath,
   pageId,
+  imageFit = "cover",
 }: BlogGridBlockProps) {
   // Per-block author toggle (defaults to true for backwards compatibility)
   const showAuthor = content.showAuthor ?? true;
@@ -82,12 +84,21 @@ export async function BlogGridBlock({
                 }}
               >
                 {post.featured_image ? (
-                  <div className="relative aspect-video overflow-hidden">
+                  <div
+                    className="relative aspect-video overflow-hidden"
+                    style={{ backgroundColor: imageFit === "contain" ? "var(--theme-muted)" : undefined }}
+                  >
                     <Image
                       src={post.featured_image}
                       alt={post.title}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      className={`transition-transform duration-300 group-hover:scale-105 ${
+                        imageFit === "cover"
+                          ? "object-cover"
+                          : imageFit === "contain"
+                            ? "object-contain"
+                            : "object-fill"
+                      }`}
                     />
                   </div>
                 ) : (

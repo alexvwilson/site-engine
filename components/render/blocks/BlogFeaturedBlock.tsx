@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getPublishedPostById } from "@/lib/queries/blog";
-import type { BlogFeaturedContent } from "@/lib/section-types";
+import type { BlogFeaturedContent, ImageFit } from "@/lib/section-types";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 
 interface BlogFeaturedBlockProps {
@@ -121,6 +121,7 @@ export async function BlogFeaturedBlock({
     showReadMore: content.showReadMore ?? true,
     showCategory: content.showCategory ?? true,
     showAuthor: content.showAuthor ?? true,
+    imageFit: content.imageFit ?? "cover",
     overlayColor: content.overlayColor ?? "#000000",
     overlayOpacity: content.overlayOpacity ?? 50,
   };
@@ -178,13 +179,13 @@ export async function BlogFeaturedBlock({
 
   switch (settings.layout) {
     case "stacked":
-      return <StackedLayout {...layoutProps} showAuthor={settings.showAuthor} />;
+      return <StackedLayout {...layoutProps} showAuthor={settings.showAuthor} imageFit={settings.imageFit} />;
     case "hero":
       return <HeroLayout {...layoutProps} showAuthor={settings.showAuthor} />;
     case "minimal":
       return <MinimalLayout {...layoutProps} showAuthor={settings.showAuthor} />;
     default:
-      return <SplitLayout {...layoutProps} showAuthor={settings.showAuthor} />;
+      return <SplitLayout {...layoutProps} showAuthor={settings.showAuthor} imageFit={settings.imageFit} />;
   }
 }
 
@@ -198,7 +199,8 @@ function SplitLayout({
   settings,
   formattedDate,
   showAuthor,
-}: LayoutProps & { showAuthor: boolean }) {
+  imageFit = "cover",
+}: LayoutProps & { showAuthor: boolean; imageFit?: ImageFit }) {
   return (
     <section
       className="py-12 md:py-20"
@@ -207,7 +209,7 @@ function SplitLayout({
       <div className="container mx-auto px-4">
         <div className="grid gap-8 md:grid-cols-2 items-center">
           {/* Image */}
-          <PostImage post={post} className="aspect-video" linked url={postUrl} />
+          <PostImage post={post} className="aspect-video" linked url={postUrl} imageFit={imageFit} />
 
           {/* Content */}
           <div className="space-y-4">
@@ -241,7 +243,8 @@ function StackedLayout({
   settings,
   formattedDate,
   showAuthor,
-}: LayoutProps & { showAuthor: boolean }) {
+  imageFit = "cover",
+}: LayoutProps & { showAuthor: boolean; imageFit?: ImageFit }) {
   return (
     <section
       className="py-12 md:py-20"
@@ -254,6 +257,7 @@ function StackedLayout({
           className="aspect-video w-full mb-8"
           linked
           url={postUrl}
+          imageFit={imageFit}
         />
 
         {/* Content */}
@@ -411,19 +415,30 @@ function PostImage({
   className,
   linked = false,
   url,
+  imageFit = "cover",
 }: {
   post: PostWithCategory;
   className?: string;
   linked?: boolean;
   url?: string;
+  imageFit?: ImageFit;
 }) {
   const imageContent = post.featured_image ? (
-    <div className={`relative rounded-lg overflow-hidden ${className || ""}`}>
+    <div
+      className={`relative rounded-lg overflow-hidden ${className || ""}`}
+      style={{ backgroundColor: imageFit === "contain" ? "var(--theme-muted)" : undefined }}
+    >
       <Image
         src={post.featured_image}
         alt={post.title}
         fill
-        className="object-cover transition-transform duration-300 group-hover:scale-105"
+        className={`transition-transform duration-300 group-hover:scale-105 ${
+          imageFit === "cover"
+            ? "object-cover"
+            : imageFit === "contain"
+              ? "object-contain"
+              : "object-fill"
+        }`}
       />
     </div>
   ) : (

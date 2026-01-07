@@ -19,7 +19,7 @@ import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { PostContent } from "@/components/render/blog/PostContent";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { getBasePath, getPublicSiteUrl } from "@/lib/url-utils";
-import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle, ImageFit } from "@/lib/section-types";
 
 export const dynamic = "force-dynamic";
 
@@ -108,6 +108,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
   const siteFooter = site.footer_content as FooterContent | null;
   const socialLinks = (site.social_links as SocialLink[]) ?? [];
   const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
+  const blogImageFit = (site.blog_image_fit as ImageFit) ?? "cover";
 
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
@@ -229,12 +230,21 @@ export default async function PublishedPostPage({ params }: PageProps) {
 
               {/* Featured Image */}
               {post.featured_image && (
-                <div className="relative aspect-video mb-8 md:mb-12 rounded-lg overflow-hidden">
+                <div
+                  className="relative aspect-video mb-8 md:mb-12 rounded-lg overflow-hidden"
+                  style={{ backgroundColor: blogImageFit === "contain" ? "var(--theme-muted)" : undefined }}
+                >
                   <Image
                     src={post.featured_image}
                     alt={post.title}
                     fill
-                    className="object-cover"
+                    className={
+                      blogImageFit === "cover"
+                        ? "object-cover"
+                        : blogImageFit === "contain"
+                          ? "object-contain"
+                          : "object-fill"
+                    }
                     priority
                   />
                 </div>

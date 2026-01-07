@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid, index, jsonb, boolean } from "drizzle-orm/pg-core";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { users } from "./users";
-import type { HeaderContent, FooterContent, SocialLink } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, ImageFit } from "@/lib/section-types";
 
 export const SITE_STATUSES = ["draft", "published"] as const;
 export type SiteStatus = (typeof SITE_STATUSES)[number];
@@ -19,6 +19,9 @@ export const DOMAIN_SSL_STATUSES = ["pending", "issued", "failed"] as const;
 export type DomainSslStatus = (typeof DOMAIN_SSL_STATUSES)[number];
 
 export const SOCIAL_ICON_STYLES = ["brand", "monochrome", "primary"] as const;
+
+export const BLOG_IMAGE_FIT_OPTIONS = ["cover", "contain", "fill"] as const;
+export type BlogImageFit = (typeof BLOG_IMAGE_FIT_OPTIONS)[number];
 
 // Vercel API verification challenge structure
 export interface VercelVerificationChallenge {
@@ -60,6 +63,8 @@ export const sites = pgTable(
     construction_description: text("construction_description"),
     // Blog settings
     show_blog_author: boolean("show_blog_author").notNull().default(true),
+    // Blog image fit mode: cover (crops to fill), contain (shows full image), fill (stretches)
+    blog_image_fit: text("blog_image_fit", { enum: BLOG_IMAGE_FIT_OPTIONS }).notNull().default("cover"),
     // Default category for new blog posts (FK to blog_categories.id, set via migration)
     default_blog_category_id: uuid("default_blog_category_id"),
     // Blog page SEO metadata

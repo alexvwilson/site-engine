@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/drizzle/db";
-import { sites, type ColorMode, COLOR_MODES, type BrandPersonality, BRAND_PERSONALITIES } from "@/lib/drizzle/schema/sites";
+import { sites, type ColorMode, COLOR_MODES, type BrandPersonality, BRAND_PERSONALITIES, type BlogImageFit, BLOG_IMAGE_FIT_OPTIONS } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, ne } from "drizzle-orm";
 import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
@@ -234,6 +234,7 @@ export interface UpdateSiteSettingsData {
   constructionTitle?: string | null;
   constructionDescription?: string | null;
   showBlogAuthor?: boolean;
+  blogImageFit?: BlogImageFit;
   defaultBlogCategoryId?: string | null;
   blogMetaTitle?: string | null;
   blogMetaDescription?: string | null;
@@ -330,6 +331,9 @@ export async function updateSiteSettings(
   }
   if (data.showBlogAuthor !== undefined) {
     updateData.show_blog_author = data.showBlogAuthor;
+  }
+  if (data.blogImageFit !== undefined && BLOG_IMAGE_FIT_OPTIONS.includes(data.blogImageFit)) {
+    updateData.blog_image_fit = data.blogImageFit;
   }
   if (data.defaultBlogCategoryId !== undefined) {
     updateData.default_blog_category_id = data.defaultBlogCategoryId;

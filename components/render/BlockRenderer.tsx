@@ -1,6 +1,6 @@
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import { getTypedContent, type SocialLink, type SocialIconStyle } from "@/lib/section-types";
+import { getTypedContent, type SocialLink, type SocialIconStyle, type ImageFit } from "@/lib/section-types";
 
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeadingBlock } from "./blocks/HeadingBlock";
@@ -30,6 +30,7 @@ interface BlockRendererProps {
   pageId?: string;
   socialLinks?: SocialLink[];
   socialIconStyle?: SocialIconStyle;
+  imageFit?: ImageFit;
 }
 
 export async function BlockRenderer({
@@ -40,6 +41,7 @@ export async function BlockRenderer({
   pageId,
   socialLinks = [],
   socialIconStyle = "brand",
+  imageFit = "cover",
 }: BlockRendererProps) {
   const { block_type, content, anchor_id } = section;
 
@@ -171,6 +173,7 @@ export async function BlockRenderer({
           siteId={siteId}
           basePath={basePath}
           pageId={pageId}
+          imageFit={imageFit}
         />
       );
     case "social_links":

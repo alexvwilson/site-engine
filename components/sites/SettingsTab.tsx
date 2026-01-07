@@ -30,7 +30,7 @@ import {
   removeCustomDomain,
   checkDomainFeatureAvailable,
 } from "@/app/actions/domains";
-import type { Site, ColorMode, BrandPersonality } from "@/lib/drizzle/schema/sites";
+import type { Site, ColorMode, BrandPersonality, BlogImageFit } from "@/lib/drizzle/schema/sites";
 import { Badge } from "@/components/ui/badge";
 import { DnsInstructionsCard } from "@/components/sites/DnsInstructionsCard";
 import { formatDnsInstructions, type DnsInstruction } from "@/lib/domain-utils";
@@ -83,6 +83,9 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
 
   // Blog settings
   const [showBlogAuthor, setShowBlogAuthor] = useState(site.show_blog_author);
+  const [blogImageFit, setBlogImageFit] = useState<BlogImageFit>(
+    (site.blog_image_fit as BlogImageFit) ?? "cover"
+  );
   const [defaultBlogCategoryId, setDefaultBlogCategoryId] = useState<string | null>(
     site.default_blog_category_id ?? null
   );
@@ -161,6 +164,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     constructionTitle !== (site.construction_title || "") ||
     constructionDescription !== (site.construction_description || "") ||
     showBlogAuthor !== site.show_blog_author ||
+    blogImageFit !== ((site.blog_image_fit as BlogImageFit) ?? "cover") ||
     defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
     blogMetaTitle !== (site.blog_meta_title || "") ||
     blogMetaDescription !== (site.blog_meta_description || "") ||
@@ -191,6 +195,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     setConstructionTitle(site.construction_title || "");
     setConstructionDescription(site.construction_description || "");
     setShowBlogAuthor(site.show_blog_author);
+    setBlogImageFit((site.blog_image_fit as BlogImageFit) ?? "cover");
     setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
     setBlogMetaTitle(site.blog_meta_title || "");
     setBlogMetaDescription(site.blog_meta_description || "");
@@ -227,6 +232,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
       constructionTitle: constructionTitle !== (site.construction_title || "") ? constructionTitle || null : undefined,
       constructionDescription: constructionDescription !== (site.construction_description || "") ? constructionDescription || null : undefined,
       showBlogAuthor: showBlogAuthor !== site.show_blog_author ? showBlogAuthor : undefined,
+      blogImageFit: blogImageFit !== ((site.blog_image_fit as BlogImageFit) ?? "cover") ? blogImageFit : undefined,
       defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
       blogMetaTitle: blogMetaTitle !== (site.blog_meta_title || "") ? blogMetaTitle || null : undefined,
       blogMetaDescription: blogMetaDescription !== (site.blog_meta_description || "") ? blogMetaDescription || null : undefined,
@@ -855,6 +861,31 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               onCheckedChange={setShowBlogAuthor}
               disabled={loading}
             />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-2">
+            <Label htmlFor="blogImageFit">Featured Image Display</Label>
+            <Select
+              value={blogImageFit}
+              onValueChange={(value) => setBlogImageFit(value as BlogImageFit)}
+              disabled={loading}
+            >
+              <SelectTrigger className="w-full max-w-xs" id="blogImageFit">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cover">Cover (Recommended)</SelectItem>
+                <SelectItem value="contain">Contain</SelectItem>
+                <SelectItem value="fill">Fill</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">
+              {blogImageFit === "cover" && "Crops the image to fill the container. Best for consistent layouts but may cut off parts of the image."}
+              {blogImageFit === "contain" && "Shows the entire image without cropping. May leave empty space if aspect ratios don't match."}
+              {blogImageFit === "fill" && "Stretches the image to fill the container. May distort the image."}
+            </p>
           </div>
 
           <Separator />

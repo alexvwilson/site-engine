@@ -1,6 +1,6 @@
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
-import type { SocialLink, SocialIconStyle } from "@/lib/section-types";
+import type { SocialLink, SocialIconStyle, ImageFit } from "@/lib/section-types";
 import { BlockRenderer } from "./BlockRenderer";
 import { getPageStyles } from "./utilities/theme-styles";
 
@@ -12,6 +12,7 @@ interface PageRendererProps {
   pageId?: string;
   socialLinks?: SocialLink[];
   socialIconStyle?: SocialIconStyle;
+  imageFit?: ImageFit;
 }
 
 export async function PageRenderer({
@@ -22,6 +23,7 @@ export async function PageRenderer({
   pageId,
   socialLinks = [],
   socialIconStyle = "brand",
+  imageFit = "cover",
 }: PageRendererProps) {
   if (sections.length === 0) {
     return (
@@ -48,6 +50,7 @@ export async function PageRenderer({
           pageId={pageId}
           socialLinks={socialLinks}
           socialIconStyle={socialIconStyle}
+          imageFit={imageFit}
         />
       ))}
     </div>

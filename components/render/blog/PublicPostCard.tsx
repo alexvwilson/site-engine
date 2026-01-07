@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Clock, Tag } from "lucide-react";
 import { calculateReadingTime } from "@/lib/blog-utils";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
+import type { ImageFit } from "@/lib/section-types";
 
 interface PublicPostCardProps {
   post: BlogPost;
@@ -11,6 +12,7 @@ interface PublicPostCardProps {
   authorName?: string | null;
   categoryName?: string | null;
   categorySlug?: string | null;
+  imageFit?: ImageFit;
 }
 
 export function PublicPostCard({
@@ -20,6 +22,7 @@ export function PublicPostCard({
   authorName,
   categoryName,
   categorySlug,
+  imageFit = "cover",
 }: PublicPostCardProps) {
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
@@ -42,12 +45,21 @@ export function PublicPostCard({
     >
       {/* Featured Image */}
       {post.featured_image ? (
-        <div className="relative aspect-video overflow-hidden">
+        <div
+          className="relative aspect-video overflow-hidden"
+          style={{ backgroundColor: imageFit === "contain" ? "var(--theme-muted)" : undefined }}
+        >
           <Image
             src={post.featured_image}
             alt={post.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className={`transition-transform duration-300 group-hover:scale-105 ${
+              imageFit === "cover"
+                ? "object-cover"
+                : imageFit === "contain"
+                  ? "object-contain"
+                  : "object-fill"
+            }`}
           />
         </div>
       ) : (

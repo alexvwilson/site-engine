@@ -504,6 +504,9 @@ export interface FooterContent {
 
 export type BlogFeaturedLayout = "split" | "stacked" | "hero" | "minimal";
 
+// Image fit options for blog images
+export type ImageFit = "cover" | "contain" | "fill";
+
 export interface BlogFeaturedContent {
   postId: string | null;
   layout: BlogFeaturedLayout;
@@ -512,6 +515,7 @@ export interface BlogFeaturedContent {
   showReadMore: boolean;
   showCategory: boolean;
   showAuthor?: boolean; // Per-block author toggle (default: true)
+  imageFit?: ImageFit; // How the featured image is displayed (default: cover)
   // Hero layout specific
   overlayColor: string; // Hex color, e.g., "#000000"
   overlayOpacity: number; // 0-100

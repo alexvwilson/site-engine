@@ -15,7 +15,7 @@ import { ComingSoonPage } from "@/components/render/ComingSoonPage";
 import { DEFAULT_THEME } from "@/lib/default-theme";
 import { mergeHeaderContent, mergeFooterContent } from "@/lib/header-footer-utils";
 import { getBasePath } from "@/lib/url-utils";
-import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle, ImageFit } from "@/lib/section-types";
 
 // Ensure fresh data on every request for published sites
 export const dynamic = "force-dynamic";
@@ -90,6 +90,7 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
   const siteFooter = site.footer_content as FooterContent | null;
   const socialLinks = (site.social_links as SocialLink[]) ?? [];
   const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
+  const blogImageFit = (site.blog_image_fit as ImageFit) ?? "cover";
 
   // Find page-level header/footer sections for potential overrides
   const pageHeaderSection = allSections.find((s) => s.block_type === "header");
@@ -130,6 +131,7 @@ export default async function PublishedSiteHomePage({ params }: PageProps) {
           pageId={page.id}
           socialLinks={socialLinks}
           socialIconStyle={socialIconStyle}
+          imageFit={blogImageFit}
         />
         {finalFooter && <FooterBlock content={finalFooter} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}
       </div>

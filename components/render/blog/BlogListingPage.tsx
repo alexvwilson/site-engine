@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Rss } from "lucide-react";
 import { PublicPostCard } from "./PublicPostCard";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
+import type { ImageFit } from "@/lib/section-types";
 
 interface PostWithAuthor extends BlogPost {
   authorName?: string | null;
@@ -19,6 +20,7 @@ interface BlogListingPageProps {
   showAuthor: boolean;
   totalCount: number;
   postsPerPage?: number;
+  imageFit?: ImageFit;
 }
 
 export function BlogListingPage({
@@ -29,6 +31,7 @@ export function BlogListingPage({
   showAuthor,
   totalCount,
   postsPerPage = 9,
+  imageFit = "cover",
 }: BlogListingPageProps) {
   const [posts, setPosts] = useState<PostWithAuthor[]>(initialPosts);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,6 +135,7 @@ export function BlogListingPage({
               authorName={post.authorName}
               categoryName={post.categoryName}
               categorySlug={post.categorySlug}
+              imageFit={imageFit}
             />
           ))}
         </div>

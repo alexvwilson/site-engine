@@ -1,0 +1,1 @@
+ALTER TABLE "sites" ADD COLUMN "blog_image_fit" text DEFAULT 'cover' NOT NULL;

@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 import type {
   BlogFeaturedContent,
   BlogFeaturedLayout,
+  ImageFit,
 } from "@/lib/section-types";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 import {
@@ -80,6 +81,7 @@ export function BlogFeaturedEditor({
     showReadMore: content.showReadMore ?? true,
     showCategory: content.showCategory ?? true,
     showAuthor: content.showAuthor ?? true,
+    imageFit: content.imageFit ?? "cover",
     overlayColor: content.overlayColor ?? "#000000",
     overlayOpacity: content.overlayOpacity ?? 50,
   };
@@ -170,6 +172,33 @@ export function BlogFeaturedEditor({
           {LAYOUT_OPTIONS.find((l) => l.value === settings.layout)?.description}
         </p>
       </div>
+
+      {/* Image Fit - only for layouts that show images */}
+      {settings.layout !== "minimal" && settings.layout !== "hero" && (
+        <div className="space-y-2">
+          <Label>Image Display</Label>
+          <Select
+            value={settings.imageFit}
+            onValueChange={(value) =>
+              updateSettings({ imageFit: value as ImageFit })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="cover">Cover (crops to fill)</SelectItem>
+              <SelectItem value="contain">Contain (shows full image)</SelectItem>
+              <SelectItem value="fill">Fill (stretches to fit)</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            {settings.imageFit === "cover" && "Image is cropped to fill the container. Best for consistent layouts."}
+            {settings.imageFit === "contain" && "Shows the entire image without cropping. May leave empty space."}
+            {settings.imageFit === "fill" && "Stretches image to fill. May distort the image."}
+          </p>
+        </div>
+      )}
 
       {/* Content Display Options */}
       <div className="space-y-4">

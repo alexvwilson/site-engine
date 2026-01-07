@@ -6,6 +6,7 @@ import { ArrowLeft, Tag } from "lucide-react";
 import { PublicPostCard } from "./PublicPostCard";
 import type { BlogPost } from "@/lib/drizzle/schema/blog-posts";
 import type { BlogCategory } from "@/lib/drizzle/schema/blog-categories";
+import type { ImageFit } from "@/lib/section-types";
 
 interface PostWithAuthor extends BlogPost {
   authorName?: string | null;
@@ -20,6 +21,7 @@ interface CategoryListingPageProps {
   showAuthor: boolean;
   totalCount: number;
   postsPerPage?: number;
+  imageFit?: ImageFit;
 }
 
 export function CategoryListingPage({
@@ -30,6 +32,7 @@ export function CategoryListingPage({
   showAuthor,
   totalCount,
   postsPerPage = 9,
+  imageFit = "cover",
 }: CategoryListingPageProps) {
   const [posts, setPosts] = useState<PostWithAuthor[]>(initialPosts);
   const [isLoading, setIsLoading] = useState(false);
@@ -178,6 +181,7 @@ export function CategoryListingPage({
               authorName={post.authorName}
               categoryName={post.categoryName}
               categorySlug={category.slug}
+              imageFit={imageFit}
             />
           ))}
         </div>
