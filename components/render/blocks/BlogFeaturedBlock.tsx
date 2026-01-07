@@ -25,6 +25,7 @@ interface PostWithCategory {
 
 interface TruncateResult {
   text: string;
+  paragraphs: string[];
   truncated: boolean;
 }
 
@@ -37,23 +38,63 @@ interface LayoutProps {
 }
 
 /**
- * Strip HTML tags and truncate text at character limit
+ * Extract paragraphs from HTML and optionally truncate
+ * Preserves paragraph structure for better formatting
  */
 function truncateContent(html: string, limit: number): TruncateResult {
-  // Strip HTML tags
-  const text = html.replace(/<[^>]*>/g, "").trim();
+  // Extract text content from each paragraph, preserving structure
+  const paragraphMatches = html.match(/<p[^>]*>([\s\S]*?)<\/p>/gi) || [];
 
-  if (limit <= 0 || text.length <= limit) {
-    return { text, truncated: false };
+  // Clean each paragraph - remove HTML tags but keep the paragraph text
+  const paragraphs = paragraphMatches
+    .map(p => p.replace(/<[^>]*>/g, "").trim())
+    .filter(p => p.length > 0);
+
+  // If no paragraphs found, fall back to stripping all HTML
+  if (paragraphs.length === 0) {
+    const text = html.replace(/<[^>]*>/g, "").trim();
+    if (limit <= 0 || text.length <= limit) {
+      return { text, paragraphs: [text], truncated: false };
+    }
+    const truncatedText = text.slice(0, limit);
+    const lastSpace = truncatedText.lastIndexOf(" ");
+    const finalText = lastSpace > limit * 0.8 ? truncatedText.slice(0, lastSpace) : truncatedText;
+    return { text: finalText, paragraphs: [finalText], truncated: true };
   }
 
-  // Truncate at word boundary
-  const truncated = text.slice(0, limit);
-  const lastSpace = truncated.lastIndexOf(" ");
-  const finalText =
-    lastSpace > limit * 0.8 ? truncated.slice(0, lastSpace) : truncated;
+  // Join for full text (for truncation calculation)
+  const fullText = paragraphs.join(" ");
 
-  return { text: finalText, truncated: true };
+  // No truncation needed
+  if (limit <= 0 || fullText.length <= limit) {
+    return { text: fullText, paragraphs, truncated: false };
+  }
+
+  // Truncate while preserving paragraph boundaries where possible
+  let charCount = 0;
+  const truncatedParagraphs: string[] = [];
+  let wasTruncated = false;
+
+  for (const para of paragraphs) {
+    if (charCount + para.length <= limit) {
+      truncatedParagraphs.push(para);
+      charCount += para.length + 1; // +1 for space between paragraphs
+    } else {
+      // This paragraph would exceed the limit
+      const remaining = limit - charCount;
+      if (remaining > 50 && truncatedParagraphs.length === 0) {
+        // If first paragraph and we have reasonable space, truncate it
+        const truncatedPara = para.slice(0, remaining);
+        const lastSpace = truncatedPara.lastIndexOf(" ");
+        truncatedParagraphs.push(lastSpace > remaining * 0.5 ? truncatedPara.slice(0, lastSpace) : truncatedPara);
+      }
+      wasTruncated = true;
+      break;
+    }
+  }
+
+  const finalText = truncatedParagraphs.join(" ");
+  return { text: finalText, paragraphs: truncatedParagraphs, truncated: wasTruncated };
 }
 
 /**
@@ -116,7 +157,7 @@ export async function BlogFeaturedBlock({
   const postContent: TruncateResult =
     settings.showFullContent && post.content?.html
       ? truncateContent(post.content.html, settings.contentLimit)
-      : { text: post.excerpt || "", truncated: false };
+      : { text: post.excerpt || "", paragraphs: [post.excerpt || ""], truncated: false };
 
   const postUrl = `${basePath}/blog/${post.slug}`;
   const formattedDate = post.published_at
@@ -172,7 +213,7 @@ function SplitLayout({
           <div className="space-y-4">
             <CategoryBadge post={post} show={settings.showCategory} />
             <PostTitle post={post} url={postUrl} />
-            {postContent.text && <PostText text={postContent.text} truncated={postContent.truncated} />}
+            {postContent.text && <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />}
             <PostMeta
               post={post}
               date={formattedDate}
@@ -222,7 +263,7 @@ function StackedLayout({
           <PostMeta post={post} date={formattedDate} showAuthor={showAuthor} />
           {postContent.text && (
             <div className="mt-6">
-              <PostText text={postContent.text} truncated={postContent.truncated} />
+              <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />
             </div>
           )}
           <ReadMoreLink
@@ -346,7 +387,7 @@ function MinimalLayout({
               className="border-t pt-6 mt-6"
               style={{ borderColor: "var(--theme-border)" }}
             >
-              <PostText text={postContent.text} truncated={postContent.truncated} />
+              <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />
             </div>
           )}
 
@@ -446,23 +487,44 @@ function PostTitle({
 }
 
 function PostText({
-  text,
+  paragraphs,
   truncated = false,
 }: {
-  text: string;
+  paragraphs: string[];
   truncated?: boolean;
 }) {
+  // If only one paragraph, render as before
+  if (paragraphs.length <= 1) {
+    return (
+      <p
+        className="text-lg leading-relaxed"
+        style={{
+          color: "var(--theme-muted-text)",
+          fontFamily: "var(--theme-font-body)",
+        }}
+      >
+        {paragraphs[0] || ""}
+        {truncated && "..."}
+      </p>
+    );
+  }
+
+  // Multiple paragraphs - render with proper spacing
   return (
-    <p
-      className="text-lg leading-relaxed"
+    <div
+      className="space-y-4"
       style={{
         color: "var(--theme-muted-text)",
         fontFamily: "var(--theme-font-body)",
       }}
     >
-      {text}
-      {truncated && "..."}
-    </p>
+      {paragraphs.map((para, index) => (
+        <p key={index} className="text-lg leading-relaxed">
+          {para}
+          {truncated && index === paragraphs.length - 1 && "..."}
+        </p>
+      ))}
+    </div>
   );
 }
 

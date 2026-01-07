@@ -349,6 +349,20 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
               >
                 {feature.description}
               </p>
+              {feature.buttonText && feature.buttonUrl && (
+                <a
+                  href={feature.buttonUrl}
+                  className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
+                  style={{
+                    border: "2px solid var(--color-primary)",
+                    color: "var(--color-primary)",
+                    backgroundColor: "transparent",
+                    fontSize: `calc(0.875rem * ${textScale})`,
+                  }}
+                >
+                  {feature.buttonText}
+                </a>
+              )}
             </div>
           ))}
         </div>

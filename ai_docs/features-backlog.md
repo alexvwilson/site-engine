@@ -22,7 +22,19 @@ _No P0 items currently_
 
 ## P1 - High Priority
 
-_No P1 items currently_
+### 59. Hero Rotating Text Mobile Bounce (Known Limitation)
+
+**Problem:** On mobile devices, the rotating text animation in the Hero block causes the page to bounce up and down. This happens when the rotating text wraps to a second line and then disappears during the animation cycle.
+
+**Root Cause:** The width-based clip animation doesn't reserve vertical space. When width animates to 0 during the "hiding" phase, the line height can collapse, causing content below to shift.
+
+**Attempted Fix (Reverted):** Setting `minWidth` to the longest word's width caused worse issues - huge gaps between words and misaligned text on desktop.
+
+**Status:** Known limitation. The mobile bounce is a trade-off of the current width-based animation approach. A proper fix would require a fundamentally different animation technique (e.g., opacity-based crossfade, or fixed container height with absolute positioning).
+
+**Workaround:** Users experiencing bounce on mobile can switch to the "typing" animation effect, which doesn't have this issue since it doesn't animate width.
+
+**Complexity:** High (would require rewriting the animation approach)
 
 ---
 
@@ -99,6 +111,52 @@ _No P1 items currently_
 ---
 
 ## Completed Features
+
+### 60. Features Block Optional Button ✅ 2026-01-07
+
+**Problem:** The Features block allows adding feature cards with icon, title, subtitle, and description, but there's no way to add a call-to-action button to individual features.
+
+**Solution Implemented:**
+- [x] Added optional `buttonText` and `buttonUrl` fields to Feature interface
+- [x] Added button URL and text inputs in FeaturesEditor (in grid layout after description)
+- [x] Button renders below description in FeaturesBlock when text/url provided
+- [x] Secondary button style (outline) using theme primary color
+
+**Files Modified:**
+- `lib/section-types.ts` - Added buttonText and buttonUrl to Feature interface
+- `components/editor/blocks/FeaturesEditor.tsx` - Added button text and URL inputs
+- `components/render/blocks/FeaturesBlock.tsx` - Renders optional button link
+
+---
+
+### 58. Blog Featured Block Formatting Fix ✅ 2026-01-07
+
+**Problem:** When using the "Blog Featured" block to display a post, the entire content was converted to a single solid paragraph with no line breaks or formatting.
+
+**Solution Implemented:**
+- [x] Updated `truncateContent()` to extract and preserve paragraph structure
+- [x] Returns `paragraphs` array alongside `text` string
+- [x] Updated `PostText` component to render multiple paragraphs with proper spacing
+- [x] Truncation respects paragraph boundaries where possible
+
+**Files Modified:**
+- `components/render/blocks/BlogFeaturedBlock.tsx` - Updated truncateContent function and PostText component
+
+---
+
+### 57. Blog Post Paragraph Spacing Fix ✅ 2026-01-07
+
+**Problem:** Blog post content written in the TipTap editor with proper paragraph spacing rendered on the published page with all paragraphs collapsed together.
+
+**Solution Implemented:**
+- [x] Added explicit paragraph margin styles to PostContent component
+- [x] Using Tailwind arbitrary selectors: `[&_p]:mb-4`, `[&_h2]:mt-8`, etc.
+- [x] Proper spacing for paragraphs, headings, lists, and blockquotes
+
+**Files Modified:**
+- `components/render/blog/PostContent.tsx` - Added explicit paragraph/heading margin classes
+
+---
 
 ### 56. Hero Block Profile/Feature Image ✅ 2026-01-06
 
@@ -1608,7 +1666,7 @@ _No P1 items currently_
 
 ---
 
-**Last Updated:** 2026-01-06 (Completed #56 Hero Block Profile/Feature Image)
+**Last Updated:** 2026-01-07 (Completed #57, #58, #60: Blog formatting fixes, Features block buttons. #59 rotating text fix reverted - known limitation)
 
 ---
 

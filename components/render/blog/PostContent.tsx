@@ -11,7 +11,7 @@ export function PostContent({ content }: PostContentProps) {
 
   return (
     <div
-      className="prose prose-lg max-w-none"
+      className="prose prose-lg max-w-none [&_p]:mb-4 [&_p]:mt-0 [&_p:last-child]:mb-0 [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:mt-6 [&_h3]:mb-3 [&_ul]:my-4 [&_ol]:my-4 [&_blockquote]:my-6"
       style={{
         // Theme-aware prose styling
         "--tw-prose-body": "var(--theme-text)",
