@@ -302,6 +302,8 @@ export interface GalleryContent {
   borderColor?: string; // Hex color, defaults to theme primary if empty
 }
 
+export type FeatureButtonVariant = "primary" | "secondary";
+
 export interface Feature {
   icon: string;
   title: string;
@@ -310,6 +312,7 @@ export interface Feature {
   showButton?: boolean;
   buttonText?: string;
   buttonUrl?: string;
+  buttonVariant?: FeatureButtonVariant;
 }
 
 export interface FeaturesContent {

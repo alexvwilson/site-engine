@@ -4,6 +4,8 @@ import {
   getHeadingStyles,
   getBodyStyles,
   getCardStyles,
+  getButtonStyles,
+  getOutlineButtonStyles,
 } from "../utilities/theme-styles";
 import { Icon } from "../utilities/icon-resolver";
 import { transformUrl } from "@/lib/url-utils";
@@ -153,12 +155,12 @@ export function FeaturesBlock({ content, theme, basePath = "" }: FeaturesBlockPr
                 {feature.showButton && feature.buttonText && feature.buttonUrl && (
                   <a
                     href={transformUrl(basePath, feature.buttonUrl)}
-                    className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
-                    style={{
-                      border: "2px solid var(--color-primary)",
-                      color: "var(--color-primary)",
-                      backgroundColor: "transparent",
-                    }}
+                    className="mt-4 inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
+                    style={
+                      feature.buttonVariant === "primary"
+                        ? getButtonStyles(theme)
+                        : getOutlineButtonStyles(theme)
+                    }
                   >
                     {feature.buttonText}
                   </a>
@@ -367,11 +369,11 @@ export function FeaturesBlock({ content, theme, basePath = "" }: FeaturesBlockPr
               {feature.showButton && feature.buttonText && feature.buttonUrl && (
                 <a
                   href={transformUrl(basePath, feature.buttonUrl)}
-                  className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
+                  className="mt-4 inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
                   style={{
-                    border: "2px solid var(--color-primary)",
-                    color: "var(--color-primary)",
-                    backgroundColor: "transparent",
+                    ...(feature.buttonVariant === "primary"
+                      ? getButtonStyles(theme)
+                      : getOutlineButtonStyles(theme)),
                     fontSize: `calc(0.875rem * ${textScale})`,
                   }}
                 >

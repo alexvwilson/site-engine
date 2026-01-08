@@ -25,6 +25,7 @@ import { ImageUpload } from "@/components/editor/ImageUpload";
 import type {
   FeaturesContent,
   Feature,
+  FeatureButtonVariant,
   TextBorderWidth,
   TextBorderRadius,
   TextSize,
@@ -206,30 +207,52 @@ export function FeaturesEditor({
             </div>
 
             {feature.showButton && (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor={`feature-${index}-button-text`}>Button Text</Label>
-                  <Input
-                    id={`feature-${index}-button-text`}
-                    value={feature.buttonText || ""}
-                    onChange={(e) =>
-                      handleFeatureChange(index, "buttonText", e.target.value)
-                    }
-                    placeholder="Learn More"
-                    disabled={disabled}
-                  />
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor={`feature-${index}-button-text`}>Button Text</Label>
+                    <Input
+                      id={`feature-${index}-button-text`}
+                      value={feature.buttonText || ""}
+                      onChange={(e) =>
+                        handleFeatureChange(index, "buttonText", e.target.value)
+                      }
+                      placeholder="Learn More"
+                      disabled={disabled}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`feature-${index}-button-url`}>Button URL</Label>
+                    <Input
+                      id={`feature-${index}-button-url`}
+                      value={feature.buttonUrl || ""}
+                      onChange={(e) =>
+                        handleFeatureChange(index, "buttonUrl", e.target.value)
+                      }
+                      placeholder="/blog/my-post"
+                      disabled={disabled}
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor={`feature-${index}-button-url`}>Button URL</Label>
-                  <Input
-                    id={`feature-${index}-button-url`}
-                    value={feature.buttonUrl || ""}
-                    onChange={(e) =>
-                      handleFeatureChange(index, "buttonUrl", e.target.value)
-                    }
-                    placeholder="/blog/my-post"
+                  <Label htmlFor={`feature-${index}-button-variant`}>Button Style</Label>
+                  <Select
+                    value={feature.buttonVariant ?? "secondary"}
+                    onValueChange={(v) => {
+                      const newFeatures = [...content.features];
+                      newFeatures[index] = { ...newFeatures[index], buttonVariant: v as FeatureButtonVariant };
+                      onChange({ ...content, features: newFeatures });
+                    }}
                     disabled={disabled}
-                  />
+                  >
+                    <SelectTrigger id={`feature-${index}-button-variant`}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="primary">Filled</SelectItem>
+                      <SelectItem value="secondary">Outline</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             )}
