@@ -1151,7 +1151,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <DocumentUpload siteId={site.id} disabled={loading} />
+          <DocumentUpload siteId={site.id} siteSlug={site.slug} disabled={loading} />
         </CardContent>
       </Card>
     </form>

@@ -67,6 +67,7 @@ export interface DocumentFile {
   id: string;
   name: string;
   url: string;
+  slug: string;
   createdAt: string;
   size: number;
 }
@@ -407,6 +408,45 @@ export async function deleteImages(imageUrls: string[]): Promise<DeleteResult> {
 // Document Upload
 // ============================================================================
 
+/**
+ * Generate a URL-friendly slug from a filename
+ */
+function generateDocumentSlug(filename: string): string {
+  // Remove file extension
+  const nameWithoutExt = filename.replace(/\.[^.]+$/, "");
+
+  return nameWithoutExt
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "") // Remove special chars
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Remove consecutive hyphens
+    .substring(0, 50); // Max 50 chars
+}
+
+/**
+ * Get a unique slug for a document within a site
+ */
+async function getUniqueDocumentSlug(siteId: string, baseSlug: string): Promise<string> {
+  let slug = baseSlug;
+  let counter = 0;
+
+  while (true) {
+    const [existing] = await db
+      .select({ id: documents.id })
+      .from(documents)
+      .where(and(eq(documents.site_id, siteId), eq(documents.slug, slug)))
+      .limit(1);
+
+    if (!existing) {
+      return slug;
+    }
+
+    counter++;
+    slug = `${baseSlug}-${counter}`;
+  }
+}
+
 export async function uploadDocument(formData: FormData): Promise<UploadResult> {
   const userId = await requireUserId();
 
@@ -453,6 +493,10 @@ export async function uploadDocument(formData: FormData): Promise<UploadResult> 
     .from(STORAGE_BUCKET)
     .getPublicUrl(data.path);
 
+  // Generate unique slug for the document
+  const baseSlug = generateDocumentSlug(file.name);
+  const slug = await getUniqueDocumentSlug(siteId, baseSlug);
+
   // Create database record to track the document
   try {
     await db.insert(documents).values({
@@ -460,6 +504,7 @@ export async function uploadDocument(formData: FormData): Promise<UploadResult> 
       storage_path: storagePath,
       url: urlData.publicUrl,
       filename: file.name,
+      slug,
       file_size: file.size,
       mime_type: file.type,
     });
@@ -489,6 +534,7 @@ export async function listSiteDocuments(
     id: doc.id,
     name: doc.filename,
     url: doc.url,
+    slug: doc.slug,
     createdAt: doc.created_at.toISOString(),
     size: doc.file_size ?? 0,
   }));

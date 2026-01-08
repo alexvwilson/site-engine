@@ -225,6 +225,13 @@
       "when": 1767847135113,
       "tag": "0031_steady_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1767847905608,
+      "tag": "0032_burly_prima",
+      "breakpoints": true
     }
   ]
 }

@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 interface DocumentUploadProps {
   siteId: string;
+  siteSlug: string;
   disabled?: boolean;
 }
 
@@ -30,8 +31,13 @@ function formatDate(dateString: string): string {
 
 export function DocumentUpload({
   siteId,
+  siteSlug,
   disabled,
 }: DocumentUploadProps): React.JSX.Element {
+  // Build the friendly URL for a document
+  const getFriendlyUrl = (doc: DocumentFile): string => {
+    return `/sites/${siteSlug}/docs/${doc.slug}`;
+  };
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -130,11 +136,12 @@ export function DocumentUpload({
   );
 
   const handleCopyUrl = useCallback(async (doc: DocumentFile) => {
-    await navigator.clipboard.writeText(doc.url);
+    const friendlyUrl = getFriendlyUrl(doc);
+    await navigator.clipboard.writeText(friendlyUrl);
     setCopiedId(doc.id);
     toast.success("URL copied to clipboard");
     setTimeout(() => setCopiedId(null), 2000);
-  }, []);
+  }, [siteSlug]);
 
   const handleDelete = useCallback(
     async (doc: DocumentFile) => {
@@ -230,7 +237,7 @@ export function DocumentUpload({
                       asChild
                     >
                       <a
-                        href={doc.url}
+                        href={getFriendlyUrl(doc)}
                         target="_blank"
                         rel="noopener noreferrer"
                         title="Open in new tab"
@@ -257,7 +264,7 @@ export function DocumentUpload({
                 {/* URL with copy button */}
                 <div className="flex items-center gap-2 pl-8">
                   <code className="flex-1 text-xs bg-muted px-2 py-1 rounded truncate">
-                    {doc.url}
+                    {getFriendlyUrl(doc)}
                   </code>
                   <Button
                     variant="outline"
