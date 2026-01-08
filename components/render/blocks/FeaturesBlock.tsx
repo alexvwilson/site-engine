@@ -153,17 +153,20 @@ export function FeaturesBlock({ content, theme, basePath = "" }: FeaturesBlockPr
                   {feature.description}
                 </p>
                 {feature.showButton && feature.buttonText && feature.buttonUrl && (
-                  <a
-                    href={transformUrl(basePath, feature.buttonUrl)}
-                    className="mt-4 inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
-                    style={
-                      feature.buttonVariant === "primary"
-                        ? getButtonStyles(theme)
-                        : getOutlineButtonStyles(theme)
-                    }
-                  >
-                    {feature.buttonText}
-                  </a>
+                  <>
+                    <div className="flex-grow" />
+                    <a
+                      href={transformUrl(basePath, feature.buttonUrl)}
+                      className="mt-4 inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
+                      style={
+                        feature.buttonVariant === "primary"
+                          ? getButtonStyles(theme)
+                          : getOutlineButtonStyles(theme)
+                      }
+                    >
+                      {feature.buttonText}
+                    </a>
+                  </>
                 )}
               </div>
             ))}
@@ -367,18 +370,21 @@ export function FeaturesBlock({ content, theme, basePath = "" }: FeaturesBlockPr
                 {feature.description}
               </p>
               {feature.showButton && feature.buttonText && feature.buttonUrl && (
-                <a
-                  href={transformUrl(basePath, feature.buttonUrl)}
-                  className="mt-4 inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
-                  style={{
-                    ...(feature.buttonVariant === "primary"
-                      ? getButtonStyles(theme)
-                      : getOutlineButtonStyles(theme)),
-                    fontSize: `calc(0.875rem * ${textScale})`,
-                  }}
-                >
-                  {feature.buttonText}
-                </a>
+                <>
+                  <div className="flex-grow" />
+                  <a
+                    href={transformUrl(basePath, feature.buttonUrl)}
+                    className="mt-4 inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors hover:opacity-80"
+                    style={{
+                      ...(feature.buttonVariant === "primary"
+                        ? getButtonStyles(theme)
+                        : getOutlineButtonStyles(theme)),
+                      fontSize: `calc(0.875rem * ${textScale})`,
+                    }}
+                  >
+                    {feature.buttonText}
+                  </a>
+                </>
               )}
             </div>
           ))}
