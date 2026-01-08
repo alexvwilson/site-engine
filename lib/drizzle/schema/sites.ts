@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid, index, jsonb, boolean } from "drizzle-orm/pg-core";
 import type { InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { users } from "./users";
-import type { HeaderContent, FooterContent, SocialLink, ImageFit } from "@/lib/section-types";
+import type { HeaderContent, FooterContent, SocialLink } from "@/lib/section-types";
 
 export const SITE_STATUSES = ["draft", "published"] as const;
 export type SiteStatus = (typeof SITE_STATUSES)[number];

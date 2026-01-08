@@ -1,105 +1,209 @@
-# Site Engine
+# Headstring Web (Site Engine)
 
-A personal AI-powered website builder built with Next.js 15. Create, customize, and publish websites with AI-generated themes, visual section editing, and a full-featured blog system.
+A personal AI-powered website builder built with Next.js 15. Create, customize, and publish complete websites with AI-generated themes, visual section editing, and a full-featured blog system - all without writing code.
 
 **Live Demo**: [https://headstringweb.com](https://headstringweb.com)
 
 ## What It Does
 
-Site Engine lets you build complete websites without writing code:
+Headstring Web is a no-code website builder that lets you:
 
-- **Create sites** with a visual page builder using 18 different section types
-- **Generate themes** using AI that understands your brand requirements
-- **Write content** with a rich text editor, markdown support, and drag-and-drop section management
-- **Publish blogs** with categories, RSS feeds, page assignments, and SEO optimization
-- **Preview changes** across desktop, tablet, and mobile with light/dark mode toggle
-- **Publish instantly** to `/sites/[your-slug]` or your own custom domain
+- **Build visually** with 18 drag-and-drop section types, pre-designed templates, and real-time preview
+- **Generate AI themes** - describe your brand and get complete color palettes, typography, and component styles
+- **Publish blogs** with categories, RSS feeds, scheduling, and SEO optimization
+- **Preview responsively** across desktop, tablet, and mobile with light/dark mode testing
+- **Go live instantly** at `/sites/[your-slug]` or connect your own custom domain with automatic SSL
 
-## Features
+## Features at a Glance
 
-### Site Building
+| Category | Highlights |
+|----------|------------|
+| **Building** | 18 block types, 60+ templates, drag-and-drop, undo/redo, auto-save |
+| **AI** | Theme generation, layout suggestions, logo prompts, SEO analysis, legal pages |
+| **Blog** | Categories, RSS, scheduling, page assignments, 4 display layouts |
+| **Publishing** | Custom domains, sitemap/robots.txt, SEO meta, under construction mode |
+| **Media** | Image upload, albums, PDF documents, inline article images |
 
-- **18 Block Types**: Hero, Header, Footer, Text, Image, Gallery, Features, CTA, Testimonials, Contact, Blog Featured, Blog Grid, Embed, Markdown, Heading, Article, Product Grid, Social Links
-- **Drag-and-Drop**: Reorder sections and pages visually with automatic saving
-- **Section Templates**: Pre-designed starting points for each block type (2-6 per type)
-- **Block Styling**: Borders, background images, overlays, and typography controls per section
-- **Undo/Redo**: 50-step history with keyboard shortcuts (Cmd/Ctrl+Z)
-- **Auto-Save**: Changes save automatically with debouncing
-- **Global Header/Footer**: Configure once, apply to all pages with per-page overrides
-- **Anchor Links**: Create same-page navigation with smooth scrolling
+---
 
-### Block Types
+## Block Types (18)
 
-| Block | Description |
-|-------|-------------|
-| **Hero** | Landing section with rotating text animation (clip/typing effects) |
-| **Header** | Navigation with logo, links, CTA, and social icons |
-| **Footer** | Site footer with multiple layout variants and social links |
-| **Text** | Rich text with styling options (borders, backgrounds, overlays) |
-| **Image** | Single image with 5 layout options and text descriptions |
-| **Gallery** | Grid, masonry, or carousel layouts with lightbox |
-| **Features** | Feature cards with icon picker (65+ icons) |
-| **CTA** | Call-to-action with styling controls |
-| **Testimonials** | Customer quotes with avatars |
-| **Contact** | Functional forms (simple/detailed) with spam protection |
-| **Blog Featured** | Display a post with 4 layout options (split, stacked, hero, minimal) |
-| **Blog Grid** | Grid of recent posts with page filtering |
-| **Embed** | YouTube, Vimeo, Google Maps, Spotify, SoundCloud |
-| **Markdown** | Full GFM support with syntax highlighting |
-| **Heading** | SEO-friendly page headers (H1-H3) |
-| **Article** | Rich text with inline floating images |
-| **Product Grid** | Product/catalog display with platform action links |
-| **Social Links** | Social media icons with brand colors |
+### Hero Section
+The hero block is packed with features for creating impactful landing sections:
+- **Rotating text animation** with clip (width reveal) or typing (typewriter) effects
+- **Multiple CTA buttons** (up to 4) with primary/secondary variants
+- **Profile/feature image** with position control (left, right, top, bottom, after-title)
+- **Image styling**: size slider (80-400px), rounding options (none to full circle), border width/color, drop shadow
+- **Mobile responsive** stacking options for horizontal layouts
+- **Background images** with color overlays
 
-### AI Features
+### Header & Footer
+- **Header layouts**: Left-aligned, right-aligned, or centered (logo with nav below)
+- **Footer layouts**: Simple, columns, or minimal variants
+- **Sticky header** toggle
+- **Social icons** with 16 platform options and brand colors
+- **Logo sizing** (24-80px) with dynamic header height
+- **Background styling**: colors, images, overlays
+- **Border controls**: bottom/top borders with width, color, and radius options
+- **Per-page overrides**: customize header/footer on specific pages while inheriting site defaults
 
-- **Theme Generation**: Describe your brand and get a complete color palette, typography, and component styles
-- **Layout Suggestions**: Describe your page purpose and get AI-recommended section structures
-- **Logo Prompt Generator**: Get ChatGPT-ready prompts for logo creation based on your brand
-- **SEO Analysis**: AI-powered content analysis with prioritized recommendations
-- **Legal Page Generator**: AI-generated Privacy Policy, Terms of Service, and Cookie Policy
+### Content Blocks
 
-### Theme System
+| Block | Key Features |
+|-------|--------------|
+| **Text** | Rich text (Tiptap), borders, backgrounds, overlays, content width control |
+| **Image** | 5 layouts (image only, left/right with text, top/bottom), percentage widths |
+| **Markdown** | Full GitHub-flavored markdown with live preview toggle |
+| **Heading** | SEO-friendly H1/H2/H3 with subtitle and alignment options |
+| **Article** | Rich text with inline floating images (left/right/center/full-width) |
 
-- **Manual Editing**: Fine-tune colors, fonts, and border radius after generation
-- **Light/Dark Mode**: Site-level control (always light, always dark, system default, user choice)
-- **Live Preview**: See theme changes in real-time before saving
-- **Multiple Themes**: Save and switch between different theme variations
-- **Preview Mode Toggle**: Test both light and dark modes in the editor
+### Gallery
+- **3 layout modes**: Grid, Masonry (Pinterest-style), Carousel (with arrows/dots)
+- **Aspect ratios**: Square, 16:9, 4:3, 3:4, or original
+- **Lightbox**: Click to view fullscreen with keyboard/swipe navigation
+- **Columns**: 2, 3, 4, or auto-fit responsive
+- **Styling**: border width/radius, gap control (none to large)
 
-### Blog System
+### Features Block
+- **Section header**: optional title and subtitle above feature cards
+- **Icon picker**: 65+ Lucide icons in 10 categories (Business, Tech, Contact, etc.)
+- **Per-feature subtitles**: short tagline between title and description
+- **Optional buttons**: add CTA buttons to individual features
+- **Styling**: card backgrounds, borders, typography scaling
 
-- **Full Blog**: Create, edit, schedule, and publish posts
-- **Categories**: Organize posts with site-level categories and filtering
-- **Page Assignment**: Assign posts to specific pages for filtered blog grids
+### CTA & Testimonials
+- **CTA**: Heading, description, buttons with border/background/overlay styling
+- **Testimonials**: Customer quotes with avatars, styled cards
+
+### Contact Form
+- **Two variants**: Simple (name, email, message) or Detailed (adds company, phone)
+- **Spam protection**: Honeypot fields + rate limiting
+- **Email notifications**: via Resend with reply-to headers
+- **Database storage**: Submissions tracked per-site
+- **Styling**: form card backgrounds, borders
+
+### Blog Blocks
+- **Blog Featured**: Display a single post with 4 layouts (split, stacked, hero, minimal)
+- **Blog Grid**: Filterable post grid with page assignment support
+- **Per-block controls**: show/hide author, image fit (cover/contain/fill)
+
+### Embed Block
+Securely embed third-party content:
+- YouTube, Vimeo (video)
+- Google Maps (location)
+- Spotify, SoundCloud (audio)
+- Aspect ratio options (16:9, 4:3, 1:1, custom height)
+
+### Product Grid
+Display products, albums, or portfolio items:
+- **Image with title/description**
+- **Action links** with platform icons (Amazon, Spotify, iTunes, YouTube, Bandcamp, etc.)
+- **Icon styles**: Brand colors, monochrome, or theme primary
+- **Featured link**: Make image clickable to primary destination
+
+### Social Links Block
+- **16 platforms**: Facebook, Instagram, X/Twitter, LinkedIn, YouTube, TikTok, Threads, Pinterest, GitHub, Discord, Snapchat, WhatsApp, Telegram, Twitch, Website, Email
+- **Icon styles**: Brand colors, monochrome, or theme-matched
+- **Section title/subtitle** support
+- **Standalone block** or integrated in header/footer
+
+---
+
+## AI-Powered Features
+
+### Theme Generation
+Describe your brand personality and requirements - the AI generates:
+- Complete color palette (8 colors) for light and dark modes
+- Typography selection from curated Google Fonts
+- Border radius and component styling
+- Automatic dark mode palette generation
+
+### Layout Suggestions
+Describe your page's purpose and get AI-recommended section structures with content suggestions.
+
+### Logo Prompt Generator
+Multi-step wizard that generates ChatGPT-ready prompts for logo creation:
+- Analyzes your site name and primary color
+- Generates 10 concepts across 3 categories (decomposed, monogram, pattern)
+- Expert recommendations highlighted (top, alternative, safe picks)
+- Copy-ready prompts for external AI image generators
+
+### SEO Analysis
+AI-powered site audit with:
+- Overall score (0-100) with color coding
+- Categorized recommendations (content, technical, keywords, meta)
+- Priority ranking (high/medium/low)
+- Current state vs. suggested fix for each issue
+
+### Legal Page Generator
+AI-generated legal documents:
+- Privacy Policy, Terms of Service, Cookie Policy
+- Business type selection for industry-specific content
+- Data collection practices configuration
+- Jurisdiction-aware (GDPR, CCPA references)
+
+---
+
+## Theme System
+
+- **AI Generation**: Describe requirements → get complete theme
+- **Manual Editing**: Color pickers, font dropdowns, radius sliders
+- **Light/Dark Mode**: Four options (always light, always dark, system default, user choice)
+- **Live Preview**: See changes in real-time before saving
+- **Multiple Themes**: Save variations and switch between them
+- **Preview Toggle**: Test both light and dark modes in the editor
+
+---
+
+## Blog System
+
+- **Post Management**: Create, edit, schedule, and publish
+- **Rich Editor**: Tiptap with markdown auto-detection and conversion
+- **Categories**: Site-level categories with dedicated listing pages
+- **Page Assignment**: Filter blog grids by page for topic-specific feeds
 - **RSS Feed**: Auto-generated at `/sites/[slug]/blog/rss.xml`
-- **SEO**: Custom meta tags, JSON-LD structured data, auto-generated sitemaps
-- **Blog Blocks**: Embed featured posts or post grids on any page with layout options
-- **Reading Time**: Automatic estimation displayed on posts
-- **Social Sharing**: Built-in share buttons for Twitter, Facebook, LinkedIn
-- **Post Navigation**: Previous/Next post links
-- **Markdown Detection**: Auto-converts pasted markdown to rich text
+- **Image Fit**: Site-level setting (cover/contain/fill) to prevent cropping
+- **Reading Time**: Automatic estimation
+- **Social Sharing**: Twitter, Facebook, LinkedIn share buttons
+- **Navigation**: Previous/next post links
+- **Sorting**: By date, update time, alphabetical, or status
 
-### Publishing
+---
 
-- **Draft/Published States**: Control visibility at site, page, and section levels
-- **Under Construction Mode**: Show a coming soon page while you build
-- **Custom Domains**: Connect your own domain via Vercel with automatic SSL
-- **SEO Settings**: Meta titles, descriptions, Open Graph, and Twitter cards
-- **SEO Health Check**: Automated checklist with AI-powered analysis
-- **Dynamic Sitemap**: Auto-generated at `/sites/[slug]/sitemap.xml`
-- **Robots.txt**: Auto-generated at `/sites/[slug]/robots.txt`
-- **Contact Forms**: Functional forms with spam protection and email notifications
+## Publishing & SEO
 
-### Content Management
+- **Visibility Control**: Draft/published states at site, page, and section levels
+- **Under Construction**: Customizable coming soon page while building
+- **Custom Domains**: Connect via Vercel with automatic SSL provisioning
+- **SEO Meta**: Per-page titles, descriptions, Open Graph, Twitter cards
+- **SEO Health Check**: Automated checklist with progress scoring
+- **Dynamic Sitemap**: `/sites/[slug]/sitemap.xml` with all pages, posts, categories
+- **Robots.txt**: `/sites/[slug]/robots.txt` auto-generated
 
-- **Image Upload**: Drag-and-drop with Supabase Storage
-- **Image Library**: Browse and reuse previously uploaded images
-- **Image Albums**: Organize images into folders/albums
-- **Rich Text Editor**: Bold, italic, headings, lists, links, blockquotes
-- **Article Editor**: Insert and position images inline with text
-- **Device Preview**: Test layouts on desktop, tablet, and mobile
-- **Manual Page Ordering**: Drag-and-drop page reordering
+---
+
+## Content Management
+
+### Media
+- **Image Upload**: Drag-and-drop with progress indicators
+- **Image Library**: Browse and reuse uploaded images
+- **Albums**: Organize images into folders with filtering
+- **PDF Documents**: Upload and get shareable URLs (10MB max)
+
+### Editing
+- **Rich Text**: Bold, italic, headings (H2/H3), lists, links, blockquotes
+- **Markdown Detection**: Auto-converts pasted markdown to formatted text
+- **Article Images**: Insert and position images inline with text (float left/right/center/full)
+- **Undo/Redo**: 50-step history with Cmd/Ctrl+Z shortcuts
+- **Auto-Save**: Debounced saving on all changes
+
+### Organization
+- **Drag-and-Drop**: Reorder sections and pages visually
+- **Section Templates**: 2-6 pre-designed templates per block type
+- **Anchor Links**: Same-page navigation with smooth scrolling
+- **Global Header/Footer**: Site-wide with per-page overrides
+
+---
 
 ## Tech Stack
 
@@ -114,6 +218,8 @@ Site Engine lets you build complete websites without writing code:
 | Styling | Tailwind CSS, shadcn/ui |
 | Rich Text | Tiptap |
 
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -123,15 +229,19 @@ Site Engine lets you build complete websites without writing code:
 - OpenAI API key
 - Trigger.dev account
 
-### Setup
+### Quick Start
 
-1. Clone the repository
-2. Copy `.env.local.example` to `.env.local` and fill in your credentials
-3. Install dependencies: `npm install`
-4. Run migrations: `npm run db:migrate`
-5. Start development: `npm run dev`
+```bash
+git clone [repository]
+cp .env.local.example .env.local  # Fill in credentials
+npm install
+npm run db:migrate
+npm run dev
+```
 
-For detailed setup instructions, see [SETUP.md](SETUP.md).
+For detailed setup, see [SETUP.md](SETUP.md).
+
+---
 
 ## Development Commands
 
@@ -156,66 +266,20 @@ npm run db:status        # Check migration status
 npm run trigger:deploy:prod   # Deploy background tasks
 ```
 
+---
+
 ## Custom Domain Setup
 
-Connect your own domain to published sites via Vercel's domain management.
+1. **Configure Vercel API**: Add `VERCEL_API_TOKEN`, `VERCEL_PROJECT_ID` to environment
+2. **Add Domain**: Enter domain in site Settings → Connect Domain
+3. **Configure DNS**:
+   - Apex domain: `A` record → `76.76.21.21`
+   - Subdomain: `CNAME` record → `cname.vercel-dns.com`
+4. **Wait for Verification**: SSL automatically provisioned
 
-### 1. Configure Vercel API Access
+See full instructions in [Custom Domain Setup](#custom-domain-setup-1) below.
 
-Get your Vercel credentials and add them to `.env.local`:
-
-```bash
-VERCEL_API_TOKEN=your_token_here      # Vercel Dashboard → Settings → Tokens → Create
-VERCEL_PROJECT_ID=prj_xxxxxxxxxxxxx   # Project Settings → General → Project ID
-VERCEL_TEAM_ID=team_xxxxxxxxxxxxx     # Team Settings → General (only if using a team)
-```
-
-Also add these variables in your Vercel project's Environment Variables settings for production.
-
-### 2. Add Domain in Site Engine
-
-1. Go to your site's **Settings** tab
-2. Enter your domain (e.g., `example.com` or `www.example.com`)
-3. Click **Connect Domain**
-4. Note the DNS records shown (and any verification TXT record)
-
-### 3. Configure DNS at Your Registrar
-
-Add these records at your domain registrar (Namecheap, GoDaddy, Cloudflare, etc.):
-
-**For apex/root domain (example.com):**
-
-| Type | Host | Value |
-|------|------|-------|
-| A | `@` | `76.76.21.21` |
-
-**For subdomain (www.example.com):**
-
-| Type | Host | Value |
-|------|------|-------|
-| CNAME | `www` | `cname.vercel-dns.com` |
-
-**If verification required (check Site Engine UI):**
-
-| Type | Host | Value |
-|------|------|-------|
-| TXT | `_vercel` | (value from Site Engine UI) |
-
-**Recommended setup (both root + www):**
-
-| Type | Host | Value |
-|------|------|-------|
-| A | `@` | `76.76.21.21` |
-| CNAME | `www` | `cname.vercel-dns.com` |
-
-### 4. Wait for Verification
-
-- DNS propagation typically takes 5-30 minutes (can take up to 48 hours)
-- Site Engine polls for verification automatically
-- Check propagation at [dnschecker.org](https://dnschecker.org)
-- Use **Retry Verification** in Settings if needed
-
-Once verified, SSL is automatically provisioned and your site is accessible at both your custom domain and `/sites/[slug]`.
+---
 
 ## Project Structure
 
@@ -223,11 +287,9 @@ Once verified, SSL is automatically provisioned and your site is accessible at b
 app/
 ├── (auth)/              # Login, signup, password reset
 ├── (protected)/         # Dashboard, site editor, page editor
-│   └── app/
-│       ├── sites/[siteId]/
-│       │   ├── blog/    # Blog post editor
-│       │   └── pages/   # Page editor and preview
-│       └── profile/     # User profile
+│   └── app/sites/[siteId]/
+│       ├── blog/        # Blog post editor
+│       └── pages/       # Page editor and preview
 ├── (public)/            # Landing page, terms, privacy
 ├── (sites)/             # Published site routes
 │   └── sites/[siteSlug]/
@@ -236,41 +298,86 @@ app/
 └── api/                 # API routes
 
 components/
-├── editor/              # Section editors for each block type
-├── render/              # Section renderers for published sites
-├── blog/                # Blog management UI
-├── sites/               # Site management (cards, tabs, settings)
+├── editor/              # 18 block editors
+├── render/              # 18 block renderers
+├── blog/                # Blog management
+├── sites/               # Site management
 ├── pages/               # Page management
 ├── theme/               # Theme generation and editing
-└── preview/             # Preview frame and device toggle
+└── preview/             # Device preview
 
 lib/
-├── drizzle/schema/      # Database schemas
-├── queries/             # Database query functions
-└── ...                  # Utilities, types, defaults
+├── drizzle/schema/      # 15+ database tables
+├── queries/             # Query functions
+├── section-types.ts     # Block type interfaces
+├── section-defaults.ts  # Default block content
+└── section-templates.ts # 60+ block templates
 
 trigger/
-├── tasks/               # Background job definitions
+├── tasks/               # 5 background jobs
 └── utils/               # AI prompts and parsers
 ```
+
+---
+
+## Architecture Highlights
+
+**Content Hierarchy**: Sites → Pages → Sections → Blocks
+
+**Theme System**: CSS variables enable runtime switching without rebuilds. Themes include light and dark palettes with automatic dark mode generation when not provided.
+
+**Blog Integration**: Blog posts are separate entities from pages. Dedicated blocks (Blog Featured, Blog Grid) embed posts anywhere. Page assignments enable filtered displays.
+
+**Background Jobs**: All AI operations run as Trigger.dev tasks with real-time progress tracking:
+- Theme generation
+- Layout suggestions
+- Logo prompt generation
+- SEO analysis
+- Legal page generation
+- Domain verification polling
+
+**SEO**: Auto-generated sitemap.xml and robots.txt per site. AI-powered analysis with actionable recommendations. Per-page and per-block meta controls.
+
+---
+
+## Custom Domain Setup (Detailed)
+
+### 1. Configure Vercel API Access
+
+```bash
+VERCEL_API_TOKEN=your_token_here      # Vercel Dashboard → Settings → Tokens
+VERCEL_PROJECT_ID=prj_xxxxxxxxxxxxx   # Project Settings → General
+VERCEL_TEAM_ID=team_xxxxxxxxxxxxx     # Team Settings (if using team)
+```
+
+### 2. Add Domain in Settings
+
+1. Go to site **Settings** tab
+2. Enter domain (e.g., `example.com`)
+3. Click **Connect Domain**
+4. Note DNS records shown
+
+### 3. Configure DNS
+
+| Type | Host | Value |
+|------|------|-------|
+| A | `@` | `76.76.21.21` |
+| CNAME | `www` | `cname.vercel-dns.com` |
+| TXT | `_vercel` | (if verification required) |
+
+### 4. Verification
+
+- DNS propagation: 5-30 minutes (up to 48 hours)
+- Check at [dnschecker.org](https://dnschecker.org)
+- SSL auto-provisioned on verification
+
+---
 
 ## Documentation
 
 - [SETUP.md](SETUP.md) - Complete setup guide
 - [DEPLOY.md](DEPLOY.md) - Deployment instructions
 - [CLAUDE.md](CLAUDE.md) - AI assistant context
-
-## Architecture Highlights
-
-**Content Hierarchy**: Sites → Pages → Sections → Blocks
-
-**Theme System**: CSS variables enable runtime theme switching without rebuilds. Themes include light and dark color palettes with automatic dark mode generation.
-
-**Blog Integration**: Blog posts exist as a separate entity from pages, with dedicated section blocks for embedding posts anywhere in your site. Posts can be assigned to specific pages for filtered displays.
-
-**Background Jobs**: AI operations (theme generation, layout suggestions, logo prompts, SEO analysis, legal page generation) run as Trigger.dev tasks with real-time progress tracking.
-
-**SEO**: Each published site gets auto-generated sitemap.xml and robots.txt, plus AI-powered SEO analysis with actionable recommendations.
 
 ---
 
