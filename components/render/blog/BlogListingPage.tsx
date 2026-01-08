@@ -21,6 +21,7 @@ interface BlogListingPageProps {
   totalCount: number;
   postsPerPage?: number;
   imageFit?: ImageFit;
+  blogTitle?: string | null;
 }
 
 export function BlogListingPage({
@@ -32,7 +33,9 @@ export function BlogListingPage({
   totalCount,
   postsPerPage = 9,
   imageFit = "cover",
+  blogTitle,
 }: BlogListingPageProps) {
+  const displayTitle = blogTitle || "Blog";
   const [posts, setPosts] = useState<PostWithAuthor[]>(initialPosts);
   const [isLoading, setIsLoading] = useState(false);
   const [offset, setOffset] = useState(initialPosts.length);
@@ -67,7 +70,7 @@ export function BlogListingPage({
               fontFamily: "var(--theme-font-heading)",
             }}
           >
-            Blog
+            {displayTitle}
           </h1>
           <p
             className="text-lg"
@@ -98,7 +101,7 @@ export function BlogListingPage({
               fontFamily: "var(--theme-font-heading)",
             }}
           >
-            Blog
+            {displayTitle}
           </h1>
           <p
             className="text-lg mb-4"

@@ -238,6 +238,7 @@ export interface UpdateSiteSettingsData {
   defaultBlogCategoryId?: string | null;
   blogMetaTitle?: string | null;
   blogMetaDescription?: string | null;
+  blogTitle?: string | null;
   brandPersonality?: BrandPersonality | null;
   contactNotificationEmail?: string | null;
   faviconUrl?: string | null;
@@ -343,6 +344,9 @@ export async function updateSiteSettings(
   }
   if (data.blogMetaDescription !== undefined) {
     updateData.blog_meta_description = data.blogMetaDescription?.trim() || null;
+  }
+  if (data.blogTitle !== undefined) {
+    updateData.blog_title = data.blogTitle?.trim() || null;
   }
   if (data.brandPersonality !== undefined) {
     if (data.brandPersonality === null || BRAND_PERSONALITIES.includes(data.brandPersonality)) {

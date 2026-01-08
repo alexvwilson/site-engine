@@ -70,6 +70,8 @@ export const sites = pgTable(
     // Blog page SEO metadata
     blog_meta_title: text("blog_meta_title"),
     blog_meta_description: text("blog_meta_description"),
+    // Blog page display title (defaults to "Blog" if not set)
+    blog_title: text("blog_title"),
     // Brand personality for AI features (logo generation, etc.)
     brand_personality: text("brand_personality", { enum: BRAND_PERSONALITIES }),
     // Email address for contact form notifications

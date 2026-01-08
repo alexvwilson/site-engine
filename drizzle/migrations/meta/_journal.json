@@ -218,6 +218,13 @@
       "when": 1767829132721,
       "tag": "0030_plain_squadron_supreme",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1767847135113,
+      "tag": "0031_steady_nova",
+      "breakpoints": true
     }
   ]
 }

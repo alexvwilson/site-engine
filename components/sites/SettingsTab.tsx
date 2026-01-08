@@ -93,6 +93,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
   const [blogMetaDescription, setBlogMetaDescription] = useState(
     site.blog_meta_description || ""
   );
+  const [blogTitle, setBlogTitle] = useState(site.blog_title || "");
 
   // Contact form settings
   const [contactNotificationEmail, setContactNotificationEmail] = useState(
@@ -168,6 +169,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ||
     blogMetaTitle !== (site.blog_meta_title || "") ||
     blogMetaDescription !== (site.blog_meta_description || "") ||
+    blogTitle !== (site.blog_title || "") ||
     contactNotificationEmail !== (site.contact_notification_email || "") ||
     faviconUrl !== (site.favicon_url || "") ||
     useSeparateFavicon !== site.use_separate_favicon ||
@@ -199,6 +201,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     setDefaultBlogCategoryId(site.default_blog_category_id ?? null);
     setBlogMetaTitle(site.blog_meta_title || "");
     setBlogMetaDescription(site.blog_meta_description || "");
+    setBlogTitle(site.blog_title || "");
     setContactNotificationEmail(site.contact_notification_email || "");
     setFaviconUrl(site.favicon_url || "");
     setUseSeparateFavicon(site.use_separate_favicon);
@@ -236,6 +239,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
       defaultBlogCategoryId: defaultBlogCategoryId !== (site.default_blog_category_id ?? null) ? defaultBlogCategoryId : undefined,
       blogMetaTitle: blogMetaTitle !== (site.blog_meta_title || "") ? blogMetaTitle || null : undefined,
       blogMetaDescription: blogMetaDescription !== (site.blog_meta_description || "") ? blogMetaDescription || null : undefined,
+      blogTitle: blogTitle !== (site.blog_title || "") ? blogTitle || null : undefined,
       contactNotificationEmail: contactNotificationEmail !== (site.contact_notification_email || "") ? contactNotificationEmail || null : undefined,
       faviconUrl: faviconUrl !== (site.favicon_url || "") ? faviconUrl || null : undefined,
       useSeparateFavicon: useSeparateFavicon !== site.use_separate_favicon ? useSeparateFavicon : undefined,
@@ -848,6 +852,23 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="blogTitle">Blog Page Title</Label>
+            <Input
+              id="blogTitle"
+              placeholder="Blog"
+              value={blogTitle}
+              onChange={(e) => setBlogTitle(e.target.value)}
+              disabled={loading}
+              className="max-w-xs"
+            />
+            <p className="text-sm text-muted-foreground">
+              The title displayed at the top of your blog page. Defaults to &quot;Blog&quot; if empty.
+            </p>
+          </div>
+
+          <Separator />
+
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <Label htmlFor="showBlogAuthor">Show Author on Post Pages</Label>
