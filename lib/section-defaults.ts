@@ -318,10 +318,35 @@ console.log(greeting);
   },
 
   blog_grid: {
+    // Optional section header
+    sectionTitle: "",
+    sectionSubtitle: "",
     postCount: 6,
     showExcerpt: true,
     showAuthor: true,
     pageFilter: "current",
+    // Image background (for contain fit mode)
+    imageBackgroundMode: "muted",
+    imageBackgroundColor: "",
+    // Post card border
+    cardBorderMode: "default",
+    cardBorderColor: "",
+    // Styling options (disabled by default - renders with theme background)
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    showCardBackground: true,
+    cardBackgroundColor: "",
+    textSize: "normal",
   },
 
   embed: {

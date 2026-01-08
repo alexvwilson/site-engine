@@ -112,6 +112,50 @@ _No P0 items currently_
 
 ## Completed Features
 
+### 62. Post Grid Block Title/Subtitle & Styling ✅ 2026-01-08
+
+**Problem:** The Post Grid (Blog Grid) block had no section header (title/subtitle) and lacked the basic styling options that other blocks like Features, CTA, and Testimonials have.
+
+**Solution Implemented:**
+- [x] Added `sectionTitle` and `sectionSubtitle` fields to BlogGridContent
+- [x] Section header renders centered above the post grid when title/subtitle provided
+- [x] Added **card border color** control:
+  - Three options: Blog Default (theme border), Theme Primary, Custom Color
+  - Custom color picker when "Custom" is selected
+  - Applies to individual post card borders
+- [x] Added full styling options matching other blocks:
+  - Master `enableStyling` toggle (disabled by default)
+  - Border options: show/hide, width (thin/medium/thick), radius, color
+  - Box background: theme-adaptive or custom with opacity
+  - Section background image with overlay color/opacity
+  - Post card background: show/hide, custom color
+  - Typography: text size scaling (small/normal/large), text color mode (auto/light/dark)
+- [x] Plain mode (default) preserves original appearance
+- [x] Styled mode enables all customization options
+- [x] Card styling respects text color mode for readability
+
+**Note on Border Styling:** The border styling requires TWO toggles to be enabled:
+1. Turn ON the main "Styling" toggle (at the top of the Styling collapsible)
+2. Turn ON the "Show Border" toggle inside the Border section
+Then you can configure border width, corners, and color.
+
+**CSS Variable Fix:** Initial implementation used incorrect CSS variable names (`var(--theme-primary)`, `var(--theme-border)`, etc.) which don't exist in the codebase. Fixed to use correct naming convention:
+- `--theme-background` → `--color-background`
+- `--theme-muted-text` → `--color-muted-foreground`
+- `--theme-text` → `--color-foreground`
+- `--theme-primary` → `--color-primary`
+- `--theme-muted` → `--color-muted`
+- `--theme-font-heading` → `--font-heading`
+- `--theme-font-body` → `--font-body`
+
+**Files Modified:**
+- `lib/section-types.ts` - Extended BlogGridContent with sectionTitle, sectionSubtitle, cardBorderMode, cardBorderColor, and all styling fields
+- `lib/section-defaults.ts` - Added default values for new blog_grid fields
+- `components/editor/BlogGridEditor.tsx` - Added title/subtitle inputs, card border color controls, and full styling controls collapsible section
+- `components/render/blocks/BlogGridBlock.tsx` - Renders section header, uses card border settings, implements plain/styled mode rendering, fixed CSS variable names
+
+---
+
 ### 61. Blog Image Fit Setting ✅ 2026-01-07
 
 **Problem:** Blog featured images with non-16:9 aspect ratios (e.g., 1200x800 = 3:2) were being cropped when displayed in blog posts, blog listing pages, and blog grid blocks due to hardcoded `aspect-video` (16:9) with `object-cover`.
@@ -1701,7 +1745,7 @@ _No P0 items currently_
 
 ---
 
-**Last Updated:** 2026-01-07 (Completed #61: Blog Image Fit Setting - prevents cropping of non-16:9 featured images)
+**Last Updated:** 2026-01-08 (Completed #62: Post Grid Block Title/Subtitle & Styling)
 
 ---
 

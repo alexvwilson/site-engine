@@ -527,11 +527,55 @@ export interface BlogFeaturedContent {
 
 export type BlogGridPageFilter = "all" | "current" | "unassigned" | string;
 
+// Image background mode for contain fit
+export type ImageBackgroundMode = "muted" | "primary" | "custom";
+
 export interface BlogGridContent {
+  // Optional section header
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
   postCount: 3 | 6 | 9;
   showExcerpt: boolean;
   showAuthor?: boolean; // Per-block author toggle (default: true)
   pageFilter?: BlogGridPageFilter;
+
+  // Image background (for contain fit mode letterboxing)
+  imageBackgroundMode?: ImageBackgroundMode;
+  imageBackgroundColor?: string; // Used when mode is "custom"
+
+  // Post card border color
+  cardBorderMode?: "default" | "primary" | "custom";
+  cardBorderColor?: string; // Used when mode is "custom"
+
+  // Master styling toggle - when false, renders with plain theme background
+  enableStyling?: boolean;
+
+  // Text color mode when styling is enabled
+  textColorMode?: TextColorMode;
+
+  // Border options (for the blog grid container)
+  showBorder?: boolean;
+  borderWidth?: TextBorderWidth;
+  borderRadius?: TextBorderRadius;
+  borderColor?: string;
+
+  // Box background (for the blog grid container)
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+
+  // Section background & overlay
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+
+  // Post card options
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+
+  // Typography
+  textSize?: TextSize;
 }
 
 export type EmbedAspectRatio = "16:9" | "4:3" | "1:1" | "custom";
