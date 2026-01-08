@@ -82,6 +82,11 @@ The hero block is packed with features for creating impactful landing sections:
 - **Database storage**: Submissions tracked per-site
 - **Styling**: form card backgrounds, borders
 
+**Requirements for email notifications:**
+1. `RESEND_API_KEY` must be set in Vercel environment variables
+2. Set notification email per-site in **Settings → Contact Form Notifications**
+3. **Must test from custom domain** (e.g., `alexvwilson.com`), NOT the internal `/sites/[slug]` route
+
 ### Blog Blocks
 - **Blog Featured**: Display a single post with 4 layouts (split, stacked, hero, minimal)
 - **Blog Grid**: Filterable post grid with page assignment support

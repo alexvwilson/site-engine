@@ -267,12 +267,39 @@ Validated via `@t3-oss/env-nextjs` in `lib/env.ts`:
 - `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 - `OPENAI_API_KEY` - OpenAI API key for GPT-4o theme/layout generation
 - `TRIGGER_SECRET_KEY` - Trigger.dev secret key
+- `RESEND_API_KEY` - Resend API key for contact form email notifications (optional)
 
 **Client:**
 
 - `NEXT_PUBLIC_APP_URL`
 
 See `.env.local.example` for template.
+
+## Contact Form Email Notifications
+
+Contact forms on published sites can send email notifications via Resend.
+
+### Requirements for Email Notifications to Work
+
+1. **RESEND_API_KEY** must be set in environment variables (Vercel)
+2. **Notification Email** must be configured per-site in Settings → Contact Form Notifications
+3. **Custom Domain Required** - Contact form submissions only send emails when accessed via the site's custom domain (e.g., `alexvwilson.com`), NOT via the internal `/sites/[slug]` route
+
+### How It Works
+
+- Form submissions are always saved to the `contact_submissions` table
+- Email notifications only sent if:
+  - `RESEND_API_KEY` is configured
+  - Site has `contact_notification_email` set
+  - Form is submitted from the custom domain
+- Message content is included in the email but NOT stored in the database
+- Spam protection via honeypot field and rate limiting (5 submissions per IP per 15 minutes)
+
+### Troubleshooting
+
+- **Submissions saving but no emails**: Check `RESEND_API_KEY` in Vercel env vars, may need redeploy
+- **Check Resend dashboard**: [resend.com/emails](https://resend.com/emails) to see sent/failed emails
+- **Testing "under construction" sites**: Must test from the actual custom domain, not `/sites/[slug]`
 
 ## Common Patterns
 
