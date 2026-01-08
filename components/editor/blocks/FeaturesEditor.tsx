@@ -190,31 +190,49 @@ export function FeaturesEditor({
           </div>
 
           {/* Optional Button */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label htmlFor={`feature-${index}-button-text`}>Button Text (optional)</Label>
-              <Input
-                id={`feature-${index}-button-text`}
-                value={feature.buttonText || ""}
-                onChange={(e) =>
-                  handleFeatureChange(index, "buttonText", e.target.value)
-                }
-                placeholder="Learn More"
+          <div className="space-y-3 pt-2 border-t">
+            <div className="flex items-center justify-between">
+              <Label htmlFor={`feature-${index}-show-button`}>Show Button</Label>
+              <Switch
+                id={`feature-${index}-show-button`}
+                checked={feature.showButton ?? false}
+                onCheckedChange={(checked) => {
+                  const newFeatures = [...content.features];
+                  newFeatures[index] = { ...newFeatures[index], showButton: checked };
+                  onChange({ ...content, features: newFeatures });
+                }}
                 disabled={disabled}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor={`feature-${index}-button-url`}>Button URL</Label>
-              <Input
-                id={`feature-${index}-button-url`}
-                value={feature.buttonUrl || ""}
-                onChange={(e) =>
-                  handleFeatureChange(index, "buttonUrl", e.target.value)
-                }
-                placeholder="/features/my-feature"
-                disabled={disabled}
-              />
-            </div>
+
+            {feature.showButton && (
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor={`feature-${index}-button-text`}>Button Text</Label>
+                  <Input
+                    id={`feature-${index}-button-text`}
+                    value={feature.buttonText || ""}
+                    onChange={(e) =>
+                      handleFeatureChange(index, "buttonText", e.target.value)
+                    }
+                    placeholder="Learn More"
+                    disabled={disabled}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`feature-${index}-button-url`}>Button URL</Label>
+                  <Input
+                    id={`feature-${index}-button-url`}
+                    value={feature.buttonUrl || ""}
+                    onChange={(e) =>
+                      handleFeatureChange(index, "buttonUrl", e.target.value)
+                    }
+                    placeholder="/blog/my-post"
+                    disabled={disabled}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       ))}

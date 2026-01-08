@@ -99,6 +99,7 @@ export async function BlockRenderer({
         <FeaturesBlock
           content={getTypedContent("features", content)}
           theme={theme}
+          basePath={basePath}
         />
       );
     case "cta":
@@ -156,6 +157,7 @@ export async function BlockRenderer({
           content={getTypedContent("blog_featured", content)}
           theme={theme}
           basePath={basePath}
+          siteImageFit={imageFit}
         />
       );
     case "blog_grid":

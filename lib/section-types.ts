@@ -307,6 +307,7 @@ export interface Feature {
   title: string;
   subtitle?: string;
   description: string;
+  showButton?: boolean;
   buttonText?: string;
   buttonUrl?: string;
 }

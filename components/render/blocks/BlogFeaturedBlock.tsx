@@ -8,6 +8,7 @@ interface BlogFeaturedBlockProps {
   content: BlogFeaturedContent;
   theme: ThemeData;
   basePath: string;
+  siteImageFit?: ImageFit;
 }
 
 interface PostWithCategory {
@@ -111,8 +112,10 @@ function hexToRgba(hex: string, opacity: number): string {
 export async function BlogFeaturedBlock({
   content,
   basePath,
+  siteImageFit = "cover",
 }: BlogFeaturedBlockProps) {
   // Merge with defaults for backwards compatibility
+  // Use block-level imageFit if set, otherwise fall back to site-level setting
   const settings: Required<BlogFeaturedContent> = {
     postId: content.postId ?? null,
     layout: content.layout ?? "split",
@@ -121,7 +124,7 @@ export async function BlogFeaturedBlock({
     showReadMore: content.showReadMore ?? true,
     showCategory: content.showCategory ?? true,
     showAuthor: content.showAuthor ?? true,
-    imageFit: content.imageFit ?? "cover",
+    imageFit: content.imageFit ?? siteImageFit,
     overlayColor: content.overlayColor ?? "#000000",
     overlayOpacity: content.overlayOpacity ?? 50,
   };

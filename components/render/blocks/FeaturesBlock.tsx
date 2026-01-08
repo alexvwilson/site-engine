@@ -6,10 +6,12 @@ import {
   getCardStyles,
 } from "../utilities/theme-styles";
 import { Icon } from "../utilities/icon-resolver";
+import { transformUrl } from "@/lib/url-utils";
 
 interface FeaturesBlockProps {
   content: FeaturesContent;
   theme: ThemeData;
+  basePath?: string;
 }
 
 function hexToRgba(hex: string, opacity: number): string {
@@ -40,7 +42,7 @@ const textSizeScale = {
   large: 1.125,
 };
 
-export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
+export function FeaturesBlock({ content, theme, basePath = "" }: FeaturesBlockProps) {
   // Empty state
   if (!content.features || content.features.length === 0) {
     return (
@@ -148,6 +150,19 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
                 >
                   {feature.description}
                 </p>
+                {feature.showButton && feature.buttonText && feature.buttonUrl && (
+                  <a
+                    href={transformUrl(basePath, feature.buttonUrl)}
+                    className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
+                    style={{
+                      border: "2px solid var(--color-primary)",
+                      color: "var(--color-primary)",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    {feature.buttonText}
+                  </a>
+                )}
               </div>
             ))}
           </div>
@@ -349,9 +364,9 @@ export function FeaturesBlock({ content, theme }: FeaturesBlockProps) {
               >
                 {feature.description}
               </p>
-              {feature.buttonText && feature.buttonUrl && (
+              {feature.showButton && feature.buttonText && feature.buttonUrl && (
                 <a
-                  href={feature.buttonUrl}
+                  href={transformUrl(basePath, feature.buttonUrl)}
                   className="mt-4 inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors hover:opacity-80"
                   style={{
                     border: "2px solid var(--color-primary)",
