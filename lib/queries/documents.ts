@@ -4,7 +4,9 @@ import { sites } from "@/lib/drizzle/schema/sites";
 import { eq, and } from "drizzle-orm";
 
 /**
- * Get a document by slug for a published site (public access, no auth required)
+ * Get a document by slug for a site (public access, no auth required)
+ * Documents are accessible regardless of site publish status since they have
+ * randomly-generated slugs and need to work in preview mode.
  */
 export async function getDocumentBySlug(
   siteSlug: string,
@@ -19,7 +21,6 @@ export async function getDocumentBySlug(
     .where(
       and(
         eq(sites.slug, siteSlug),
-        eq(sites.status, "published"),
         eq(documents.slug, documentSlug)
       )
     )
