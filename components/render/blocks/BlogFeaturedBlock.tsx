@@ -36,6 +36,8 @@ interface LayoutProps {
   postUrl: string;
   settings: Required<BlogFeaturedContent>;
   formattedDate: string;
+  htmlContent: string | null;
+  shouldRenderHtml: boolean;
 }
 
 /**
@@ -157,11 +159,19 @@ export async function BlogFeaturedBlock({
     );
   }
 
-  // Prepare content text
+  // Prepare content text (used for plain text rendering or when truncating)
   const postContent: TruncateResult =
     settings.showFullContent && post.content?.html
       ? truncateContent(post.content.html, settings.contentLimit)
       : { text: post.excerpt || "", paragraphs: [post.excerpt || ""], truncated: false };
+
+  // Determine if we should render full HTML content
+  // Render HTML when: showFullContent is true, HTML exists, AND content wasn't truncated
+  // (either no limit set, or content fits within the limit)
+  const shouldRenderHtml =
+    settings.showFullContent &&
+    !!post.content?.html &&
+    !postContent.truncated;
 
   const postUrl = `${basePath}/blog/${post.slug}`;
   const formattedDate = post.published_at
@@ -178,6 +188,8 @@ export async function BlogFeaturedBlock({
     postUrl,
     settings,
     formattedDate,
+    htmlContent: post.content?.html ?? null,
+    shouldRenderHtml,
   };
 
   switch (settings.layout) {
@@ -203,6 +215,8 @@ function SplitLayout({
   formattedDate,
   showAuthor,
   imageFit = "cover",
+  htmlContent,
+  shouldRenderHtml,
 }: LayoutProps & { showAuthor: boolean; imageFit?: ImageFit }) {
   return (
     <section
@@ -218,7 +232,11 @@ function SplitLayout({
           <div className="space-y-4">
             <CategoryBadge post={post} show={settings.showCategory} />
             <PostTitle post={post} url={postUrl} />
-            {postContent.text && <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />}
+            {shouldRenderHtml && htmlContent ? (
+              <PostContentFull html={htmlContent} />
+            ) : postContent.text ? (
+              <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />
+            ) : null}
             <PostMeta
               post={post}
               date={formattedDate}
@@ -247,6 +265,8 @@ function StackedLayout({
   formattedDate,
   showAuthor,
   imageFit = "cover",
+  htmlContent,
+  shouldRenderHtml,
 }: LayoutProps & { showAuthor: boolean; imageFit?: ImageFit }) {
   return (
     <section
@@ -268,11 +288,15 @@ function StackedLayout({
           <CategoryBadge post={post} show={settings.showCategory} />
           <PostTitle post={post} url={postUrl} size="lg" />
           <PostMeta post={post} date={formattedDate} showAuthor={showAuthor} />
-          {postContent.text && (
+          {shouldRenderHtml && htmlContent ? (
+            <div className="mt-6">
+              <PostContentFull html={htmlContent} />
+            </div>
+          ) : postContent.text ? (
             <div className="mt-6">
               <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />
             </div>
-          )}
+          ) : null}
           <ReadMoreLink
             show={settings.showReadMore}
             truncated={postContent.truncated}
@@ -377,6 +401,8 @@ function MinimalLayout({
   settings,
   formattedDate,
   showAuthor,
+  htmlContent,
+  shouldRenderHtml,
 }: LayoutProps & { showAuthor: boolean }) {
   return (
     <section
@@ -389,14 +415,21 @@ function MinimalLayout({
           <PostTitle post={post} url={postUrl} size="lg" />
           <PostMeta post={post} date={formattedDate} showAuthor={showAuthor} />
 
-          {postContent.text && (
+          {shouldRenderHtml && htmlContent ? (
+            <div
+              className="border-t pt-6 mt-6"
+              style={{ borderColor: "var(--theme-border)" }}
+            >
+              <PostContentFull html={htmlContent} />
+            </div>
+          ) : postContent.text ? (
             <div
               className="border-t pt-6 mt-6"
               style={{ borderColor: "var(--theme-border)" }}
             >
               <PostText paragraphs={postContent.paragraphs} truncated={postContent.truncated} />
             </div>
-          )}
+          ) : null}
 
           <ReadMoreLink
             show={settings.showReadMore}
@@ -543,6 +576,34 @@ function PostText({
         </p>
       ))}
     </div>
+  );
+}
+
+function PostContentFull({ html }: { html: string }) {
+  return (
+    <div
+      className="prose prose-lg max-w-none [&_p]:mb-4 [&_p]:mt-0 [&_p:last-child]:mb-0 [&_h2]:mt-8 [&_h2]:mb-4 [&_h3]:mt-6 [&_h3]:mb-3 [&_ul]:my-4 [&_ol]:my-4 [&_blockquote]:my-6"
+      style={{
+        "--tw-prose-body": "var(--theme-text)",
+        "--tw-prose-headings": "var(--theme-text)",
+        "--tw-prose-lead": "var(--theme-muted-text)",
+        "--tw-prose-links": "var(--theme-primary)",
+        "--tw-prose-bold": "var(--theme-text)",
+        "--tw-prose-counters": "var(--theme-muted-text)",
+        "--tw-prose-bullets": "var(--theme-muted-text)",
+        "--tw-prose-hr": "var(--theme-border)",
+        "--tw-prose-quotes": "var(--theme-text)",
+        "--tw-prose-quote-borders": "var(--theme-primary)",
+        "--tw-prose-captions": "var(--theme-muted-text)",
+        "--tw-prose-code": "var(--theme-text)",
+        "--tw-prose-pre-code": "var(--theme-text)",
+        "--tw-prose-pre-bg": "var(--theme-muted)",
+        "--tw-prose-th-borders": "var(--theme-border)",
+        "--tw-prose-td-borders": "var(--theme-border)",
+        fontFamily: "var(--theme-font-body)",
+      } as React.CSSProperties}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }
 

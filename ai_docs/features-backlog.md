@@ -112,6 +112,26 @@ _No P0 items currently_
 
 ## Completed Features
 
+### 64. Blog Featured Block Full HTML Rendering ✅ 2026-01-08
+
+**Problem:** When using the BlogFeaturedBlock with "Show Full Content" enabled, all HTML formatting was stripped - headings became plain text, bold/italic was lost, horizontal rules disappeared, and lists rendered as separate paragraphs without bullets.
+
+**Root Cause:** The `truncateContent()` function stripped ALL HTML tags from content, even when no truncation was needed. It only extracted `<p>` tags and removed all formatting within them.
+
+**Solution Implemented:**
+- [x] Added `PostContentFull` component with full prose styling (matching blog post detail page)
+- [x] Added `shouldRenderHtml` flag - renders HTML when showFullContent=true AND content wasn't truncated
+- [x] Updated SplitLayout, StackedLayout, MinimalLayout to conditionally render HTML or plain text
+- [x] HeroLayout kept as plain text (text overlay on images works better with simple text)
+- [x] Theme-aware prose styling with CSS variables for light/dark mode support
+
+**Files Modified:**
+- `components/render/blocks/BlogFeaturedBlock.tsx` - Added PostContentFull component, shouldRenderHtml logic, updated all layouts
+
+**Task Document:** `ai_docs/tasks/064_blog_featured_block_html_formatting.md`
+
+---
+
 ### 62. Post Grid Block Title/Subtitle & Styling ✅ 2026-01-08
 
 **Problem:** The Post Grid (Blog Grid) block had no section header (title/subtitle) and lacked the basic styling options that other blocks like Features, CTA, and Testimonials have.
@@ -1745,7 +1765,7 @@ Then you can configure border width, corners, and color.
 
 ---
 
-**Last Updated:** 2026-01-08 (Completed #62: Post Grid Block Title/Subtitle & Styling)
+**Last Updated:** 2026-01-08 (Completed #64: Blog Featured Block Full HTML Rendering)
 
 ---
 
