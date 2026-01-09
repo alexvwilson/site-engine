@@ -125,6 +125,7 @@ export type HeroImagePosition = "left" | "right" | "top" | "bottom" | "after-tit
 export type HeroImageBorderWidth = "none" | "thin" | "medium" | "thick";
 export type HeroImageShadow = "none" | "small" | "medium" | "large" | "xl";
 export type HeroImageMobileStack = "above" | "below";
+export type HeroBodyTextAlignment = "left" | "center" | "right";
 
 export interface HeroContent {
   heading: string;
@@ -149,6 +150,9 @@ export interface HeroContent {
   imageBorderColor?: string;
   imageShadow?: HeroImageShadow;
   imageSize?: number; // Size in pixels (e.g., 150, 200, 300)
+  // Body text with rich formatting
+  bodyText?: string;
+  bodyTextAlignment?: HeroBodyTextAlignment;
 }
 
 // Heading block types

@@ -112,6 +112,30 @@ _No P0 items currently_
 
 ## Completed Features
 
+### 66. Hero Body Text Field with Alignment ✅ 2026-01-09
+
+**Problem:** Users needed to add more detailed, formatted content to hero sections beyond the simple heading and plain-text subheading. The subheading field was a textarea with no formatting options.
+
+**Solution Implemented:**
+- [x] New `bodyText` field (HTML string) for rich formatted content
+- [x] TiptapEditor integration with full formatting (bold, italic, headings, lists, blockquotes, links)
+- [x] HTML mode toggle to view/edit raw HTML
+- [x] Text alignment option (Left, Center, Right) - defaults to Center
+- [x] Body text renders after subheading, before buttons
+- [x] Color adapts based on background (white on background image, muted on light)
+- [x] Prose styling for proper rich text display
+- [x] Backward compatible - existing hero sections work unchanged
+
+**Files Modified:**
+- `lib/section-types.ts` - Added `HeroBodyTextAlignment` type, `bodyText` and `bodyTextAlignment` fields to HeroContent
+- `lib/section-defaults.ts` - Added defaults (`bodyText: ""`, `bodyTextAlignment: "center"`)
+- `components/editor/blocks/HeroEditor.tsx` - Added TiptapEditor section with alignment Select after image section
+- `components/render/blocks/HeroBlock.tsx` - Added BodyTextElement with prose styling and alignment
+
+**Task Document:** `ai_docs/tasks/066_hero_body_text_field.md`
+
+---
+
 ### 65. Embed Block PDF Document Support ✅ 2026-01-08
 
 **Problem:** Users wanted to display PDF documents (resumes, brochures, reports) on their site pages. PDFs could be uploaded and shared via URL from Settings → Documents, but there was no way to embed them visually on a page. Creating a new "PDF block" would add another block causing unwanted scrolling.
@@ -1790,7 +1814,7 @@ Then you can configure border width, corners, and color.
 
 ---
 
-**Last Updated:** 2026-01-08 (Completed #65: Embed Block PDF Document Support)
+**Last Updated:** 2026-01-09 (Completed #66: Hero Body Text Field with Alignment)
 
 ---
 

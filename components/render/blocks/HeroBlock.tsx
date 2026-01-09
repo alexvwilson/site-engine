@@ -213,6 +213,20 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
     </p>
   ) : null;
 
+  // Body text element (rich text with alignment)
+  const BodyTextElement = content.bodyText ? (
+    <div
+      className="mt-6 prose prose-sm max-w-none [&>*:first-child]:mt-0 [&>*:last-child]:mb-0"
+      style={{
+        textAlign: content.bodyTextAlignment ?? "center",
+        color: hasBackgroundImage
+          ? "rgba(255,255,255,0.9)"
+          : "var(--color-muted-foreground)",
+      }}
+      dangerouslySetInnerHTML={{ __html: content.bodyText }}
+    />
+  ) : null;
+
   // Buttons element
   const ButtonsElement = buttons.length > 0 ? (
     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -237,6 +251,7 @@ export function HeroBlock({ content, theme, basePath = "" }: HeroBlockProps) {
         <div className="my-6 flex justify-center">{HeroImage}</div>
       )}
       {SubheadingElement}
+      {BodyTextElement}
       {ButtonsElement}
     </div>
   );

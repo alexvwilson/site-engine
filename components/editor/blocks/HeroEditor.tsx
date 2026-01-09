@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,9 +27,27 @@ import type {
   HeroImageBorderWidth,
   HeroImageShadow,
   HeroImageMobileStack,
+  HeroBodyTextAlignment,
 } from "@/lib/section-types";
 import { MAX_HERO_BUTTONS } from "@/lib/section-types";
 import { Slider } from "@/components/ui/slider";
+
+// Dynamically import TiptapEditor to avoid SSR issues with ProseMirror
+const TiptapEditor = dynamic(
+  () =>
+    import("@/components/editor/TiptapEditor").then((mod) => mod.TiptapEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="border rounded-md bg-muted/50 min-h-[150px]">
+        <div className="h-10 border-b bg-muted/30" />
+        <div className="p-3 text-muted-foreground text-sm">
+          Loading editor...
+        </div>
+      </div>
+    ),
+  }
+);
 
 interface HeroEditorProps {
   content: HeroContent;
@@ -574,6 +593,42 @@ export function HeroEditor({
             </div>
           </div>
         )}
+      </div>
+
+      {/* Body Text Section */}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label>Body Text</Label>
+          <p className="text-xs text-muted-foreground">
+            Add formatted content below your heading and subheading
+          </p>
+          <TiptapEditor
+            value={content.bodyText ?? ""}
+            onChange={(html) => handleChange("bodyText", html)}
+            placeholder="Add detailed content to your hero section..."
+            disabled={disabled}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label>Text Alignment</Label>
+          <Select
+            value={content.bodyTextAlignment ?? "center"}
+            onValueChange={(value: HeroBodyTextAlignment) =>
+              onChange({ ...content, bodyTextAlignment: value })
+            }
+            disabled={disabled}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="left">Left</SelectItem>
+              <SelectItem value="center">Center</SelectItem>
+              <SelectItem value="right">Right</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Buttons Section */}

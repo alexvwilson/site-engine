@@ -71,6 +71,9 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     imageBorderColor: "",
     imageShadow: "none",
     imageSize: 200,
+    // Body text defaults
+    bodyText: "",
+    bodyTextAlignment: "center",
   },
 
   text: {
