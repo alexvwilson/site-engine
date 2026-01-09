@@ -104,6 +104,9 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
   const [faviconUrl, setFaviconUrl] = useState(site.favicon_url || "");
   const [useSeparateFavicon, setUseSeparateFavicon] = useState(site.use_separate_favicon);
 
+  // Social sharing / OG image
+  const [ogImageUrl, setOgImageUrl] = useState(site.og_image_url || "");
+
   // Site-level header/footer configuration
   const [headerContent, setHeaderContent] = useState<HeaderContent>(
     site.header_content ?? { ...sectionDefaults.header, siteName: site.name }
@@ -173,6 +176,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     contactNotificationEmail !== (site.contact_notification_email || "") ||
     faviconUrl !== (site.favicon_url || "") ||
     useSeparateFavicon !== site.use_separate_favicon ||
+    ogImageUrl !== (site.og_image_url || "") ||
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter) ||
     !deepEqual(socialLinks, initialSocialLinks) ||
@@ -205,6 +209,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     setContactNotificationEmail(site.contact_notification_email || "");
     setFaviconUrl(site.favicon_url || "");
     setUseSeparateFavicon(site.use_separate_favicon);
+    setOgImageUrl(site.og_image_url || "");
     setHeaderContent(site.header_content ?? { ...sectionDefaults.header, siteName: site.name });
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
     setSocialLinks((site.social_links as SocialLink[]) ?? []);
@@ -243,6 +248,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
       contactNotificationEmail: contactNotificationEmail !== (site.contact_notification_email || "") ? contactNotificationEmail || null : undefined,
       faviconUrl: faviconUrl !== (site.favicon_url || "") ? faviconUrl || null : undefined,
       useSeparateFavicon: useSeparateFavicon !== site.use_separate_favicon ? useSeparateFavicon : undefined,
+      ogImageUrl: ogImageUrl !== (site.og_image_url || "") ? ogImageUrl || null : undefined,
       headerContent: !deepEqual(headerContent, initialHeader) ? headerContent : undefined,
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
       socialLinks: !deepEqual(socialLinks, initialSocialLinks) ? socialLinks : undefined,
@@ -1103,6 +1109,53 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               {metaDescription || site.description || "No description set"}
             </p>
           </div>
+
+          <Separator />
+
+          {/* Social Sharing Image */}
+          <div className="space-y-2">
+            <Label>Social Sharing Image (OG Image)</Label>
+            <ImageUpload
+              value={ogImageUrl}
+              onChange={setOgImageUrl}
+              siteId={site.id}
+              disabled={loading}
+              placeholder="Upload an image for social sharing"
+            />
+            <p className="text-sm text-muted-foreground">
+              This image appears when your site is shared on Twitter, Facebook, LinkedIn, and other platforms.
+              Recommended size: 1200x630 pixels.
+            </p>
+          </div>
+
+          {/* Social Share Preview */}
+          {(ogImageUrl || metaTitle || metaDescription) && (
+            <div className="space-y-2">
+              <Label className="text-sm text-muted-foreground">Social Share Preview</Label>
+              <div className="border rounded-lg overflow-hidden max-w-md">
+                {ogImageUrl && (
+                  <div className="aspect-[1200/630] bg-muted relative">
+                    <img
+                      src={ogImageUrl}
+                      alt="Social share preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-3 bg-muted/30">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">
+                    {site.custom_domain || `headstringweb.com${publicUrl}`}
+                  </p>
+                  <p className="font-semibold text-sm line-clamp-1">
+                    {metaTitle || site.name}
+                  </p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {metaDescription || site.description || "No description set"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

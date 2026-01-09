@@ -41,13 +41,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Category Not Found" };
   }
 
+  const title = `${category.name} | Blog | ${site.meta_title || site.name}`;
+  const description = category.description || `Posts in ${category.name} from ${site.name}`;
+
   return {
-    title: `${category.name} | Blog | ${site.meta_title || site.name}`,
-    description: category.description || `Posts in ${category.name} from ${site.name}`,
+    title,
+    description,
     openGraph: {
-      title: `${category.name} | Blog | ${site.meta_title || site.name}`,
-      description: category.description || `Posts in ${category.name} from ${site.name}`,
+      title,
+      description,
       type: "website",
+      siteName: site.name,
+      ...(site.og_image_url && { images: [site.og_image_url] }),
+    },
+    twitter: {
+      card: site.og_image_url ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(site.og_image_url && { images: [site.og_image_url] }),
     },
     ...(site.favicon_url && {
       icons: {

@@ -243,6 +243,7 @@ export interface UpdateSiteSettingsData {
   contactNotificationEmail?: string | null;
   faviconUrl?: string | null;
   useSeparateFavicon?: boolean;
+  ogImageUrl?: string | null;
   socialLinks?: SocialLink[];
   socialIconStyle?: SocialIconStyle;
 }
@@ -361,6 +362,9 @@ export async function updateSiteSettings(
   }
   if (data.useSeparateFavicon !== undefined) {
     updateData.use_separate_favicon = data.useSeparateFavicon;
+  }
+  if (data.ogImageUrl !== undefined) {
+    updateData.og_image_url = data.ogImageUrl?.trim() || null;
   }
   if (data.socialLinks !== undefined) {
     updateData.social_links = data.socialLinks;

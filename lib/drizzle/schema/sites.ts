@@ -80,6 +80,8 @@ export const sites = pgTable(
     favicon_url: text("favicon_url"),
     // When false, logo is used as favicon; when true, use separate favicon_url
     use_separate_favicon: boolean("use_separate_favicon").notNull().default(false),
+    // Open Graph image for social sharing (Twitter, Facebook, LinkedIn, etc.)
+    og_image_url: text("og_image_url"),
     // Social links - array of {platform, url} objects for site-wide social media
     social_links: jsonb("social_links").$type<SocialLink[]>().default([]),
     // Icon style for social links (brand colors, monochrome, or theme primary)

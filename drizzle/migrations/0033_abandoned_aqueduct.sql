@@ -1,0 +1,1 @@
+ALTER TABLE "sites" ADD COLUMN "og_image_url" text;

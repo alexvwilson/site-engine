@@ -48,6 +48,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       type: "website",
+      siteName: site.name,
+      ...(site.og_image_url && { images: [site.og_image_url] }),
+    },
+    twitter: {
+      card: site.og_image_url ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(site.og_image_url && { images: [site.og_image_url] }),
     },
     ...(site.favicon_url && {
       icons: {
