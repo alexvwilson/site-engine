@@ -17,6 +17,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
 import { pages } from "./pages";
+import type { BlockType } from "./sections";
 
 // ============================================================================
 // Enums
@@ -34,17 +35,7 @@ export const layoutJobStatusEnum = pgEnum("layout_job_status", [
 // ============================================================================
 
 export interface LayoutSuggestion {
-  blockType:
-    | "header"
-    | "hero"
-    | "text"
-    | "image"
-    | "gallery"
-    | "features"
-    | "cta"
-    | "testimonials"
-    | "contact"
-    | "footer";
+  blockType: BlockType;
   rationale: string;
   suggestedContent: Record<string, unknown>;
 }

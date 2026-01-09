@@ -20,8 +20,10 @@ import type { LayoutSuggestion } from "@/lib/drizzle/schema/layout-suggestion-jo
 
 const blockTypeEnum = z.enum([
   "header",
+  "heading",
   "hero",
   "text",
+  "markdown",
   "image",
   "gallery",
   "features",
@@ -29,6 +31,12 @@ const blockTypeEnum = z.enum([
   "testimonials",
   "contact",
   "footer",
+  "blog_featured",
+  "blog_grid",
+  "embed",
+  "social_links",
+  "product_grid",
+  "article",
 ]);
 
 const layoutSuggestionResponseSchema = z.object({

@@ -90,6 +90,42 @@ const BLOCK_CONTENT_EXAMPLES = {
     { "label": "Terms", "url": "/terms" }
   ]
 }`,
+  heading: `{
+  "title": "Section Title",
+  "subtitle": "Optional supporting text for this section"
+}`,
+  markdown: `{
+  "content": "# Markdown Content\\n\\nYou can use **bold**, *italic*, and other markdown formatting."
+}`,
+  blog_featured: `{
+  "title": "Featured Post Section",
+  "subtitle": "Latest from our blog"
+}`,
+  blog_grid: `{
+  "title": "Recent Posts",
+  "subtitle": "Check out our latest articles",
+  "postsPerPage": 6,
+  "columns": 3
+}`,
+  embed: `{
+  "embedType": "youtube",
+  "embedUrl": "https://www.youtube.com/watch?v=example",
+  "title": "Video Title"
+}`,
+  social_links: `{
+  "heading": "Connect With Us",
+  "layout": "horizontal"
+}`,
+  product_grid: `{
+  "title": "Our Products",
+  "products": [
+    { "title": "Product 1", "description": "Product description", "price": "$99", "ctaText": "Learn More", "ctaUrl": "#" }
+  ]
+}`,
+  article: `{
+  "title": "Article Title",
+  "content": "Article body content with rich formatting..."
+}`,
 } as const;
 
 /**
@@ -166,7 +202,7 @@ Respond with a valid JSON object matching this exact schema:
 {
   "suggestions": [
     {
-      "blockType": "header" | "hero" | "text" | "image" | "gallery" | "features" | "cta" | "testimonials" | "contact" | "footer",
+      "blockType": "header" | "heading" | "hero" | "text" | "markdown" | "image" | "gallery" | "features" | "cta" | "testimonials" | "contact" | "footer" | "blog_featured" | "blog_grid" | "embed" | "social_links" | "product_grid" | "article",
       "rationale": "Brief explanation why this section fits the page",
       "suggestedContent": { /* content matching the block type structure */ }
     }
