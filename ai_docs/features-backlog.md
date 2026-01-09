@@ -112,6 +112,32 @@ _No P0 items currently_
 
 ## Completed Features
 
+### 67. OG Image Support for Social Sharing ✅ 2026-01-09
+
+**Problem:** When sites were shared on Twitter, Facebook, LinkedIn, etc., no image appeared. Twitter Cards were missing from published site pages entirely, and Open Graph metadata was incomplete.
+
+**Solution Implemented:**
+- [x] Added `og_image_url` column to sites table
+- [x] Added Twitter Card metadata to all published site pages (homepage, subpages, blog listing, blog categories)
+- [x] Enhanced Open Graph metadata with `siteName` and `images` fields
+- [x] Twitter card type dynamically switches: `summary_large_image` when OG image exists, `summary` otherwise
+- [x] OG image upload in Settings → SEO Settings with ImageUpload component
+- [x] Live social share preview showing how links will appear when shared
+- [x] Recommended size guidance (1200x630 pixels)
+
+**Files Modified:**
+- `lib/drizzle/schema/sites.ts` - Added `og_image_url` column
+- `app/actions/sites.ts` - Added `ogImageUrl` to `UpdateSiteSettingsData`
+- `components/sites/SettingsTab.tsx` - Added OG image upload UI with preview
+- `app/(sites)/sites/[siteSlug]/page.tsx` - Added Twitter Card + enhanced OG metadata
+- `app/(sites)/sites/[siteSlug]/[pageSlug]/page.tsx` - Added Twitter Card + enhanced OG metadata
+- `app/(sites)/sites/[siteSlug]/blog/page.tsx` - Added Twitter Card + enhanced OG metadata
+- `app/(sites)/sites/[siteSlug]/blog/category/[categorySlug]/page.tsx` - Added Twitter Card + enhanced OG metadata
+
+**Database Migration:** `0033_abandoned_aqueduct` - Added og_image_url column to sites table
+
+---
+
 ### 66. Hero Body Text Field with Alignment ✅ 2026-01-09
 
 **Problem:** Users needed to add more detailed, formatted content to hero sections beyond the simple heading and plain-text subheading. The subheading field was a textarea with no formatting options.
@@ -1814,7 +1840,7 @@ Then you can configure border width, corners, and color.
 
 ---
 
-**Last Updated:** 2026-01-09 (Completed #66: Hero Body Text Field with Alignment)
+**Last Updated:** 2026-01-09 (Completed #67: OG Image Support for Social Sharing)
 
 ---
 
