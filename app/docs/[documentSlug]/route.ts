@@ -24,8 +24,6 @@ export async function GET(
     const { documentSlug } = await params;
     const referer = request.headers.get("referer");
 
-    console.log(`[Root Document Route] Fetching: documentSlug=${documentSlug}, referer=${referer}`);
-
     // Try to extract site slug from referer
     let siteSlug: string | null = null;
 
@@ -71,22 +69,16 @@ export async function GET(
     }
 
     if (!document) {
-      console.error(`[Root Document Route] Not found: documentSlug=${documentSlug}, siteSlug=${siteSlug}`);
       return new NextResponse("Document not found", {
         status: 404,
         headers: { "Content-Type": "text/plain" },
       });
     }
 
-    console.log(`[Root Document Route] Found document: id=${document.id}, url=${document.url}`);
-
     // Fetch the document from storage
     const response = await fetch(document.url);
 
     if (!response.ok) {
-      console.error(
-        `[Root Document Route] Failed to fetch from storage: ${response.status} ${response.statusText}`
-      );
       return new NextResponse("Document temporarily unavailable", {
         status: 502,
         headers: { "Content-Type": "text/plain" },
@@ -122,7 +114,7 @@ export async function GET(
       headers,
     });
   } catch (error) {
-    console.error("[Root Document Route] Error:", error);
+    console.error("Document route error:", error);
     return new NextResponse("Internal server error", {
       status: 500,
       headers: { "Content-Type": "text/plain" },
