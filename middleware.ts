@@ -99,6 +99,15 @@ export async function middleware(request: NextRequest) {
         const url = request.nextUrl.clone();
         const pathname = url.pathname;
 
+        // Skip rewrite if path already starts with /sites/ (avoid double-prefixing)
+        // This handles legacy URLs that include the full internal path
+        if (pathname.startsWith("/sites/")) {
+          // Already has the internal path structure, just pass through
+          const response = NextResponse.rewrite(url);
+          response.headers.set("x-site-base-path", "");
+          return response;
+        }
+
         // Handle root path → site homepage
         if (pathname === "/" || pathname === "") {
           url.pathname = `/sites/${siteSlug}`;
