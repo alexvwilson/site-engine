@@ -6,6 +6,7 @@ import { requireUserId } from "@/lib/auth";
 import { db } from "@/lib/drizzle/db";
 import { images } from "@/lib/drizzle/schema/images";
 import { documents } from "@/lib/drizzle/schema/documents";
+import { sites } from "@/lib/drizzle/schema/sites";
 import { eq, and, desc, isNull, inArray } from "drizzle-orm";
 
 const STORAGE_BUCKET = "media-uploads";
@@ -75,6 +76,7 @@ export interface DocumentFile {
 export interface ListDocumentsResult {
   success: boolean;
   documents?: DocumentFile[];
+  siteSlug?: string;
   error?: string;
 }
 
@@ -524,6 +526,13 @@ export async function listSiteDocuments(
 ): Promise<ListDocumentsResult> {
   await requireUserId();
 
+  // Fetch site slug for building document URLs
+  const [site] = await db
+    .select({ slug: sites.slug })
+    .from(sites)
+    .where(eq(sites.id, siteId))
+    .limit(1);
+
   const results = await db
     .select()
     .from(documents)
@@ -539,7 +548,7 @@ export async function listSiteDocuments(
     size: doc.file_size ?? 0,
   }));
 
-  return { success: true, documents: documentFiles };
+  return { success: true, documents: documentFiles, siteSlug: site?.slug };
 }
 
 // ============================================================================

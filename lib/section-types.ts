@@ -578,7 +578,8 @@ export interface BlogGridContent {
   textSize?: TextSize;
 }
 
-export type EmbedAspectRatio = "16:9" | "4:3" | "1:1" | "custom";
+export type EmbedSourceType = "embed" | "pdf";
+export type EmbedAspectRatio = "16:9" | "4:3" | "1:1" | "letter" | "custom";
 
 export interface EmbedContent {
   embedCode: string;
@@ -586,6 +587,11 @@ export interface EmbedContent {
   aspectRatio: EmbedAspectRatio;
   customHeight?: number;
   title?: string;
+
+  // PDF document support
+  sourceType?: EmbedSourceType;
+  documentId?: string;
+  documentSlug?: string;
 }
 
 export interface SocialLinksContent {

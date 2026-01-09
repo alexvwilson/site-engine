@@ -112,6 +112,31 @@ _No P0 items currently_
 
 ## Completed Features
 
+### 65. Embed Block PDF Document Support ✅ 2026-01-08
+
+**Problem:** Users wanted to display PDF documents (resumes, brochures, reports) on their site pages. PDFs could be uploaded and shared via URL from Settings → Documents, but there was no way to embed them visually on a page. Creating a new "PDF block" would add another block causing unwanted scrolling.
+
+**Solution Implemented:**
+- [x] Extended embed block with source type toggle: "Embed Code" | "PDF Document"
+- [x] PDF Document mode shows picker with uploaded site documents
+- [x] Added "Letter (8.5:11)" aspect ratio option for document-friendly display
+- [x] Document picker fetches from existing `listSiteDocuments()` action
+- [x] Updated action to also return site slug for building PDF URLs
+- [x] PDFs render in iframe using browser's native PDF viewer
+- [x] Existing embed functionality (YouTube, Vimeo, etc.) unchanged
+- [x] Empty state shows "No documents uploaded" with guidance
+
+**Files Modified:**
+- `lib/section-types.ts` - Added `EmbedSourceType`, `"letter"` ratio, `sourceType`, `documentId`, `documentSlug` fields
+- `lib/section-defaults.ts` - Added `sourceType: "embed"` default
+- `app/actions/storage.ts` - Updated `listSiteDocuments()` to return `siteSlug`
+- `components/editor/blocks/EmbedEditor.tsx` - Added tabs UI, document picker, letter ratio option
+- `components/render/blocks/EmbedBlock.tsx` - Handle letter aspect ratio
+
+**Task Document:** `ai_docs/tasks/065_embed_block_pdf_support.md`
+
+---
+
 ### 64. Blog Featured Block Full HTML Rendering ✅ 2026-01-08
 
 **Problem:** When using the BlogFeaturedBlock with "Show Full Content" enabled, all HTML formatting was stripped - headings became plain text, bold/italic was lost, horizontal rules disappeared, and lists rendered as separate paragraphs without bullets.
@@ -1765,7 +1790,7 @@ Then you can configure border width, corners, and color.
 
 ---
 
-**Last Updated:** 2026-01-08 (Completed #64: Blog Featured Block Full HTML Rendering)
+**Last Updated:** 2026-01-08 (Completed #65: Embed Block PDF Document Support)
 
 ---
 

@@ -12,10 +12,17 @@ export function EmbedBlock({ content, theme }: EmbedBlockProps) {
     return null;
   }
 
-  const aspectRatioStyle =
-    content.aspectRatio === "custom"
-      ? { height: `${content.customHeight || 400}px` }
-      : { aspectRatio: content.aspectRatio.replace(":", "/") };
+  const getAspectRatioStyle = (): React.CSSProperties => {
+    if (content.aspectRatio === "custom") {
+      return { height: `${content.customHeight || 400}px` };
+    }
+    if (content.aspectRatio === "letter") {
+      return { aspectRatio: "8.5/11" };
+    }
+    return { aspectRatio: content.aspectRatio.replace(":", "/") };
+  };
+
+  const aspectRatioStyle = getAspectRatioStyle();
 
   return (
     <section

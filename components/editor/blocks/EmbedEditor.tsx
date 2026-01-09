@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -11,10 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle2, Code } from "lucide-react";
-import type { EmbedContent, EmbedAspectRatio } from "@/lib/section-types";
+import { AlertCircle, CheckCircle2, Code, FileText, Loader2 } from "lucide-react";
+import type {
+  EmbedContent,
+  EmbedAspectRatio,
+  EmbedSourceType,
+} from "@/lib/section-types";
 import { validateEmbedCode, getEmbedServiceName } from "@/lib/embed-utils";
+import {
+  listSiteDocuments,
+  type DocumentFile,
+} from "@/app/actions/storage";
 
 interface EmbedEditorProps {
   content: EmbedContent;
@@ -27,6 +36,7 @@ const ASPECT_RATIOS: { value: EmbedAspectRatio; label: string }[] = [
   { value: "16:9", label: "16:9 (Video)" },
   { value: "4:3", label: "4:3 (Standard)" },
   { value: "1:1", label: "1:1 (Square)" },
+  { value: "letter", label: "Letter (8.5:11)" },
   { value: "custom", label: "Custom Height" },
 ];
 
@@ -34,8 +44,53 @@ export function EmbedEditor({
   content,
   onChange,
   disabled,
+  siteId,
 }: EmbedEditorProps) {
   const [error, setError] = useState<string | null>(null);
+  const [documents, setDocuments] = useState<DocumentFile[]>([]);
+  const [siteSlug, setSiteSlug] = useState<string>("");
+  const [isLoadingDocs, setIsLoadingDocs] = useState(false);
+  const [docsLoaded, setDocsLoaded] = useState(false);
+
+  const sourceType: EmbedSourceType = content.sourceType || "embed";
+
+  // Fetch documents when PDF tab is selected
+  useEffect(() => {
+    if (sourceType === "pdf" && !docsLoaded) {
+      loadDocuments();
+    }
+  }, [sourceType, siteId, docsLoaded]);
+
+  const loadDocuments = async (): Promise<void> => {
+    setIsLoadingDocs(true);
+    try {
+      const result = await listSiteDocuments(siteId);
+      if (result.success && result.documents) {
+        setDocuments(result.documents);
+        setSiteSlug(result.siteSlug || "");
+      }
+      setDocsLoaded(true);
+    } catch (err) {
+      console.error("Failed to load documents:", err);
+    } finally {
+      setIsLoadingDocs(false);
+    }
+  };
+
+  const handleSourceTypeChange = (type: string): void => {
+    const newSourceType = type as EmbedSourceType;
+    // Clear content when switching source types
+    onChange({
+      ...content,
+      sourceType: newSourceType,
+      src: "",
+      embedCode: "",
+      documentId: undefined,
+      documentSlug: undefined,
+      title: "",
+    });
+    setError(null);
+  };
 
   const handleEmbedCodeChange = (value: string): void => {
     if (!value.trim()) {
@@ -60,6 +115,21 @@ export function EmbedEditor({
     }
   };
 
+  const handleDocumentSelect = (docId: string): void => {
+    const doc = documents.find((d) => d.id === docId);
+    if (doc && siteSlug) {
+      const pdfUrl = `/sites/${siteSlug}/docs/${doc.slug}`;
+      onChange({
+        ...content,
+        sourceType: "pdf",
+        documentId: doc.id,
+        documentSlug: doc.slug,
+        src: pdfUrl,
+        title: doc.name.replace(/\.pdf$/i, ""),
+      });
+    }
+  };
+
   const handleAspectRatioChange = (value: EmbedAspectRatio): void => {
     onChange({ ...content, aspectRatio: value });
   };
@@ -77,40 +147,115 @@ export function EmbedEditor({
 
   const isValid = !!content.src;
 
+  const getAspectRatioStyle = (): React.CSSProperties => {
+    if (content.aspectRatio === "custom") {
+      return { height: `${content.customHeight || 400}px` };
+    }
+    if (content.aspectRatio === "letter") {
+      return { aspectRatio: "8.5/11" };
+    }
+    return { aspectRatio: content.aspectRatio.replace(":", "/") };
+  };
+
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="embed-code">Embed Code</Label>
-        <Textarea
-          id="embed-code"
-          value={content.embedCode}
-          onChange={(e) => handleEmbedCodeChange(e.target.value)}
-          placeholder='Paste iframe embed code here (e.g., <iframe src="https://youtube.com/embed/...")'
-          disabled={disabled}
-          rows={4}
-          className="font-mono text-sm"
-        />
-        <p className="text-xs text-muted-foreground">
-          Supported: YouTube, Vimeo, Google Maps, Spotify, SoundCloud
-        </p>
-      </div>
+      {/* Source Type Tabs */}
+      <Tabs value={sourceType} onValueChange={handleSourceTypeChange}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="embed" disabled={disabled}>
+            <Code className="mr-2 h-4 w-4" />
+            Embed Code
+          </TabsTrigger>
+          <TabsTrigger value="pdf" disabled={disabled}>
+            <FileText className="mr-2 h-4 w-4" />
+            PDF Document
+          </TabsTrigger>
+        </TabsList>
 
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+        {/* Embed Code Tab */}
+        <TabsContent value="embed" className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="embed-code">Embed Code</Label>
+            <Textarea
+              id="embed-code"
+              value={content.embedCode}
+              onChange={(e) => handleEmbedCodeChange(e.target.value)}
+              placeholder='Paste iframe embed code here (e.g., <iframe src="https://youtube.com/embed/...")'
+              disabled={disabled}
+              rows={4}
+              className="font-mono text-sm"
+            />
+            <p className="text-xs text-muted-foreground">
+              Supported: YouTube, Vimeo, Google Maps, Spotify, SoundCloud
+            </p>
+          </div>
 
-      {isValid && content.src && (
-        <Alert>
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
-          <AlertDescription>
-            {getEmbedServiceName(content.src)} embed detected
-          </AlertDescription>
-        </Alert>
-      )}
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
+          {isValid && content.src && sourceType === "embed" && (
+            <Alert>
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <AlertDescription>
+                {getEmbedServiceName(content.src)} embed detected
+              </AlertDescription>
+            </Alert>
+          )}
+        </TabsContent>
+
+        {/* PDF Document Tab */}
+        <TabsContent value="pdf" className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="document-select">Select Document</Label>
+            {isLoadingDocs ? (
+              <div className="flex items-center gap-2 rounded-md border p-3 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading documents...
+              </div>
+            ) : documents.length === 0 ? (
+              <div className="rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground">
+                <FileText className="mx-auto mb-2 h-8 w-8" />
+                <p>No documents uploaded</p>
+                <p className="mt-1 text-xs">
+                  Upload PDFs in Settings → Documents
+                </p>
+              </div>
+            ) : (
+              <Select
+                value={content.documentId || ""}
+                onValueChange={handleDocumentSelect}
+                disabled={disabled}
+              >
+                <SelectTrigger id="document-select">
+                  <SelectValue placeholder="Choose a PDF document" />
+                </SelectTrigger>
+                <SelectContent>
+                  {documents.map((doc) => (
+                    <SelectItem key={doc.id} value={doc.id}>
+                      {doc.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          {isValid && content.src && sourceType === "pdf" && (
+            <Alert>
+              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <AlertDescription>
+                PDF selected: {content.documentSlug}
+              </AlertDescription>
+            </Alert>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Aspect Ratio - shown for both types */}
       <div className="space-y-2">
         <Label htmlFor="aspect-ratio">Aspect Ratio</Label>
         <Select
@@ -157,21 +302,13 @@ export function EmbedEditor({
         />
       </div>
 
+      {/* Preview */}
       {isValid && content.src && (
         <div className="space-y-2">
           <Label>Preview</Label>
           <div
             className="relative w-full overflow-hidden rounded-md border bg-muted"
-            style={{
-              aspectRatio:
-                content.aspectRatio === "custom"
-                  ? undefined
-                  : content.aspectRatio.replace(":", "/"),
-              height:
-                content.aspectRatio === "custom"
-                  ? `${content.customHeight || 400}px`
-                  : undefined,
-            }}
+            style={getAspectRatioStyle()}
           >
             <iframe
               src={content.src}
@@ -184,11 +321,21 @@ export function EmbedEditor({
         </div>
       )}
 
-      {!content.src && !error && (
+      {/* Empty state */}
+      {!content.src && !error && sourceType === "embed" && (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
           <Code className="mb-2 h-8 w-8 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             Paste an embed code above to preview
+          </p>
+        </div>
+      )}
+
+      {!content.src && sourceType === "pdf" && documents.length > 0 && (
+        <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
+          <FileText className="mb-2 h-8 w-8 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">
+            Select a document above to preview
           </p>
         </div>
       )}

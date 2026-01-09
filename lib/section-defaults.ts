@@ -355,6 +355,7 @@ console.log(greeting);
     aspectRatio: "16:9",
     customHeight: 400,
     title: "",
+    sourceType: "embed",
   },
 
   social_links: {
