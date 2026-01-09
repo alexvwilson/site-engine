@@ -22,14 +22,19 @@ export async function GET(
   try {
     const { siteSlug, documentSlug } = await params;
 
+    console.log(`[Document Route] Fetching: siteSlug=${siteSlug}, documentSlug=${documentSlug}`);
+
     const document = await getDocumentBySlug(siteSlug, documentSlug);
 
     if (!document) {
+      console.error(`[Document Route] Not found: siteSlug=${siteSlug}, documentSlug=${documentSlug}`);
       return new NextResponse("Document not found", {
         status: 404,
         headers: { "Content-Type": "text/plain" },
       });
     }
+
+    console.log(`[Document Route] Found document: id=${document.id}, url=${document.url}`);
 
     // Fetch the document from storage
     const response = await fetch(document.url);
