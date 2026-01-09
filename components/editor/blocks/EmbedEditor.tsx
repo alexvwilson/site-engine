@@ -48,7 +48,6 @@ export function EmbedEditor({
 }: EmbedEditorProps) {
   const [error, setError] = useState<string | null>(null);
   const [documents, setDocuments] = useState<DocumentFile[]>([]);
-  const [siteSlug, setSiteSlug] = useState<string>("");
   const [isLoadingDocs, setIsLoadingDocs] = useState(false);
   const [docsLoaded, setDocsLoaded] = useState(false);
 
@@ -67,7 +66,6 @@ export function EmbedEditor({
       const result = await listSiteDocuments(siteId);
       if (result.success && result.documents) {
         setDocuments(result.documents);
-        setSiteSlug(result.siteSlug || "");
       }
       setDocsLoaded(true);
     } catch (err) {
@@ -117,8 +115,9 @@ export function EmbedEditor({
 
   const handleDocumentSelect = (docId: string): void => {
     const doc = documents.find((d) => d.id === docId);
-    if (doc && siteSlug) {
-      const pdfUrl = `/sites/${siteSlug}/docs/${doc.slug}`;
+    if (doc) {
+      // Use root-level /docs/ path - works for both custom domains and internal routes
+      const pdfUrl = `/docs/${doc.slug}`;
       onChange({
         ...content,
         sourceType: "pdf",
