@@ -23,11 +23,20 @@ interface BlockPickerProps {
   pageId: string;
   siteId: string;
   className?: string;
+  position?: number;
+  trigger?: React.ReactNode;
+  onClose?: () => void;
 }
 
 type Step = "block-type" | "template";
 
-export function BlockPicker({ pageId, className }: BlockPickerProps) {
+export function BlockPicker({
+  pageId,
+  className,
+  position,
+  trigger,
+  onClose,
+}: BlockPickerProps) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("block-type");
   const [selectedBlockType, setSelectedBlockType] = useState<BlockType | null>(null);
@@ -42,8 +51,9 @@ export function BlockPicker({ pageId, className }: BlockPickerProps) {
     if (!selectedBlockType) return;
 
     startTransition(async () => {
-      await addSection(pageId, selectedBlockType, undefined, content);
+      await addSection(pageId, selectedBlockType, position, content);
       handleClose();
+      onClose?.();
     });
   };
 
@@ -67,10 +77,12 @@ export function BlockPicker({ pageId, className }: BlockPickerProps) {
       else setOpen(true);
     }}>
       <DialogTrigger asChild>
-        <Button variant="outline" className={cn("gap-2", className)}>
-          <Plus className="h-4 w-4" />
-          Add Section
-        </Button>
+        {trigger ?? (
+          <Button variant="outline" className={cn("gap-2", className)}>
+            <Plus className="h-4 w-4" />
+            Add Section
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         {step === "block-type" ? (

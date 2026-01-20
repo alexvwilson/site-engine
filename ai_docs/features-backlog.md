@@ -84,27 +84,6 @@ _No P0 items currently_
 
 ---
 
-### 70. Add Section Between Sections
-
-**Problem:** Users can only add sections at the bottom of the page. The `addSection()` action already supports a `position` parameter, but there's no UI to insert between existing sections.
-
-**Solution:**
-- Show "+" button between section cards on hover
-- Clicking opens BlockPicker with target position
-- After adding, auto-select new section and focus inspector
-- Also support context menu "Insert above/below" on section cards
-
-**Prerequisites:** None (quick win - logic already exists)
-
-**Files to Modify:**
-- `components/editor/SectionsList.tsx` - Add insertion point UI between cards
-- `components/editor/BlockPicker.tsx` - Accept optional `position` prop
-- Pass position through to `addSection()` call
-
-**Complexity:** Low (2-4 hours)
-
----
-
 ## P2 - Medium Priority
 
 ### 51. Admin Landing Page Content Management
@@ -468,6 +447,26 @@ interface SectionStyling {
 ---
 
 ## Completed Features
+
+### 70. Add Section Between Sections ✅ 2026-01-20
+
+**Problem:** Users could only add sections at the bottom of the page. The `addSection()` action already supported a `position` parameter, but there was no UI to insert between existing sections.
+
+**Solution Implemented:**
+- [x] Added InsertionPoint component with hover-activated "+" button
+- [x] Subtle horizontal line appears between section cards on hover
+- [x] Clicking "+" opens BlockPicker dialog with target position
+- [x] New section inserts at correct position, existing sections shift down
+- [x] Updated BlockPicker to accept `position`, `trigger`, and `onClose` props
+
+**Files Modified:**
+- `components/editor/BlockPicker.tsx` - Added position, trigger, onClose props
+- `components/editor/SectionsList.tsx` - Added InsertionPoint components between cards
+- `components/editor/InsertionPoint.tsx` - New component for insertion UI
+
+**Task Document:** `ai_docs/tasks/067_add_section_between_sections.md`
+
+---
 
 ### 67. OG Image Support for Social Sharing ✅ 2026-01-09
 

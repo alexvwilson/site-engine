@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { SectionCard } from "./SectionCard";
+import { InsertionPoint } from "./InsertionPoint";
 import { reorderSections } from "@/app/actions/sections";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import { FileText } from "lucide-react";
@@ -92,9 +93,20 @@ export function SectionsList({ sections, pageId, siteId }: SectionsListProps) {
         items={sections.map((s) => s.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className={`space-y-4 ${isPending ? "opacity-70" : ""}`}>
-          {sections.map((section) => (
-            <SectionCard key={section.id} section={section} siteId={siteId} />
+        <div className={isPending ? "opacity-70" : ""}>
+          {/* Insertion point before first section */}
+          <InsertionPoint pageId={pageId} siteId={siteId} position={0} />
+
+          {sections.map((section, index) => (
+            <div key={section.id}>
+              <SectionCard section={section} siteId={siteId} />
+              {/* Insertion point after each section */}
+              <InsertionPoint
+                pageId={pageId}
+                siteId={siteId}
+                position={index + 1}
+              />
+            </div>
           ))}
         </div>
       </SortableContext>
