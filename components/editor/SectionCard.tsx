@@ -3,13 +3,7 @@
 import { useTransition, useRef, useEffect, useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  GripVertical,
-  Copy,
-  Trash2,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { GripVertical, Copy, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -23,9 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { BlockIcon } from "./BlockIcon";
-import { SectionEditor } from "./SectionEditor";
 import { SectionStatusToggle } from "./SectionStatusToggle";
-import { AnchorIdInput } from "./AnchorIdInput";
 import { deleteSection, duplicateSection } from "@/app/actions/sections";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import { BLOCK_TYPE_INFO } from "@/lib/section-types";
@@ -37,7 +29,7 @@ interface SectionCardProps {
   siteId: string;
 }
 
-export function SectionCard({ section, siteId }: SectionCardProps): React.ReactElement {
+export function SectionCard({ section, siteId: _siteId }: SectionCardProps): React.ReactElement {
   const [isPending, startTransition] = useTransition();
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -49,9 +41,9 @@ export function SectionCard({ section, siteId }: SectionCardProps): React.ReactE
     registerEditorSection,
   } = useEditorSelection();
 
-  // Selection from context determines expansion
-  const isExpanded = selectedSectionId === section.id;
-  const isHighlighted = hoveredSectionId === section.id && !isExpanded;
+  // Selection state from context
+  const isSelected = selectedSectionId === section.id;
+  const isHighlighted = hoveredSectionId === section.id && !isSelected;
 
   // Register ref for scroll sync
   useEffect(() => {
@@ -59,9 +51,9 @@ export function SectionCard({ section, siteId }: SectionCardProps): React.ReactE
     return () => registerEditorSection(section.id, null);
   }, [section.id, registerEditorSection]);
 
-  const handleToggleExpand = useCallback((): void => {
-    setSelectedSectionId(isExpanded ? null : section.id);
-  }, [isExpanded, section.id, setSelectedSectionId]);
+  const handleSelect = useCallback((): void => {
+    setSelectedSectionId(isSelected ? null : section.id);
+  }, [isSelected, section.id, setSelectedSectionId]);
 
   const {
     attributes,
@@ -105,71 +97,67 @@ export function SectionCard({ section, siteId }: SectionCardProps): React.ReactE
       ref={setRefs}
       style={style}
       className={cn(
-        "border rounded-lg bg-card transition-shadow",
+        "border rounded-lg bg-card cursor-pointer transition-all",
         isDragging && "shadow-lg opacity-90 z-50",
         isPending && "opacity-50 pointer-events-none",
+        isSelected && "ring-2 ring-primary bg-primary/5",
         isHighlighted && "ring-2 ring-primary/50"
       )}
+      onClick={handleSelect}
       onMouseEnter={() => setHoveredSectionId(section.id)}
       onMouseLeave={() => setHoveredSectionId(null)}
     >
-      {/* Header */}
-      <div
-        className={cn(
-          "flex items-center gap-3 p-4 border-b transition-colors",
-          isExpanded && "bg-muted/30"
-        )}
-      >
+      {/* Compact Header */}
+      <div className="flex items-center gap-2 p-3">
         <button
           className="cursor-grab touch-none text-muted-foreground hover:text-foreground transition-colors"
           {...attributes}
           {...listeners}
           onClick={(e) => e.stopPropagation()}
         >
-          <GripVertical className="h-5 w-5" />
+          <GripVertical className="h-4 w-4" />
         </button>
 
-        {/* Clickable area to expand/collapse */}
-        <button
-          type="button"
-          className="flex items-center gap-3 flex-1 text-left group"
-          onClick={handleToggleExpand}
-        >
-          <BlockIcon
-            blockType={section.block_type}
-            className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors"
-          />
-
-          <span className="font-medium group-hover:text-primary transition-colors">
-            {blockInfo?.label ?? section.block_type}
-          </span>
-
-          <AnchorIdInput
-            sectionId={section.id}
-            currentAnchorId={section.anchor_id}
-          />
-
-          {!isExpanded && !section.anchor_id && (
-            <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
-              Click to edit
-            </span>
+        <BlockIcon
+          blockType={section.block_type}
+          className={cn(
+            "h-4 w-4 shrink-0",
+            isSelected ? "text-primary" : "text-muted-foreground"
           )}
-        </button>
-
-        <SectionStatusToggle
-          sectionId={section.id}
-          status={section.status}
         />
 
-        <div className="flex items-center gap-1">
+        <span
+          className={cn(
+            "font-medium text-sm flex-1 truncate",
+            isSelected && "text-primary"
+          )}
+        >
+          {blockInfo?.label ?? section.block_type}
+        </span>
+
+        {section.anchor_id && (
+          <span className="text-xs text-muted-foreground shrink-0">
+            #{section.anchor_id}
+          </span>
+        )}
+
+        <div
+          className="flex items-center gap-1 shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <SectionStatusToggle
+            sectionId={section.id}
+            status={section.status}
+          />
+
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-7 w-7"
             onClick={handleDuplicate}
             disabled={isPending}
           >
-            <Copy className="h-4 w-4" />
+            <Copy className="h-3.5 w-3.5" />
             <span className="sr-only">Duplicate section</span>
           </Button>
 
@@ -178,10 +166,10 @@ export function SectionCard({ section, siteId }: SectionCardProps): React.ReactE
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                className="h-7 w-7 text-muted-foreground hover:text-destructive"
                 disabled={isPending}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3.5 w-3.5" />
                 <span className="sr-only">Delete section</span>
               </Button>
             </AlertDialogTrigger>
@@ -204,31 +192,8 @@ export function SectionCard({ section, siteId }: SectionCardProps): React.ReactE
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={handleToggleExpand}
-          >
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-            <span className="sr-only">
-              {isExpanded ? "Collapse" : "Expand"} section
-            </span>
-          </Button>
         </div>
       </div>
-
-      {/* Content Editor */}
-      {isExpanded && (
-        <div className="p-4">
-          <SectionEditor section={section} siteId={siteId} />
-        </div>
-      )}
     </div>
   );
 }

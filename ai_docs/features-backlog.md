@@ -55,27 +55,40 @@ _No P0 items currently_
 
 ---
 
-### 71. Inspector Panel Editing
+### 71. Inspector Panel Editing ✅ 2026-01-20 (Phase 1-2)
+
+**Status:** Phase 1-2 complete - basic inspector panel with three tabs working. Design tab consolidation and polish pending.
 
 **Problem:** Currently sections are edited by expanding accordion cards inline. With split view, a dedicated inspector panel (right sidebar) would be more efficient - see preview on left, edit properties on right.
 
+**Solution Implemented:**
+- Right-side inspector panel appears when section is selected (25% width)
+- Panel structure: Content tab (routes to existing block editors), Design tab (placeholder), Advanced tab (anchor ID, visibility)
+- Section list becomes compact clickable cards (no inline expansion)
+- Dynamic layout: 40%/60% when no selection, 25%/50%/25% when inspector open
+- Undo/redo and auto-save work in inspector
+- Escape key closes inspector
+
+**Known Issues / Future Enhancements:**
+- See #83 for independent panel scrolling enhancement
+- Design tab is placeholder; styling controls remain in Content tab within block editors
+
+**Task Document:** `ai_docs/tasks/070_inspector_panel_editing.md`
+
+---
+
+### 83. Inspector Panel Independent Scrolling
+
+**Problem:** When editing a section positioned high on the page with a long inspector panel, users may need to scroll below the visible section to access all editing controls. The inspector scrolls with the page content.
+
 **Solution:**
-- Right-side inspector panel appears when section is selected
-- Panel structure: Content tab, Design tab, Advanced tab (collapsed)
-- Content: main editable fields (title, body, images, buttons)
-- Design: styling controls (alignment, spacing, background, borders)
-- Advanced: section ID, anchor, custom attributes
-- Changes apply immediately to preview (already have auto-save)
-- Keyboard navigation between sections
+- Make each panel scroll independently (section list, preview, inspector)
+- Inspector has its own overflow-auto container
+- Consider "sticky" section header in inspector showing which block is being edited
 
-**Prerequisites:** #68 (Split View), #69 (Section Selection)
+**Prerequisites:** #71 (Inspector Panel) - Complete
 
-**Files to Modify:**
-- `components/editor/InspectorPanel.tsx` - New component
-- Refactor existing block editors to work in inspector context
-- `components/editor/EditorLayout.tsx` - Add inspector pane
-
-**Complexity:** Medium-High (2-3 days)
+**Complexity:** Low (1-2 hours)
 
 ---
 

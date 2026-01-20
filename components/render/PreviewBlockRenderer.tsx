@@ -21,6 +21,9 @@ import { CTABlock } from "./blocks/CTABlock";
 import { TestimonialsBlock } from "./blocks/TestimonialsBlock";
 import { ContactBlock } from "./blocks/ContactBlock";
 import { FooterBlock } from "./blocks/FooterBlock";
+import { EmbedBlock } from "./blocks/EmbedBlock";
+import { ProductGridBlock } from "./blocks/ProductGridBlock";
+import { ArticleBlock } from "./blocks/ArticleBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -112,6 +115,53 @@ export function PreviewBlockRenderer({
         return (
           <FooterBlock
             content={getTypedContent("footer", content)}
+            theme={theme}
+          />
+        );
+      case "embed":
+        return (
+          <EmbedBlock
+            content={getTypedContent("embed", content)}
+            theme={theme}
+          />
+        );
+      case "social_links":
+        return (
+          <div
+            className="py-8 text-center border-2 border-dashed rounded-lg mx-4 my-4"
+            style={{
+              borderColor: "var(--color-border)",
+              backgroundColor: "var(--color-muted)",
+            }}
+          >
+            <div className="space-y-2">
+              <div className="text-2xl">🔗</div>
+              <p
+                className="font-medium text-sm"
+                style={{ color: "var(--color-foreground)" }}
+              >
+                Social Links
+              </p>
+              <p
+                className="text-xs"
+                style={{ color: "var(--color-muted-foreground)" }}
+              >
+                Links from Site Settings display on published site
+              </p>
+            </div>
+          </div>
+        );
+      case "product_grid":
+        return (
+          <ProductGridBlock
+            content={getTypedContent("product_grid", content)}
+            theme={theme}
+          />
+        );
+      case "article":
+        return (
+          <ArticleBlock
+            content={getTypedContent("article", content)}
             theme={theme}
           />
         );

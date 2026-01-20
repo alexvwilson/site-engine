@@ -5,11 +5,15 @@ import type { Page } from "@/lib/drizzle/schema/pages";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
-import { EditorSelectionProvider } from "@/contexts/EditorSelectionContext";
+import {
+  EditorSelectionProvider,
+  useEditorSelection,
+} from "@/contexts/EditorSelectionContext";
 import { EditorHeader } from "./EditorHeader";
 import { SectionsList } from "./SectionsList";
 import { BlockPicker } from "./BlockPicker";
 import { LayoutSuggestionModal } from "./LayoutSuggestionModal";
+import { InspectorPanel } from "./InspectorPanel";
 import { PreviewFrame } from "@/components/preview/PreviewFrame";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -111,6 +115,75 @@ export function EditorLayout({
 
   return (
     <EditorSelectionProvider>
+      <EditorLayoutContent
+        page={page}
+        siteId={siteId}
+        sections={sections}
+        previewSections={previewSections}
+        theme={theme}
+        siteHeader={siteHeader}
+        siteFooter={siteFooter}
+        effectiveViewMode={effectiveViewMode}
+        handleViewModeChange={handleViewModeChange}
+        device={device}
+        setDevice={setDevice}
+        colorMode={colorMode}
+        setColorMode={setColorMode}
+        showPreviewControls={showPreviewControls}
+        isSmallScreen={isSmallScreen}
+      />
+    </EditorSelectionProvider>
+  );
+}
+
+interface EditorLayoutContentProps {
+  page: Page;
+  siteId: string;
+  sections: Section[];
+  previewSections: Section[];
+  theme: ThemeData | null;
+  siteHeader: HeaderContent | null;
+  siteFooter: FooterContent | null;
+  effectiveViewMode: ViewMode;
+  handleViewModeChange: (mode: ViewMode) => void;
+  device: DeviceType;
+  setDevice: (device: DeviceType) => void;
+  colorMode: PreviewColorMode;
+  setColorMode: (mode: PreviewColorMode) => void;
+  showPreviewControls: boolean;
+  isSmallScreen: boolean;
+}
+
+function EditorLayoutContent({
+  page,
+  siteId,
+  sections,
+  previewSections,
+  theme,
+  siteHeader,
+  siteFooter,
+  effectiveViewMode,
+  handleViewModeChange,
+  device,
+  setDevice,
+  colorMode,
+  setColorMode,
+  showPreviewControls,
+  isSmallScreen,
+}: EditorLayoutContentProps): React.ReactElement {
+  const { selectedSectionId, setSelectedSectionId } = useEditorSelection();
+
+  // Find the selected section
+  const selectedSection = selectedSectionId
+    ? sections.find((s) => s.id === selectedSectionId) ?? null
+    : null;
+
+  // Show inspector only in split mode with a selection
+  const showInspector =
+    effectiveViewMode === "split" && selectedSectionId !== null;
+
+  return (
+    <>
       <EditorHeader
         page={page}
         siteId={siteId}
@@ -124,15 +197,22 @@ export function EditorLayout({
         disableSplit={isSmallScreen}
       />
       <div className="flex-1 flex overflow-hidden">
-        {/* Editor Panel */}
+        {/* Section List Panel */}
         {effectiveViewMode !== "preview" && (
           <div
             className={cn(
-              "overflow-auto",
-              effectiveViewMode === "split" ? "w-[40%] border-r" : "w-full"
+              "overflow-auto border-r",
+              effectiveViewMode === "builder" && "w-full border-r-0",
+              effectiveViewMode === "split" && !showInspector && "w-[40%]",
+              effectiveViewMode === "split" && showInspector && "w-[25%]"
             )}
           >
-            <div className="container max-w-4xl mx-auto px-4 py-8">
+            <div
+              className={cn(
+                "px-4 py-6",
+                !showInspector && "container max-w-4xl mx-auto"
+              )}
+            >
               <SectionsList
                 sections={sections}
                 pageId={page.id}
@@ -151,7 +231,9 @@ export function EditorLayout({
           <div
             className={cn(
               "overflow-hidden",
-              effectiveViewMode === "split" ? "w-[60%]" : "w-full"
+              effectiveViewMode === "preview" && "w-full",
+              effectiveViewMode === "split" && !showInspector && "w-[60%]",
+              effectiveViewMode === "split" && showInspector && "w-[50%]"
             )}
           >
             <PreviewFrame
@@ -165,7 +247,18 @@ export function EditorLayout({
             />
           </div>
         )}
+
+        {/* Inspector Panel */}
+        {showInspector && (
+          <div className="w-[25%] border-l overflow-hidden">
+            <InspectorPanel
+              section={selectedSection}
+              siteId={siteId}
+              onClose={() => setSelectedSectionId(null)}
+            />
+          </div>
+        )}
       </div>
-    </EditorSelectionProvider>
+    </>
   );
 }
