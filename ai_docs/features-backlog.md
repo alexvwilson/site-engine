@@ -38,6 +38,73 @@ _No P0 items currently_
 
 ---
 
+### 68. Live Preview Split View Mode
+
+**Problem:** The current editor is a single-column list of collapsible section cards. Preview is on a separate route (`/preview`). Users can't see how edits look in real-time without switching between pages.
+
+**Solution:**
+- Add split view layout: editor panel (left) + live preview (right)
+- Three view modes: "Builder" (list only), "Preview" (preview only), "Split" (both)
+- Preview updates immediately as content is edited (already have auto-save)
+- Responsive: collapse to single pane on mobile/tablet
+- Persist view mode preference in localStorage
+
+**Prerequisites:** None (foundational feature)
+
+**Files to Modify:**
+- `app/(protected)/app/sites/[siteId]/pages/[pageId]/page.tsx` - Add layout state and split view
+- `components/editor/EditorLayout.tsx` - New component for view mode switching
+- Move `PreviewFrame` logic into main editor page
+
+**Complexity:** Medium (1-2 days)
+
+---
+
+### 69. Section Selection & Highlighting
+
+**Problem:** No visual connection between the section card being edited and its rendered output in preview. Users can't click on the preview to jump to editing a section.
+
+**Solution:**
+- Add `data-section-id` and `data-section-type` attributes to rendered sections
+- Create `EditorContext` for shared selection state across editor and preview
+- Hover: outline section in preview when hovering section card (and vice versa)
+- Click: select section in preview to expand its editor card
+- Selected section shows: stronger outline, section type label, quick actions
+- Scroll sync: selecting a section scrolls both panels to show it
+
+**Prerequisites:** #68 (Split View) recommended but not required
+
+**Files to Modify:**
+- `components/render/BlockRenderer.tsx` - Add data attributes wrapper
+- `components/editor/EditorContext.tsx` - New context for selection state
+- `components/editor/SectionCard.tsx` - Wire up selection state
+- `components/preview/PreviewFrame.tsx` - Add click/hover handlers
+
+**Complexity:** Medium (1-2 days)
+
+---
+
+### 70. Add Section Between Sections
+
+**Problem:** Users can only add sections at the bottom of the page. The `addSection()` action already supports a `position` parameter, but there's no UI to insert between existing sections.
+
+**Solution:**
+- Show "+" button between section cards on hover
+- Clicking opens BlockPicker with target position
+- After adding, auto-select new section and focus inspector
+- Also support context menu "Insert above/below" on section cards
+
+**Prerequisites:** None (quick win - logic already exists)
+
+**Files to Modify:**
+- `components/editor/SectionsList.tsx` - Add insertion point UI between cards
+- `components/editor/BlockPicker.tsx` - Accept optional `position` prop
+- Pass position through to `addSection()` call
+
+**Complexity:** Low (2-4 hours)
+
+---
+
 ## P2 - Medium Priority
 
 ### 51. Admin Landing Page Content Management
@@ -55,7 +122,297 @@ _No P0 items currently_
 
 ---
 
+### 71. Inspector Panel Editing
+
+**Problem:** Currently sections are edited by expanding accordion cards inline. With split view, a dedicated inspector panel (right sidebar) would be more efficient - see preview on left, edit properties on right.
+
+**Solution:**
+- Right-side inspector panel appears when section is selected
+- Panel structure: Content tab, Design tab, Advanced tab (collapsed)
+- Content: main editable fields (title, body, images, buttons)
+- Design: styling controls (alignment, spacing, background, borders)
+- Advanced: section ID, anchor, custom attributes
+- Changes apply immediately to preview (already have auto-save)
+- Keyboard navigation between sections
+
+**Prerequisites:** #68 (Split View), #69 (Section Selection)
+
+**Files to Modify:**
+- `components/editor/InspectorPanel.tsx` - New component
+- Refactor existing block editors to work in inspector context
+- `components/editor/EditorLayout.tsx` - Add inspector pane
+
+**Complexity:** Medium-High (2-3 days)
+
+---
+
+### 72. Section Picker Improvements
+
+**Problem:** BlockPicker shows a flat grid of 18 block types. Finding the right one requires scanning all options. No way to quickly reuse recently used or favorite sections.
+
+**Solution:**
+- Search input to filter section types
+- Categories (tabs or sidebar): Layout, Text, Media, Cards, Social, Forms, Commerce, Utility
+- Add category metadata to `BLOCK_TYPE_INFO`
+- Favorites: star button, stored in localStorage
+- Recently used: track last 5-10 used block types
+- Show favorites and recent at top of picker
+
+**Prerequisites:** None
+
+**Files to Modify:**
+- `lib/section-types.ts` - Add `category` field to `BlockTypeInfo`
+- `components/editor/BlockPicker.tsx` - Add search, tabs, favorites, recent
+
+**Complexity:** Medium (4-8 hours)
+
+---
+
+### 73. Primitive Consolidation: RichText
+
+**Problem:** Three block types (`text`, `markdown`, `article`) are essentially the same thing with different input modes. They share 90% of the same styling fields but have separate editors and renderers.
+
+**Solution:**
+- Create unified `RichText` primitive with mode toggle: "visual" | "markdown" | "article"
+- Single `RichTextEditor.tsx` that switches input method based on mode
+- Single `RichTextBlock.tsx` renderer
+- Mapping layer: existing `text`/`markdown`/`article` block_types route to RichText primitive
+- Preserve backward compatibility - no database migration required initially
+
+**Content Interface:**
+```typescript
+interface RichTextContent extends SectionStyling {
+  mode: "visual" | "markdown" | "article";
+  body: string;  // HTML for visual/article, raw for markdown
+  imageRounding?: TextBorderRadius;  // article mode only
+}
+```
+
+**Prerequisites:** #81 (Shared Styling Interface) recommended
+
+**Files to Modify:**
+- `lib/section-types.ts` - Add RichTextContent, keep old types as aliases
+- `components/editor/primitives/RichTextEditor.tsx` - New unified editor
+- `components/render/primitives/RichTextBlock.tsx` - New unified renderer
+- `components/editor/SectionEditor.tsx` - Route old types to new editor
+- `components/render/BlockRenderer.tsx` - Route old types to new renderer
+
+**Complexity:** High (3-5 days)
+
+---
+
+### 74. Primitive Consolidation: Cards
+
+**Problem:** Three block types (`features`, `testimonials`, `product_grid`) are all "array of items displayed in a grid" with slightly different card templates. Massive code duplication in editors and renderers.
+
+**Solution:**
+- Create unified `Cards` primitive with template presets: "feature" | "testimonial" | "product"
+- Single `CardsEditor.tsx` with template-specific field rendering
+- Single `CardsBlock.tsx` renderer with template-specific card layouts
+- Common: section header, grid layout (columns, gap), card styling
+- Template-specific: icon (feature), avatar/quote (testimonial), links (product)
+
+**Content Interface:**
+```typescript
+interface CardsContent extends SectionStyling {
+  template: "feature" | "testimonial" | "product";
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+  items: CardItem[];  // Union type based on template
+  columns: 2 | 3 | 4 | "auto";
+  gap: "small" | "medium" | "large";
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+}
+```
+
+**Prerequisites:** #81 (Shared Styling Interface) recommended
+
+**Complexity:** High (4-6 days)
+
+---
+
+### 75. Primitive Consolidation: Hero
+
+**Problem:** Three block types (`hero`, `cta`, `heading`) are all "heading + optional subheading + optional buttons" with different layouts. CTA is basically a compact hero. Heading is hero without buttons/background.
+
+**Solution:**
+- Create unified `Hero` primitive with layout presets: "full" | "compact" | "cta" | "title-only"
+- `full`: Current hero with all options (image, background, rotating text)
+- `compact`: Smaller hero, no background image
+- `cta`: Centered with prominent button, background color
+- `title-only`: Just heading + subtitle (current heading block)
+- Single editor with conditional fields based on layout
+
+**Content Interface:**
+```typescript
+interface HeroContent extends SectionStyling {
+  layout: "full" | "compact" | "cta" | "title-only";
+  heading: string;
+  subheading?: string;
+  buttons?: HeroButton[];
+  // Full layout only:
+  backgroundImage?: string;
+  image?: string;
+  titleMode?: "static" | "rotating";
+  rotatingTitle?: RotatingTitleConfig;
+}
+```
+
+**Prerequisites:** #81 (Shared Styling Interface) recommended
+
+**Complexity:** High (3-5 days)
+
+---
+
+### 76. Primitive Consolidation: Media
+
+**Problem:** Three block types (`image`, `gallery`, `embed`) handle visual content. While more distinct than other groups, they share layout patterns and could benefit from unified handling.
+
+**Solution:**
+- Create unified `Media` primitive with modes: "single" | "gallery" | "embed"
+- `single`: Current image block (src, alt, caption, layout with text)
+- `gallery`: Current gallery block (images array, grid/masonry/carousel)
+- `embed`: Current embed block (YouTube, maps, PDFs)
+- Shared: aspect ratio controls, border styling, captions
+
+**Note:** This consolidation is lower priority than RichText/Cards/Hero since these blocks are more functionally distinct.
+
+**Prerequisites:** #81 (Shared Styling Interface) recommended
+
+**Complexity:** High (4-6 days)
+
+---
+
 ## P3 - Low Priority / Future
+
+### 77. Inline Field Editing in Preview
+
+**Problem:** Even with inspector panel, editing requires using form fields rather than direct manipulation. For simple fields (headlines, button labels), inline editing in the preview would be faster.
+
+**Solution:**
+- Click on text in preview to edit inline (contenteditable)
+- Only for simple fields: headings, subheadings, button text, labels
+- TipTap integration for rich text fields (complex - may cause focus issues)
+- Escape to cancel, click outside or Enter to save
+- Visual indicator showing editable regions on hover
+
+**Prerequisites:** #68 (Split View), #69 (Section Selection)
+
+**Risks:** TipTap focus management in iframe is notoriously tricky. Start with plain text fields only.
+
+**Complexity:** High (2-3 days)
+
+---
+
+### 78. Layout vs Content Mode Toggle
+
+**Problem:** The inspector could get overwhelming with both content fields and styling options visible. Power users might want to focus on just content or just layout.
+
+**Solution:**
+- Toggle in inspector: "Content" | "Layout" mode
+- Content mode: text fields, images, links, buttons
+- Layout mode: spacing, alignment, colors, borders, backgrounds
+- Remember preference per session
+- Consider auto-switching based on what user is doing
+
+**Prerequisites:** #71 (Inspector Panel)
+
+**Complexity:** Medium (1 day)
+
+---
+
+### 79. Dual-Format Rich Text Storage
+
+**Problem:** TipTap outputs HTML which is stored directly. If we ever want to migrate editors or enable advanced features (collaborative editing, versioned content), ProseMirror JSON format is better.
+
+**Solution:**
+- Store both formats for rich text fields:
+  - `body_html`: HTML for rendering (current)
+  - `body_doc`: ProseMirror JSON for editing
+- On save: write both formats
+- On load: prefer doc format if available, fall back to HTML
+- Migration task: convert existing HTML to doc format on first edit
+- Enables future features: diff viewing, version history, real-time collab
+
+**Prerequisites:** #73 (RichText Primitive) - easier to implement for one type
+
+**Complexity:** High (3-5 days including migration)
+
+---
+
+### 80. Primitive Consolidation: Blog
+
+**Problem:** `blog_featured` and `blog_grid` both display blog posts, just with different layouts. They're data-driven (query database) rather than user-content.
+
+**Solution:**
+- Create unified `Blog` primitive with layouts: "featured" | "grid"
+- `featured`: Single post display (split/stacked/hero/minimal)
+- `grid`: Multiple posts in grid
+- Shared: post selection, display options, styling
+
+**Note:** Lower priority since blog blocks are already well-contained and less frequently used.
+
+**Prerequisites:** None
+
+**Complexity:** Medium (2-3 days)
+
+---
+
+### 81. Shared Styling Interface Extraction
+
+**Problem:** ~15 blocks have nearly identical styling fields (enableStyling, textColorMode, showBorder, borderWidth, etc.) copied in each interface. Changes require updating all blocks.
+
+**Solution:**
+- Extract `SectionStyling` base interface with all common fields
+- Each content type extends: `interface HeroContent extends SectionStyling { ... }`
+- Create shared styling editor component used by all block editors
+- Create shared styling renderer logic (currently duplicated as `borderWidthMap`, etc.)
+
+**Content Interface:**
+```typescript
+interface SectionStyling {
+  enableStyling?: boolean;
+  textColorMode?: "auto" | "light" | "dark";
+  showBorder?: boolean;
+  borderWidth?: "thin" | "medium" | "thick";
+  borderRadius?: "none" | "small" | "medium" | "large" | "full";
+  borderColor?: string;
+  boxBackgroundColor?: string;
+  boxBackgroundOpacity?: number;
+  useThemeBackground?: boolean;
+  backgroundImage?: string;
+  overlayColor?: string;
+  overlayOpacity?: number;
+  textSize?: "small" | "normal" | "large";
+  contentWidth?: "narrow" | "medium" | "full";
+}
+```
+
+**Prerequisites:** None (foundational for primitive consolidation)
+
+**Complexity:** Medium (1-2 days)
+
+---
+
+### 82. Database Migration to Primitives
+
+**Problem:** After primitive consolidation, the database still has old `block_type` values ("text", "markdown", etc.). Clean data would have `primitive` + `preset` columns.
+
+**Solution:**
+- Add columns: `primitive` (text), `preset` (text)
+- Backfill using mapping from old block_type
+- Keep old block_type column for backward compatibility
+- New sections write both formats
+- Eventually deprecate block_type column
+
+**Prerequisites:** All primitive consolidation complete (#73-76, #80)
+
+**Risks:** Production data migration - requires careful rollback plan
+
+**Complexity:** Medium (1-2 days) but High risk
+
+---
 
 ### 32. Media Player Blocks (Exploratory)
 
