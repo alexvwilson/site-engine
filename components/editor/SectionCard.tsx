@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition, useRef, useEffect, useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
@@ -29,6 +29,7 @@ import { AnchorIdInput } from "./AnchorIdInput";
 import { deleteSection, duplicateSection } from "@/app/actions/sections";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import { BLOCK_TYPE_INFO } from "@/lib/section-types";
+import { useEditorSelection } from "@/contexts/EditorSelectionContext";
 import { cn } from "@/lib/utils";
 
 interface SectionCardProps {
@@ -36,9 +37,31 @@ interface SectionCardProps {
   siteId: string;
 }
 
-export function SectionCard({ section, siteId }: SectionCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+export function SectionCard({ section, siteId }: SectionCardProps): React.ReactElement {
   const [isPending, startTransition] = useTransition();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const {
+    hoveredSectionId,
+    selectedSectionId,
+    setHoveredSectionId,
+    setSelectedSectionId,
+    registerEditorSection,
+  } = useEditorSelection();
+
+  // Selection from context determines expansion
+  const isExpanded = selectedSectionId === section.id;
+  const isHighlighted = hoveredSectionId === section.id && !isExpanded;
+
+  // Register ref for scroll sync
+  useEffect(() => {
+    registerEditorSection(section.id, cardRef.current);
+    return () => registerEditorSection(section.id, null);
+  }, [section.id, registerEditorSection]);
+
+  const handleToggleExpand = useCallback((): void => {
+    setSelectedSectionId(isExpanded ? null : section.id);
+  }, [isExpanded, section.id, setSelectedSectionId]);
 
   const {
     attributes,
@@ -68,15 +91,27 @@ export function SectionCard({ section, siteId }: SectionCardProps) {
     });
   };
 
+  // Combine refs for both sortable and scroll sync
+  const setRefs = useCallback(
+    (node: HTMLDivElement | null) => {
+      setNodeRef(node);
+      (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+    },
+    [setNodeRef]
+  );
+
   return (
     <div
-      ref={setNodeRef}
+      ref={setRefs}
       style={style}
       className={cn(
         "border rounded-lg bg-card transition-shadow",
         isDragging && "shadow-lg opacity-90 z-50",
-        isPending && "opacity-50 pointer-events-none"
+        isPending && "opacity-50 pointer-events-none",
+        isHighlighted && "ring-2 ring-primary/50"
       )}
+      onMouseEnter={() => setHoveredSectionId(section.id)}
+      onMouseLeave={() => setHoveredSectionId(null)}
     >
       {/* Header */}
       <div
@@ -98,7 +133,7 @@ export function SectionCard({ section, siteId }: SectionCardProps) {
         <button
           type="button"
           className="flex items-center gap-3 flex-1 text-left group"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={handleToggleExpand}
         >
           <BlockIcon
             blockType={section.block_type}
@@ -174,7 +209,7 @@ export function SectionCard({ section, siteId }: SectionCardProps) {
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => setIsExpanded(!isExpanded)}
+            onClick={handleToggleExpand}
           >
             {isExpanded ? (
               <ChevronUp className="h-4 w-4" />

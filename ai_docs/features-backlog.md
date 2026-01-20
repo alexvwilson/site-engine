@@ -38,30 +38,6 @@ _No P0 items currently_
 
 ---
 
-### 69. Section Selection & Highlighting
-
-**Problem:** No visual connection between the section card being edited and its rendered output in preview. Users can't click on the preview to jump to editing a section.
-
-**Solution:**
-- Add `data-section-id` and `data-section-type` attributes to rendered sections
-- Create `EditorContext` for shared selection state across editor and preview
-- Hover: outline section in preview when hovering section card (and vice versa)
-- Click: select section in preview to expand its editor card
-- Selected section shows: stronger outline, section type label, quick actions
-- Scroll sync: selecting a section scrolls both panels to show it
-
-**Prerequisites:** #68 (Split View) recommended but not required
-
-**Files to Modify:**
-- `components/render/BlockRenderer.tsx` - Add data attributes wrapper
-- `components/editor/EditorContext.tsx` - New context for selection state
-- `components/editor/SectionCard.tsx` - Wire up selection state
-- `components/preview/PreviewFrame.tsx` - Add click/hover handlers
-
-**Complexity:** Medium (1-2 days)
-
----
-
 ## P2 - Medium Priority
 
 ### 51. Admin Landing Page Content Management
@@ -452,6 +428,31 @@ interface SectionStyling {
 - `components/preview/PreviewFrame.tsx` - Accept external device/colorMode props, hideControls option
 
 **Task Document:** `ai_docs/tasks/068_live_preview_split_view.md`
+
+---
+
+### 69. Section Selection & Highlighting ✅ 2026-01-20
+
+**Problem:** No visual connection between the section card being edited and its rendered output in preview. Users couldn't click on the preview to jump to editing a section.
+
+**Solution Implemented:**
+- [x] Hover sync: hovering a section card highlights the corresponding section in preview (and vice versa)
+- [x] Click-to-edit: clicking a section in the preview expands that section's editor card
+- [x] Visual feedback: highlighted sections show ring outline + floating section type label
+- [x] Scroll sync: selecting a section scrolls both panels to center it
+- [x] Data attributes: `data-section-id` and `data-section-type` on preview sections
+- [x] Graceful fallback: components work without context (for non-editor contexts)
+
+**Files Created:**
+- `contexts/EditorSelectionContext.tsx` - Shared state for hover/selection across panels
+- `components/preview/SectionHighlight.tsx` - Wrapper component with highlight UI and click handlers
+
+**Files Modified:**
+- `components/editor/EditorLayout.tsx` - Added EditorSelectionProvider wrapper
+- `components/editor/SectionCard.tsx` - Connected to context, refactored expansion state
+- `components/render/PreviewBlockRenderer.tsx` - Wrapped blocks with SectionHighlight
+
+**Task Document:** `ai_docs/tasks/069_section_selection_highlighting.md`
 
 ---
 

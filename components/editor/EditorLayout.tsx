@@ -5,6 +5,7 @@ import type { Page } from "@/lib/drizzle/schema/pages";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { HeaderContent, FooterContent } from "@/lib/section-types";
+import { EditorSelectionProvider } from "@/contexts/EditorSelectionContext";
 import { EditorHeader } from "./EditorHeader";
 import { SectionsList } from "./SectionsList";
 import { BlockPicker } from "./BlockPicker";
@@ -109,7 +110,7 @@ export function EditorLayout({
   }
 
   return (
-    <>
+    <EditorSelectionProvider>
       <EditorHeader
         page={page}
         siteId={siteId}
@@ -165,6 +166,6 @@ export function EditorLayout({
           </div>
         )}
       </div>
-    </>
+    </EditorSelectionProvider>
   );
 }
