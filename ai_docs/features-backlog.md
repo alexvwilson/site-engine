@@ -38,28 +38,6 @@ _No P0 items currently_
 
 ---
 
-### 68. Live Preview Split View Mode
-
-**Problem:** The current editor is a single-column list of collapsible section cards. Preview is on a separate route (`/preview`). Users can't see how edits look in real-time without switching between pages.
-
-**Solution:**
-- Add split view layout: editor panel (left) + live preview (right)
-- Three view modes: "Builder" (list only), "Preview" (preview only), "Split" (both)
-- Preview updates immediately as content is edited (already have auto-save)
-- Responsive: collapse to single pane on mobile/tablet
-- Persist view mode preference in localStorage
-
-**Prerequisites:** None (foundational feature)
-
-**Files to Modify:**
-- `app/(protected)/app/sites/[siteId]/pages/[pageId]/page.tsx` - Add layout state and split view
-- `components/editor/EditorLayout.tsx` - New component for view mode switching
-- Move `PreviewFrame` logic into main editor page
-
-**Complexity:** Medium (1-2 days)
-
----
-
 ### 69. Section Selection & Highlighting
 
 **Problem:** No visual connection between the section card being edited and its rendered output in preview. Users can't click on the preview to jump to editing a section.
@@ -447,6 +425,35 @@ interface SectionStyling {
 ---
 
 ## Completed Features
+
+### 68. Live Preview Split View Mode ✅ 2026-01-20
+
+**Problem:** The current editor was a single-column list of collapsible section cards. Preview was on a separate route (`/preview`). Users couldn't see how edits looked in real-time without switching between pages.
+
+**Solution Implemented:**
+- [x] Split view layout: editor panel (left, 40%) + live preview (right, 60%)
+- [x] Three view modes: "Builder" (editor only), "Split" (both), "Preview" (preview only)
+- [x] Preview updates immediately as content is edited (leverages existing auto-save)
+- [x] Device toggle (desktop/tablet/mobile) in header when preview visible
+- [x] Color mode toggle (light/dark) in header when preview visible
+- [x] Responsive: screens < 1024px show Builder or Preview only (no split)
+- [x] View mode preference persisted in localStorage
+- [x] Keyboard shortcut: Cmd/Ctrl+Shift+P to cycle view modes
+
+**Files Created:**
+- `components/editor/EditorLayout.tsx` - Main split view layout with view mode state
+- `components/editor/ViewModeToggle.tsx` - Toggle button group for view modes
+- `hooks/useMediaQuery.ts` - Responsive breakpoint detection hook
+- `components/ui/toggle.tsx`, `components/ui/toggle-group.tsx` - shadcn components
+
+**Files Modified:**
+- `app/(protected)/app/sites/[siteId]/pages/[pageId]/page.tsx` - Added theme/header/footer fetching, uses EditorLayout
+- `components/editor/EditorHeader.tsx` - Added ViewModeToggle, device/color controls
+- `components/preview/PreviewFrame.tsx` - Accept external device/colorMode props, hideControls option
+
+**Task Document:** `ai_docs/tasks/068_live_preview_split_view.md`
+
+---
 
 ### 70. Add Section Between Sections ✅ 2026-01-20
 

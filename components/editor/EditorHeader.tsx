@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SaveIndicator, type SaveStatus } from "./SaveIndicator";
+import { ViewModeToggle, type ViewMode } from "./ViewModeToggle";
+import { DeviceToggle, type DeviceType } from "@/components/preview/DeviceToggle";
+import {
+  ColorModePreviewToggle,
+  type PreviewColorMode,
+} from "@/components/preview/ColorModePreviewToggle";
 import { updatePage, publishPage, unpublishPage } from "@/app/actions/pages";
 import type { Page } from "@/lib/drizzle/schema/pages";
 import { cn } from "@/lib/utils";
@@ -16,6 +22,15 @@ interface EditorHeaderProps {
   siteId: string;
   saveStatus?: SaveStatus;
   onRetry?: () => void;
+  // Split view props (optional - when not provided, falls back to Preview link)
+  viewMode?: ViewMode;
+  onViewModeChange?: (mode: ViewMode) => void;
+  device?: DeviceType;
+  onDeviceChange?: (device: DeviceType) => void;
+  colorMode?: PreviewColorMode;
+  onColorModeChange?: (mode: PreviewColorMode) => void;
+  showPreviewControls?: boolean;
+  disableSplit?: boolean;
 }
 
 export function EditorHeader({
@@ -23,6 +38,14 @@ export function EditorHeader({
   siteId,
   saveStatus = "idle",
   onRetry,
+  viewMode = "builder",
+  onViewModeChange,
+  device = "desktop",
+  onDeviceChange,
+  colorMode = "light",
+  onColorModeChange,
+  showPreviewControls = false,
+  disableSplit = false,
 }: EditorHeaderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(page.title);
@@ -37,7 +60,9 @@ export function EditorHeader({
     setIsEditing(false);
   };
 
-  const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  const handleTitleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ): void => {
     if (e.key === "Enter") {
       handleTitleSubmit();
     } else if (e.key === "Escape") {
@@ -102,12 +127,36 @@ export function EditorHeader({
         <div className="flex items-center gap-3 flex-shrink-0">
           <SaveIndicator status={saveStatus} onRetry={onRetry} />
 
-          <Button variant="outline" size="sm" asChild>
-            <Link href={`/app/sites/${siteId}/pages/${page.id}/preview`}>
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </Link>
-          </Button>
+          {/* View Mode Toggle (when EditorLayout provides the callback) */}
+          {onViewModeChange ? (
+            <ViewModeToggle
+              value={viewMode}
+              onChange={onViewModeChange}
+              disableSplit={disableSplit}
+            />
+          ) : (
+            // Fallback: Preview link for standalone usage
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/app/sites/${siteId}/pages/${page.id}/preview`}>
+                <Eye className="h-4 w-4 mr-2" />
+                Preview
+              </Link>
+            </Button>
+          )}
+
+          {/* Device and Color Mode (shown when preview is visible) */}
+          {showPreviewControls && onDeviceChange && onColorModeChange && (
+            <>
+              <div className="h-6 w-px bg-border" />
+              <DeviceToggle device={device} onChange={onDeviceChange} />
+              <ColorModePreviewToggle
+                colorMode={colorMode}
+                onChange={onColorModeChange}
+              />
+            </>
+          )}
+
+          <div className="h-6 w-px bg-border" />
 
           <Button
             variant={page.status === "published" ? "outline" : "default"}

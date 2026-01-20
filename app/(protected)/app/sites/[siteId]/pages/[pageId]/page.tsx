@@ -3,11 +3,14 @@ import { requireUserId } from "@/lib/auth";
 import { getSiteById } from "@/lib/queries/sites";
 import { getPageById } from "@/lib/queries/pages";
 import { getSectionsByPage } from "@/lib/queries/sections";
+import { getActiveTheme } from "@/lib/queries/themes";
 import { Breadcrumbs } from "@/components/navigation/Breadcrumbs";
-import { EditorHeader } from "@/components/editor/EditorHeader";
-import { SectionsList } from "@/components/editor/SectionsList";
-import { BlockPicker } from "@/components/editor/BlockPicker";
-import { LayoutSuggestionModal } from "@/components/editor/LayoutSuggestionModal";
+import { EditorLayout } from "@/components/editor/EditorLayout";
+import {
+  mergeHeaderContent,
+  mergeFooterContent,
+} from "@/lib/header-footer-utils";
+import type { HeaderContent, FooterContent } from "@/lib/section-types";
 
 interface PageEditorProps {
   params: Promise<{ siteId: string; pageId: string }>;
@@ -22,16 +25,35 @@ export default async function PageEditorPage({ params }: PageEditorProps) {
     getPageById(pageId, userId),
   ]);
 
-  if (!site || !page) {
+  if (!site || !page || page.site_id !== siteId) {
     notFound();
   }
 
-  // Verify page belongs to site
-  if (page.site_id !== siteId) {
-    notFound();
-  }
+  // Fetch sections and theme in parallel
+  const [allSections, activeTheme] = await Promise.all([
+    getSectionsByPage(pageId, userId),
+    getActiveTheme(siteId),
+  ]);
 
-  const sections = await getSectionsByPage(pageId, userId);
+  // Header/footer merging for preview (same logic as preview page)
+  const siteHeader = site.header_content as HeaderContent | null;
+  const siteFooter = site.footer_content as FooterContent | null;
+  const pageHeaderSection = allSections.find((s) => s.block_type === "header");
+  const pageFooterSection = allSections.find((s) => s.block_type === "footer");
+  const pageHeader = pageHeaderSection?.content as HeaderContent | null;
+  const pageFooter = pageFooterSection?.content as FooterContent | null;
+
+  const finalHeader = siteHeader
+    ? mergeHeaderContent(siteHeader, pageHeader)
+    : pageHeader;
+  const finalFooter = siteFooter
+    ? mergeFooterContent(siteFooter, pageFooter)
+    : pageFooter;
+
+  // Sections for preview (without header/footer - they're rendered separately)
+  const previewSections = allSections.filter(
+    (s) => s.block_type !== "header" && s.block_type !== "footer"
+  );
 
   const breadcrumbs = [
     { label: "Dashboard", href: "/app" },
@@ -42,16 +64,15 @@ export default async function PageEditorPage({ params }: PageEditorProps) {
   return (
     <div className="flex flex-col h-full">
       <Breadcrumbs items={breadcrumbs} />
-      <EditorHeader page={page} siteId={siteId} />
-      <div className="flex-1 overflow-auto">
-        <div className="container max-w-4xl mx-auto px-4 py-8">
-          <SectionsList sections={sections} pageId={pageId} siteId={siteId} />
-          <div className="mt-6 flex justify-center gap-3">
-            <LayoutSuggestionModal pageId={pageId} siteId={siteId} />
-            <BlockPicker pageId={pageId} siteId={siteId} />
-          </div>
-        </div>
-      </div>
+      <EditorLayout
+        page={page}
+        siteId={siteId}
+        sections={allSections}
+        previewSections={previewSections}
+        theme={activeTheme?.data ?? null}
+        siteHeader={finalHeader ?? null}
+        siteFooter={finalFooter ?? null}
+      />
     </div>
   );
 }

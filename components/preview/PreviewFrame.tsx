@@ -24,6 +24,12 @@ interface PreviewFrameProps {
   theme: ThemeData | null;
   siteHeader?: HeaderContent | null;
   siteFooter?: FooterContent | null;
+  /** External device control - when provided, internal state is bypassed */
+  device?: DeviceType;
+  /** External color mode control - when provided, internal state is bypassed */
+  colorMode?: PreviewColorMode;
+  /** Hide the internal device/color toggle controls (use when externally controlled) */
+  hideControls?: boolean;
 }
 
 /**
@@ -64,9 +70,18 @@ export function PreviewFrame({
   theme,
   siteHeader,
   siteFooter,
+  device: externalDevice,
+  colorMode: externalColorMode,
+  hideControls = false,
 }: PreviewFrameProps) {
-  const [device, setDevice] = useState<DeviceType>("desktop");
-  const [colorMode, setColorMode] = useState<PreviewColorMode>("light");
+  // Internal state as fallback when not externally controlled
+  const [internalDevice, setInternalDevice] = useState<DeviceType>("desktop");
+  const [internalColorMode, setInternalColorMode] =
+    useState<PreviewColorMode>("light");
+
+  // Use external values if provided, otherwise use internal state
+  const device = externalDevice ?? internalDevice;
+  const colorMode = externalColorMode ?? internalColorMode;
 
   // Use DEFAULT_THEME for header/footer rendering if no theme
   const renderTheme = theme ?? DEFAULT_THEME;
@@ -91,10 +106,15 @@ export function PreviewFrame({
     <div className="flex flex-col h-full">
       <PreviewThemeStyles theme={theme} colorMode={colorMode} />
 
-      <div className="flex justify-center gap-4 py-4 border-b bg-background">
-        <DeviceToggle device={device} onChange={setDevice} />
-        <ColorModePreviewToggle colorMode={colorMode} onChange={setColorMode} />
-      </div>
+      {!hideControls && (
+        <div className="flex justify-center gap-4 py-4 border-b bg-background">
+          <DeviceToggle device={device} onChange={setInternalDevice} />
+          <ColorModePreviewToggle
+            colorMode={colorMode}
+            onChange={setInternalColorMode}
+          />
+        </div>
+      )}
 
       <div className="flex-1 flex justify-center overflow-auto p-4 bg-muted/30">
         <div
