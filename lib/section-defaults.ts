@@ -1,5 +1,11 @@
 import type { BlockType } from "@/lib/drizzle/schema/sections";
-import type { ContentTypeMap, HeadingLevel, HeadingAlignment, TextColorMode } from "./section-types";
+import type {
+  ContentTypeMap,
+  HeadingLevel,
+  HeadingAlignment,
+  TextColorMode,
+  FeatureCardItem,
+} from "./section-types";
 
 /**
  * Default content for each block type when a new section is created.
@@ -462,6 +468,58 @@ console.log(greeting);
     contentWidth: "medium",
     // Typography
     textSize: "normal",
+  },
+
+  cards: {
+    // Template determines card type
+    template: "feature",
+    // Optional section header (all templates)
+    sectionTitle: "",
+    sectionSubtitle: "",
+    // Default items (feature template)
+    items: [
+      {
+        id: "card-1",
+        icon: "star",
+        title: "Feature One",
+        description: "Describe your first key feature or benefit here.",
+      } as FeatureCardItem,
+      {
+        id: "card-2",
+        icon: "zap",
+        title: "Feature Two",
+        description: "Highlight another important aspect of your offering.",
+      } as FeatureCardItem,
+      {
+        id: "card-3",
+        icon: "shield",
+        title: "Feature Three",
+        description: "Share what makes you different from the competition.",
+      } as FeatureCardItem,
+    ],
+    // Grid layout
+    columns: 3,
+    gap: "medium",
+    // Styling options (disabled by default)
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    showCardBackground: true,
+    cardBackgroundColor: "",
+    textSize: "normal",
+    // Product template specific (included for completeness)
+    iconStyle: "brand",
+    showItemTitles: true,
+    showItemDescriptions: true,
   },
 };
 

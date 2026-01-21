@@ -15,6 +15,7 @@ import { FooterEditor } from "../blocks/FooterEditor";
 import { EmbedEditor } from "../blocks/EmbedEditor";
 import { SocialLinksEditor } from "../blocks/SocialLinksEditor";
 import { ProductGridEditor } from "../blocks/ProductGridEditor";
+import { CardsEditor } from "../blocks/CardsEditor";
 import { BlogFeaturedEditor } from "../BlogFeaturedEditor";
 import { BlogGridEditor } from "../BlogGridEditor";
 import type { Section } from "@/lib/drizzle/schema/sections";
@@ -161,6 +162,13 @@ export function ContentTab({
         <ProductGridEditor
           {...editorProps}
           content={content as Parameters<typeof ProductGridEditor>[0]["content"]}
+        />
+      );
+    case "cards":
+      return (
+        <CardsEditor
+          {...editorProps}
+          content={content as Parameters<typeof CardsEditor>[0]["content"]}
         />
       );
     default:

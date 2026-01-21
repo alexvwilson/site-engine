@@ -977,6 +977,173 @@ console.log(message); // Output: Hello, World!
       },
     },
   ],
+
+  // ============================================================================
+  // Cards Templates (Unified cards primitive with template switching)
+  // ============================================================================
+  cards: [
+    {
+      id: "cards-feature-benefits",
+      name: "Key Benefits",
+      description: "Feature cards highlighting main benefits",
+      content: {
+        template: "feature" as const,
+        sectionTitle: "",
+        sectionSubtitle: "",
+        items: [
+          {
+            id: "card-1",
+            icon: "zap",
+            title: "Lightning Fast",
+            description:
+              "Experience blazing fast performance that keeps you ahead of the competition.",
+          },
+          {
+            id: "card-2",
+            icon: "shield",
+            title: "Secure & Reliable",
+            description:
+              "Enterprise-grade security you can trust. Your data is always protected.",
+          },
+          {
+            id: "card-3",
+            icon: "heart",
+            title: "Built with Care",
+            description:
+              "Crafted with attention to every detail. Quality you can feel.",
+          },
+        ],
+        columns: 3,
+        gap: "medium",
+      },
+    },
+    {
+      id: "cards-feature-how-it-works",
+      name: "How It Works",
+      description: "Step-by-step process explanation",
+      content: {
+        template: "feature" as const,
+        sectionTitle: "How It Works",
+        sectionSubtitle: "Simple steps to get started",
+        items: [
+          {
+            id: "card-1",
+            icon: "user-plus",
+            title: "1. Sign Up",
+            description:
+              "Create your free account in seconds. No credit card required.",
+          },
+          {
+            id: "card-2",
+            icon: "settings",
+            title: "2. Customize",
+            description:
+              "Configure your settings and personalize your experience.",
+          },
+          {
+            id: "card-3",
+            icon: "rocket",
+            title: "3. Launch",
+            description: "Go live and start seeing results immediately.",
+          },
+        ],
+        columns: 3,
+        gap: "medium",
+      },
+    },
+    {
+      id: "cards-testimonial-single",
+      name: "Featured Quote",
+      description: "Single prominent testimonial",
+      content: {
+        template: "testimonial" as const,
+        sectionTitle: "",
+        sectionSubtitle: "",
+        items: [
+          {
+            id: "card-1",
+            quote:
+              "This platform completely transformed how we do business. The results speak for themselves - 40% increase in productivity within the first month.",
+            author: "Sarah Johnson",
+            role: "CEO, TechStart Inc.",
+            avatar: "",
+          },
+        ],
+        columns: 3,
+        gap: "medium",
+      },
+    },
+    {
+      id: "cards-testimonial-multiple",
+      name: "Customer Stories",
+      description: "Multiple testimonials from different customers",
+      content: {
+        template: "testimonial" as const,
+        sectionTitle: "What Our Customers Say",
+        sectionSubtitle: "",
+        items: [
+          {
+            id: "card-1",
+            quote:
+              "The best investment we've made for our team. Highly recommended!",
+            author: "Michael Chen",
+            role: "Product Manager, Innovate Co",
+            avatar: "",
+          },
+          {
+            id: "card-2",
+            quote:
+              "Incredible support and an amazing product. Our workflow has never been smoother.",
+            author: "Emily Rodriguez",
+            role: "Founder, Creative Labs",
+            avatar: "",
+          },
+          {
+            id: "card-3",
+            quote:
+              "We tried many solutions before finding this one. Nothing else comes close.",
+            author: "David Park",
+            role: "CTO, Growth Dynamics",
+            avatar: "",
+          },
+        ],
+        columns: 3,
+        gap: "medium",
+      },
+    },
+    {
+      id: "cards-product-music",
+      name: "Music Catalog",
+      description: "Display albums with streaming links",
+      content: {
+        template: "product" as const,
+        sectionTitle: "Our Music",
+        sectionSubtitle: "Listen on your favorite platform",
+        items: [],
+        columns: 3,
+        gap: "medium",
+        iconStyle: "brand" as const,
+        showItemTitles: true,
+        showItemDescriptions: true,
+      },
+    },
+    {
+      id: "cards-product-portfolio",
+      name: "Portfolio Showcase",
+      description: "Display projects or products with action links",
+      content: {
+        template: "product" as const,
+        sectionTitle: "Our Work",
+        sectionSubtitle: "",
+        items: [],
+        columns: 4,
+        gap: "medium",
+        iconStyle: "monochrome" as const,
+        showItemTitles: true,
+        showItemDescriptions: true,
+      },
+    },
+  ],
 };
 
 /**

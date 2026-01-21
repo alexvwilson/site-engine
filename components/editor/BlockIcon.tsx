@@ -20,6 +20,7 @@ import {
   ShoppingBag,
   BookOpen,
   AlignLeft,
+  Layers,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   social_links: Share2,
   product_grid: ShoppingBag,
   article: BookOpen,
+  cards: Layers,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {

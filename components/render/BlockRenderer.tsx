@@ -19,6 +19,7 @@ import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
 import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
+import { CardsBlock } from "./blocks/CardsBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -186,6 +187,14 @@ export async function BlockRenderer({
         <ProductGridBlock
           content={getTypedContent("product_grid", content)}
           theme={theme}
+        />
+      );
+    case "cards":
+      return (
+        <CardsBlock
+          content={getTypedContent("cards", content)}
+          theme={theme}
+          basePath={basePath}
         />
       );
     default:

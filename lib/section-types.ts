@@ -558,6 +558,100 @@ export interface ArticleContent extends SectionStyling {
   imageRounding?: TextBorderRadius;
 }
 
+// =============================================================================
+// Cards Primitive - Unified features/testimonials/product_grid
+// =============================================================================
+
+/**
+ * Template type for Cards primitive
+ * - feature: Icon + title + subtitle + description + optional button
+ * - testimonial: Quote + author + role + avatar
+ * - product: Image + title + description + platform links
+ */
+export type CardsTemplate = "feature" | "testimonial" | "product";
+
+/**
+ * Feature card item (icon-based)
+ */
+export interface FeatureCardItem {
+  id: string;
+  icon: string;
+  title: string;
+  subtitle?: string;
+  description: string;
+  showButton?: boolean;
+  buttonText?: string;
+  buttonUrl?: string;
+  buttonVariant?: FeatureButtonVariant;
+}
+
+/**
+ * Testimonial card item (quote-based)
+ */
+export interface TestimonialCardItem {
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  avatar?: string;
+}
+
+/**
+ * Product card item (image + links)
+ * Reuses existing ProductLink type
+ */
+export interface ProductCardItem {
+  id: string;
+  image?: string;
+  title?: string;
+  description?: string;
+  links: ProductLink[];
+  featuredLinkIndex?: number;
+}
+
+/**
+ * Union type for card items - discriminated by parent template
+ */
+export type CardItem = FeatureCardItem | TestimonialCardItem | ProductCardItem;
+
+/**
+ * Grid column options (unified across templates)
+ */
+export type CardsColumns = 2 | 3 | 4 | "auto";
+
+/**
+ * Grid gap options (unified across templates)
+ */
+export type CardsGap = "small" | "medium" | "large";
+
+/**
+ * Unified Cards content interface
+ */
+export interface CardsContent extends SectionStyling {
+  /** Template determines item fields and card layout */
+  template: CardsTemplate;
+
+  /** Optional section header (all templates) */
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  /** Items array - structure depends on template */
+  items: CardItem[];
+
+  /** Grid layout (unified across templates) */
+  columns?: CardsColumns;
+  gap?: CardsGap;
+
+  /** Card styling (not in base SectionStyling) */
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+
+  /** Product template specific */
+  iconStyle?: ProductIconStyle;
+  showItemTitles?: boolean;
+  showItemDescriptions?: boolean;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -580,7 +674,8 @@ export type SectionContent =
   | EmbedContent
   | SocialLinksContent
   | ProductGridContent
-  | ArticleContent;
+  | ArticleContent
+  | CardsContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -605,6 +700,7 @@ export interface ContentTypeMap {
   social_links: SocialLinksContent;
   product_grid: ProductGridContent;
   article: ArticleContent;
+  cards: CardsContent;
 }
 
 /**
@@ -763,6 +859,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Product Grid",
     description: "Display products or items with action links",
     icon: "shopping-bag",
+    category: "cards",
+  },
+  {
+    type: "cards",
+    label: "Cards",
+    description: "Feature cards, testimonials, or product grid with templates",
+    icon: "layout-grid",
     category: "cards",
   },
 ];

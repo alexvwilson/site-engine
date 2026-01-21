@@ -148,16 +148,18 @@ _No P0 items currently_
 
 ---
 
-### 74. Primitive Consolidation: Cards
+### 74. Primitive Consolidation: Cards ✅ COMPLETED (2026-01-21)
 
 **Problem:** Three block types (`features`, `testimonials`, `product_grid`) are all "array of items displayed in a grid" with slightly different card templates. Massive code duplication in editors and renderers.
 
-**Solution:**
-- Create unified `Cards` primitive with template presets: "feature" | "testimonial" | "product"
-- Single `CardsEditor.tsx` with template-specific field rendering
-- Single `CardsBlock.tsx` renderer with template-specific card layouts
-- Common: section header, grid layout (columns, gap), card styling
-- Template-specific: icon (feature), avatar/quote (testimonial), links (product)
+**Solution Implemented:**
+- Created unified `cards` block type with template: "feature" | "testimonial" | "product"
+- Single `CardsEditor.tsx` (~900 lines) with template-specific field rendering and drag-drop for ALL templates
+- Single `CardsBlock.tsx` (~700 lines) renderer with template-specific card layouts
+- All templates get: section header, grid layout (columns, gap), drag-drop reordering
+- Template-specific: icon/button (feature), avatar/quote (testimonial), image/links (product)
+- Old blocks (`features`, `testimonials`, `product_grid`) remain functional for backwards compatibility
+- `cards` is available as a new block type in the block picker
 
 **Content Interface:**
 ```typescript
@@ -165,17 +167,25 @@ interface CardsContent extends SectionStyling {
   template: "feature" | "testimonial" | "product";
   sectionTitle?: string;
   sectionSubtitle?: string;
-  items: CardItem[];  // Union type based on template
-  columns: 2 | 3 | 4 | "auto";
-  gap: "small" | "medium" | "large";
+  items: CardItem[];  // Union type: FeatureCardItem | TestimonialCardItem | ProductCardItem
+  columns?: 2 | 3 | 4 | "auto";
+  gap?: "small" | "medium" | "large";
   showCardBackground?: boolean;
   cardBackgroundColor?: string;
+  // Product template specific
+  iconStyle?: ProductIconStyle;
+  showItemTitles?: boolean;
+  showItemDescriptions?: boolean;
 }
 ```
 
-**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
+**Files Created:**
+- `components/render/blocks/CardsBlock.tsx`
+- `components/editor/blocks/CardsEditor.tsx`
 
-**Complexity:** High (4-6 days)
+**Bugfix (also applied):** Fixed undefined CSS variables in ProductGridBlock.tsx - changed `--theme-foreground/background/muted-foreground` to `--color-foreground/background/muted-foreground` (these variables were never defined, causing white-on-white text issues).
+
+**Task Document:** `ai_docs/tasks/076_cards_primitive_consolidation.md`
 
 ---
 

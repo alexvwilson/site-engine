@@ -22,6 +22,7 @@ import { ContactBlock } from "./blocks/ContactBlock";
 import { FooterBlock } from "./blocks/FooterBlock";
 import { EmbedBlock } from "./blocks/EmbedBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
+import { CardsBlock } from "./blocks/CardsBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -146,6 +147,13 @@ export function PreviewBlockRenderer({
         return (
           <ProductGridBlock
             content={getTypedContent("product_grid", content)}
+            theme={theme}
+          />
+        );
+      case "cards":
+        return (
+          <CardsBlock
+            content={getTypedContent("cards", content)}
             theme={theme}
           />
         );

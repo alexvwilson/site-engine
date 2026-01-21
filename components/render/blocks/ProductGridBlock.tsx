@@ -87,7 +87,7 @@ function ProductCard({
         {showTitle && item.title && (
           <h3
             className="font-semibold text-lg mb-1 line-clamp-2 text-center"
-            style={{ color: "var(--theme-foreground)" }}
+            style={{ color: "var(--color-foreground)" }}
           >
             {item.title}
           </h3>
@@ -96,7 +96,7 @@ function ProductCard({
         {showDescription && item.description && (
           <p
             className="text-sm mb-4 flex-1 line-clamp-2 text-center"
-            style={{ color: "var(--theme-muted-foreground)" }}
+            style={{ color: "var(--color-muted-foreground)" }}
           >
             {item.description}
           </p>
@@ -151,7 +151,7 @@ export function ProductGridBlock({ content, theme }: ProductGridBlockProps) {
   return (
     <section
       className="py-12 md:py-16 px-6"
-      style={{ backgroundColor: "var(--theme-background)" }}
+      style={{ backgroundColor: "var(--color-background)" }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
@@ -160,7 +160,7 @@ export function ProductGridBlock({ content, theme }: ProductGridBlockProps) {
             {content.sectionTitle && (
               <h2
                 className="text-3xl md:text-4xl font-bold mb-3"
-                style={{ color: "var(--theme-foreground)" }}
+                style={{ color: "var(--color-foreground)" }}
               >
                 {content.sectionTitle}
               </h2>
@@ -168,7 +168,7 @@ export function ProductGridBlock({ content, theme }: ProductGridBlockProps) {
             {content.sectionSubtitle && (
               <p
                 className="text-lg max-w-2xl mx-auto"
-                style={{ color: "var(--theme-muted-foreground)" }}
+                style={{ color: "var(--color-muted-foreground)" }}
               >
                 {content.sectionSubtitle}
               </p>
