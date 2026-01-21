@@ -33,6 +33,7 @@ export const BLOCK_TYPES = [
   "product_grid",
   "article",
   "cards",
+  "media",
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];

@@ -21,6 +21,7 @@ import { BlogGridBlock } from "./blocks/BlogGridBlock";
 import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
 import { CardsBlock } from "./blocks/CardsBlock";
+import { MediaBlock } from "./blocks/MediaBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -204,6 +205,13 @@ export async function BlockRenderer({
           content={getTypedContent("cards", content)}
           theme={theme}
           basePath={basePath}
+        />
+      );
+    case "media":
+      return (
+        <MediaBlock
+          content={getTypedContent("media", content)}
+          theme={theme}
         />
       );
     default:

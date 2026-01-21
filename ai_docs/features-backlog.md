@@ -222,22 +222,24 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 76. Primitive Consolidation: Media
+### 76. Primitive Consolidation: Media ✅ 2026-01-21
 
 **Problem:** Three block types (`image`, `gallery`, `embed`) handle visual content. While more distinct than other groups, they share layout patterns and could benefit from unified handling.
 
-**Solution:**
-- Create unified `Media` primitive with modes: "single" | "gallery" | "embed"
-- `single`: Current image block (src, alt, caption, layout with text)
-- `gallery`: Current gallery block (images array, grid/masonry/carousel)
-- `embed`: Current embed block (YouTube, maps, PDFs)
-- Shared: aspect ratio controls, border styling, captions
+**Solution Implemented:**
+- Created unified `Media` primitive with modes: "single" | "gallery" | "embed"
+- `single`: Full image block functionality (src, alt, caption, 5 layout options, rich text description)
+- `gallery`: Full gallery functionality (images array, grid/masonry/carousel, lightbox, auto-rotate)
+- `embed`: Full embed functionality (YouTube, maps, PDFs, aspect ratios)
+- Mode switching with confirmation warning when data would be lost
+- SectionStyling support for all modes (Gallery and Embed now have styling they previously lacked)
+- EditorMode support (content/layout toggle)
 
-**Note:** This consolidation is lower priority than RichText/Cards/Hero since these blocks are more functionally distinct.
+**Files Created:**
+- `components/editor/blocks/MediaEditor.tsx` (~1200 lines) - Unified editor
+- `components/render/blocks/MediaBlock.tsx` (~530 lines) - Unified renderer
 
-**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
-
-**Complexity:** High (4-6 days)
+**Task Document:** `ai_docs/tasks/078_media_primitive_consolidation.md`
 
 ---
 

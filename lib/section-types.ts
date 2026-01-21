@@ -534,6 +534,79 @@ export interface EmbedContent {
   documentSlug?: string;
 }
 
+// =============================================================================
+// Media Primitive - Unified image/gallery/embed
+// =============================================================================
+
+/**
+ * Mode type for Media primitive
+ * - single: Single image with layout options (image-only, side-by-side, etc.)
+ * - gallery: Multiple images in grid/masonry/carousel
+ * - embed: External content (YouTube, maps, PDFs)
+ */
+export type MediaMode = "single" | "gallery" | "embed";
+
+/**
+ * Unified Media content interface
+ * All modes extend SectionStyling for consistent styling options
+ */
+export interface MediaContent extends SectionStyling {
+  /** Mode determines which fields are active */
+  mode: MediaMode;
+
+  // ===== SINGLE MODE (image) =====
+  /** Image source URL */
+  src?: string;
+  /** Alt text for accessibility */
+  alt?: string;
+  /** Image caption */
+  caption?: string;
+  /** Image width as percentage (10 | 25 | 50 | 75 | 100) */
+  imageWidth?: ImageWidth;
+  /** Text width for side-by-side layouts */
+  textWidth?: ImageWidth;
+  /** Layout preset for image positioning */
+  layout?: ImageLayout;
+  /** Rich text HTML description (for text layouts) */
+  description?: string;
+
+  // ===== GALLERY MODE =====
+  /** Array of gallery images */
+  images?: GalleryImage[];
+  /** Aspect ratio for gallery images */
+  galleryAspectRatio?: GalleryAspectRatio;
+  /** Gallery display layout (grid | masonry | carousel) */
+  galleryLayout?: GalleryLayout;
+  /** Number of columns */
+  columns?: GalleryColumns;
+  /** Gap between items */
+  gap?: GalleryGap;
+  /** Enable lightbox on image click */
+  lightbox?: boolean;
+  /** Auto-rotate carousel */
+  autoRotate?: boolean;
+  /** Auto-rotate interval in seconds */
+  autoRotateInterval?: GalleryAutoRotateInterval;
+
+  // ===== EMBED MODE =====
+  /** Raw embed code (HTML) */
+  embedCode?: string;
+  /** Extracted iframe src */
+  embedSrc?: string;
+  /** Embed aspect ratio */
+  embedAspectRatio?: EmbedAspectRatio;
+  /** Custom height for custom aspect ratio */
+  customHeight?: number;
+  /** Embed title/label */
+  embedTitle?: string;
+  /** Source type (embed code or PDF) */
+  embedSourceType?: EmbedSourceType;
+  /** PDF document ID */
+  documentId?: string;
+  /** PDF document slug */
+  documentSlug?: string;
+}
+
 export interface SocialLinksContent extends SectionStyling {
   // Section title and subtitle
   title?: string;
@@ -746,7 +819,8 @@ export type SectionContent =
   | SocialLinksContent
   | ProductGridContent
   | ArticleContent
-  | CardsContent;
+  | CardsContent
+  | MediaContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -773,6 +847,7 @@ export interface ContentTypeMap {
   product_grid: ProductGridContent;
   article: ArticleContent;
   cards: CardsContent;
+  media: MediaContent;
 }
 
 /**
@@ -946,5 +1021,12 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     description: "Feature cards, testimonials, or product grid with templates",
     icon: "layout-grid",
     category: "cards",
+  },
+  {
+    type: "media",
+    label: "Media",
+    description: "Image, gallery, or embedded content with flexible modes",
+    icon: "image",
+    category: "media",
   },
 ];

@@ -581,6 +581,53 @@ console.log(greeting);
     showItemTitles: true,
     showItemDescriptions: true,
   },
+
+  media: {
+    // Mode determines which fields are active
+    mode: "single",
+
+    // ===== SINGLE MODE defaults =====
+    src: "",
+    alt: "Image description",
+    caption: "",
+    imageWidth: 50,
+    textWidth: 50,
+    layout: "image-only",
+    description: "",
+
+    // ===== GALLERY MODE defaults =====
+    images: [],
+    galleryAspectRatio: "1:1",
+    galleryLayout: "grid",
+    columns: "auto",
+    gap: "medium",
+    lightbox: false,
+    autoRotate: false,
+    autoRotateInterval: 5,
+
+    // ===== EMBED MODE defaults =====
+    embedCode: "",
+    embedSrc: "",
+    embedAspectRatio: "16:9",
+    customHeight: 400,
+    embedTitle: "",
+    embedSourceType: "embed",
+
+    // ===== Styling (shared, disabled by default) =====
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    textSize: "normal",
+  },
 };
 
 /**

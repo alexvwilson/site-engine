@@ -24,6 +24,7 @@ import { FooterBlock } from "./blocks/FooterBlock";
 import { EmbedBlock } from "./blocks/EmbedBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
 import { CardsBlock } from "./blocks/CardsBlock";
+import { MediaBlock } from "./blocks/MediaBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -162,6 +163,13 @@ export function PreviewBlockRenderer({
         return (
           <CardsBlock
             content={getTypedContent("cards", content)}
+            theme={theme}
+          />
+        );
+      case "media":
+        return (
+          <MediaBlock
+            content={getTypedContent("media", content)}
             theme={theme}
           />
         );

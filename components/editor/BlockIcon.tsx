@@ -6,6 +6,7 @@ import {
   Type,
   FileText,
   Image,
+  Images,
   Grid3X3,
   Sparkles,
   MousePointerClick,
@@ -53,6 +54,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   product_grid: ShoppingBag,
   article: BookOpen,
   cards: Layers,
+  media: Images,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {

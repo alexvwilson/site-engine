@@ -1259,6 +1259,142 @@ console.log(message); // Output: Hello, World!
       },
     },
   ],
+
+  // ============================================================================
+  // Media Templates (unified image/gallery/embed)
+  // ============================================================================
+  media: [
+    // Single Image Templates
+    {
+      id: "media-image-simple",
+      name: "Simple Image",
+      description: "Single image with optional caption",
+      content: {
+        mode: "single" as const,
+        src: "",
+        alt: "Image description",
+        caption: "",
+        imageWidth: 100,
+        layout: "image-only" as const,
+      },
+    },
+    {
+      id: "media-image-with-text",
+      name: "Image with Text",
+      description: "Image alongside descriptive text",
+      content: {
+        mode: "single" as const,
+        src: "",
+        alt: "Image description",
+        caption: "",
+        imageWidth: 50,
+        textWidth: 50,
+        layout: "image-left" as const,
+        description: "<p>Add your description here...</p>",
+      },
+    },
+    {
+      id: "media-image-profile",
+      name: "Profile Image",
+      description: "Profile photo with bio text",
+      content: {
+        mode: "single" as const,
+        src: "",
+        alt: "Profile photo",
+        imageWidth: 25,
+        textWidth: 75,
+        layout: "image-left" as const,
+        description: "<p>Tell your story...</p>",
+        enableStyling: true,
+        showBorder: true,
+        borderWidth: "thin" as const,
+        borderRadius: "full" as const,
+      },
+    },
+    // Gallery Templates
+    {
+      id: "media-gallery-grid",
+      name: "Photo Grid",
+      description: "Grid layout for multiple images",
+      content: {
+        mode: "gallery" as const,
+        images: [],
+        galleryAspectRatio: "1:1" as const,
+        galleryLayout: "grid" as const,
+        columns: "auto" as const,
+        gap: "medium" as const,
+        lightbox: true,
+      },
+    },
+    {
+      id: "media-gallery-masonry",
+      name: "Masonry Gallery",
+      description: "Pinterest-style masonry layout",
+      content: {
+        mode: "gallery" as const,
+        images: [],
+        galleryAspectRatio: "original" as const,
+        galleryLayout: "masonry" as const,
+        columns: 3,
+        gap: "small" as const,
+        lightbox: true,
+      },
+    },
+    {
+      id: "media-gallery-carousel",
+      name: "Image Carousel",
+      description: "Sliding carousel with auto-rotate",
+      content: {
+        mode: "gallery" as const,
+        images: [],
+        galleryAspectRatio: "16:9" as const,
+        galleryLayout: "carousel" as const,
+        autoRotate: true,
+        autoRotateInterval: 5,
+        lightbox: false,
+      },
+    },
+    // Embed Templates
+    {
+      id: "media-embed-video",
+      name: "Video Embed",
+      description: "YouTube or Vimeo video embed",
+      content: {
+        mode: "embed" as const,
+        embedCode: "",
+        embedSrc: "",
+        embedAspectRatio: "16:9" as const,
+        embedTitle: "",
+        embedSourceType: "embed" as const,
+      },
+    },
+    {
+      id: "media-embed-map",
+      name: "Map Embed",
+      description: "Google Maps or location embed",
+      content: {
+        mode: "embed" as const,
+        embedCode: "",
+        embedSrc: "",
+        embedAspectRatio: "4:3" as const,
+        embedTitle: "Location",
+        embedSourceType: "embed" as const,
+      },
+    },
+    {
+      id: "media-embed-pdf",
+      name: "PDF Document",
+      description: "Embedded PDF viewer",
+      content: {
+        mode: "embed" as const,
+        embedCode: "",
+        embedSrc: "",
+        embedAspectRatio: "letter" as const,
+        embedTitle: "Document",
+        embedSourceType: "pdf" as const,
+      },
+    },
+  ],
 };
 
 /**
