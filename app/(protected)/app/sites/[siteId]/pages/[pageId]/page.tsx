@@ -62,7 +62,7 @@ export default async function PageEditorPage({ params }: PageEditorProps) {
   ];
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <Breadcrumbs items={breadcrumbs} />
       <EditorLayout
         page={page}

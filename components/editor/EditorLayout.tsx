@@ -250,7 +250,7 @@ function EditorLayoutContent({
 
         {/* Inspector Panel */}
         {showInspector && (
-          <div className="w-[25%] border-l overflow-hidden">
+          <div className="w-[25%] border-l overflow-hidden h-full">
             <InspectorPanel
               section={selectedSection}
               siteId={siteId}

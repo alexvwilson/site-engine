@@ -77,18 +77,24 @@ _No P0 items currently_
 
 ---
 
-### 83. Inspector Panel Independent Scrolling
+### 83. Inspector Panel Independent Scrolling ✅ 2026-01-20
 
 **Problem:** When editing a section positioned high on the page with a long inspector panel, users may need to scroll below the visible section to access all editing controls. The inspector scrolls with the page content.
 
-**Solution:**
-- Make each panel scroll independently (section list, preview, inspector)
-- Inspector has its own overflow-auto container
-- Consider "sticky" section header in inspector showing which block is being edited
+**Solution Implemented:**
+- [x] Fixed protected layout height chain (`h-screen` + `overflow-hidden/auto`)
+- [x] Added `h-full` to inspector panel wrapper for proper height constraint
+- [x] Fixed ScrollArea in InspectorPanel with proper flex/height constraints
+- [x] Inspector panel now scrolls independently via internal ScrollArea
+- [x] Header with section type label stays fixed while content scrolls
 
-**Prerequisites:** #71 (Inspector Panel) - Complete
+**Files Modified:**
+- `app/(protected)/layout.tsx` - Changed `min-h-screen` to `h-screen overflow-hidden`, added `overflow-auto` to main
+- `app/(protected)/app/sites/[siteId]/pages/[pageId]/page.tsx` - Added `overflow-hidden` to page wrapper
+- `components/editor/EditorLayout.tsx` - Added `h-full` to inspector wrapper
+- `components/editor/InspectorPanel.tsx` - Wrapped ScrollArea with proper height constraints
 
-**Complexity:** Low (1-2 hours)
+**Task Document:** `ai_docs/tasks/071_inspector_panel_independent_scrolling.md`
 
 ---
 

@@ -207,30 +207,32 @@ export function InspectorPanel({
           </TabsList>
         </div>
 
-        <ScrollArea className="flex-1">
-          <div className="p-4">
-            <TabsContent value="content" className="mt-0 focus-visible:outline-none">
-              <ContentTab
-                section={section}
-                content={content}
-                onChange={handleContentChange}
-                siteId={siteId}
-                disabled={isSaving}
-              />
-            </TabsContent>
-            <TabsContent value="design" className="mt-0 focus-visible:outline-none">
-              <DesignTab
-                content={content}
-                onChange={handleContentChange}
-                siteId={siteId}
-                disabled={isSaving}
-              />
-            </TabsContent>
-            <TabsContent value="advanced" className="mt-0 focus-visible:outline-none">
-              <AdvancedTab section={section} disabled={isSaving} />
-            </TabsContent>
-          </div>
-        </ScrollArea>
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <ScrollArea className="h-full">
+            <div className="p-4">
+              <TabsContent value="content" className="mt-0 focus-visible:outline-none">
+                <ContentTab
+                  section={section}
+                  content={content}
+                  onChange={handleContentChange}
+                  siteId={siteId}
+                  disabled={isSaving}
+                />
+              </TabsContent>
+              <TabsContent value="design" className="mt-0 focus-visible:outline-none">
+                <DesignTab
+                  content={content}
+                  onChange={handleContentChange}
+                  siteId={siteId}
+                  disabled={isSaving}
+                />
+              </TabsContent>
+              <TabsContent value="advanced" className="mt-0 focus-visible:outline-none">
+                <AdvancedTab section={section} disabled={isSaving} />
+              </TabsContent>
+            </div>
+          </ScrollArea>
+        </div>
       </Tabs>
     </div>
   );
