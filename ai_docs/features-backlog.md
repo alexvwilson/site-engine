@@ -260,18 +260,30 @@ interface HeroContent extends SectionStyling {
 
 ---
 
-### 78. Layout vs Content Mode Toggle
+### 78. Layout vs Content Mode Toggle ✅ 2025-01-20
 
 **Problem:** The inspector could get overwhelming with both content fields and styling options visible. Power users might want to focus on just content or just layout.
 
-**Solution:**
-- Toggle in inspector: "Content" | "Layout" mode
-- Content mode: text fields, images, links, buttons
-- Layout mode: spacing, alignment, colors, borders, backgrounds
-- Remember preference per session
-- Consider auto-switching based on what user is doing
+**Solution Implemented:**
+- [x] Created EditorModeToggle component with 3-state toggle (All/Content/Layout)
+- [x] Integrated toggle into InspectorPanel's Content tab header
+- [x] Mode persists to localStorage (`editor-mode-preference`)
+- [x] Updated all block editors with conditional rendering:
+  - Simple editors: TextEditor, MarkdownEditor, HeadingEditor
+  - Medium editors: FeaturesEditor, CTAEditor, TestimonialsEditor, ContactEditor
+  - Complex editors: HeroEditor, ImageEditor, GalleryEditor
+  - Remaining editors: EmbedEditor, SocialLinksEditor, ProductGridEditor, ArticleEditor
+- [x] Content mode shows: text fields, images, links, buttons, content items
+- [x] Layout mode shows: spacing, alignment, colors, borders, backgrounds, StylingControls
+- [x] HeaderEditor/FooterEditor skipped (have their own site/page mode system)
 
-**Prerequisites:** #71 (Inspector Panel)
+**Key Files:**
+- `components/editor/inspector/EditorModeToggle.tsx` - Toggle component
+- `components/editor/inspector/InspectorPanel.tsx` - State management
+- `components/editor/inspector/ContentTab.tsx` - Passes editorMode to editors
+- All `components/editor/blocks/*Editor.tsx` files updated
+
+**Prerequisites:** #71 (Inspector Panel) ✅
 
 **Complexity:** Medium (1 day)
 

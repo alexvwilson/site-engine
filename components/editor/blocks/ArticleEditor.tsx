@@ -14,6 +14,7 @@ import type {
   ArticleContent,
   TextBorderRadius,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 // Dynamically import ArticleTiptapEditor to avoid SSR issues with ProseMirror
 const ArticleTiptapEditor = dynamic(
@@ -39,6 +40,7 @@ interface ArticleEditorProps {
   onChange: (content: ArticleContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 export function ArticleEditor({
@@ -46,7 +48,10 @@ export function ArticleEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: ArticleEditorProps): React.JSX.Element {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
   const handleBodyChange = (html: string): void => {
     onChange({ ...content, body: html });
   };
@@ -60,64 +65,68 @@ export function ArticleEditor({
 
   return (
     <div className="space-y-6">
-      {/* Content Editor */}
-      <div className="space-y-2">
-        <Label>Article Content</Label>
-        <p className="text-xs text-muted-foreground mb-2">
-          Use the image button in the toolbar to add inline images that text
-          will wrap around.
-        </p>
-        <ArticleTiptapEditor
-          value={content.body}
-          onChange={handleBodyChange}
-          siteId={siteId}
-          placeholder="Write your article content here..."
-          disabled={disabled}
-          imageRounding={content.imageRounding ?? "medium"}
-        />
-      </div>
-
-      {/* Styling Section */}
-      <StylingControls
-        content={content}
-        onChange={onChange}
-        disabled={disabled}
-        siteId={siteId}
-        showLayoutPanel
-        textSizeDescription="Scales all text including headings proportionally."
-      >
-        {/* Custom Images Panel */}
-        <div className="space-y-4 rounded-lg border p-4">
-          <Label className="text-xs uppercase text-muted-foreground tracking-wide">
-            Images
-          </Label>
-
-          <div className="space-y-2">
-            <Label>Image Corners</Label>
-            <Select
-              value={content.imageRounding ?? "medium"}
-              onValueChange={(v) =>
-                updateField("imageRounding", v as TextBorderRadius)
-              }
-              disabled={disabled}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Square</SelectItem>
-                <SelectItem value="small">Small</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="large">Large</SelectItem>
-                <SelectItem value="full">Pill</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">
-              Applies to all inline images in this article.
-            </p>
-          </div>
+      {/* Content Section */}
+      {showContent && (
+        <div className="space-y-2">
+          <Label>Article Content</Label>
+          <p className="text-xs text-muted-foreground mb-2">
+            Use the image button in the toolbar to add inline images that text
+            will wrap around.
+          </p>
+          <ArticleTiptapEditor
+            value={content.body}
+            onChange={handleBodyChange}
+            siteId={siteId}
+            placeholder="Write your article content here..."
+            disabled={disabled}
+            imageRounding={content.imageRounding ?? "medium"}
+          />
         </div>
-      </StylingControls>
+      )}
+
+      {/* Layout Section */}
+      {showLayout && (
+        <StylingControls
+          content={content}
+          onChange={onChange}
+          disabled={disabled}
+          siteId={siteId}
+          showLayoutPanel
+          textSizeDescription="Scales all text including headings proportionally."
+        >
+          {/* Custom Images Panel */}
+          <div className="space-y-4 rounded-lg border p-4">
+            <Label className="text-xs uppercase text-muted-foreground tracking-wide">
+              Images
+            </Label>
+
+            <div className="space-y-2">
+              <Label>Image Corners</Label>
+              <Select
+                value={content.imageRounding ?? "medium"}
+                onValueChange={(v) =>
+                  updateField("imageRounding", v as TextBorderRadius)
+                }
+                disabled={disabled}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Square</SelectItem>
+                  <SelectItem value="small">Small</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="large">Large</SelectItem>
+                  <SelectItem value="full">Pill</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Applies to all inline images in this article.
+              </p>
+            </div>
+          </div>
+        </StylingControls>
+      )}
     </div>
   );
 }

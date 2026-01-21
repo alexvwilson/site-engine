@@ -54,6 +54,7 @@ import type {
   ProductGridColumns,
   ProductGridGap,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 import { PRODUCT_PLATFORMS } from "@/lib/section-types";
 import {
   ProductIcon,
@@ -66,6 +67,7 @@ interface ProductGridEditorProps {
   onChange: (content: ProductGridContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 interface SortableItemRowProps {
@@ -568,7 +570,10 @@ export function ProductGridEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: ProductGridEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
   const [showItemModal, setShowItemModal] = useState(false);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
@@ -640,216 +645,226 @@ export function ProductGridEditor({
 
   return (
     <div className="space-y-6">
-      {/* Section Header */}
-      <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
-        <h4 className="font-medium text-sm">Section Header (optional)</h4>
-        <div className="space-y-3">
-          <div className="space-y-2">
-            <Label htmlFor="section-title">Title</Label>
-            <Input
-              id="section-title"
-              value={content.sectionTitle ?? ""}
-              onChange={(e) =>
-                onChange({ ...content, sectionTitle: e.target.value })
-              }
-              placeholder="e.g., Our Albums, Products, Portfolio"
-              disabled={disabled}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="section-subtitle">Subtitle</Label>
-            <Input
-              id="section-subtitle"
-              value={content.sectionSubtitle ?? ""}
-              onChange={(e) =>
-                onChange({ ...content, sectionSubtitle: e.target.value })
-              }
-              placeholder="e.g., Stream on your favorite platform"
-              disabled={disabled}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Layout Settings */}
-      <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
-        <h4 className="font-medium text-sm">Layout Settings</h4>
-        <div className="grid grid-cols-3 gap-4">
-          {/* Columns */}
-          <div className="space-y-2">
-            <Label>Columns</Label>
-            <Select
-              value={String(columns)}
-              onValueChange={(value) =>
-                onChange({
-                  ...content,
-                  columns:
-                    value === "auto"
-                      ? "auto"
-                      : (parseInt(value) as ProductGridColumns),
-                })
-              }
-              disabled={disabled}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="auto">Auto</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Gap */}
-          <div className="space-y-2">
-            <Label>Spacing</Label>
-            <Select
-              value={gap}
-              onValueChange={(value: ProductGridGap) =>
-                onChange({ ...content, gap: value })
-              }
-              disabled={disabled}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="small">Small</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="large">Large</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Icon Style */}
-          <div className="space-y-2">
-            <Label>Icon Style</Label>
-            <Select
-              value={iconStyle}
-              onValueChange={(value: ProductIconStyle) =>
-                onChange({ ...content, iconStyle: value })
-              }
-              disabled={disabled}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="brand">Brand Colors</SelectItem>
-                <SelectItem value="monochrome">Monochrome</SelectItem>
-                <SelectItem value="primary">Theme Primary</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Card Display Options */}
-        <div className="pt-3 border-t space-y-3">
-          <h4 className="font-medium text-sm">Card Display</h4>
-          <div className="flex items-center gap-3">
-            <Switch
-              id="show-titles"
-              checked={content.showItemTitles ?? true}
-              onCheckedChange={(checked) =>
-                onChange({ ...content, showItemTitles: checked })
-              }
-              disabled={disabled}
-            />
-            <Label htmlFor="show-titles" className="cursor-pointer">
-              Show titles
-            </Label>
-          </div>
-          <div className="flex items-center gap-3">
-            <Switch
-              id="show-descriptions"
-              checked={content.showItemDescriptions ?? true}
-              onCheckedChange={(checked) =>
-                onChange({ ...content, showItemDescriptions: checked })
-              }
-              disabled={disabled}
-            />
-            <Label htmlFor="show-descriptions" className="cursor-pointer">
-              Show descriptions
-            </Label>
-          </div>
-        </div>
-      </div>
-
-      {/* Items List */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <Label>Items ({content.items.length})</Label>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleAddItem}
-            disabled={disabled}
-          >
-            <Plus className="h-4 w-4 mr-1" />
-            Add Item
-          </Button>
-        </div>
-
-        {content.items.length === 0 ? (
-          <div className="p-8 border-2 border-dashed rounded-lg text-center text-muted-foreground">
-            <p className="text-sm">No items yet.</p>
-            <p className="text-xs mt-1">
-              Add items to display in your product grid.
-            </p>
-          </div>
-        ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-            modifiers={[restrictToVerticalAxis]}
-          >
-            <SortableContext
-              items={content.items.map((i) => i.id)}
-              strategy={verticalListSortingStrategy}
-            >
+      {/* Content Section */}
+      {showContent && (
+        <>
+          {/* Section Header */}
+          <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+            <h4 className="font-medium text-sm">Section Header (optional)</h4>
+            <div className="space-y-3">
               <div className="space-y-2">
-                {content.items.map((item) => (
-                  <SortableItemRow
-                    key={item.id}
-                    item={item}
-                    iconStyle={iconStyle}
-                    onEdit={() => handleEditItem(item.id)}
-                    onDelete={() => handleDeleteItem(item.id)}
-                    disabled={disabled}
-                  />
-                ))}
+                <Label htmlFor="section-title">Title</Label>
+                <Input
+                  id="section-title"
+                  value={content.sectionTitle ?? ""}
+                  onChange={(e) =>
+                    onChange({ ...content, sectionTitle: e.target.value })
+                  }
+                  placeholder="e.g., Our Albums, Products, Portfolio"
+                  disabled={disabled}
+                />
               </div>
-            </SortableContext>
-          </DndContext>
-        )}
-      </div>
-
-      {/* Styling Options (Collapsible) */}
-      <Collapsible>
-        <CollapsibleTrigger asChild>
-          <Button variant="outline" className="w-full justify-between">
-            Advanced Styling Options
-            <span className="text-xs text-muted-foreground">
-              {content.enableStyling ? "Enabled" : "Disabled"}
-            </span>
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent className="pt-4">
-          <div className="space-y-4 p-4 border rounded-lg">
-            <p className="text-sm text-muted-foreground">
-              Advanced styling options coming soon. Enable custom backgrounds,
-              borders, and card styling.
-            </p>
+              <div className="space-y-2">
+                <Label htmlFor="section-subtitle">Subtitle</Label>
+                <Input
+                  id="section-subtitle"
+                  value={content.sectionSubtitle ?? ""}
+                  onChange={(e) =>
+                    onChange({ ...content, sectionSubtitle: e.target.value })
+                  }
+                  placeholder="e.g., Stream on your favorite platform"
+                  disabled={disabled}
+                />
+              </div>
+            </div>
           </div>
-        </CollapsibleContent>
-      </Collapsible>
 
-      {/* Item Editor Dialog */}
+          {/* Items List */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label>Items ({content.items.length})</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleAddItem}
+                disabled={disabled}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                Add Item
+              </Button>
+            </div>
+
+            {content.items.length === 0 ? (
+              <div className="p-8 border-2 border-dashed rounded-lg text-center text-muted-foreground">
+                <p className="text-sm">No items yet.</p>
+                <p className="text-xs mt-1">
+                  Add items to display in your product grid.
+                </p>
+              </div>
+            ) : (
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                modifiers={[restrictToVerticalAxis]}
+              >
+                <SortableContext
+                  items={content.items.map((i) => i.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-2">
+                    {content.items.map((item) => (
+                      <SortableItemRow
+                        key={item.id}
+                        item={item}
+                        iconStyle={iconStyle}
+                        onEdit={() => handleEditItem(item.id)}
+                        onDelete={() => handleDeleteItem(item.id)}
+                        disabled={disabled}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* Layout Section */}
+      {showLayout && (
+        <>
+          {/* Layout Settings */}
+          <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+            <h4 className="font-medium text-sm">Layout Settings</h4>
+            <div className="grid grid-cols-3 gap-4">
+              {/* Columns */}
+              <div className="space-y-2">
+                <Label>Columns</Label>
+                <Select
+                  value={String(columns)}
+                  onValueChange={(value) =>
+                    onChange({
+                      ...content,
+                      columns:
+                        value === "auto"
+                          ? "auto"
+                          : (parseInt(value) as ProductGridColumns),
+                    })
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                    <SelectItem value="auto">Auto</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Gap */}
+              <div className="space-y-2">
+                <Label>Spacing</Label>
+                <Select
+                  value={gap}
+                  onValueChange={(value: ProductGridGap) =>
+                    onChange({ ...content, gap: value })
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="small">Small</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="large">Large</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Icon Style */}
+              <div className="space-y-2">
+                <Label>Icon Style</Label>
+                <Select
+                  value={iconStyle}
+                  onValueChange={(value: ProductIconStyle) =>
+                    onChange({ ...content, iconStyle: value })
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="brand">Brand Colors</SelectItem>
+                    <SelectItem value="monochrome">Monochrome</SelectItem>
+                    <SelectItem value="primary">Theme Primary</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Card Display Options */}
+            <div className="pt-3 border-t space-y-3">
+              <h4 className="font-medium text-sm">Card Display</h4>
+              <div className="flex items-center gap-3">
+                <Switch
+                  id="show-titles"
+                  checked={content.showItemTitles ?? true}
+                  onCheckedChange={(checked) =>
+                    onChange({ ...content, showItemTitles: checked })
+                  }
+                  disabled={disabled}
+                />
+                <Label htmlFor="show-titles" className="cursor-pointer">
+                  Show titles
+                </Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Switch
+                  id="show-descriptions"
+                  checked={content.showItemDescriptions ?? true}
+                  onCheckedChange={(checked) =>
+                    onChange({ ...content, showItemDescriptions: checked })
+                  }
+                  disabled={disabled}
+                />
+                <Label htmlFor="show-descriptions" className="cursor-pointer">
+                  Show descriptions
+                </Label>
+              </div>
+            </div>
+          </div>
+
+          {/* Styling Options (Collapsible) */}
+          <Collapsible>
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" className="w-full justify-between">
+                Advanced Styling Options
+                <span className="text-xs text-muted-foreground">
+                  {content.enableStyling ? "Enabled" : "Disabled"}
+                </span>
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-4">
+              <div className="space-y-4 p-4 border rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  Advanced styling options coming soon. Enable custom backgrounds,
+                  borders, and card styling.
+                </p>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </>
+      )}
+
+      {/* Item Editor Dialog - Always rendered for modal functionality */}
       <ItemEditorDialog
         item={editingItem}
         open={showItemModal}

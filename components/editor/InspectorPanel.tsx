@@ -9,6 +9,10 @@ import { BlockIcon } from "./BlockIcon";
 import { ContentTab } from "./inspector/ContentTab";
 import { DesignTab } from "./inspector/DesignTab";
 import { AdvancedTab } from "./inspector/AdvancedTab";
+import {
+  EditorModeToggle,
+  type EditorMode,
+} from "./inspector/EditorModeToggle";
 import { SaveIndicator } from "./SaveIndicator";
 import { UndoRedoButtons } from "./UndoRedoButtons";
 import { useHistory } from "@/hooks/useHistory";
@@ -19,6 +23,8 @@ import type { SectionContent } from "@/lib/section-types";
 import { BLOCK_TYPE_INFO } from "@/lib/section-types";
 
 type InspectorTab = "content" | "design" | "advanced";
+
+const EDITOR_MODE_STORAGE_KEY = "editor-mode-preference";
 
 interface InspectorPanelProps {
   section: Section | null;
@@ -32,6 +38,21 @@ export function InspectorPanel({
   onClose,
 }: InspectorPanelProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<InspectorTab>("content");
+
+  // Editor mode state with localStorage persistence
+  const [editorMode, setEditorMode] = useState<EditorMode>(() => {
+    if (typeof window === "undefined") return "all";
+    const stored = localStorage.getItem(EDITOR_MODE_STORAGE_KEY);
+    if (stored === "content" || stored === "layout" || stored === "all") {
+      return stored;
+    }
+    return "all";
+  });
+
+  const handleEditorModeChange = (mode: EditorMode): void => {
+    setEditorMode(mode);
+    localStorage.setItem(EDITOR_MODE_STORAGE_KEY, mode);
+  };
 
   // Track section ID to reset state when selection changes
   const currentSectionIdRef = useRef<string | null>(null);
@@ -187,6 +208,17 @@ export function InspectorPanel({
         />
       </div>
 
+      {/* Editor Mode Toggle - only show when Content tab is active */}
+      {activeTab === "content" && (
+        <div className="px-4 py-2 border-b bg-muted/20">
+          <EditorModeToggle
+            mode={editorMode}
+            onChange={handleEditorModeChange}
+            disabled={isSaving}
+          />
+        </div>
+      )}
+
       {/* Tabs */}
       <Tabs
         value={activeTab}
@@ -217,6 +249,7 @@ export function InspectorPanel({
                   onChange={handleContentChange}
                   siteId={siteId}
                   disabled={isSaving}
+                  editorMode={editorMode}
                 />
               </TabsContent>
               <TabsContent value="design" className="mt-0 focus-visible:outline-none">

@@ -1,5 +1,6 @@
 "use client";
 
+import type { EditorMode } from "./EditorModeToggle";
 import { HeaderEditor } from "../blocks/HeaderEditor";
 import { HeadingEditor } from "../blocks/HeadingEditor";
 import { HeroEditor } from "../blocks/HeroEditor";
@@ -27,6 +28,7 @@ interface ContentTabProps {
   onChange: (content: SectionContent) => void;
   siteId: string;
   disabled?: boolean;
+  editorMode: EditorMode;
 }
 
 export function ContentTab({
@@ -35,12 +37,14 @@ export function ContentTab({
   onChange,
   siteId,
   disabled,
+  editorMode,
 }: ContentTabProps): React.ReactElement {
   const editorProps = {
     content,
     onChange,
     disabled,
     siteId,
+    editorMode,
   };
 
   // Route to the appropriate block editor based on block_type

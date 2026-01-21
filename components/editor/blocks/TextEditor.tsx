@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Label } from "@/components/ui/label";
 import { StylingControls } from "@/components/editor/StylingControls";
 import type { TextContent } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 // Dynamically import TiptapEditor to avoid SSR issues with ProseMirror
 const TiptapEditor = dynamic(
@@ -27,6 +28,7 @@ interface TextEditorProps {
   onChange: (content: TextContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 export function TextEditor({
@@ -34,7 +36,11 @@ export function TextEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: TextEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
+
   const handleBodyChange = (html: string): void => {
     onChange({ ...content, body: html });
   };
@@ -42,25 +48,29 @@ export function TextEditor({
   return (
     <div className="space-y-6">
       {/* Content Editor */}
-      <div className="space-y-2">
-        <Label>Content</Label>
-        <TiptapEditor
-          value={content.body}
-          onChange={handleBodyChange}
-          placeholder="Enter your text content..."
-          disabled={disabled}
-        />
-      </div>
+      {showContent && (
+        <div className="space-y-2">
+          <Label>Content</Label>
+          <TiptapEditor
+            value={content.body}
+            onChange={handleBodyChange}
+            placeholder="Enter your text content..."
+            disabled={disabled}
+          />
+        </div>
+      )}
 
       {/* Styling Section */}
-      <StylingControls
-        content={content}
-        onChange={onChange}
-        disabled={disabled}
-        siteId={siteId}
-        showLayoutPanel
-        textSizeDescription="Scales all text including headings proportionally."
-      />
+      {showLayout && (
+        <StylingControls
+          content={content}
+          onChange={onChange}
+          disabled={disabled}
+          siteId={siteId}
+          showLayoutPanel
+          textSizeDescription="Scales all text including headings proportionally."
+        />
+      )}
     </div>
   );
 }

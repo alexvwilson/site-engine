@@ -28,6 +28,7 @@ import type {
   TextBorderRadius,
   TextColorMode,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 // Dynamically import TiptapEditor to avoid SSR issues with ProseMirror
 const TiptapEditor = dynamic(
@@ -51,6 +52,7 @@ interface ImageEditorProps {
   onChange: (content: ImageContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 export function ImageEditor({
@@ -58,7 +60,11 @@ export function ImageEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: ImageEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
+
   const [stylingOpen, setStylingOpen] = useState(false);
   const [themePrimaryColor, setThemePrimaryColor] = useState("#3B82F6");
 
@@ -94,131 +100,142 @@ export function ImageEditor({
 
   return (
     <div className="space-y-6">
-      {/* Image Upload */}
-      <div className="space-y-2">
-        <Label>Image</Label>
-        <ImageUpload
-          value={content.src}
-          onChange={(url) => updateField("src", url)}
-          siteId={siteId}
-          disabled={disabled}
-        />
-      </div>
+      {/* Content Section */}
+      {showContent && (
+        <>
+          {/* Image Upload */}
+          <div className="space-y-2">
+            <Label>Image</Label>
+            <ImageUpload
+              value={content.src}
+              onChange={(url) => updateField("src", url)}
+              siteId={siteId}
+              disabled={disabled}
+            />
+          </div>
 
-      {/* Alt Text */}
-      <div className="space-y-2">
-        <Label htmlFor="image-alt">Alt Text</Label>
-        <Input
-          id="image-alt"
-          value={content.alt}
-          onChange={(e) => updateField("alt", e.target.value)}
-          placeholder="Describe the image for accessibility"
-          disabled={disabled}
-        />
-      </div>
+          {/* Alt Text */}
+          <div className="space-y-2">
+            <Label htmlFor="image-alt">Alt Text</Label>
+            <Input
+              id="image-alt"
+              value={content.alt}
+              onChange={(e) => updateField("alt", e.target.value)}
+              placeholder="Describe the image for accessibility"
+              disabled={disabled}
+            />
+          </div>
 
-      {/* Image Width */}
-      <div className="space-y-2">
-        <Label>Image Width</Label>
-        <Select
-          value={String(content.imageWidth ?? 50)}
-          onValueChange={(v) => updateField("imageWidth", Number(v) as ImageWidth)}
-          disabled={disabled}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="10">10% - Very Small</SelectItem>
-            <SelectItem value="25">25% - Small</SelectItem>
-            <SelectItem value="50">50% - Medium</SelectItem>
-            <SelectItem value="75">75% - Large</SelectItem>
-            <SelectItem value="100">100% - Full Width</SelectItem>
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground">
-          Controls the width of the image section relative to the page.
-        </p>
-      </div>
+          {/* Caption */}
+          <div className="space-y-2">
+            <Label htmlFor="image-caption">Caption (optional)</Label>
+            <Input
+              id="image-caption"
+              value={content.caption ?? ""}
+              onChange={(e) => updateField("caption", e.target.value)}
+              placeholder="Brief caption below the image"
+              disabled={disabled}
+            />
+          </div>
 
-      {/* Layout */}
-      <div className="space-y-2">
-        <Label>Layout</Label>
-        <Select
-          value={content.layout ?? "image-only"}
-          onValueChange={(v) => updateField("layout", v as ImageLayout)}
-          disabled={disabled}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="image-only">Image Only</SelectItem>
-            <SelectItem value="image-left">Image Left + Text Right</SelectItem>
-            <SelectItem value="image-right">Image Right + Text Left</SelectItem>
-            <SelectItem value="image-top">Image Top + Text Below</SelectItem>
-            <SelectItem value="image-bottom">Text Top + Image Below</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Text Width - Only for side-by-side layouts */}
-      {isSideBySide && (
-        <div className="space-y-2">
-          <Label>Text Width</Label>
-          <Select
-            value={String(content.textWidth ?? 50)}
-            onValueChange={(v) => updateField("textWidth", Number(v) as ImageWidth)}
-            disabled={disabled}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10% - Very Small</SelectItem>
-              <SelectItem value="25">25% - Small</SelectItem>
-              <SelectItem value="50">50% - Medium</SelectItem>
-              <SelectItem value="75">75% - Large</SelectItem>
-              <SelectItem value="100">100% - Full Width</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">
-            Image ({content.imageWidth ?? 50}%) + Text ({content.textWidth ?? 50}%) = {totalWidth}%
-          </p>
-          {exceedsMaxWidth && (
-            <p className="text-xs text-destructive">
-              ⚠️ Total exceeds 100%. Content may wrap or overflow.
-            </p>
+          {/* Description - Only shown when layout includes text */}
+          {showsText && (
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <TiptapEditor
+                value={content.description ?? ""}
+                onChange={(html) => updateField("description", html)}
+                placeholder="Add a detailed description..."
+                disabled={disabled}
+              />
+            </div>
           )}
-        </div>
+        </>
       )}
 
-      {/* Caption */}
-      <div className="space-y-2">
-        <Label htmlFor="image-caption">Caption (optional)</Label>
-        <Input
-          id="image-caption"
-          value={content.caption ?? ""}
-          onChange={(e) => updateField("caption", e.target.value)}
-          placeholder="Brief caption below the image"
-          disabled={disabled}
-        />
-      </div>
+      {/* Layout Section */}
+      {showLayout && (
+        <>
+          {/* Image Width */}
+          <div className="space-y-2">
+            <Label>Image Width</Label>
+            <Select
+              value={String(content.imageWidth ?? 50)}
+              onValueChange={(v) => updateField("imageWidth", Number(v) as ImageWidth)}
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10% - Very Small</SelectItem>
+                <SelectItem value="25">25% - Small</SelectItem>
+                <SelectItem value="50">50% - Medium</SelectItem>
+                <SelectItem value="75">75% - Large</SelectItem>
+                <SelectItem value="100">100% - Full Width</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Controls the width of the image section relative to the page.
+            </p>
+          </div>
 
-      {/* Description - Only shown when layout includes text */}
-      {showsText && (
-        <div className="space-y-2">
-          <Label>Description</Label>
-          <TiptapEditor
-            value={content.description ?? ""}
-            onChange={(html) => updateField("description", html)}
-            placeholder="Add a detailed description..."
-            disabled={disabled}
-          />
-        </div>
+          {/* Layout */}
+          <div className="space-y-2">
+            <Label>Layout</Label>
+            <Select
+              value={content.layout ?? "image-only"}
+              onValueChange={(v) => updateField("layout", v as ImageLayout)}
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="image-only">Image Only</SelectItem>
+                <SelectItem value="image-left">Image Left + Text Right</SelectItem>
+                <SelectItem value="image-right">Image Right + Text Left</SelectItem>
+                <SelectItem value="image-top">Image Top + Text Below</SelectItem>
+                <SelectItem value="image-bottom">Text Top + Image Below</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Text Width - Only for side-by-side layouts */}
+          {isSideBySide && (
+            <div className="space-y-2">
+              <Label>Text Width</Label>
+              <Select
+                value={String(content.textWidth ?? 50)}
+                onValueChange={(v) => updateField("textWidth", Number(v) as ImageWidth)}
+                disabled={disabled}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10% - Very Small</SelectItem>
+                  <SelectItem value="25">25% - Small</SelectItem>
+                  <SelectItem value="50">50% - Medium</SelectItem>
+                  <SelectItem value="75">75% - Large</SelectItem>
+                  <SelectItem value="100">100% - Full Width</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Image ({content.imageWidth ?? 50}%) + Text ({content.textWidth ?? 50}%) = {totalWidth}%
+              </p>
+              {exceedsMaxWidth && (
+                <p className="text-xs text-destructive">
+                  Warning: Total exceeds 100%. Content may wrap or overflow.
+                </p>
+              )}
+            </div>
+          )}
+        </>
       )}
 
-      {/* Styling Section (Collapsible with Enable Toggle) */}
+      {/* Styling Section (Collapsible with Enable Toggle) - Layout */}
+      {showLayout && (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Collapsible
@@ -438,6 +455,7 @@ export function ImageEditor({
           </CollapsibleContent>
         </Collapsible>
       </div>
+      )}
     </div>
   );
 }

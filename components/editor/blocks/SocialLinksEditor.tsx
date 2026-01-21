@@ -28,12 +28,14 @@ import type {
   TextBorderRadius,
   TextColorMode,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 interface SocialLinksEditorProps {
   content: SocialLinksContent;
   onChange: (content: SocialLinksContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 export function SocialLinksEditor({
@@ -41,7 +43,10 @@ export function SocialLinksEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: SocialLinksEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
   // Ensure content has all required fields with defaults
   const content: SocialLinksContent = {
     title: "",
@@ -85,119 +90,126 @@ export function SocialLinksEditor({
 
   return (
     <div className="space-y-6">
-      {/* Info Section */}
-      <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
-        <LinkIcon className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
-        <div className="text-sm text-muted-foreground">
-          <p>
-            This block displays your site&apos;s social links. Configure your social
-            profiles in <strong>Site Settings</strong> to add or edit links.
-          </p>
-        </div>
-      </div>
+      {/* Content Section */}
+      {showContent && (
+        <>
+          {/* Info Section */}
+          <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+            <LinkIcon className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-muted-foreground">
+              <p>
+                This block displays your site&apos;s social links. Configure your social
+                profiles in <strong>Site Settings</strong> to add or edit links.
+              </p>
+            </div>
+          </div>
 
-      {/* Title & Subtitle Section */}
-      <div className="space-y-4">
-        <Label className="text-xs uppercase text-muted-foreground tracking-wide">
-          Content
-        </Label>
+          {/* Title & Subtitle Section */}
+          <div className="space-y-4">
+            <Label className="text-xs uppercase text-muted-foreground tracking-wide">
+              Content
+            </Label>
 
-        <div className="space-y-2">
-          <Label htmlFor="title">Section Title</Label>
-          <Input
-            id="title"
-            value={content.title ?? ""}
-            onChange={(e) => updateField("title", e.target.value)}
-            placeholder="e.g., Connect With Us"
-            disabled={disabled}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="title">Section Title</Label>
+              <Input
+                id="title"
+                value={content.title ?? ""}
+                onChange={(e) => updateField("title", e.target.value)}
+                placeholder="e.g., Connect With Us"
+                disabled={disabled}
+              />
+            </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="subtitle">Subtitle</Label>
-          <Textarea
-            id="subtitle"
-            value={content.subtitle ?? ""}
-            onChange={(e) => updateField("subtitle", e.target.value)}
-            placeholder="e.g., Follow us on social media for updates and news"
-            rows={2}
-            disabled={disabled}
-          />
-        </div>
-      </div>
+            <div className="space-y-2">
+              <Label htmlFor="subtitle">Subtitle</Label>
+              <Textarea
+                id="subtitle"
+                value={content.subtitle ?? ""}
+                onChange={(e) => updateField("subtitle", e.target.value)}
+                placeholder="e.g., Follow us on social media for updates and news"
+                rows={2}
+                disabled={disabled}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Layout Section */}
-      <div className="space-y-4">
-        <Label className="text-xs uppercase text-muted-foreground tracking-wide">
-          Layout
-        </Label>
+      {showLayout && (
+        <>
+          <div className="space-y-4">
+            <Label className="text-xs uppercase text-muted-foreground tracking-wide">
+              Layout
+            </Label>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Alignment</Label>
-            <Select
-              value={content.alignment ?? "center"}
-              onValueChange={(v) =>
-                updateField("alignment", v as "left" | "center" | "right")
-              }
-              disabled={disabled}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="left">Left</SelectItem>
-                <SelectItem value="center">Center</SelectItem>
-                <SelectItem value="right">Right</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Alignment</Label>
+                <Select
+                  value={content.alignment ?? "center"}
+                  onValueChange={(v) =>
+                    updateField("alignment", v as "left" | "center" | "right")
+                  }
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="left">Left</SelectItem>
+                    <SelectItem value="center">Center</SelectItem>
+                    <SelectItem value="right">Right</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Icon Size</Label>
+                <Select
+                  value={content.size ?? "medium"}
+                  onValueChange={(v) => updateField("size", v as SocialIconSize)}
+                  disabled={disabled}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="small">Small (20px)</SelectItem>
+                    <SelectItem value="medium">Medium (24px)</SelectItem>
+                    <SelectItem value="large">Large (32px)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Icon Style</Label>
+              <Select
+                value={content.iconStyle ?? "site-default"}
+                onValueChange={(v) =>
+                  updateField("iconStyle", v === "site-default" ? undefined : v as SocialIconStyle)
+                }
+                disabled={disabled}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Use Site Default" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="site-default">Use Site Default</SelectItem>
+                  <SelectItem value="brand">Brand Colors</SelectItem>
+                  <SelectItem value="monochrome">Monochrome</SelectItem>
+                  <SelectItem value="primary">Theme Primary</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Override the site-level icon style for this block only.
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label>Icon Size</Label>
-            <Select
-              value={content.size ?? "medium"}
-              onValueChange={(v) => updateField("size", v as SocialIconSize)}
-              disabled={disabled}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="small">Small (20px)</SelectItem>
-                <SelectItem value="medium">Medium (24px)</SelectItem>
-                <SelectItem value="large">Large (32px)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Icon Style</Label>
-          <Select
-            value={content.iconStyle ?? "site-default"}
-            onValueChange={(v) =>
-              updateField("iconStyle", v === "site-default" ? undefined : v as SocialIconStyle)
-            }
-            disabled={disabled}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Use Site Default" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="site-default">Use Site Default</SelectItem>
-              <SelectItem value="brand">Brand Colors</SelectItem>
-              <SelectItem value="monochrome">Monochrome</SelectItem>
-              <SelectItem value="primary">Theme Primary</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">
-            Override the site-level icon style for this block only.
-          </p>
-        </div>
-      </div>
-
-      {/* Styling Section */}
+          {/* Styling Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Collapsible
@@ -494,6 +506,8 @@ export function SocialLinksEditor({
           </CollapsibleContent>
         </Collapsible>
       </div>
+        </>
+      )}
     </div>
   );
 }

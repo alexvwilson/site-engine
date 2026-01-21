@@ -14,12 +14,14 @@ import type {
   TestimonialsContent,
   Testimonial,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 interface TestimonialsEditorProps {
   content: TestimonialsContent;
   onChange: (content: TestimonialsContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 const DEFAULT_TESTIMONIAL: Testimonial = {
@@ -34,7 +36,10 @@ export function TestimonialsEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: TestimonialsEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
   const handleTestimonialChange = (
     index: number,
     field: keyof Testimonial,
@@ -66,8 +71,11 @@ export function TestimonialsEditor({
 
   return (
     <div className="space-y-6">
-      {/* Testimonial List */}
-      {content.testimonials.map((testimonial, index) => (
+      {/* Content Section */}
+      {showContent && (
+        <>
+          {/* Testimonial List */}
+          {content.testimonials.map((testimonial, index) => (
         <div key={index} className="border rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
@@ -140,41 +148,45 @@ export function TestimonialsEditor({
         </div>
       ))}
 
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={handleAddTestimonial}
-        disabled={disabled}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Testimonial
-      </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleAddTestimonial}
+            disabled={disabled}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Testimonial
+          </Button>
+        </>
+      )}
 
       {/* Styling Section */}
-      <StylingControls
-        content={content}
-        onChange={onChange}
-        disabled={disabled}
-        siteId={siteId}
-        textSizeDescription="Scales quotes, author names, and roles proportionally."
-      >
-        {/* Card Background Panel */}
-        <CardBackgroundPanel
-          title="Testimonial Cards"
-          showCardBackground={content.showCardBackground ?? true}
-          cardBackgroundColor={content.cardBackgroundColor}
-          onShowCardBackgroundChange={(checked) =>
-            updateField("showCardBackground", checked)
-          }
-          onCardBackgroundColorChange={(color) =>
-            updateField("cardBackgroundColor", color)
-          }
-          onCardBackgroundColorReset={() => updateField("cardBackgroundColor", "")}
+      {showLayout && (
+        <StylingControls
+          content={content}
+          onChange={onChange}
           disabled={disabled}
-          showDescription="Cards have solid backgrounds (text uses theme colors)"
-          hideDescription="Cards are transparent (text adapts to section background)"
-        />
-      </StylingControls>
+          siteId={siteId}
+          textSizeDescription="Scales quotes, author names, and roles proportionally."
+        >
+          {/* Card Background Panel */}
+          <CardBackgroundPanel
+            title="Testimonial Cards"
+            showCardBackground={content.showCardBackground ?? true}
+            cardBackgroundColor={content.cardBackgroundColor}
+            onShowCardBackgroundChange={(checked) =>
+              updateField("showCardBackground", checked)
+            }
+            onCardBackgroundColorChange={(color) =>
+              updateField("cardBackgroundColor", color)
+            }
+            onCardBackgroundColorReset={() => updateField("cardBackgroundColor", "")}
+            disabled={disabled}
+            showDescription="Cards have solid backgrounds (text uses theme colors)"
+            hideDescription="Cards are transparent (text adapts to section background)"
+          />
+        </StylingControls>
+      )}
     </div>
   );
 }

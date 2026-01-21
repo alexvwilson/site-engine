@@ -23,12 +23,14 @@ import type {
   Feature,
   FeatureButtonVariant,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 interface FeaturesEditorProps {
   content: FeaturesContent;
   onChange: (content: FeaturesContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 const DEFAULT_FEATURE: Feature = {
@@ -42,7 +44,10 @@ export function FeaturesEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: FeaturesEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
   const handleFeatureChange = (
     index: number,
     field: keyof Feature,
@@ -74,33 +79,36 @@ export function FeaturesEditor({
 
   return (
     <div className="space-y-6">
-      {/* Section Header */}
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="section-title">Section Title (optional)</Label>
-          <Input
-            id="section-title"
-            value={content.sectionTitle || ""}
-            onChange={(e) => updateField("sectionTitle", e.target.value)}
-            placeholder="Our Features"
-            disabled={disabled}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="section-subtitle">Section Subtitle (optional)</Label>
-          <Textarea
-            id="section-subtitle"
-            value={content.sectionSubtitle || ""}
-            onChange={(e) => updateField("sectionSubtitle", e.target.value)}
-            placeholder="A brief description of what makes us special"
-            rows={2}
-            disabled={disabled}
-          />
-        </div>
-      </div>
+      {/* Content Section */}
+      {showContent && (
+        <>
+          {/* Section Header */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="section-title">Section Title (optional)</Label>
+              <Input
+                id="section-title"
+                value={content.sectionTitle || ""}
+                onChange={(e) => updateField("sectionTitle", e.target.value)}
+                placeholder="Our Features"
+                disabled={disabled}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="section-subtitle">Section Subtitle (optional)</Label>
+              <Textarea
+                id="section-subtitle"
+                value={content.sectionSubtitle || ""}
+                onChange={(e) => updateField("sectionSubtitle", e.target.value)}
+                placeholder="A brief description of what makes us special"
+                rows={2}
+                disabled={disabled}
+              />
+            </div>
+          </div>
 
-      {/* Feature List */}
-      {content.features.map((feature, index) => (
+          {/* Feature List */}
+          {content.features.map((feature, index) => (
         <div key={index} className="border rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
@@ -239,41 +247,45 @@ export function FeaturesEditor({
         </div>
       ))}
 
-      <Button
-        variant="outline"
-        className="w-full"
-        onClick={handleAddFeature}
-        disabled={disabled}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Feature
-      </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleAddFeature}
+            disabled={disabled}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Feature
+          </Button>
+        </>
+      )}
 
       {/* Styling Section */}
-      <StylingControls
-        content={content}
-        onChange={onChange}
-        disabled={disabled}
-        siteId={siteId}
-        textSizeDescription="Scales feature titles and descriptions proportionally."
-      >
-        {/* Card Background Panel */}
-        <CardBackgroundPanel
-          title="Feature Cards"
-          showCardBackground={content.showCardBackground ?? true}
-          cardBackgroundColor={content.cardBackgroundColor}
-          onShowCardBackgroundChange={(checked) =>
-            updateField("showCardBackground", checked)
-          }
-          onCardBackgroundColorChange={(color) =>
-            updateField("cardBackgroundColor", color)
-          }
-          onCardBackgroundColorReset={() => updateField("cardBackgroundColor", "")}
+      {showLayout && (
+        <StylingControls
+          content={content}
+          onChange={onChange}
           disabled={disabled}
-          showDescription="Cards have solid backgrounds (text uses theme colors)"
-          hideDescription="Cards are transparent (text adapts to section background)"
-        />
-      </StylingControls>
+          siteId={siteId}
+          textSizeDescription="Scales feature titles and descriptions proportionally."
+        >
+          {/* Card Background Panel */}
+          <CardBackgroundPanel
+            title="Feature Cards"
+            showCardBackground={content.showCardBackground ?? true}
+            cardBackgroundColor={content.cardBackgroundColor}
+            onShowCardBackgroundChange={(checked) =>
+              updateField("showCardBackground", checked)
+            }
+            onCardBackgroundColorChange={(color) =>
+              updateField("cardBackgroundColor", color)
+            }
+            onCardBackgroundColorReset={() => updateField("cardBackgroundColor", "")}
+            disabled={disabled}
+            showDescription="Cards have solid backgrounds (text uses theme colors)"
+            hideDescription="Cards are transparent (text adapts to section background)"
+          />
+        </StylingControls>
+      )}
     </div>
   );
 }

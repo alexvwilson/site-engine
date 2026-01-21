@@ -18,12 +18,14 @@ import type {
   ContactContent,
   ContactVariant,
 } from "@/lib/section-types";
+import type { EditorMode } from "../inspector/EditorModeToggle";
 
 interface ContactEditorProps {
   content: ContactContent;
   onChange: (content: ContactContent) => void;
   disabled?: boolean;
   siteId: string;
+  editorMode?: EditorMode;
 }
 
 export function ContactEditor({
@@ -31,7 +33,11 @@ export function ContactEditor({
   onChange,
   disabled,
   siteId,
+  editorMode = "all",
 }: ContactEditorProps) {
+  const showContent = editorMode === "all" || editorMode === "content";
+  const showLayout = editorMode === "all" || editorMode === "layout";
+
   const handleChange = (
     field: keyof ContactContent,
     value: string | ContactVariant
@@ -52,79 +58,83 @@ export function ContactEditor({
   return (
     <div className="space-y-6">
       {/* Content Section */}
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="contact-heading">Heading</Label>
-          <Input
-            id="contact-heading"
-            value={content.heading}
-            onChange={(e) => handleChange("heading", e.target.value)}
-            placeholder="Get in Touch"
-            disabled={disabled}
-          />
-        </div>
+      {showContent && (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="contact-heading">Heading</Label>
+            <Input
+              id="contact-heading"
+              value={content.heading}
+              onChange={(e) => handleChange("heading", e.target.value)}
+              placeholder="Get in Touch"
+              disabled={disabled}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="contact-description">Description</Label>
-          <Textarea
-            id="contact-description"
-            value={content.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-            placeholder="Let visitors know how to reach you"
-            rows={2}
-            disabled={disabled}
-          />
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="contact-description">Description</Label>
+            <Textarea
+              id="contact-description"
+              value={content.description}
+              onChange={(e) => handleChange("description", e.target.value)}
+              placeholder="Let visitors know how to reach you"
+              rows={2}
+              disabled={disabled}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="contact-variant">Form Type</Label>
-          <Select
-            value={currentVariant}
-            onValueChange={(value: ContactVariant) =>
-              handleChange("variant", value)
-            }
-            disabled={disabled}
-          >
-            <SelectTrigger id="contact-variant">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="simple">Simple (Name, Email, Message)</SelectItem>
-              <SelectItem value="detailed">
-                Detailed (+ Company, Phone)
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">
-            {currentVariant === "detailed"
-              ? "Shows: Name, Email, Company, Phone, Message"
-              : "Shows: Name, Email, Message"}
-          </p>
+          <div className="space-y-2">
+            <Label htmlFor="contact-variant">Form Type</Label>
+            <Select
+              value={currentVariant}
+              onValueChange={(value: ContactVariant) =>
+                handleChange("variant", value)
+              }
+              disabled={disabled}
+            >
+              <SelectTrigger id="contact-variant">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="simple">Simple (Name, Email, Message)</SelectItem>
+                <SelectItem value="detailed">
+                  Detailed (+ Company, Phone)
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              {currentVariant === "detailed"
+                ? "Shows: Name, Email, Company, Phone, Message"
+                : "Shows: Name, Email, Message"}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Styling Section */}
-      <StylingControls
-        content={content}
-        onChange={onChange}
-        disabled={disabled}
-        siteId={siteId}
-        textSizeDescription="Scales heading, description, and labels proportionally."
-      >
-        {/* Form Background Panel */}
-        <FormBackgroundPanel
-          showFormBackground={content.showFormBackground ?? true}
-          formBackgroundColor={content.formBackgroundColor}
-          onShowFormBackgroundChange={(checked) =>
-            updateField("showFormBackground", checked)
-          }
-          onFormBackgroundColorChange={(color) =>
-            updateField("formBackgroundColor", color)
-          }
-          onFormBackgroundColorReset={() => updateField("formBackgroundColor", "")}
+      {showLayout && (
+        <StylingControls
+          content={content}
+          onChange={onChange}
           disabled={disabled}
-        />
-      </StylingControls>
+          siteId={siteId}
+          textSizeDescription="Scales heading, description, and labels proportionally."
+        >
+          {/* Form Background Panel */}
+          <FormBackgroundPanel
+            showFormBackground={content.showFormBackground ?? true}
+            formBackgroundColor={content.formBackgroundColor}
+            onShowFormBackgroundChange={(checked) =>
+              updateField("showFormBackground", checked)
+            }
+            onFormBackgroundColorChange={(color) =>
+              updateField("formBackgroundColor", color)
+            }
+            onFormBackgroundColorReset={() => updateField("formBackgroundColor", "")}
+            disabled={disabled}
+          />
+        </StylingControls>
+      )}
     </div>
   );
 }
