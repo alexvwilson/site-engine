@@ -4,8 +4,7 @@ import type { EditorMode } from "./EditorModeToggle";
 import { HeaderEditor } from "../blocks/HeaderEditor";
 import { HeadingEditor } from "../blocks/HeadingEditor";
 import { HeroEditor } from "../blocks/HeroEditor";
-import { TextEditor } from "../blocks/TextEditor";
-import { MarkdownEditor } from "../blocks/MarkdownEditor";
+import { RichTextEditor } from "../blocks/RichTextEditor";
 import { ImageEditor } from "../blocks/ImageEditor";
 import { GalleryEditor } from "../blocks/GalleryEditor";
 import { FeaturesEditor } from "../blocks/FeaturesEditor";
@@ -16,7 +15,6 @@ import { FooterEditor } from "../blocks/FooterEditor";
 import { EmbedEditor } from "../blocks/EmbedEditor";
 import { SocialLinksEditor } from "../blocks/SocialLinksEditor";
 import { ProductGridEditor } from "../blocks/ProductGridEditor";
-import { ArticleEditor } from "../blocks/ArticleEditor";
 import { BlogFeaturedEditor } from "../BlogFeaturedEditor";
 import { BlogGridEditor } from "../BlogGridEditor";
 import type { Section } from "@/lib/drizzle/schema/sections";
@@ -72,18 +70,11 @@ export function ContentTab({
           content={content as Parameters<typeof HeroEditor>[0]["content"]}
         />
       );
-    case "text":
+    case "richtext":
       return (
-        <TextEditor
+        <RichTextEditor
           {...editorProps}
-          content={content as Parameters<typeof TextEditor>[0]["content"]}
-        />
-      );
-    case "markdown":
-      return (
-        <MarkdownEditor
-          {...editorProps}
-          content={content as Parameters<typeof MarkdownEditor>[0]["content"]}
+          content={content as Parameters<typeof RichTextEditor>[0]["content"]}
         />
       );
     case "image":
@@ -170,13 +161,6 @@ export function ContentTab({
         <ProductGridEditor
           {...editorProps}
           content={content as Parameters<typeof ProductGridEditor>[0]["content"]}
-        />
-      );
-    case "article":
-      return (
-        <ArticleEditor
-          {...editorProps}
-          content={content as Parameters<typeof ArticleEditor>[0]["content"]}
         />
       );
     default:

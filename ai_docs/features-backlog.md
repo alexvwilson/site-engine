@@ -123,36 +123,28 @@ _No P0 items currently_
 
 ---
 
-### 73. Primitive Consolidation: RichText
+### 73. Primitive Consolidation: RichText ✅ COMPLETED (2026-01-21)
 
 **Problem:** Three block types (`text`, `markdown`, `article`) are essentially the same thing with different input modes. They share 90% of the same styling fields but have separate editors and renderers.
 
-**Solution:**
-- Create unified `RichText` primitive with mode toggle: "visual" | "markdown" | "article"
-- Single `RichTextEditor.tsx` that switches input method based on mode
-- Single `RichTextBlock.tsx` renderer
-- Mapping layer: existing `text`/`markdown`/`article` block_types route to RichText primitive
-- Preserve backward compatibility - no database migration required initially
+**Solution Implemented:**
+- Created unified `richtext` block type with mode: "visual" | "markdown" | "article"
+- Single `RichTextEditor.tsx` with mode tabs and appropriate input for each mode
+- Single `RichTextBlock.tsx` renderer using shared utilities from `lib/richtext-utils.ts`
+- Database migration converted all existing text/markdown/article sections to richtext
+- Old block types removed from picker, old files deleted
+- **Follow-up enhancements:**
+  - Colored mode tabs: Visual (blue), Markdown (green), Article (purple) for visual distinction
+  - Pretty-printed HTML in source view (eye icon) for better readability and editing
 
-**Content Interface:**
-```typescript
-interface RichTextContent extends SectionStyling {
-  mode: "visual" | "markdown" | "article";
-  body: string;  // HTML for visual/article, raw for markdown
-  imageRounding?: TextBorderRadius;  // article mode only
-}
-```
+**Files Created:**
+- `lib/richtext-utils.ts` - Shared rendering utilities
+- `components/editor/blocks/RichTextEditor.tsx` - Unified editor
+- `components/render/blocks/RichTextBlock.tsx` - Unified renderer
 
-**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
+**Code Reduction:** ~566 lines (41% reduction from original 1,368 lines)
 
-**Files to Modify:**
-- `lib/section-types.ts` - Add RichTextContent, keep old types as aliases
-- `components/editor/primitives/RichTextEditor.tsx` - New unified editor
-- `components/render/primitives/RichTextBlock.tsx` - New unified renderer
-- `components/editor/SectionEditor.tsx` - Route old types to new editor
-- `components/render/BlockRenderer.tsx` - Route old types to new renderer
-
-**Complexity:** High (3-5 days)
+**Task Document:** `ai_docs/tasks/075_richtext_primitive_consolidation.md`
 
 ---
 

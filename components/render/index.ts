@@ -2,7 +2,7 @@ export { BlockRenderer } from "./BlockRenderer";
 export { PageRenderer } from "./PageRenderer";
 
 export { HeroBlock } from "./blocks/HeroBlock";
-export { TextBlock } from "./blocks/TextBlock";
+export { RichTextBlock } from "./blocks/RichTextBlock";
 export { ImageBlock } from "./blocks/ImageBlock";
 export { GalleryBlock } from "./blocks/GalleryBlock";
 export { FeaturesBlock } from "./blocks/FeaturesBlock";

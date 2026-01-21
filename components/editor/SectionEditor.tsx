@@ -4,8 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { HeaderEditor } from "./blocks/HeaderEditor";
 import { HeadingEditor } from "./blocks/HeadingEditor";
 import { HeroEditor } from "./blocks/HeroEditor";
-import { TextEditor } from "./blocks/TextEditor";
-import { MarkdownEditor } from "./blocks/MarkdownEditor";
+import { RichTextEditor } from "./blocks/RichTextEditor";
 import { ImageEditor } from "./blocks/ImageEditor";
 import { GalleryEditor } from "./blocks/GalleryEditor";
 import { FeaturesEditor } from "./blocks/FeaturesEditor";
@@ -16,7 +15,6 @@ import { FooterEditor } from "./blocks/FooterEditor";
 import { EmbedEditor } from "./blocks/EmbedEditor";
 import { SocialLinksEditor } from "./blocks/SocialLinksEditor";
 import { ProductGridEditor } from "./blocks/ProductGridEditor";
-import { ArticleEditor } from "./blocks/ArticleEditor";
 import { BlogFeaturedEditor } from "./BlogFeaturedEditor";
 import { BlogGridEditor } from "./BlogGridEditor";
 import { SaveIndicator } from "./SaveIndicator";
@@ -141,11 +139,8 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       {section.block_type === "hero" && (
         <HeroEditor {...editorProps} content={content as Parameters<typeof HeroEditor>[0]["content"]} />
       )}
-      {section.block_type === "text" && (
-        <TextEditor {...editorProps} content={content as Parameters<typeof TextEditor>[0]["content"]} />
-      )}
-      {section.block_type === "markdown" && (
-        <MarkdownEditor {...editorProps} content={content as Parameters<typeof MarkdownEditor>[0]["content"]} />
+      {section.block_type === "richtext" && (
+        <RichTextEditor {...editorProps} content={content as Parameters<typeof RichTextEditor>[0]["content"]} />
       )}
       {section.block_type === "image" && (
         <ImageEditor {...editorProps} content={content as Parameters<typeof ImageEditor>[0]["content"]} />
@@ -186,9 +181,6 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       )}
       {section.block_type === "product_grid" && (
         <ProductGridEditor {...editorProps} content={content as Parameters<typeof ProductGridEditor>[0]["content"]} />
-      )}
-      {section.block_type === "article" && (
-        <ArticleEditor {...editorProps} content={content as Parameters<typeof ArticleEditor>[0]["content"]} />
       )}
     </div>
   );

@@ -76,6 +76,33 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     bodyTextAlignment: "center",
   },
 
+  richtext: {
+    mode: "visual",
+    body: "<p>Start writing your content here. You can switch between visual editor, markdown, or article mode with inline images.</p>",
+    markdown: "",
+    // Image styling (for article mode)
+    imageRounding: "medium",
+    // Master styling toggle (disabled by default for plain text)
+    enableStyling: false,
+    textColorMode: "auto",
+    // Border options (disabled by default)
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    // Background & overlay (disabled by default)
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    // Layout
+    contentWidth: "narrow",
+    // Typography
+    textSize: "normal",
+  },
+
   text: {
     body: "<p>Start writing your content here. You can add paragraphs, format text, and share your message with the world.</p>",
     // Master styling toggle (disabled by default for plain text)

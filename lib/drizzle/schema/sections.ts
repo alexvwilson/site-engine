@@ -15,6 +15,7 @@ export const BLOCK_TYPES = [
   "header",
   "heading",
   "hero",
+  "richtext",
   "text",
   "markdown",
   "image",

@@ -219,6 +219,33 @@ export interface MarkdownContent extends SectionStyling {
   markdown: string;
 }
 
+// =============================================================================
+// RichText Primitive - Unified text/markdown/article
+// =============================================================================
+
+/**
+ * Editor mode for RichText primitive
+ * - visual: WYSIWYG TipTap editor (HTML output)
+ * - markdown: Markdown textarea with live preview
+ * - article: TipTap with inline image support (HTML output with float images)
+ */
+export type RichTextMode = "visual" | "markdown" | "article";
+
+/**
+ * Unified RichText content interface
+ * Consolidates TextContent, MarkdownContent, and ArticleContent
+ */
+export interface RichTextContent extends SectionStyling {
+  /** Editor mode determines input UI and rendering behavior */
+  mode: RichTextMode;
+  /** HTML content for visual/article modes */
+  body?: string;
+  /** Raw markdown for markdown mode */
+  markdown?: string;
+  /** Border radius for inline images (article mode only) */
+  imageRounding?: TextBorderRadius;
+}
+
 export interface ImageContent extends SectionStyling {
   src: string;
   alt: string;
@@ -538,6 +565,7 @@ export type SectionContent =
   | HeaderContent
   | HeadingContent
   | HeroContent
+  | RichTextContent
   | TextContent
   | MarkdownContent
   | ImageContent
@@ -561,6 +589,7 @@ export interface ContentTypeMap {
   header: HeaderContent;
   heading: HeadingContent;
   hero: HeroContent;
+  richtext: RichTextContent;
   text: TextContent;
   markdown: MarkdownContent;
   image: ImageContent;
@@ -646,17 +675,10 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     category: "layout",
   },
   {
-    type: "text",
-    label: "Text",
-    description: "Rich text content block",
-    icon: "type",
-    category: "content",
-  },
-  {
-    type: "markdown",
-    label: "Markdown",
-    description: "Write content in Markdown with live preview",
-    icon: "file-text",
+    type: "richtext",
+    label: "Rich Text",
+    description: "Formatted text with visual editor, markdown, or inline images",
+    icon: "text",
     category: "content",
   },
   {
@@ -742,12 +764,5 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     description: "Display products or items with action links",
     icon: "shopping-bag",
     category: "cards",
-  },
-  {
-    type: "article",
-    label: "Article",
-    description: "Rich content with inline images and text wrapping",
-    icon: "book-open",
-    category: "content",
   },
 ];

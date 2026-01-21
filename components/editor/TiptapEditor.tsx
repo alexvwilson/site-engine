@@ -44,6 +44,67 @@ interface TiptapEditorProps {
 }
 
 /**
+ * Pretty-print HTML with proper indentation for readability.
+ */
+function formatHtml(html: string): string {
+  if (!html || html.trim() === "") return "";
+
+  // Block-level tags that should have line breaks
+  const blockTags = ["p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote", "pre", "div", "hr", "br"];
+
+  let formatted = html;
+  let indent = 0;
+  const indentStr = "  "; // 2 spaces
+
+  // Add newlines before and after block tags
+  blockTags.forEach((tag) => {
+    // Opening tags (not self-closing)
+    formatted = formatted.replace(
+      new RegExp(`<${tag}([^>]*)>`, "gi"),
+      (match) => `\n${indentStr.repeat(indent)}<${tag}$1>`
+    );
+    // Closing tags
+    formatted = formatted.replace(
+      new RegExp(`</${tag}>`, "gi"),
+      `</${tag}>\n`
+    );
+  });
+
+  // Handle self-closing tags like <br> and <hr>
+  formatted = formatted.replace(/<(br|hr)\s*\/?>/gi, "<$1>\n");
+
+  // Clean up multiple newlines
+  formatted = formatted.replace(/\n{3,}/g, "\n\n");
+
+  // Proper indentation for nested structures
+  const lines = formatted.split("\n");
+  const result: string[] = [];
+  indent = 0;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    // Check for closing tags to decrease indent first
+    const closingMatch = trimmed.match(/^<\/(ul|ol|li|blockquote|div)>/i);
+    if (closingMatch) {
+      indent = Math.max(0, indent - 1);
+    }
+
+    result.push(indentStr.repeat(indent) + trimmed);
+
+    // Check for opening tags to increase indent for next line
+    const openingMatch = trimmed.match(/^<(ul|ol|blockquote|div)(\s|>)/i);
+    const selfClosingOrWithClose = /<\/(ul|ol|blockquote|div)>$/i.test(trimmed);
+    if (openingMatch && !selfClosingOrWithClose) {
+      indent++;
+    }
+  }
+
+  return result.join("\n").trim();
+}
+
+/**
  * Normalize content to proper HTML paragraphs.
  * - Plain text with newlines becomes separate <p> tags
  * - HTML content with <br> tags gets split into separate paragraphs
@@ -164,10 +225,10 @@ export function TiptapEditor({
     }
   }, [normalizedValue, editor]);
 
-  // Sync HTML source when switching to HTML mode
+  // Sync HTML source when switching to HTML mode (formatted for readability)
   useEffect(() => {
     if (htmlMode && editor) {
-      setHtmlSource(editor.getHTML());
+      setHtmlSource(formatHtml(editor.getHTML()));
     }
   }, [htmlMode, editor]);
 
@@ -483,7 +544,7 @@ export function TiptapEditor({
               variant="outline"
               onClick={() => {
                 if (editor) {
-                  setHtmlSource(editor.getHTML());
+                  setHtmlSource(formatHtml(editor.getHTML()));
                 }
               }}
             >

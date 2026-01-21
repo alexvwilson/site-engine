@@ -152,6 +152,66 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
   ],
 
   // ============================================================================
+  // Rich Text Templates (Unified visual/markdown/article)
+  // ============================================================================
+  richtext: [
+    {
+      id: "richtext-visual",
+      name: "Visual Editor",
+      description: "Rich text with WYSIWYG formatting",
+      content: {
+        mode: "visual" as const,
+        body: "<h2>About Us</h2><p>We're a passionate team dedicated to creating exceptional experiences. Start editing this content using the visual editor toolbar above.</p><p>Format your text with <strong>bold</strong>, <em>italic</em>, and more.</p>",
+      },
+    },
+    {
+      id: "richtext-markdown",
+      name: "Markdown",
+      description: "Write content in Markdown with live preview",
+      content: {
+        mode: "markdown" as const,
+        markdown: `# Welcome
+
+Start writing your content in Markdown. You'll see a live preview as you type.
+
+## Features
+
+- **Bold** and *italic* text
+- [Links](https://example.com)
+- Lists and more
+
+> Use blockquotes for emphasis.`,
+      },
+    },
+    {
+      id: "richtext-article",
+      name: "Article",
+      description: "Long-form content with inline images",
+      content: {
+        mode: "article" as const,
+        body: "<h2>Article Title</h2><p>This is an article block that supports inline images. Use the image button in the toolbar to add photos that text will wrap around.</p><p>Perfect for blog posts, portfolios, and long-form content where you want images integrated with your text.</p>",
+        imageRounding: "medium" as const,
+      },
+    },
+    {
+      id: "richtext-card",
+      name: "Styled Card",
+      description: "Bordered container with theme-aware background",
+      content: {
+        mode: "visual" as const,
+        body: "<h2>Card Title</h2><p>This is a card-style block with a border and theme-aware background. Great for highlighting important content.</p>",
+        enableStyling: true,
+        textColorMode: "dark" as const,
+        showBorder: true,
+        borderWidth: "thin" as const,
+        borderRadius: "medium" as const,
+        useThemeBackground: true,
+        contentWidth: "narrow" as const,
+      },
+    },
+  ],
+
+  // ============================================================================
   // Text Templates
   // ============================================================================
   text: [

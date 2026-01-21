@@ -5,8 +5,7 @@ import { getTypedContent, type SocialLink, type SocialIconStyle, type ImageFit }
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeadingBlock } from "./blocks/HeadingBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
-import { TextBlock } from "./blocks/TextBlock";
-import { MarkdownBlock } from "./blocks/MarkdownBlock";
+import { RichTextBlock } from "./blocks/RichTextBlock";
 import { ImageBlock } from "./blocks/ImageBlock";
 import { GalleryBlock } from "./blocks/GalleryBlock";
 import { FeaturesBlock } from "./blocks/FeaturesBlock";
@@ -20,7 +19,6 @@ import { BlogFeaturedBlock } from "./blocks/BlogFeaturedBlock";
 import { BlogGridBlock } from "./blocks/BlogGridBlock";
 import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
-import { ArticleBlock } from "./blocks/ArticleBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -72,14 +70,10 @@ export async function BlockRenderer({
           basePath={basePath}
         />
       );
-    case "text":
+    case "richtext":
       return (
-        <TextBlock content={getTypedContent("text", content)} theme={theme} />
-      );
-    case "markdown":
-      return (
-        <MarkdownBlock
-          content={getTypedContent("markdown", content)}
+        <RichTextBlock
+          content={getTypedContent("richtext", content)}
           theme={theme}
         />
       );
@@ -191,13 +185,6 @@ export async function BlockRenderer({
       return (
         <ProductGridBlock
           content={getTypedContent("product_grid", content)}
-          theme={theme}
-        />
-      );
-    case "article":
-      return (
-        <ArticleBlock
-          content={getTypedContent("article", content)}
           theme={theme}
         />
       );

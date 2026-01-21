@@ -19,6 +19,7 @@ import {
   Share2,
   ShoppingBag,
   BookOpen,
+  AlignLeft,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -32,6 +33,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   header: PanelTop,
   heading: Heading1,
   hero: Layout,
+  richtext: AlignLeft,
   text: Type,
   markdown: FileText,
   image: Image,

@@ -12,8 +12,7 @@ import { SectionHighlight } from "@/components/preview/SectionHighlight";
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeadingBlock } from "./blocks/HeadingBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
-import { TextBlock } from "./blocks/TextBlock";
-import { MarkdownBlock } from "./blocks/MarkdownBlock";
+import { RichTextBlock } from "./blocks/RichTextBlock";
 import { ImageBlock } from "./blocks/ImageBlock";
 import { GalleryBlock } from "./blocks/GalleryBlock";
 import { FeaturesBlock } from "./blocks/FeaturesBlock";
@@ -23,7 +22,6 @@ import { ContactBlock } from "./blocks/ContactBlock";
 import { FooterBlock } from "./blocks/FooterBlock";
 import { EmbedBlock } from "./blocks/EmbedBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
-import { ArticleBlock } from "./blocks/ArticleBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -61,16 +59,9 @@ export function PreviewBlockRenderer({
         return (
           <HeroBlock content={getTypedContent("hero", content)} theme={theme} />
         );
-      case "text":
+      case "richtext":
         return (
-          <TextBlock content={getTypedContent("text", content)} theme={theme} />
-        );
-      case "markdown":
-        return (
-          <MarkdownBlock
-            content={getTypedContent("markdown", content)}
-            theme={theme}
-          />
+          <RichTextBlock content={getTypedContent("richtext", content)} theme={theme} />
         );
       case "image":
         return (
@@ -155,13 +146,6 @@ export function PreviewBlockRenderer({
         return (
           <ProductGridBlock
             content={getTypedContent("product_grid", content)}
-            theme={theme}
-          />
-        );
-      case "article":
-        return (
-          <ArticleBlock
-            content={getTypedContent("article", content)}
             theme={theme}
           />
         );
