@@ -23,6 +23,7 @@ import {
   BookOpen,
   AlignLeft,
   Layers,
+  Rss,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   footer: PanelBottom,
   blog_featured: Newspaper,
   blog_grid: LayoutGrid,
+  blog: Rss,
   embed: Code,
   social_links: Share2,
   product_grid: ShoppingBag,

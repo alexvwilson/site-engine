@@ -312,21 +312,35 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 80. Primitive Consolidation: Blog
+### 80. ~~Primitive Consolidation: Blog~~ ✅ COMPLETED (2026-01-21)
 
-**Problem:** `blog_featured` and `blog_grid` both display blog posts, just with different layouts. They're data-driven (query database) rather than user-content.
+**Status:** Implemented in task `ai_docs/tasks/079_blog_primitive_consolidation.md`
 
-**Solution:**
-- Create unified `Blog` primitive with layouts: "featured" | "grid"
-- `featured`: Single post display (split/stacked/hero/minimal)
-- `grid`: Multiple posts in grid
-- Shared: post selection, display options, styling
+**What was done:**
+- Created unified `Blog` primitive with mode-based architecture ("featured" | "grid")
+- Featured mode: 4 layouts (split, stacked, hero, minimal)
+- Grid mode: 3 layouts (grid, list, magazine)
+- Full SectionStyling support for both modes
+- 9 curated templates for common use cases
+- Mode switching with data loss confirmation
+- Shared components extracted to `components/render/blog/`
 
-**Note:** Lower priority since blog blocks are already well-contained and less frequently used.
+**Files Created:**
+- `components/render/blocks/BlogBlock.tsx` - Unified renderer (~1000 lines)
+- `components/editor/blocks/BlogEditor.tsx` - Unified editor (~800 lines)
+- `components/render/blog/BlogPostImage.tsx` - Shared image component
+- `components/render/blog/BlogPostMeta.tsx` - Shared meta component
+- `components/render/blog/BlogCategoryBadge.tsx` - Shared badge component
+- `components/render/blog/BlogPostExcerpt.tsx` - Shared excerpt component
 
-**Prerequisites:** None
-
-**Complexity:** Medium (2-3 days)
+**Files Modified:**
+- `lib/section-types.ts` - Added BlogContent, BlogMode, BlogGridLayout, BLOCK_TYPE_INFO
+- `lib/section-defaults.ts` - Added blog defaults
+- `lib/section-templates.ts` - Added 9 blog templates
+- `components/render/BlockRenderer.tsx` - Added blog case
+- `components/render/PreviewBlockRenderer.tsx` - Added blog case
+- `components/editor/inspector/ContentTab.tsx` - Added BlogEditor
+- `components/editor/BlockIcon.tsx` - Added Rss icon
 
 ---
 
@@ -419,6 +433,34 @@ interface CardsContent extends SectionStyling {
 ---
 
 ## Completed Features
+
+### 80. Primitive Consolidation: Blog ✅ 2026-01-21
+
+**Problem:** `blog_featured` and `blog_grid` both display blog posts with different layouts but were separate blocks.
+
+**Solution Implemented:**
+- [x] Created unified `Blog` primitive with mode-based architecture ("featured" | "grid")
+- [x] Featured mode: 4 layouts (split, stacked, hero, minimal)
+- [x] Grid mode: 3 layouts (grid, list, magazine)
+- [x] Full SectionStyling support for both modes
+- [x] 9 curated templates for common use cases
+- [x] Mode switching with data loss confirmation dialog
+- [x] Shared components extracted to `components/render/blog/`
+
+**Files Created:**
+- `components/render/blocks/BlogBlock.tsx` - Unified renderer
+- `components/editor/blocks/BlogEditor.tsx` - Unified editor
+- `components/render/blog/` - Shared components (BlogPostImage, BlogPostMeta, BlogCategoryBadge, BlogPostExcerpt)
+
+**Files Modified:**
+- `lib/section-types.ts` - Added BlogContent, BlogMode, BlogGridLayout
+- `lib/section-defaults.ts` - Added blog defaults
+- `lib/section-templates.ts` - Added 9 blog templates
+- `components/render/BlockRenderer.tsx`, `PreviewBlockRenderer.tsx`, `ContentTab.tsx`, `BlockIcon.tsx`
+
+**Task Document:** `ai_docs/tasks/079_blog_primitive_consolidation.md`
+
+---
 
 ### 68. Live Preview Split View Mode ✅ 2026-01-20
 

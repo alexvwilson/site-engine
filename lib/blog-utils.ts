@@ -1,6 +1,135 @@
 /**
- * Blog utility functions for reading time calculation and RSS feed generation
+ * Blog utility functions for reading time calculation, RSS feed generation,
+ * and Blog primitive rendering helpers
  */
+
+// =============================================================================
+// Blog Primitive Utilities
+// =============================================================================
+
+export interface TruncateResult {
+  text: string;
+  paragraphs: string[];
+  truncated: boolean;
+}
+
+/**
+ * Extract paragraphs from HTML and optionally truncate
+ * Preserves paragraph structure for better formatting
+ */
+export function truncateContent(html: string, limit: number): TruncateResult {
+  // Extract text content from each paragraph, preserving structure
+  const paragraphMatches = html.match(/<p[^>]*>([\s\S]*?)<\/p>/gi) || [];
+
+  // Clean each paragraph - remove HTML tags but keep the paragraph text
+  const paragraphs = paragraphMatches
+    .map((p) => p.replace(/<[^>]*>/g, "").trim())
+    .filter((p) => p.length > 0);
+
+  // If no paragraphs found, fall back to stripping all HTML
+  if (paragraphs.length === 0) {
+    const text = html.replace(/<[^>]*>/g, "").trim();
+    if (limit <= 0 || text.length <= limit) {
+      return { text, paragraphs: [text], truncated: false };
+    }
+    const truncatedText = text.slice(0, limit);
+    const lastSpace = truncatedText.lastIndexOf(" ");
+    const finalText =
+      lastSpace > limit * 0.8 ? truncatedText.slice(0, lastSpace) : truncatedText;
+    return { text: finalText, paragraphs: [finalText], truncated: true };
+  }
+
+  // Join for full text (for truncation calculation)
+  const fullText = paragraphs.join(" ");
+
+  // No truncation needed
+  if (limit <= 0 || fullText.length <= limit) {
+    return { text: fullText, paragraphs, truncated: false };
+  }
+
+  // Truncate while preserving paragraph boundaries where possible
+  let charCount = 0;
+  const truncatedParagraphs: string[] = [];
+  let wasTruncated = false;
+
+  for (const para of paragraphs) {
+    if (charCount + para.length <= limit) {
+      truncatedParagraphs.push(para);
+      charCount += para.length + 1; // +1 for space between paragraphs
+    } else {
+      // This paragraph would exceed the limit
+      const remaining = limit - charCount;
+      if (remaining > 50 && truncatedParagraphs.length === 0) {
+        // If first paragraph and we have reasonable space, truncate it
+        const truncatedPara = para.slice(0, remaining);
+        const lastSpace = truncatedPara.lastIndexOf(" ");
+        truncatedParagraphs.push(
+          lastSpace > remaining * 0.5
+            ? truncatedPara.slice(0, lastSpace)
+            : truncatedPara
+        );
+      }
+      wasTruncated = true;
+      break;
+    }
+  }
+
+  const finalText = truncatedParagraphs.join(" ");
+  return { text: finalText, paragraphs: truncatedParagraphs, truncated: wasTruncated };
+}
+
+/**
+ * Get card border color based on mode setting
+ */
+export function getCardBorderColor(
+  mode: string | undefined,
+  customColor: string | undefined
+): string {
+  switch (mode) {
+    case "primary":
+      return "var(--color-primary)";
+    case "custom":
+      return customColor || "#E5E7EB";
+    case "default":
+    default:
+      return "var(--color-border)";
+  }
+}
+
+/**
+ * Get image background color based on mode setting
+ */
+export function getImageBackgroundColor(
+  mode: string | undefined,
+  customColor: string | undefined
+): string {
+  switch (mode) {
+    case "primary":
+      return "var(--color-primary)";
+    case "custom":
+      return customColor || "var(--color-muted)";
+    case "muted":
+    default:
+      return "var(--color-muted)";
+  }
+}
+
+/**
+ * Format date for blog display
+ */
+export function formatBlogDate(date: Date | string | null | undefined): string | null {
+  if (!date) return null;
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+// =============================================================================
+// Reading Time and RSS Feed Utilities
+// =============================================================================
 
 /**
  * Calculate estimated reading time based on word count

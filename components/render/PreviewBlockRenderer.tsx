@@ -6,6 +6,9 @@ import {
   getTypedContent,
   type BlogFeaturedContent,
   type BlogFeaturedLayout,
+  type BlogContent,
+  type BlogMode,
+  type BlogGridLayout,
 } from "@/lib/section-types";
 import { SectionHighlight } from "@/components/preview/SectionHighlight";
 
@@ -235,6 +238,55 @@ export function PreviewBlockRenderer({
             </div>
           </div>
         );
+      case "blog": {
+        const blogContent = content as BlogContent;
+        const mode: BlogMode = blogContent.mode ?? "featured";
+        const modeLabels: Record<BlogMode, string> = {
+          featured: "Featured Post",
+          grid: "Post Grid",
+        };
+        const featuredLayoutLabels: Record<BlogFeaturedLayout, string> = {
+          split: "Split",
+          stacked: "Stacked",
+          hero: "Hero",
+          minimal: "Minimal",
+        };
+        const gridLayoutLabels: Record<BlogGridLayout, string> = {
+          grid: "Grid",
+          list: "List",
+          magazine: "Magazine",
+        };
+        const layoutLabel =
+          mode === "featured"
+            ? featuredLayoutLabels[blogContent.featuredLayout ?? "split"]
+            : gridLayoutLabels[blogContent.gridLayout ?? "grid"];
+
+        return (
+          <div
+            className="py-16 text-center border-2 border-dashed rounded-lg mx-4 my-8"
+            style={{
+              borderColor: "var(--color-border)",
+              backgroundColor: "var(--color-muted)",
+            }}
+          >
+            <div className="space-y-2">
+              <div className="text-3xl">📰</div>
+              <p
+                className="font-medium"
+                style={{ color: "var(--color-foreground)" }}
+              >
+                {modeLabels[mode]}
+              </p>
+              <p
+                className="text-sm"
+                style={{ color: "var(--color-muted-foreground)" }}
+              >
+                {layoutLabel} layout • Displays on published site
+              </p>
+            </div>
+          </div>
+        );
+      }
       default:
         return (
           <div className="p-8 text-center text-muted-foreground">

@@ -445,6 +445,58 @@ console.log(greeting);
     textSize: "normal",
   },
 
+  blog: {
+    mode: "featured",
+
+    // Section header
+    sectionTitle: "",
+    sectionSubtitle: "",
+
+    // Featured mode defaults
+    postId: null,
+    featuredLayout: "split",
+    showFullContent: false,
+    contentLimit: 0,
+    showReadMore: true,
+
+    // Grid mode defaults
+    gridLayout: "grid",
+    postCount: 6,
+    columns: 3,
+    showExcerpt: true,
+    pageFilter: "current",
+
+    // Shared display
+    showCategory: true,
+    showAuthor: true,
+    showDate: true,
+    imageFit: "cover",
+
+    // Card styling
+    cardBorderMode: "default",
+    cardBorderColor: "",
+    imageBackgroundMode: "muted",
+    imageBackgroundColor: "",
+
+    // SectionStyling (Featured now gets these!)
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    showCardBackground: true,
+    cardBackgroundColor: "",
+    textSize: "normal",
+    contentWidth: "medium",
+  },
+
   embed: {
     embedCode: "",
     src: "",

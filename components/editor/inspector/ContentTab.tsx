@@ -20,6 +20,7 @@ import { CardsEditor } from "../blocks/CardsEditor";
 import { MediaEditor } from "../blocks/MediaEditor";
 import { BlogFeaturedEditor } from "../BlogFeaturedEditor";
 import { BlogGridEditor } from "../BlogGridEditor";
+import { BlogEditor } from "../blocks/BlogEditor";
 import type { Section } from "@/lib/drizzle/schema/sections";
 import type { SectionContent } from "@/lib/section-types";
 
@@ -149,6 +150,14 @@ export function ContentTab({
         <BlogGridEditor
           {...editorProps}
           content={content as Parameters<typeof BlogGridEditor>[0]["content"]}
+          currentPageId={section.page_id}
+        />
+      );
+    case "blog":
+      return (
+        <BlogEditor
+          {...editorProps}
+          content={content as Parameters<typeof BlogEditor>[0]["content"]}
           currentPageId={section.page_id}
         />
       );

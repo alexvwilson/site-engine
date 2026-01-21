@@ -28,6 +28,7 @@ export const BLOCK_TYPES = [
   "footer",
   "blog_featured",
   "blog_grid",
+  "blog",
   "embed",
   "social_links",
   "product_grid",

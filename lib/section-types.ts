@@ -518,6 +518,51 @@ export interface BlogGridContent extends SectionStyling {
   cardBackgroundColor?: string;
 }
 
+// =============================================================================
+// Blog Primitive - Unified blog_featured/blog_grid
+// =============================================================================
+
+export type BlogMode = "featured" | "grid";
+export type BlogGridLayout = "grid" | "list" | "magazine";
+
+export interface BlogContent extends SectionStyling {
+  mode: BlogMode;
+
+  // Section header (both modes)
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  // Featured mode fields
+  postId?: string | null;
+  featuredLayout?: BlogFeaturedLayout;
+  showFullContent?: boolean;
+  contentLimit?: number;
+  showReadMore?: boolean;
+
+  // Grid mode fields
+  gridLayout?: BlogGridLayout;
+  postCount?: 3 | 6 | 9;
+  columns?: 2 | 3 | 4;
+  showExcerpt?: boolean;
+  pageFilter?: BlogGridPageFilter;
+
+  // Shared display options
+  showCategory?: boolean;
+  showAuthor?: boolean;
+  showDate?: boolean;
+  imageFit?: ImageFit;
+
+  // Card styling (both modes)
+  cardBorderMode?: "default" | "primary" | "custom";
+  cardBorderColor?: string;
+  imageBackgroundMode?: ImageBackgroundMode;
+  imageBackgroundColor?: string;
+
+  // Card background (grid mode)
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+}
+
 export type EmbedSourceType = "embed" | "pdf";
 export type EmbedAspectRatio = "16:9" | "4:3" | "1:1" | "letter" | "custom";
 
@@ -842,6 +887,7 @@ export interface ContentTypeMap {
   footer: FooterContent;
   blog_featured: BlogFeaturedContent;
   blog_grid: BlogGridContent;
+  blog: BlogContent;
   embed: EmbedContent;
   social_links: SocialLinksContent;
   product_grid: ProductGridContent;
@@ -992,6 +1038,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Post Grid",
     description: "Grid of recent blog posts",
     icon: "layout-grid",
+    category: "blog",
+  },
+  {
+    type: "blog",
+    label: "Blog",
+    description: "Display blog posts as featured highlight or grid with multiple layouts",
+    icon: "rss",
     category: "blog",
   },
   {

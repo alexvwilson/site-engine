@@ -22,6 +22,7 @@ import { SocialLinksBlock } from "./blocks/SocialLinksBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
 import { CardsBlock } from "./blocks/CardsBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
+import { BlogBlock } from "./blocks/BlogBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -212,6 +213,24 @@ export async function BlockRenderer({
         <MediaBlock
           content={getTypedContent("media", content)}
           theme={theme}
+        />
+      );
+    case "blog":
+      if (!siteId) {
+        return (
+          <div className="p-8 text-center text-muted-foreground">
+            Blog block requires site context
+          </div>
+        );
+      }
+      return (
+        <BlogBlock
+          content={getTypedContent("blog", content)}
+          theme={theme}
+          siteId={siteId}
+          basePath={basePath}
+          pageId={pageId}
+          siteImageFit={imageFit}
         />
       );
     default:
