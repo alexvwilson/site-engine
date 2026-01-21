@@ -360,22 +360,37 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 82. Database Migration to Primitives
+### 82. Database Migration to Primitives ✅ COMPLETED (2026-01-21)
 
 **Problem:** After primitive consolidation, the database still has old `block_type` values ("text", "markdown", etc.). Clean data would have `primitive` + `preset` columns.
 
-**Solution:**
-- Add columns: `primitive` (text), `preset` (text)
-- Backfill using mapping from old block_type
-- Keep old block_type column for backward compatibility
-- New sections write both formats
-- Eventually deprecate block_type column
+**Solution Implemented:**
+- Added `primitive` and `preset` columns to sections table (nullable)
+- Created `lib/primitive-utils.ts` with block_type → primitive/preset mapping
+- Backfilled all 75 existing sections with correct primitive/preset values
+- Updated `addSection` and `duplicateSection` to write primitive/preset on create
+- Added indexes for efficient primitive-based queries
+- Created down migration for rollback capability
+- Old `block_type` column preserved for backward compatibility
 
-**Prerequisites:** All primitive consolidation complete (#73-76, #80)
+**Block Type Mapping:**
+- `text/markdown/article` → `richtext` primitive with `visual/markdown/article` preset
+- `hero/cta/heading` → `hero_primitive` with `full/cta/title-only` preset
+- `features/testimonials/product_grid` → `cards` with `feature/testimonial/product` preset
+- `image/gallery/embed` → `media` with `single/gallery/embed` preset
+- `blog_featured/blog_grid` → `blog` with `featured/grid` preset
+- `header/footer/contact/social_links` → standalone primitives (no preset)
 
-**Risks:** Production data migration - requires careful rollback plan
+**Files Created:**
+- `lib/primitive-utils.ts` - Mapping utility (~80 lines)
+- `drizzle/migrations/0035_ordinary_loners.sql` - Add columns + indexes
+- `drizzle/migrations/0035_ordinary_loners/down.sql` - Rollback migration
 
-**Complexity:** Medium (1-2 days) but High risk
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added PRIMITIVES array, primitive/preset columns, indexes
+- `app/actions/sections.ts` - Updated addSection/duplicateSection to write new columns
+
+**Task Document:** `ai_docs/tasks/080_database_migration_to_primitives.md`
 
 ---
 

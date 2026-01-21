@@ -12,6 +12,7 @@ import { requireUserId } from "@/lib/auth";
 import { eq, and, gt, gte, sql, ne } from "drizzle-orm";
 import { getDefaultContent } from "@/lib/section-defaults";
 import type { SectionContent, HeaderContent } from "@/lib/section-types";
+import { computePrimitiveAndPreset } from "@/lib/primitive-utils";
 import { getSiteById } from "@/lib/queries/sites";
 import { getPagesBySite } from "@/lib/queries/pages";
 import { isValidAnchorId } from "@/lib/anchor-utils";
@@ -140,12 +141,17 @@ export async function addSection(
     content = getDefaultContent(blockType);
   }
 
+  // Compute normalized primitive/preset for schema modernization
+  const { primitive, preset } = computePrimitiveAndPreset(blockType, content);
+
   const [section] = await db
     .insert(sections)
     .values({
       page_id: pageId,
       user_id: userId,
       block_type: blockType,
+      primitive,
+      preset,
       content,
       position: targetPosition,
     })
@@ -343,13 +349,15 @@ export async function duplicateSection(
       )
     );
 
-  // Create the duplicate
+  // Create the duplicate (including primitive/preset from original)
   const [newSection] = await db
     .insert(sections)
     .values({
       page_id: original.page_id,
       user_id: userId,
       block_type: original.block_type,
+      primitive: original.primitive,
+      preset: original.preset,
       content: original.content,
       position: newPosition,
     })

@@ -39,6 +39,24 @@ export const BLOCK_TYPES = [
 
 export type BlockType = (typeof BLOCK_TYPES)[number];
 
+/**
+ * Normalized primitive types after consolidation.
+ * Each primitive may have multiple presets/modes.
+ */
+export const PRIMITIVES = [
+  "header",
+  "footer",
+  "contact",
+  "social_links",
+  "richtext",
+  "hero_primitive",
+  "cards",
+  "media",
+  "blog",
+] as const;
+
+export type Primitive = (typeof PRIMITIVES)[number];
+
 export const SECTION_STATUSES = ["draft", "published"] as const;
 export type SectionStatus = (typeof SECTION_STATUSES)[number];
 
@@ -53,6 +71,8 @@ export const sections = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     block_type: text("block_type", { enum: BLOCK_TYPES }).notNull(),
+    primitive: text("primitive"),
+    preset: text("preset"),
     content: jsonb("content").notNull().default({}),
     position: integer("position").notNull().default(0),
     created_at: timestamp("created_at", { withTimezone: true })
@@ -72,6 +92,8 @@ export const sections = pgTable(
     index("sections_page_position_idx").on(t.page_id, t.position),
     index("sections_status_idx").on(t.status),
     index("sections_page_anchor_idx").on(t.page_id, t.anchor_id),
+    index("sections_primitive_idx").on(t.primitive),
+    index("sections_primitive_preset_idx").on(t.primitive, t.preset),
   ]
 );
 
