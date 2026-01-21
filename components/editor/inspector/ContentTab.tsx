@@ -4,6 +4,7 @@ import type { EditorMode } from "./EditorModeToggle";
 import { HeaderEditor } from "../blocks/HeaderEditor";
 import { HeadingEditor } from "../blocks/HeadingEditor";
 import { HeroEditor } from "../blocks/HeroEditor";
+import { HeroPrimitiveEditor } from "../blocks/HeroPrimitiveEditor";
 import { RichTextEditor } from "../blocks/RichTextEditor";
 import { ImageEditor } from "../blocks/ImageEditor";
 import { GalleryEditor } from "../blocks/GalleryEditor";
@@ -69,6 +70,13 @@ export function ContentTab({
         <HeroEditor
           {...editorProps}
           content={content as Parameters<typeof HeroEditor>[0]["content"]}
+        />
+      );
+    case "hero_primitive":
+      return (
+        <HeroPrimitiveEditor
+          {...editorProps}
+          content={content as Parameters<typeof HeroPrimitiveEditor>[0]["content"]}
         />
       );
     case "richtext":

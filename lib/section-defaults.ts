@@ -5,6 +5,7 @@ import type {
   HeadingAlignment,
   TextColorMode,
   FeatureCardItem,
+  HeroLayout,
 } from "./section-types";
 
 /**
@@ -80,6 +81,65 @@ export const sectionDefaults: { [K in BlockType]: ContentTypeMap[K] } = {
     // Body text defaults
     bodyText: "",
     bodyTextAlignment: "center",
+  },
+
+  hero_primitive: {
+    // Layout preset determines available features
+    layout: "full" as HeroLayout,
+
+    // Common fields (all layouts)
+    heading: "Welcome to Your Site",
+    subheading: "Create something amazing with our platform",
+    textAlignment: "center" as HeadingAlignment,
+
+    // Buttons (all layouts except title-only)
+    buttons: [
+      { id: "btn-1", text: "Get Started", url: "#", variant: "primary" },
+    ],
+
+    // Title-only specific
+    headingLevel: 1 as HeadingLevel,
+
+    // Full layout specific - rotating text
+    titleMode: "static",
+    rotatingTitle: {
+      beforeText: "We specialize in",
+      words: ["Design", "Development", "Marketing"],
+      afterText: "",
+      effect: "clip",
+      displayTime: 2000,
+      animationMode: "loop",
+    },
+    bodyText: "",
+    bodyTextAlignment: "center",
+    heroBackgroundImage: "",
+
+    // Image support (full + compact layouts)
+    image: "",
+    imageAlt: "",
+    imagePosition: "top",
+    imageMobileStack: "above",
+    imageRounding: "none",
+    imageBorderWidth: "none",
+    imageBorderColor: "",
+    imageShadow: "none",
+    imageSize: 200,
+
+    // SectionStyling defaults (all layouts)
+    enableStyling: false,
+    textColorMode: "auto" as TextColorMode,
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    contentWidth: "medium",
+    textSize: "normal",
   },
 
   richtext: {

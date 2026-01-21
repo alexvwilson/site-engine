@@ -5,6 +5,7 @@ import { getTypedContent, type SocialLink, type SocialIconStyle, type ImageFit }
 import { HeaderBlock } from "./blocks/HeaderBlock";
 import { HeadingBlock } from "./blocks/HeadingBlock";
 import { HeroBlock } from "./blocks/HeroBlock";
+import { HeroPrimitiveBlock } from "./blocks/HeroPrimitiveBlock";
 import { RichTextBlock } from "./blocks/RichTextBlock";
 import { ImageBlock } from "./blocks/ImageBlock";
 import { GalleryBlock } from "./blocks/GalleryBlock";
@@ -67,6 +68,14 @@ export async function BlockRenderer({
       return (
         <HeroBlock
           content={getTypedContent("hero", content)}
+          theme={theme}
+          basePath={basePath}
+        />
+      );
+    case "hero_primitive":
+      return (
+        <HeroPrimitiveBlock
+          content={getTypedContent("hero_primitive", content)}
           theme={theme}
           basePath={basePath}
         />

@@ -167,6 +167,76 @@ export interface HeadingContent {
   textColorMode?: TextColorMode;
 }
 
+// =============================================================================
+// Hero Primitive - Unified hero/cta/heading
+// =============================================================================
+
+/**
+ * Layout presets for Hero primitive
+ * - full: All features (rotating text, hero image, multi-buttons, body text, background)
+ * - compact: Smaller hero with optional image, single button, no background
+ * - cta: Conversion-focused section with single button, SectionStyling support
+ * - title-only: Simple heading with subtitle, heading level selection, no buttons
+ */
+export type HeroLayout = "full" | "compact" | "cta" | "title-only";
+
+/**
+ * Unified Hero primitive content interface
+ * Consolidates HeroContent, CTAContent, and HeadingContent patterns
+ */
+export interface HeroPrimitiveContent extends SectionStyling {
+  /** Layout preset determines which features are available */
+  layout: HeroLayout;
+
+  // COMMON: All layouts have these
+  /** Main heading text */
+  heading: string;
+  /** Supporting text below heading */
+  subheading?: string;
+  /** Text alignment for heading and subheading */
+  textAlignment?: HeadingAlignment;
+
+  // BUTTONS: All layouts except title-only
+  /** Button array (multi-button for full layout, single for others) */
+  buttons?: HeroButton[];
+
+  // TITLE-ONLY: Heading level selection
+  /** Semantic heading level (H1/H2/H3) - title-only layout */
+  headingLevel?: HeadingLevel;
+
+  // FULL LAYOUT: Rotating text, body text, hero background
+  /** Static or rotating title mode */
+  titleMode?: HeroTitleMode;
+  /** Rotating title configuration */
+  rotatingTitle?: RotatingTitleConfig;
+  /** Rich text body content */
+  bodyText?: string;
+  /** Body text alignment */
+  bodyTextAlignment?: HeroBodyTextAlignment;
+  /** Hero section background image (separate from SectionStyling.backgroundImage) */
+  heroBackgroundImage?: string;
+
+  // FULL + COMPACT: Hero image support
+  /** Hero/profile image URL */
+  image?: string;
+  /** Image alt text for accessibility */
+  imageAlt?: string;
+  /** Image position relative to text */
+  imagePosition?: HeroImagePosition;
+  /** Mobile stacking behavior for side-by-side layouts */
+  imageMobileStack?: HeroImageMobileStack;
+  /** Image corner rounding */
+  imageRounding?: HeroImageRounding;
+  /** Image border width */
+  imageBorderWidth?: HeroImageBorderWidth;
+  /** Image border color */
+  imageBorderColor?: string;
+  /** Image drop shadow */
+  imageShadow?: HeroImageShadow;
+  /** Image size in pixels */
+  imageSize?: number;
+}
+
 // Text block styling types
 export type TextBorderWidth = "thin" | "medium" | "thick";
 export type TextBorderRadius = "none" | "small" | "medium" | "large" | "full";
@@ -659,6 +729,7 @@ export type SectionContent =
   | HeaderContent
   | HeadingContent
   | HeroContent
+  | HeroPrimitiveContent
   | RichTextContent
   | TextContent
   | MarkdownContent
@@ -684,6 +755,7 @@ export interface ContentTypeMap {
   header: HeaderContent;
   heading: HeadingContent;
   hero: HeroContent;
+  hero_primitive: HeroPrimitiveContent;
   richtext: RichTextContent;
   text: TextContent;
   markdown: MarkdownContent;
@@ -768,6 +840,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Hero",
     description: "Large header section with heading, subheading, and CTA",
     icon: "layout",
+    category: "layout",
+  },
+  {
+    type: "hero_primitive",
+    label: "Hero (Flexible)",
+    description: "Flexible hero with layout presets: full, compact, CTA, or title-only",
+    icon: "layout-template",
     category: "layout",
   },
   {

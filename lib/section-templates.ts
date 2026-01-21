@@ -152,6 +152,121 @@ export const sectionTemplates: { [K in BlockType]: SectionTemplate<K>[] } = {
   ],
 
   // ============================================================================
+  // Hero Primitive Templates (Unified hero/cta/heading)
+  // ============================================================================
+  hero_primitive: [
+    {
+      id: "hero-primitive-full",
+      name: "Full Hero",
+      description: "Complete hero with all features: images, rotating text, multiple buttons",
+      content: {
+        layout: "full" as const,
+        heading: "Welcome to Your Site",
+        subheading: "Create something amazing with our intuitive platform",
+        textAlignment: "center" as const,
+        buttons: [
+          { id: "btn-1", text: "Get Started", url: "#", variant: "primary" as const },
+          { id: "btn-2", text: "Learn More", url: "#about", variant: "secondary" as const },
+        ],
+        titleMode: "static" as const,
+      },
+    },
+    {
+      id: "hero-primitive-rotating",
+      name: "Rotating Text Hero",
+      description: "Animated hero with rotating words",
+      content: {
+        layout: "full" as const,
+        heading: "",
+        subheading: "Transform your business with cutting-edge solutions",
+        textAlignment: "center" as const,
+        buttons: [
+          { id: "btn-1", text: "Start Now", url: "#", variant: "primary" as const },
+        ],
+        titleMode: "rotating" as const,
+        rotatingTitle: {
+          beforeText: "We build",
+          words: ["websites", "apps", "brands", "experiences"],
+          afterText: "that convert",
+          effect: "clip" as const,
+          displayTime: 2000,
+          animationMode: "loop" as const,
+        },
+      },
+    },
+    {
+      id: "hero-primitive-compact",
+      name: "Compact Hero",
+      description: "Smaller hero section, perfect for inner pages",
+      content: {
+        layout: "compact" as const,
+        heading: "Page Title Here",
+        subheading: "A brief description of what this page is about",
+        textAlignment: "center" as const,
+        buttons: [
+          { id: "btn-1", text: "Take Action", url: "#", variant: "primary" as const },
+        ],
+      },
+    },
+    {
+      id: "hero-primitive-cta",
+      name: "Call to Action",
+      description: "Conversion-focused section with prominent button",
+      content: {
+        layout: "cta" as const,
+        heading: "Ready to Get Started?",
+        subheading: "Join thousands of satisfied customers and take the next step today.",
+        textAlignment: "center" as const,
+        buttons: [
+          { id: "btn-1", text: "Sign Up Free", url: "#", variant: "primary" as const },
+        ],
+      },
+    },
+    {
+      id: "hero-primitive-cta-styled",
+      name: "Styled CTA",
+      description: "Call to action with custom background styling",
+      content: {
+        layout: "cta" as const,
+        heading: "Transform Your Business Today",
+        subheading: "Get instant access to powerful tools that will help you grow.",
+        textAlignment: "center" as const,
+        buttons: [
+          { id: "btn-1", text: "Start Free Trial", url: "#", variant: "primary" as const },
+        ],
+        enableStyling: true,
+        showBorder: true,
+        borderRadius: "medium" as const,
+        useThemeBackground: true,
+      },
+    },
+    {
+      id: "hero-primitive-title-h1",
+      name: "Page Title (H1)",
+      description: "Simple heading for page titles",
+      content: {
+        layout: "title-only" as const,
+        heading: "Page Title",
+        subheading: "Supporting text that provides context",
+        textAlignment: "center" as const,
+        headingLevel: 1 as const,
+      },
+    },
+    {
+      id: "hero-primitive-title-h2",
+      name: "Section Heading (H2)",
+      description: "Section divider heading",
+      content: {
+        layout: "title-only" as const,
+        heading: "Section Title",
+        subheading: "",
+        textAlignment: "left" as const,
+        headingLevel: 2 as const,
+      },
+    },
+  ],
+
+  // ============================================================================
   // Rich Text Templates (Unified visual/markdown/article)
   // ============================================================================
   richtext: [

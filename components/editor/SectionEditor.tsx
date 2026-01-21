@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { HeaderEditor } from "./blocks/HeaderEditor";
 import { HeadingEditor } from "./blocks/HeadingEditor";
 import { HeroEditor } from "./blocks/HeroEditor";
+import { HeroPrimitiveEditor } from "./blocks/HeroPrimitiveEditor";
 import { RichTextEditor } from "./blocks/RichTextEditor";
 import { ImageEditor } from "./blocks/ImageEditor";
 import { GalleryEditor } from "./blocks/GalleryEditor";
@@ -139,6 +140,9 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       )}
       {section.block_type === "hero" && (
         <HeroEditor {...editorProps} content={content as Parameters<typeof HeroEditor>[0]["content"]} />
+      )}
+      {section.block_type === "hero_primitive" && (
+        <HeroPrimitiveEditor {...editorProps} content={content as Parameters<typeof HeroPrimitiveEditor>[0]["content"]} />
       )}
       {section.block_type === "richtext" && (
         <RichTextEditor {...editorProps} content={content as Parameters<typeof RichTextEditor>[0]["content"]} />

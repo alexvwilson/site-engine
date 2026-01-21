@@ -2,6 +2,7 @@
 
 import {
   Layout,
+  LayoutTemplate,
   Type,
   FileText,
   Image,
@@ -34,6 +35,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   header: PanelTop,
   heading: Heading1,
   hero: Layout,
+  hero_primitive: LayoutTemplate,
   richtext: AlignLeft,
   text: Type,
   markdown: FileText,

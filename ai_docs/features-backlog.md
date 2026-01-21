@@ -189,36 +189,36 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 75. Primitive Consolidation: Hero
+### 75. Primitive Consolidation: Hero ✅ COMPLETED (2026-01-21)
 
 **Problem:** Three block types (`hero`, `cta`, `heading`) are all "heading + optional subheading + optional buttons" with different layouts. CTA is basically a compact hero. Heading is hero without buttons/background.
 
-**Solution:**
-- Create unified `Hero` primitive with layout presets: "full" | "compact" | "cta" | "title-only"
-- `full`: Current hero with all options (image, background, rotating text)
-- `compact`: Smaller hero, no background image
-- `cta`: Centered with prominent button, background color
-- `title-only`: Just heading + subtitle (current heading block)
-- Single editor with conditional fields based on layout
+**Solution Implemented:**
+- Created unified `hero_primitive` block type with layout presets: "full" | "compact" | "cta" | "title-only"
+- `full`: All features - rotating text, hero image, multi-buttons (up to 4), body text, background image
+- `compact`: Simpler hero with optional image, single button, no background
+- `cta`: Call-to-action with SectionStyling support (plain/styled modes), single button
+- `title-only`: Just heading + subtitle with H1/H2/H3 level selection
+- Single editor with conditional fields based on layout (getLayoutFeatures pattern)
+- EditorMode toggle support (content/layout separation)
+- Backwards compatible - old hero, cta, heading blocks remain functional
 
-**Content Interface:**
-```typescript
-interface HeroContent extends SectionStyling {
-  layout: "full" | "compact" | "cta" | "title-only";
-  heading: string;
-  subheading?: string;
-  buttons?: HeroButton[];
-  // Full layout only:
-  backgroundImage?: string;
-  image?: string;
-  titleMode?: "static" | "rotating";
-  rotatingTitle?: RotatingTitleConfig;
-}
-```
+**Files Created:**
+- `components/render/blocks/HeroPrimitiveBlock.tsx` (657 lines) - Unified renderer
+- `components/editor/blocks/HeroPrimitiveEditor.tsx` (1049 lines) - Unified editor
 
-**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
+**Files Modified:**
+- `lib/drizzle/schema/sections.ts` - Added hero_primitive to BLOCK_TYPES
+- `lib/section-types.ts` - Added HeroLayout, HeroPrimitiveContent interface, BLOCK_TYPE_INFO entry
+- `lib/section-defaults.ts` - Added hero_primitive defaults
+- `lib/section-templates.ts` - Added 7 templates for different layout presets
+- `components/editor/BlockIcon.tsx` - Added LayoutTemplate icon
+- `components/render/BlockRenderer.tsx` - Added hero_primitive case
+- `components/render/PreviewBlockRenderer.tsx` - Added hero_primitive case
+- `components/editor/SectionEditor.tsx` - Added HeroPrimitiveEditor case
+- `components/editor/inspector/ContentTab.tsx` - Added HeroPrimitiveEditor case
 
-**Complexity:** High (3-5 days)
+**Task Document:** `ai_docs/tasks/077_hero_primitive_consolidation.md`
 
 ---
 
