@@ -35,9 +35,12 @@ export function DocumentUpload({
   disabled,
 }: DocumentUploadProps): React.JSX.Element {
   // Build the friendly URL for a document
-  const getFriendlyUrl = (doc: DocumentFile): string => {
-    return `/sites/${siteSlug}/docs/${doc.slug}`;
-  };
+  const getFriendlyUrl = useCallback(
+    (doc: DocumentFile): string => {
+      return `/sites/${siteSlug}/docs/${doc.slug}`;
+    },
+    [siteSlug]
+  );
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -141,7 +144,7 @@ export function DocumentUpload({
     setCopiedId(doc.id);
     toast.success("URL copied to clipboard");
     setTimeout(() => setCopiedId(null), 2000);
-  }, [siteSlug]);
+  }, [getFriendlyUrl]);
 
   const handleDelete = useCallback(
     async (doc: DocumentFile) => {

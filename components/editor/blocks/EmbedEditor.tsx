@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -58,14 +58,7 @@ export function EmbedEditor({
 
   const sourceType: EmbedSourceType = content.sourceType || "embed";
 
-  // Fetch documents when PDF tab is selected
-  useEffect(() => {
-    if (sourceType === "pdf" && !docsLoaded) {
-      loadDocuments();
-    }
-  }, [sourceType, siteId, docsLoaded]);
-
-  const loadDocuments = async (): Promise<void> => {
+  const loadDocuments = useCallback(async (): Promise<void> => {
     setIsLoadingDocs(true);
     try {
       const result = await listSiteDocuments(siteId);
@@ -78,7 +71,14 @@ export function EmbedEditor({
     } finally {
       setIsLoadingDocs(false);
     }
-  };
+  }, [siteId]);
+
+  // Fetch documents when PDF tab is selected
+  useEffect(() => {
+    if (sourceType === "pdf" && !docsLoaded) {
+      loadDocuments();
+    }
+  }, [sourceType, docsLoaded, loadDocuments]);
 
   const handleSourceTypeChange = (type: string): void => {
     const newSourceType = type as EmbedSourceType;

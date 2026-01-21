@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon, Share2, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -1135,10 +1136,12 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               <div className="border rounded-lg overflow-hidden max-w-md">
                 {ogImageUrl && (
                   <div className="aspect-[1200/630] bg-muted relative">
-                    <img
+                    <Image
                       src={ogImageUrl}
                       alt="Social share preview"
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                   </div>
                 )}

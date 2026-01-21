@@ -107,7 +107,7 @@ function formatHtml(html: string): string {
     // Opening tags (not self-closing)
     formatted = formatted.replace(
       new RegExp(`<${tag}([^>]*)>`, "gi"),
-      (match) => `\n${indentStr.repeat(indent)}<${tag}$1>`
+      (_match) => `\n${indentStr.repeat(indent)}<${tag}$1>`
     );
     // Closing tags
     formatted = formatted.replace(
