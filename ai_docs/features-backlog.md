@@ -143,7 +143,7 @@ interface RichTextContent extends SectionStyling {
 }
 ```
 
-**Prerequisites:** #81 (Shared Styling Interface) recommended
+**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
 
 **Files to Modify:**
 - `lib/section-types.ts` - Add RichTextContent, keep old types as aliases
@@ -181,7 +181,7 @@ interface CardsContent extends SectionStyling {
 }
 ```
 
-**Prerequisites:** #81 (Shared Styling Interface) recommended
+**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
 
 **Complexity:** High (4-6 days)
 
@@ -214,7 +214,7 @@ interface HeroContent extends SectionStyling {
 }
 ```
 
-**Prerequisites:** #81 (Shared Styling Interface) recommended
+**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
 
 **Complexity:** High (3-5 days)
 
@@ -233,7 +233,7 @@ interface HeroContent extends SectionStyling {
 
 **Note:** This consolidation is lower priority than RichText/Cards/Hero since these blocks are more functionally distinct.
 
-**Prerequisites:** #81 (Shared Styling Interface) recommended
+**Prerequisites:** #81 (Shared Styling Interface) ✅ completed
 
 **Complexity:** High (4-6 days)
 
@@ -314,39 +314,19 @@ interface HeroContent extends SectionStyling {
 
 ---
 
-### 81. Shared Styling Interface Extraction
+### 81. ~~Shared Styling Interface Extraction~~ ✅ COMPLETED (2026-01-20)
 
-**Problem:** ~15 blocks have nearly identical styling fields (enableStyling, textColorMode, showBorder, borderWidth, etc.) copied in each interface. Changes require updating all blocks.
+**Status:** Implemented in task `ai_docs/tasks/073_shared_styling_interface.md`
 
-**Solution:**
-- Extract `SectionStyling` base interface with all common fields
-- Each content type extends: `interface HeroContent extends SectionStyling { ... }`
-- Create shared styling editor component used by all block editors
-- Create shared styling renderer logic (currently duplicated as `borderWidthMap`, etc.)
+**What was done:**
+- Created `SectionStyling` base interface in `lib/section-types.ts`
+- Created `lib/styling-utils.ts` with shared utilities (hexToRgba, BORDER_WIDTHS, etc.)
+- Created `components/editor/StylingControls.tsx` with composable panels
+- Refactored 11 block interfaces to extend SectionStyling
+- Refactored 12 renderers to use shared utilities
+- Refactored 8 editors to use StylingControls component
 
-**Content Interface:**
-```typescript
-interface SectionStyling {
-  enableStyling?: boolean;
-  textColorMode?: "auto" | "light" | "dark";
-  showBorder?: boolean;
-  borderWidth?: "thin" | "medium" | "thick";
-  borderRadius?: "none" | "small" | "medium" | "large" | "full";
-  borderColor?: string;
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-  textSize?: "small" | "normal" | "large";
-  contentWidth?: "narrow" | "medium" | "full";
-}
-```
-
-**Prerequisites:** None (foundational for primitive consolidation)
-
-**Complexity:** Medium (1-2 days)
+**Skipped (different patterns):** ImageEditor, SocialLinksEditor, ProductGridEditor
 
 ---
 

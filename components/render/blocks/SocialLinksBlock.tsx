@@ -1,6 +1,7 @@
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { SocialLinksContent, SocialLink, SocialIconStyle, SocialIconSize } from "@/lib/section-types";
 import { SocialIcon } from "@/lib/social-icons";
+import { hexToRgba, BORDER_WIDTHS, BORDER_RADII } from "@/lib/styling-utils";
 
 interface SocialLinksBlockProps {
   content: SocialLinksContent;
@@ -9,27 +10,9 @@ interface SocialLinksBlockProps {
   siteIconStyle: SocialIconStyle;
 }
 
-function hexToRgba(hex: string, opacity: number): string {
-  const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.substring(0, 2), 16);
-  const g = parseInt(cleanHex.substring(2, 4), 16);
-  const b = parseInt(cleanHex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`;
-}
-
-const borderWidthMap = {
-  thin: "1px",
-  medium: "2px",
-  thick: "4px",
-};
-
-const borderRadiusMap = {
-  none: "0",
-  small: "0.25rem",
-  medium: "0.5rem",
-  large: "1rem",
-  full: "9999px",
-};
+// Legacy aliases for existing code
+const borderWidthMap = BORDER_WIDTHS;
+const borderRadiusMap = BORDER_RADII;
 
 const alignmentMap = {
   left: "justify-start",

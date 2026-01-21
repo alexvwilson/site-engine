@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getPublishedPostById } from "@/lib/queries/blog";
 import type { BlogFeaturedContent, ImageFit } from "@/lib/section-types";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
+import { hexToRgba } from "@/lib/styling-utils";
 
 interface BlogFeaturedBlockProps {
   content: BlogFeaturedContent;
@@ -98,17 +99,6 @@ function truncateContent(html: string, limit: number): TruncateResult {
 
   const finalText = truncatedParagraphs.join(" ");
   return { text: finalText, paragraphs: truncatedParagraphs, truncated: wasTruncated };
-}
-
-/**
- * Convert hex color and opacity to rgba string
- */
-function hexToRgba(hex: string, opacity: number): string {
-  const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.substring(0, 2), 16);
-  const g = parseInt(cleanHex.substring(2, 4), 16);
-  const b = parseInt(cleanHex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
 export async function BlogFeaturedBlock({

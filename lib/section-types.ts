@@ -174,45 +174,18 @@ export type TextContentWidth = "narrow" | "medium" | "full";
 export type TextSize = "small" | "normal" | "large";
 export type TextColorMode = "auto" | "light" | "dark";
 
-export interface TextContent {
-  body: string;
-
-  // Master styling toggle - when false, renders as plain text with theme colors
+/**
+ * Base styling interface shared across styled section blocks.
+ * Blocks that support styling extend this interface.
+ *
+ * This interface consolidates the common styling fields that were previously
+ * duplicated across ~13 block content interfaces.
+ */
+export interface SectionStyling {
+  // Master toggle - when false, renders with default theme colors
   enableStyling?: boolean;
 
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode; // 'auto' detects from background, 'light'/'dark' forces color
-
-  // Border options
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string; // Hex color, defaults to theme primary if not set
-
-  // Box background (when border is shown)
-  boxBackgroundColor?: string; // Hex color for the bordered box, empty = use theme
-  boxBackgroundOpacity?: number; // 0-100, defaults to 100
-  useThemeBackground?: boolean; // If true, uses theme background color (adapts to light/dark mode)
-
-  // Background & overlay options (for section background)
-  backgroundImage?: string;
-  overlayColor?: string; // Hex color
-  overlayOpacity?: number; // 0-100
-
-  // Layout options
-  contentWidth?: TextContentWidth;
-
-  // Typography options
-  textSize?: TextSize;
-}
-
-export interface MarkdownContent {
-  markdown: string;
-
-  // Master styling toggle - when false, renders as plain markdown with theme colors
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
+  // Text/content color mode
   textColorMode?: TextColorMode;
 
   // Border options
@@ -221,24 +194,32 @@ export interface MarkdownContent {
   borderRadius?: TextBorderRadius;
   borderColor?: string;
 
-  // Box background (when border is shown)
+  // Box background (container background when border is shown)
   boxBackgroundColor?: string;
   boxBackgroundOpacity?: number;
   useThemeBackground?: boolean;
 
-  // Background & overlay options (for section background)
+  // Section background & overlay
   backgroundImage?: string;
   overlayColor?: string;
   overlayOpacity?: number;
 
-  // Layout options
+  // Layout
   contentWidth?: TextContentWidth;
 
-  // Typography options
+  // Typography
   textSize?: TextSize;
 }
 
-export interface ImageContent {
+export interface TextContent extends SectionStyling {
+  body: string;
+}
+
+export interface MarkdownContent extends SectionStyling {
+  markdown: string;
+}
+
+export interface ImageContent extends SectionStyling {
   src: string;
   alt: string;
   caption?: string;
@@ -248,23 +229,6 @@ export interface ImageContent {
   textWidth?: ImageWidth; // Only used for side-by-side layouts (image-left, image-right)
   layout?: ImageLayout;
   description?: string; // Rich text HTML for text layouts
-
-  // Master styling toggle
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Background & overlay options
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
 }
 
 export interface GalleryImage {
@@ -319,73 +283,23 @@ export interface Feature {
   buttonVariant?: FeatureButtonVariant;
 }
 
-export interface FeaturesContent {
+export interface FeaturesContent extends SectionStyling {
   // Optional section header
   sectionTitle?: string;
   sectionSubtitle?: string;
 
   features: Feature[];
 
-  // Master styling toggle - when false, renders with fixed muted background
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options (for the features container)
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background (for the features container)
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Section background & overlay
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-
-  // Feature card options
-  showCardBackground?: boolean; // When false, cards are transparent
-  cardBackgroundColor?: string; // Custom card background (empty = use theme)
-
-  // Typography
-  textSize?: TextSize;
+  // Feature card options (not in base SectionStyling)
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
 }
 
-export interface CTAContent {
+export interface CTAContent extends SectionStyling {
   heading: string;
   description: string;
   buttonText: string;
   buttonUrl: string;
-
-  // Master styling toggle - when false, renders with fixed primary background
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options (for the CTA container)
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background (for the CTA container)
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Section background & overlay
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-
-  // Typography
-  textSize?: TextSize;
 }
 
 export interface Testimonial {
@@ -395,74 +309,24 @@ export interface Testimonial {
   avatar?: string;
 }
 
-export interface TestimonialsContent {
+export interface TestimonialsContent extends SectionStyling {
   testimonials: Testimonial[];
 
-  // Master styling toggle - when false, renders with theme background
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options (for the testimonials container)
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background (for the testimonials container)
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Section background & overlay
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-
-  // Testimonial card options
+  // Testimonial card options (not in base SectionStyling)
   showCardBackground?: boolean;
   cardBackgroundColor?: string;
-
-  // Typography
-  textSize?: TextSize;
 }
 
 export type ContactVariant = "simple" | "detailed";
 
-export interface ContactContent {
+export interface ContactContent extends SectionStyling {
   heading: string;
   description: string;
   variant: ContactVariant;
 
-  // Master styling toggle - when false, renders with muted background
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options (for the contact container)
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background (for the contact container)
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Section background & overlay
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-
-  // Form card options
+  // Form card options (not in base SectionStyling)
   showFormBackground?: boolean;
   formBackgroundColor?: string;
-
-  // Typography
-  textSize?: TextSize;
 }
 
 export interface FooterLink {
@@ -534,52 +398,27 @@ export type BlogGridPageFilter = "all" | "current" | "unassigned" | string;
 // Image background mode for contain fit
 export type ImageBackgroundMode = "muted" | "primary" | "custom";
 
-export interface BlogGridContent {
+export interface BlogGridContent extends SectionStyling {
   // Optional section header
   sectionTitle?: string;
   sectionSubtitle?: string;
 
   postCount: 3 | 6 | 9;
   showExcerpt: boolean;
-  showAuthor?: boolean; // Per-block author toggle (default: true)
+  showAuthor?: boolean;
   pageFilter?: BlogGridPageFilter;
 
   // Image background (for contain fit mode letterboxing)
   imageBackgroundMode?: ImageBackgroundMode;
-  imageBackgroundColor?: string; // Used when mode is "custom"
+  imageBackgroundColor?: string;
 
-  // Post card border color
+  // Post card border color (not in base SectionStyling)
   cardBorderMode?: "default" | "primary" | "custom";
-  cardBorderColor?: string; // Used when mode is "custom"
+  cardBorderColor?: string;
 
-  // Master styling toggle - when false, renders with plain theme background
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options (for the blog grid container)
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background (for the blog grid container)
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Section background & overlay
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-
-  // Post card options
+  // Post card options (not in base SectionStyling)
   showCardBackground?: boolean;
   cardBackgroundColor?: string;
-
-  // Typography
-  textSize?: TextSize;
 }
 
 export type EmbedSourceType = "embed" | "pdf";
@@ -598,7 +437,7 @@ export interface EmbedContent {
   documentSlug?: string;
 }
 
-export interface SocialLinksContent {
+export interface SocialLinksContent extends SectionStyling {
   // Section title and subtitle
   title?: string;
   subtitle?: string;
@@ -608,28 +447,6 @@ export interface SocialLinksContent {
 
   // Icon style override (if not set, uses site-level style)
   iconStyle?: SocialIconStyle;
-
-  // Master styling toggle - follows same pattern as other blocks
-  enableStyling?: boolean;
-
-  // Text/icon color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Section background & overlay
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
 }
 
 // ============== PRODUCT GRID TYPES ==============
@@ -680,7 +497,7 @@ export type ArticleImageAlignment = "left" | "right" | "center" | "full";
 export type ArticleImageWidth = 25 | 50 | 75 | 100;
 
 // Full product grid block content
-export interface ProductGridContent {
+export interface ProductGridContent extends SectionStyling {
   // Optional section header
   sectionTitle?: string;
   sectionSubtitle?: string;
@@ -699,58 +516,19 @@ export interface ProductGridContent {
   // Icon styling
   iconStyle: ProductIconStyle;
 
-  // Block styling (following established pattern)
-  enableStyling?: boolean;
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-  textColorMode?: TextColorMode;
-
-  // Card styling
+  // Card styling (not in base SectionStyling)
   showCardBackground?: boolean;
   cardBackgroundColor?: string;
   cardBackgroundOpacity?: number;
 }
 
 // Article block content - rich text with inline images
-export interface ArticleContent {
+export interface ArticleContent extends SectionStyling {
   // HTML content from TipTap (includes image nodes with alignment/width)
   body: string;
 
-  // Image styling for inline images
+  // Image styling for inline images (not in base SectionStyling)
   imageRounding?: TextBorderRadius;
-
-  // Master styling toggle - when false, renders as plain article with theme colors
-  enableStyling?: boolean;
-
-  // Text color mode when styling is enabled
-  textColorMode?: TextColorMode;
-
-  // Border options
-  showBorder?: boolean;
-  borderWidth?: TextBorderWidth;
-  borderRadius?: TextBorderRadius;
-  borderColor?: string;
-
-  // Box background (when border is shown)
-  boxBackgroundColor?: string;
-  boxBackgroundOpacity?: number;
-  useThemeBackground?: boolean;
-
-  // Background & overlay options (for section background)
-  backgroundImage?: string;
-  overlayColor?: string;
-  overlayOpacity?: number;
-
-  // Layout options
-  contentWidth?: TextContentWidth;
-
-  // Typography options
-  textSize?: TextSize;
 }
 
 /**

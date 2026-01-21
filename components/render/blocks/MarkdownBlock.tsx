@@ -4,6 +4,13 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeSanitize from "rehype-sanitize";
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { MarkdownContent } from "@/lib/section-types";
+import {
+  hexToRgba,
+  BORDER_WIDTHS,
+  BORDER_RADII,
+  CONTENT_WIDTHS,
+  TEXT_SIZES,
+} from "@/lib/styling-utils";
 
 // Import highlight.js theme for syntax highlighting
 import "highlight.js/styles/github.css";
@@ -12,40 +19,6 @@ interface MarkdownBlockProps {
   content: MarkdownContent;
   theme: ThemeData;
 }
-
-function hexToRgba(hex: string, opacity: number): string {
-  const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.substring(0, 2), 16);
-  const g = parseInt(cleanHex.substring(2, 4), 16);
-  const b = parseInt(cleanHex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-}
-
-const BORDER_WIDTHS: Record<string, string> = {
-  thin: "1px",
-  medium: "2px",
-  thick: "4px",
-};
-
-const BORDER_RADII: Record<string, string> = {
-  none: "0",
-  small: "4px",
-  medium: "8px",
-  large: "16px",
-  full: "9999px",
-};
-
-const CONTENT_WIDTHS: Record<string, string> = {
-  narrow: "max-w-3xl",
-  medium: "max-w-5xl",
-  full: "max-w-7xl",
-};
-
-const TEXT_SIZES: Record<string, { body: string; h1: string; h2: string; h3: string }> = {
-  small: { body: "0.875rem", h1: "1.75rem", h2: "1.5rem", h3: "1.25rem" },
-  normal: { body: "1rem", h1: "2.25rem", h2: "1.875rem", h3: "1.5rem" },
-  large: { body: "1.125rem", h1: "2.75rem", h2: "2.25rem", h3: "1.875rem" },
-};
 
 export function MarkdownBlock({ content, theme }: MarkdownBlockProps) {
   if (!content.markdown?.trim()) {

@@ -1,5 +1,6 @@
 import type { ThemeData } from "@/lib/drizzle/schema/theme-types";
 import type { ImageContent, ImageLayout, ImageWidth } from "@/lib/section-types";
+import { hexToRgba, BORDER_WIDTHS, BORDER_RADII } from "@/lib/styling-utils";
 
 interface ImageBlockProps {
   content: ImageContent;
@@ -19,33 +20,6 @@ function getContainerStyle(imageWidth: ImageWidth): React.CSSProperties {
     marginLeft: "auto",
     marginRight: "auto",
   };
-}
-
-// Border width mappings
-const BORDER_WIDTHS: Record<string, string> = {
-  thin: "1px",
-  medium: "2px",
-  thick: "4px",
-};
-
-// Border radius mappings
-const BORDER_RADII: Record<string, string> = {
-  none: "0",
-  small: "4px",
-  medium: "8px",
-  large: "16px",
-  full: "9999px",
-};
-
-/**
- * Convert hex color and opacity to rgba string
- */
-function hexToRgba(hex: string, opacity: number): string {
-  const cleanHex = hex.replace("#", "");
-  const r = parseInt(cleanHex.substring(0, 2), 16);
-  const g = parseInt(cleanHex.substring(2, 4), 16);
-  const b = parseInt(cleanHex.substring(4, 6), 16);
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
 
 /**
