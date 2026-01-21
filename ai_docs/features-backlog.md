@@ -98,25 +98,28 @@ _No P0 items currently_
 
 ---
 
-### 72. Section Picker Improvements
+### 72. Section Picker Improvements ✅ 2026-01-20
 
 **Problem:** BlockPicker shows a flat grid of 18 block types. Finding the right one requires scanning all options. No way to quickly reuse recently used or favorite sections.
 
-**Solution:**
-- Search input to filter section types
-- Categories (tabs or sidebar): Layout, Text, Media, Cards, Social, Forms, Commerce, Utility
-- Add category metadata to `BLOCK_TYPE_INFO`
-- Favorites: star button, stored in localStorage
-- Recently used: track last 5-10 used block types
-- Show favorites and recent at top of picker
+**Solution Implemented:**
+- [x] Search input to filter section types by label/description
+- [x] Category tabs: All, Layout, Content, Media, Cards, Blog, Utility
+- [x] Added `category` field to `BlockTypeInfo` interface
+- [x] Favorites: star button on each block, stored in localStorage
+- [x] Recently used: track last 5 used block types in localStorage
+- [x] Show Favorites and Recent sections at top of "All" tab
+- [x] Compact card design (4 columns desktop, 3 mobile) with scrollable grid
+- [x] Empty search state with "No blocks match" message
 
-**Prerequisites:** None
+**Files Created:**
+- `hooks/useBlockPickerStorage.ts` - localStorage hook for favorites/recent
 
-**Files to Modify:**
-- `lib/section-types.ts` - Add `category` field to `BlockTypeInfo`
-- `components/editor/BlockPicker.tsx` - Add search, tabs, favorites, recent
+**Files Modified:**
+- `lib/section-types.ts` - Added `BlockCategory` type, `BLOCK_CATEGORIES` array, `category` field to all 18 blocks
+- `components/editor/BlockPicker.tsx` - Complete refactor with search, tabs, favorites, recent
 
-**Complexity:** Medium (4-8 hours)
+**Task Document:** `ai_docs/tasks/072_section_picker_improvements.md`
 
 ---
 

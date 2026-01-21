@@ -811,6 +811,30 @@ export function getTypedContent<T extends BlockType>(
 }
 
 /**
+ * Block categories for organizing the section picker
+ */
+export type BlockCategory =
+  | "layout"
+  | "content"
+  | "media"
+  | "cards"
+  | "blog"
+  | "utility";
+
+/**
+ * Category display info for tabs in section picker
+ */
+export const BLOCK_CATEGORIES: { id: BlockCategory | "all"; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "layout", label: "Layout" },
+  { id: "content", label: "Content" },
+  { id: "media", label: "Media" },
+  { id: "cards", label: "Cards" },
+  { id: "blog", label: "Blog" },
+  { id: "utility", label: "Utility" },
+];
+
+/**
  * Block type display information
  */
 export interface BlockTypeInfo {
@@ -818,6 +842,7 @@ export interface BlockTypeInfo {
   label: string;
   description: string;
   icon: string;
+  category: BlockCategory;
 }
 
 export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
@@ -826,107 +851,125 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Header",
     description: "Site navigation with logo and links",
     icon: "panel-top",
+    category: "layout",
   },
   {
     type: "heading",
     label: "Heading",
     description: "Page title or section heading with optional subtitle",
     icon: "heading",
+    category: "layout",
   },
   {
     type: "hero",
     label: "Hero",
     description: "Large header section with heading, subheading, and CTA",
     icon: "layout",
+    category: "layout",
   },
   {
     type: "text",
     label: "Text",
     description: "Rich text content block",
     icon: "type",
+    category: "content",
   },
   {
     type: "markdown",
     label: "Markdown",
     description: "Write content in Markdown with live preview",
     icon: "file-text",
+    category: "content",
   },
   {
     type: "image",
     label: "Image",
     description: "Single image with caption",
     icon: "image",
+    category: "media",
   },
   {
     type: "gallery",
     label: "Gallery",
     description: "Grid of multiple images",
     icon: "grid-3x3",
+    category: "media",
   },
   {
     type: "features",
     label: "Features",
     description: "Feature cards with icons",
     icon: "sparkles",
+    category: "cards",
   },
   {
     type: "cta",
     label: "Call to Action",
     description: "Conversion-focused section with button",
     icon: "mouse-pointer-click",
+    category: "layout",
   },
   {
     type: "testimonials",
     label: "Testimonials",
     description: "Customer quotes and reviews",
     icon: "quote",
+    category: "cards",
   },
   {
     type: "contact",
     label: "Contact Form",
     description: "Contact form with configurable fields",
     icon: "mail",
+    category: "utility",
   },
   {
     type: "footer",
     label: "Footer",
     description: "Page footer with links and copyright",
     icon: "panel-bottom",
+    category: "layout",
   },
   {
     type: "blog_featured",
     label: "Featured Post",
     description: "Display a single blog post as a hero section",
     icon: "newspaper",
+    category: "blog",
   },
   {
     type: "blog_grid",
     label: "Post Grid",
     description: "Grid of recent blog posts",
     icon: "layout-grid",
+    category: "blog",
   },
   {
     type: "embed",
     label: "Embed",
     description: "Embed YouTube, Google Maps, and other content",
     icon: "code",
+    category: "media",
   },
   {
     type: "social_links",
     label: "Social Links",
     description: "Display social media links with icons",
     icon: "share-2",
+    category: "utility",
   },
   {
     type: "product_grid",
     label: "Product Grid",
     description: "Display products or items with action links",
     icon: "shopping-bag",
+    category: "cards",
   },
   {
     type: "article",
     label: "Article",
     description: "Rich content with inline images and text wrapping",
     icon: "book-open",
+    category: "content",
   },
 ];
