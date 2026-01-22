@@ -888,8 +888,8 @@ export function CardsEditor({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const template = content.template;
-  const items = content.items;
+  const template = content.template ?? "features";
+  const items = content.items ?? [];
 
   // Drag end handler
   const handleDragEnd = (event: DragEndEvent): void => {

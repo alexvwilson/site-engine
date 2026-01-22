@@ -48,12 +48,16 @@ export function FeaturesEditor({
 }: FeaturesEditorProps) {
   const showContent = editorMode === "all" || editorMode === "content";
   const showLayout = editorMode === "all" || editorMode === "layout";
+
+  // Defensive check: ensure features array exists
+  const features = content.features ?? [];
+
   const handleFeatureChange = (
     index: number,
     field: keyof Feature,
     value: string
   ): void => {
-    const newFeatures = [...content.features];
+    const newFeatures = [...features];
     newFeatures[index] = { ...newFeatures[index], [field]: value };
     onChange({ ...content, features: newFeatures });
   };
@@ -61,12 +65,12 @@ export function FeaturesEditor({
   const handleAddFeature = (): void => {
     onChange({
       ...content,
-      features: [...content.features, { ...DEFAULT_FEATURE }],
+      features: [...features, { ...DEFAULT_FEATURE }],
     });
   };
 
   const handleRemoveFeature = (index: number): void => {
-    const newFeatures = content.features.filter((_, i) => i !== index);
+    const newFeatures = features.filter((_, i) => i !== index);
     onChange({ ...content, features: newFeatures });
   };
 
@@ -108,7 +112,7 @@ export function FeaturesEditor({
           </div>
 
           {/* Feature List */}
-          {content.features.map((feature, index) => (
+          {features.map((feature, index) => (
         <div key={index} className="border rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
@@ -119,7 +123,7 @@ export function FeaturesEditor({
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-destructive"
               onClick={() => handleRemoveFeature(index)}
-              disabled={disabled || content.features.length <= 1}
+              disabled={disabled || features.length <= 1}
             >
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">Remove feature</span>
@@ -185,7 +189,7 @@ export function FeaturesEditor({
                 id={`feature-${index}-show-button`}
                 checked={feature.showButton ?? false}
                 onCheckedChange={(checked) => {
-                  const newFeatures = [...content.features];
+                  const newFeatures = [...features];
                   newFeatures[index] = { ...newFeatures[index], showButton: checked };
                   onChange({ ...content, features: newFeatures });
                 }}
@@ -226,7 +230,7 @@ export function FeaturesEditor({
                   <Select
                     value={feature.buttonVariant ?? "secondary"}
                     onValueChange={(v) => {
-                      const newFeatures = [...content.features];
+                      const newFeatures = [...features];
                       newFeatures[index] = { ...newFeatures[index], buttonVariant: v as FeatureButtonVariant };
                       onChange({ ...content, features: newFeatures });
                     }}

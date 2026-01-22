@@ -59,7 +59,7 @@ export function InspectorPanel({
 
   // Undo/redo history for the current section
   const {
-    state: content,
+    state: historyContent,
     set: setContent,
     undo,
     redo,
@@ -71,6 +71,13 @@ export function InspectorPanel({
     storageKey: section ? `section-history-${section.id}` : undefined,
     maxHistory: 50,
   });
+
+  // Use section.content directly if section changed but history hasn't synced yet
+  // This prevents passing stale content to editors during the render before useEffect runs
+  const content =
+    section && section.id !== currentSectionIdRef.current
+      ? (section.content as SectionContent)
+      : historyContent;
 
   // Auto-save with debounce
   const saveContent = useCallback(
@@ -244,6 +251,7 @@ export function InspectorPanel({
             <div className="p-4">
               <TabsContent value="content" className="mt-0 focus-visible:outline-none">
                 <ContentTab
+                  key={section.id}
                   section={section}
                   content={content}
                   onChange={handleContentChange}

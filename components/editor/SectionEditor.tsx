@@ -18,6 +18,7 @@ import { SocialLinksEditor } from "./blocks/SocialLinksEditor";
 import { ProductGridEditor } from "./blocks/ProductGridEditor";
 import { CardsEditor } from "./blocks/CardsEditor";
 import { MediaEditor } from "./blocks/MediaEditor";
+import { BlogEditor } from "./blocks/BlogEditor";
 import { BlogFeaturedEditor } from "./BlogFeaturedEditor";
 import { BlogGridEditor } from "./BlogGridEditor";
 import { SaveIndicator } from "./SaveIndicator";
@@ -193,6 +194,9 @@ export function SectionEditor({ section, siteId }: SectionEditorProps) {
       )}
       {section.block_type === "media" && (
         <MediaEditor {...editorProps} content={content as Parameters<typeof MediaEditor>[0]["content"]} />
+      )}
+      {section.block_type === "blog" && (
+        <BlogEditor {...editorProps} content={content as Parameters<typeof BlogEditor>[0]["content"]} />
       )}
     </div>
   );

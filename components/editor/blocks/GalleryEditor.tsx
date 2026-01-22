@@ -51,6 +51,9 @@ export function GalleryEditor({
   const showContent = editorMode === "all" || editorMode === "content";
   const showLayout = editorMode === "all" || editorMode === "layout";
 
+  // Defensive check: ensure images array exists
+  const images = content.images ?? [];
+
   // Read the theme primary color from CSS variables
   const [themePrimaryColor, setThemePrimaryColor] = useState("#3B82F6");
 
@@ -67,7 +70,7 @@ export function GalleryEditor({
     field: keyof GalleryImage,
     value: string
   ): void => {
-    const newImages = [...content.images];
+    const newImages = [...images];
     newImages[index] = { ...newImages[index], [field]: value };
     onChange({ ...content, images: newImages });
   };
@@ -75,12 +78,12 @@ export function GalleryEditor({
   const handleAddImage = (): void => {
     onChange({
       ...content,
-      images: [...content.images, { ...DEFAULT_IMAGE }],
+      images: [...images, { ...DEFAULT_IMAGE }],
     });
   };
 
   const handleRemoveImage = (index: number): void => {
-    const newImages = content.images.filter((_, i) => i !== index);
+    const newImages = images.filter((_, i) => i !== index);
     onChange({ ...content, images: newImages });
   };
 
@@ -369,13 +372,13 @@ export function GalleryEditor({
       {/* Image List - Content */}
       {showContent && (
         <>
-          {content.images.length === 0 && (
+          {images.length === 0 && (
             <div className="text-center text-muted-foreground py-8 border-2 border-dashed rounded-lg">
               No images yet. Add your first image below.
             </div>
           )}
 
-          {content.images.map((image, index) => (
+          {images.map((image, index) => (
             <div key={index} className="border rounded-lg p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">

@@ -180,6 +180,9 @@ export function HeaderEditor({
 }: HeaderEditorProps) {
   const [stylingOpen, setStylingOpen] = useState(false);
 
+  // Defensive check: ensure links array exists
+  const links = content.links ?? [];
+
   const handleFieldChange = (field: keyof HeaderContent, value: string): void => {
     onChange({ ...content, [field]: value });
   };
@@ -200,7 +203,7 @@ export function HeaderEditor({
     field: keyof NavLink,
     value: string
   ): void => {
-    const newLinks = [...content.links];
+    const newLinks = [...links];
     newLinks[index] = { ...newLinks[index], [field]: value };
     onChange({ ...content, links: newLinks });
   };
@@ -208,12 +211,12 @@ export function HeaderEditor({
   const handleAddLink = (): void => {
     onChange({
       ...content,
-      links: [...content.links, { ...DEFAULT_LINK }],
+      links: [...links, { ...DEFAULT_LINK }],
     });
   };
 
   const handleRemoveLink = (index: number): void => {
-    const newLinks = content.links.filter((_, i) => i !== index);
+    const newLinks = links.filter((_, i) => i !== index);
     onChange({ ...content, links: newLinks });
   };
 
@@ -228,12 +231,12 @@ export function HeaderEditor({
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = content.links.findIndex((_, i) => `link-${i}` === active.id);
-    const newIndex = content.links.findIndex((_, i) => `link-${i}` === over.id);
+    const oldIndex = links.findIndex((_, i) => `link-${i}` === active.id);
+    const newIndex = links.findIndex((_, i) => `link-${i}` === over.id);
 
     if (oldIndex === -1 || newIndex === -1) return;
 
-    const newLinks = [...content.links];
+    const newLinks = [...links];
     const [movedLink] = newLinks.splice(oldIndex, 1);
     newLinks.splice(newIndex, 0, movedLink);
 
@@ -590,11 +593,11 @@ export function HeaderEditor({
           modifiers={[restrictToVerticalAxis]}
         >
           <SortableContext
-            items={content.links.map((_, i) => `link-${i}`)}
+            items={links.map((_, i) => `link-${i}`)}
             strategy={verticalListSortingStrategy}
           >
             <div className="space-y-3">
-              {content.links.map((link, index) => (
+              {links.map((link, index) => (
                 <SortableLinkItem
                   key={`link-${index}`}
                   id={`link-${index}`}

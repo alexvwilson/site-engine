@@ -40,12 +40,16 @@ export function TestimonialsEditor({
 }: TestimonialsEditorProps) {
   const showContent = editorMode === "all" || editorMode === "content";
   const showLayout = editorMode === "all" || editorMode === "layout";
+
+  // Defensive check: ensure testimonials array exists
+  const testimonials = content.testimonials ?? [];
+
   const handleTestimonialChange = (
     index: number,
     field: keyof Testimonial,
     value: string
   ): void => {
-    const newTestimonials = [...content.testimonials];
+    const newTestimonials = [...testimonials];
     newTestimonials[index] = { ...newTestimonials[index], [field]: value };
     onChange({ ...content, testimonials: newTestimonials });
   };
@@ -53,12 +57,12 @@ export function TestimonialsEditor({
   const handleAddTestimonial = (): void => {
     onChange({
       ...content,
-      testimonials: [...content.testimonials, { ...DEFAULT_TESTIMONIAL }],
+      testimonials: [...testimonials, { ...DEFAULT_TESTIMONIAL }],
     });
   };
 
   const handleRemoveTestimonial = (index: number): void => {
-    const newTestimonials = content.testimonials.filter((_, i) => i !== index);
+    const newTestimonials = testimonials.filter((_, i) => i !== index);
     onChange({ ...content, testimonials: newTestimonials });
   };
 
@@ -75,7 +79,7 @@ export function TestimonialsEditor({
       {showContent && (
         <>
           {/* Testimonial List */}
-          {content.testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial, index) => (
         <div key={index} className="border rounded-lg p-4 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
@@ -86,7 +90,7 @@ export function TestimonialsEditor({
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-destructive"
               onClick={() => handleRemoveTestimonial(index)}
-              disabled={disabled || content.testimonials.length <= 1}
+              disabled={disabled || testimonials.length <= 1}
             >
               <Trash2 className="h-4 w-4" />
               <span className="sr-only">Remove testimonial</span>

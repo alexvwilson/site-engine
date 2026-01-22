@@ -59,6 +59,9 @@ export function FooterEditor({
 }: FooterEditorProps) {
   const [stylingOpen, setStylingOpen] = useState(false);
 
+  // Defensive check: ensure links array exists
+  const links = content.links ?? [];
+
   const handleCopyrightChange = (value: string): void => {
     onChange({ ...content, copyright: value });
   };
@@ -75,7 +78,7 @@ export function FooterEditor({
     field: keyof FooterLink,
     value: string
   ): void => {
-    const newLinks = [...content.links];
+    const newLinks = [...links];
     newLinks[index] = { ...newLinks[index], [field]: value };
     onChange({ ...content, links: newLinks });
   };
@@ -83,12 +86,12 @@ export function FooterEditor({
   const handleAddLink = (): void => {
     onChange({
       ...content,
-      links: [...content.links, { ...DEFAULT_LINK }],
+      links: [...links, { ...DEFAULT_LINK }],
     });
   };
 
   const handleRemoveLink = (index: number): void => {
-    const newLinks = content.links.filter((_, i) => i !== index);
+    const newLinks = links.filter((_, i) => i !== index);
     onChange({ ...content, links: newLinks });
   };
 
@@ -274,7 +277,7 @@ export function FooterEditor({
 
       <div className="space-y-4">
         <Label>Footer Links</Label>
-        {content.links.map((link, index) => (
+        {links.map((link, index) => (
           <div key={index} className="flex items-end gap-3">
             <div className="flex-1 space-y-2">
               <Label htmlFor={`link-${index}-label`} className="text-xs text-muted-foreground">
