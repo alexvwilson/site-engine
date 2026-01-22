@@ -8,7 +8,7 @@ A personal AI-powered website builder built with Next.js 15. Create, customize, 
 
 Headstring Web is a no-code website builder that lets you:
 
-- **Build visually** with 18 drag-and-drop section types, pre-designed templates, and real-time preview
+- **Build visually** with 9 unified block types, 70+ templates, split-view editor, and real-time preview
 - **Generate AI themes** - describe your brand and get complete color palettes, typography, and component styles
 - **Publish blogs** with categories, RSS feeds, scheduling, and SEO optimization
 - **Preview responsively** across desktop, tablet, and mobile with light/dark mode testing
@@ -18,24 +18,30 @@ Headstring Web is a no-code website builder that lets you:
 
 | Category | Highlights |
 |----------|------------|
-| **Building** | 18 block types, 60+ templates, drag-and-drop, undo/redo, auto-save |
+| **Building** | 9 unified blocks, 70+ templates, split-view editor, inspector panel, undo/redo |
 | **AI** | Theme generation, layout suggestions, logo prompts, SEO analysis, legal pages |
-| **Blog** | Categories, RSS, scheduling, page assignments, 4 display layouts |
+| **Blog** | Categories, RSS, scheduling, page assignments, 7 display layouts |
 | **Publishing** | Custom domains, sitemap/robots.txt, SEO meta, under construction mode |
-| **Media** | Image upload, albums, PDF documents, inline article images |
+| **Media** | Image upload, albums, PDF documents, gallery modes, embeds |
 
 ---
 
-## Block Types (18)
+## Block Types (9 Unified Primitives)
 
-### Hero Section
-The hero block is packed with features for creating impactful landing sections:
-- **Rotating text animation** with clip (width reveal) or typing (typewriter) effects
-- **Multiple CTA buttons** (up to 4) with primary/secondary variants
-- **Profile/feature image** with position control (left, right, top, bottom, after-title)
-- **Image styling**: size slider (80-400px), rounding options (none to full circle), border width/color, drop shadow
-- **Mobile responsive** stacking options for horizontal layouts
-- **Background images** with color overlays
+The block system uses unified primitives with presets/modes, reducing complexity while maintaining flexibility.
+
+### Hero
+Flexible hero section with 4 layout presets:
+- **Full**: Rotating text animation (clip/typing), up to 4 CTA buttons, hero image with position control, background images
+- **Compact**: Simpler hero with optional image and single button
+- **CTA**: Call-to-action focused with styled box, button, and overlay options
+- **Title Only**: Clean heading with H1/H2/H3 level selection and optional subtitle
+
+**Hero features:**
+- Image styling: size (80-400px), rounding, border, shadow
+- Mobile responsive stacking for horizontal layouts
+- Background images with color overlays
+- Rotating text with clip (width reveal) or typing (typewriter) effects
 
 ### Header & Footer
 - **Header layouts**: Left-aligned, right-aligned, or centered (logo with nav below)
@@ -44,73 +50,63 @@ The hero block is packed with features for creating impactful landing sections:
 - **Social icons** with 16 platform options and brand colors
 - **Logo sizing** (24-80px) with dynamic header height
 - **Background styling**: colors, images, overlays
-- **Border controls**: bottom/top borders with width, color, and radius options
-- **Per-page overrides**: customize header/footer on specific pages while inheriting site defaults
+- **Border controls**: width, color, and radius options
+- **Per-page overrides**: customize on specific pages while inheriting site defaults
 
-### Content Blocks
+### Rich Text
+Unified text editing with 3 modes:
+- **Visual**: Rich text editor (Tiptap) with formatting toolbar
+- **Markdown**: GitHub-flavored markdown with live preview toggle
+- **Article**: Rich text with inline floating images (left/right/center/full-width)
 
-| Block | Key Features |
-|-------|--------------|
-| **Text** | Rich text (Tiptap), borders, backgrounds, overlays, content width control |
-| **Image** | 5 layouts (image only, left/right with text, top/bottom), percentage widths |
-| **Markdown** | Full GitHub-flavored markdown with live preview toggle |
-| **Heading** | SEO-friendly H1/H2/H3 with subtitle and alignment options |
-| **Article** | Rich text with inline floating images (left/right/center/full-width) |
+All modes support: borders, backgrounds, overlays, content width control
 
-### Gallery
-- **3 layout modes**: Grid, Masonry (Pinterest-style), Carousel (with arrows/dots)
-- **Aspect ratios**: Square, 16:9, 4:3, 3:4, or original
-- **Lightbox**: Click to view fullscreen with keyboard/swipe navigation
-- **Columns**: 2, 3, 4, or auto-fit responsive
-- **Styling**: border width/radius, gap control (none to large)
+### Cards
+Grid of items with 3 templates:
+- **Feature**: Icon + title + subtitle + description + optional button
+- **Testimonial**: Quote + author + role + avatar
+- **Product**: Image + title + description + action links (Amazon, Spotify, Bandcamp, etc.)
 
-### Features Block
-- **Section header**: optional title and subtitle above feature cards
-- **Icon picker**: 65+ Lucide icons in 10 categories (Business, Tech, Contact, etc.)
-- **Per-feature subtitles**: short tagline between title and description
-- **Optional buttons**: add CTA buttons to individual features
-- **Styling**: card backgrounds, borders, typography scaling
+**Card features:**
+- Section header with title/subtitle
+- Grid layout (2-4 columns or auto-fit)
+- Drag-and-drop reordering
+- Card backgrounds and styling
+- 65+ Lucide icons for features
 
-### CTA & Testimonials
-- **CTA**: Heading, description, buttons with border/background/overlay styling
-- **Testimonials**: Customer quotes with avatars, styled cards
+### Media
+Visual content with 3 modes:
+- **Single Image**: 5 layouts (image only, left/right/top/bottom with text), percentage widths
+- **Gallery**: Grid, Masonry, or Carousel with lightbox, auto-rotate, aspect ratios
+- **Embed**: YouTube, Vimeo, Google Maps, Spotify, SoundCloud, PDFs
+
+### Blog
+Blog post display with 2 modes:
+- **Featured**: Single post highlight with 4 layouts (split, stacked, hero, minimal)
+- **Grid**: Post collection with 3 layouts (grid, list, magazine)
+
+**Blog features:**
+- Page assignment filtering
+- Show/hide author, excerpt, category
+- Image fit options (cover/contain/fill)
+- Full SectionStyling support
 
 ### Contact Form
 - **Two variants**: Simple (name, email, message) or Detailed (adds company, phone)
 - **Spam protection**: Honeypot fields + rate limiting
 - **Email notifications**: via Resend with reply-to headers
 - **Database storage**: Submissions tracked per-site
-- **Styling**: form card backgrounds, borders
 
-**Requirements for email notifications:**
+**Email notification requirements:**
 1. `RESEND_API_KEY` must be set in Vercel environment variables
 2. Set notification email per-site in **Settings → Contact Form Notifications**
-3. **Must test from custom domain** (e.g., `alexvwilson.com`), NOT the internal `/sites/[slug]` route
+3. Must test from custom domain, NOT the internal `/sites/[slug]` route
 
-### Blog Blocks
-- **Blog Featured**: Display a single post with 4 layouts (split, stacked, hero, minimal)
-- **Blog Grid**: Filterable post grid with page assignment support
-- **Per-block controls**: show/hide author, image fit (cover/contain/fill)
-
-### Embed Block
-Securely embed third-party content:
-- YouTube, Vimeo (video)
-- Google Maps (location)
-- Spotify, SoundCloud (audio)
-- Aspect ratio options (16:9, 4:3, 1:1, custom height)
-
-### Product Grid
-Display products, albums, or portfolio items:
-- **Image with title/description**
-- **Action links** with platform icons (Amazon, Spotify, iTunes, YouTube, Bandcamp, etc.)
-- **Icon styles**: Brand colors, monochrome, or theme primary
-- **Featured link**: Make image clickable to primary destination
-
-### Social Links Block
+### Social Links
 - **16 platforms**: Facebook, Instagram, X/Twitter, LinkedIn, YouTube, TikTok, Threads, Pinterest, GitHub, Discord, Snapchat, WhatsApp, Telegram, Twitch, Website, Email
 - **Icon styles**: Brand colors, monochrome, or theme-matched
 - **Section title/subtitle** support
-- **Standalone block** or integrated in header/footer
+- Also integrated in Header/Footer blocks
 
 ---
 
@@ -187,6 +183,31 @@ AI-generated legal documents:
 
 ---
 
+## Visual Editor
+
+### Split View
+- **Three view modes**: Builder (editor only), Split (editor + preview), Preview (preview only)
+- **Real-time preview**: Changes appear instantly as you edit
+- **Device toggle**: Test desktop, tablet, and mobile layouts
+- **Color mode toggle**: Preview light and dark themes
+- **Keyboard shortcut**: Cmd/Ctrl+Shift+P to cycle view modes
+
+### Inspector Panel
+- **Right sidebar**: Edit selected section properties without inline expansion
+- **Three tabs**: Content, Design, Advanced (anchor IDs, visibility)
+- **Section selection**: Click sections in preview to edit, hover to highlight
+- **Independent scrolling**: Inspector scrolls separately from preview
+- **Undo/Redo buttons**: 50-step history with Cmd/Ctrl+Z shortcuts
+
+### Section Management
+- **Block picker**: Search, category tabs, favorites, recently used
+- **Insert anywhere**: Add sections between existing sections with hover "+" button
+- **Drag-and-drop**: Reorder sections visually
+- **Section templates**: 70+ pre-designed templates across all block types
+- **Editor mode toggle**: Focus on Content or Layout fields separately
+
+---
+
 ## Content Management
 
 ### Media
@@ -195,17 +216,16 @@ AI-generated legal documents:
 - **Albums**: Organize images into folders with filtering
 - **PDF Documents**: Upload and get shareable URLs (10MB max)
 
-### Editing
-- **Rich Text**: Bold, italic, headings (H2/H3), lists, links, blockquotes
-- **Markdown Detection**: Auto-converts pasted markdown to formatted text
-- **Article Images**: Insert and position images inline with text (float left/right/center/full)
-- **Undo/Redo**: 50-step history with Cmd/Ctrl+Z shortcuts
-- **Auto-Save**: Debounced saving on all changes
+### Rich Text Editing
+- **Visual editor**: Bold, italic, headings (H2/H3), lists, links, blockquotes
+- **Markdown mode**: GitHub-flavored with live preview toggle
+- **Article mode**: Inline floating images (left/right/center/full-width)
+- **Markdown detection**: Auto-converts pasted markdown to formatted text
+- **Auto-save**: Debounced saving on all changes
 
 ### Organization
-- **Drag-and-Drop**: Reorder sections and pages visually
-- **Section Templates**: 2-6 pre-designed templates per block type
-- **Anchor Links**: Same-page navigation with smooth scrolling
+- **Drag-and-drop**: Reorder sections and pages visually
+- **Anchor links**: Same-page navigation with smooth scrolling
 - **Global Header/Footer**: Site-wide with per-page overrides
 
 ---
@@ -303,23 +323,29 @@ app/
 └── api/                 # API routes
 
 components/
-├── editor/              # 18 block editors
-├── render/              # 18 block renderers
+├── editor/              # Block editors, inspector panel, split view
+│   ├── blocks/          # 9 unified block editors
+│   └── inspector/       # Inspector panel tabs
+├── render/              # Block renderers
+│   ├── blocks/          # 9 unified block renderers
+│   └── blog/            # Shared blog components
 ├── blog/                # Blog management
 ├── sites/               # Site management
 ├── pages/               # Page management
 ├── theme/               # Theme generation and editing
-└── preview/             # Device preview
+└── preview/             # Device preview, section highlighting
 
 lib/
 ├── drizzle/schema/      # 15+ database tables
 ├── queries/             # Query functions
-├── section-types.ts     # Block type interfaces
+├── section-types.ts     # Block type interfaces with primitives
 ├── section-defaults.ts  # Default block content
-└── section-templates.ts # 60+ block templates
+├── section-templates.ts # 70+ block templates
+├── primitive-utils.ts   # Block type → primitive mapping
+└── styling-utils.ts     # Shared styling utilities
 
 trigger/
-├── tasks/               # 5 background jobs
+├── tasks/               # 6 background jobs
 └── utils/               # AI prompts and parsers
 ```
 
@@ -329,9 +355,13 @@ trigger/
 
 **Content Hierarchy**: Sites → Pages → Sections → Blocks
 
+**Unified Primitives**: 9 block types with mode/preset variations replace the original 18 separate blocks. Each primitive stores `block_type`, `primitive`, and `preset` columns for flexible querying while maintaining backwards compatibility.
+
 **Theme System**: CSS variables enable runtime switching without rebuilds. Themes include light and dark palettes with automatic dark mode generation when not provided.
 
-**Blog Integration**: Blog posts are separate entities from pages. Dedicated blocks (Blog Featured, Blog Grid) embed posts anywhere. Page assignments enable filtered displays.
+**Split View Editor**: Three-panel layout (section list, preview, inspector) with real-time sync. Section selection highlights corresponding elements in preview. Inspector panel provides focused editing without inline expansion.
+
+**Blog Integration**: Blog posts are separate entities from pages. The unified Blog block displays posts in featured or grid modes with 7 layout options. Page assignments enable filtered displays.
 
 **Background Jobs**: All AI operations run as Trigger.dev tasks with real-time progress tracking:
 - Theme generation
@@ -341,7 +371,7 @@ trigger/
 - Legal page generation
 - Domain verification polling
 
-**SEO**: Auto-generated sitemap.xml and robots.txt per site. AI-powered analysis with actionable recommendations. Per-page and per-block meta controls.
+**SEO**: Auto-generated sitemap.xml and robots.txt per site. AI-powered analysis with actionable recommendations. Per-page meta controls with Open Graph and Twitter Card support.
 
 ---
 
