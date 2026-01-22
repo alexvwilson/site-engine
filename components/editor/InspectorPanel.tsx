@@ -6,9 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BlockIcon } from "./BlockIcon";
+import { ConvertBlockDialog } from "./ConvertBlockDialog";
 import { ContentTab } from "./inspector/ContentTab";
 import { DesignTab } from "./inspector/DesignTab";
 import { AdvancedTab } from "./inspector/AdvancedTab";
+import {
+  isConvertibleBlockType,
+  getConversionTarget,
+} from "@/lib/block-migration";
 import {
   EditorModeToggle,
   type EditorMode,
@@ -175,7 +180,19 @@ export function InspectorPanel({
   }
 
   const blockInfo = BLOCK_TYPE_INFO.find((b) => b.type === section.block_type);
+  // Only disable controls like undo/redo during save, NOT the editor inputs
+  // This prevents focus loss while typing
   const isSaving = saveStatus === "saving";
+
+  // Check if this block type can be converted to a new primitive
+  const conversionTarget = isConvertibleBlockType(section.block_type)
+    ? getConversionTarget(section.block_type)
+    : null;
+
+  const handleConverted = (): void => {
+    // Force refresh to get updated section data with new block type
+    window.location.reload();
+  };
 
   return (
     <div className="h-full flex flex-col bg-background">
@@ -189,6 +206,15 @@ export function InspectorPanel({
           <span className="font-medium text-sm truncate">
             {blockInfo?.label ?? section.block_type}
           </span>
+          {conversionTarget && (
+            <ConvertBlockDialog
+              section={section}
+              oldLabel={blockInfo?.label ?? section.block_type}
+              targetLabel={conversionTarget.label}
+              targetPreset={conversionTarget.preset}
+              onConverted={handleConverted}
+            />
+          )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <SaveIndicator status={saveStatus} />
@@ -256,7 +282,6 @@ export function InspectorPanel({
                   content={content}
                   onChange={handleContentChange}
                   siteId={siteId}
-                  disabled={isSaving}
                   editorMode={editorMode}
                 />
               </TabsContent>
@@ -265,11 +290,10 @@ export function InspectorPanel({
                   content={content}
                   onChange={handleContentChange}
                   siteId={siteId}
-                  disabled={isSaving}
                 />
               </TabsContent>
               <TabsContent value="advanced" className="mt-0 focus-visible:outline-none">
-                <AdvancedTab section={section} disabled={isSaving} />
+                <AdvancedTab section={section} />
               </TabsContent>
             </div>
           </ScrollArea>

@@ -13,6 +13,11 @@ import { eq, and, gt, gte, sql, ne } from "drizzle-orm";
 import { getDefaultContent } from "@/lib/section-defaults";
 import type { SectionContent, HeaderContent } from "@/lib/section-types";
 import { computePrimitiveAndPreset } from "@/lib/primitive-utils";
+import {
+  isConvertibleBlockType,
+  getConversionTarget,
+  convertContent,
+} from "@/lib/block-migration";
 import { getSiteById } from "@/lib/queries/sites";
 import { getPagesBySite } from "@/lib/queries/pages";
 import { isValidAnchorId } from "@/lib/anchor-utils";
@@ -562,6 +567,58 @@ export async function updateSectionAnchorId(
     })
     .where(eq(sections.id, sectionId));
 
+  revalidatePath(`/app/sites/${page?.site_id}/pages/${existing.page_id}`);
+
+  return { success: true };
+}
+
+/**
+ * Convert an old block type section to its corresponding new primitive.
+ * Transforms the content and updates block_type, primitive, and preset.
+ */
+export async function convertSectionToPrimitive(
+  sectionId: string
+): Promise<ActionResult> {
+  const userId = await requireUserId();
+
+  const [existing] = await db
+    .select()
+    .from(sections)
+    .where(and(eq(sections.id, sectionId), eq(sections.user_id, userId)))
+    .limit(1);
+
+  if (!existing) {
+    return { success: false, error: "Section not found" };
+  }
+
+  if (!isConvertibleBlockType(existing.block_type)) {
+    return { success: false, error: "Block type cannot be converted" };
+  }
+
+  const target = getConversionTarget(existing.block_type);
+  const newContent = convertContent(
+    existing.block_type,
+    existing.content as SectionContent
+  );
+
+  await db
+    .update(sections)
+    .set({
+      block_type: target.primitive,
+      primitive: target.primitive,
+      preset: target.preset,
+      content: newContent,
+      updated_at: new Date(),
+    })
+    .where(eq(sections.id, sectionId));
+
+  const [page] = await db
+    .select({ site_id: pages.site_id })
+    .from(pages)
+    .where(eq(pages.id, existing.page_id))
+    .limit(1);
+
+  revalidatePath(`/app/sites/${page?.site_id}`);
   revalidatePath(`/app/sites/${page?.site_id}/pages/${existing.page_id}`);
 
   return { success: true };

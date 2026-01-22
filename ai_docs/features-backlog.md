@@ -394,6 +394,34 @@ interface CardsContent extends SectionStyling {
 
 ---
 
+### 84. Block Type Migration UI ✅ COMPLETED (2026-01-21)
+
+**Problem:** After creating new unified primitives (hero_primitive, cards, media, blog), users have existing sections using old block types. Before hiding old types from the block picker, users need a way to convert existing sections to new primitives.
+
+**Solution Implemented:**
+- "Convert" button appears in InspectorPanel header for old block types
+- Confirmation dialog shows old type → new primitive/preset mapping
+- Server action transforms content and updates block_type/primitive/preset columns
+- 11 block types supported: hero, cta, heading, features, testimonials, product_grid, image, gallery, embed, blog_featured, blog_grid
+- Content is preserved during conversion (field mapping handled automatically)
+- Page reloads after conversion to show new primitive's editor
+
+**Files Created:**
+- `lib/block-migration.ts` (~320 lines) - Content transformation functions and type guards
+- `components/editor/ConvertBlockDialog.tsx` (~85 lines) - Confirmation dialog
+
+**Files Modified:**
+- `app/actions/sections.ts` - Added `convertSectionToPrimitive` server action
+- `components/editor/InspectorPanel.tsx` - Added convert button for old block types
+
+**Bugfix Also Applied:** Fixed autosave disabling inputs while saving, which caused focus loss when typing in inspector fields.
+
+**Next Step:** After converting all live site sections, hide old block types from `BLOCK_TYPE_INFO` in `lib/section-types.ts`.
+
+**Task Document:** `ai_docs/tasks/081_block_type_migration_ui.md`
+
+---
+
 ### 32. Media Player Blocks (Exploratory)
 
 **Problem:** Users want to showcase audio/video content beyond YouTube/Spotify embeds.
