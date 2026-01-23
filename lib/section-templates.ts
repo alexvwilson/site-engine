@@ -1559,6 +1559,274 @@ console.log(message); // Output: Hello, World!
       },
     },
   ],
+
+  // ============================================================================
+  // Accordion Templates
+  // ============================================================================
+  accordion: [
+    // FAQ Templates
+    {
+      id: "accordion-faq-simple",
+      name: "FAQ - Simple",
+      description: "Clean FAQ section with chevron icons",
+      content: {
+        mode: "faq" as const,
+        sectionTitle: "Frequently Asked Questions",
+        sectionSubtitle: "Find answers to common questions",
+        iconStyle: "chevron" as const,
+        allowMultipleOpen: false,
+        showExpandAll: true,
+        defaultExpandFirst: true,
+        faqItems: [
+          {
+            id: "faq-1",
+            title: "What is your return policy?",
+            content:
+              "<p>We offer a 30-day money-back guarantee on all purchases. If you're not satisfied, simply contact our support team for a full refund.</p>",
+          },
+          {
+            id: "faq-2",
+            title: "How long does shipping take?",
+            content:
+              "<p>Standard shipping takes 5-7 business days. Express shipping options are available at checkout for faster delivery.</p>",
+          },
+          {
+            id: "faq-3",
+            title: "Do you offer customer support?",
+            content:
+              "<p>Yes! Our support team is available Monday through Friday, 9am-5pm EST. You can reach us via email or live chat.</p>",
+          },
+        ],
+        showNumbering: false,
+        modules: [],
+        showLessonCount: true,
+        showTotalDuration: true,
+        customItems: [],
+        enableStyling: false,
+      },
+    },
+    {
+      id: "accordion-faq-styled",
+      name: "FAQ - Styled Card",
+      description: "FAQ with border and background styling",
+      content: {
+        mode: "faq" as const,
+        sectionTitle: "Common Questions",
+        sectionSubtitle: "",
+        iconStyle: "plus-minus" as const,
+        allowMultipleOpen: true,
+        showExpandAll: false,
+        defaultExpandFirst: false,
+        faqItems: [
+          {
+            id: "faq-1",
+            title: "How do I get started?",
+            content:
+              "<p>Getting started is easy! Simply sign up for an account and follow our step-by-step onboarding guide.</p>",
+          },
+          {
+            id: "faq-2",
+            title: "What payment methods do you accept?",
+            content:
+              "<p>We accept all major credit cards, PayPal, and bank transfers for annual subscriptions.</p>",
+          },
+          {
+            id: "faq-3",
+            title: "Can I cancel my subscription?",
+            content:
+              "<p>Yes, you can cancel your subscription at any time from your account settings. No questions asked.</p>",
+          },
+        ],
+        showNumbering: false,
+        modules: [],
+        showLessonCount: true,
+        showTotalDuration: true,
+        customItems: [],
+        enableStyling: true,
+        showBorder: true,
+        borderWidth: "thin" as const,
+        borderRadius: "medium" as const,
+        textColorMode: "auto" as const,
+      },
+    },
+    {
+      id: "accordion-faq-numbered",
+      name: "FAQ - Numbered",
+      description: "FAQ with numbered questions",
+      content: {
+        mode: "faq" as const,
+        sectionTitle: "Help Center",
+        sectionSubtitle: "Top questions answered",
+        iconStyle: "chevron" as const,
+        allowMultipleOpen: false,
+        showExpandAll: true,
+        defaultExpandFirst: true,
+        faqItems: [
+          {
+            id: "faq-1",
+            title: "How do I reset my password?",
+            content:
+              "<p>Click on 'Forgot Password' on the login page and enter your email. We'll send you a reset link within minutes.</p>",
+          },
+          {
+            id: "faq-2",
+            title: "How do I update my billing information?",
+            content:
+              "<p>Go to Account Settings → Billing to update your payment method or billing address.</p>",
+          },
+          {
+            id: "faq-3",
+            title: "Where can I find my invoices?",
+            content:
+              "<p>All invoices are available in your Account Settings under the Billing History section.</p>",
+          },
+        ],
+        showNumbering: true,
+        modules: [],
+        showLessonCount: true,
+        showTotalDuration: true,
+        customItems: [],
+        enableStyling: false,
+      },
+    },
+    // Curriculum Template
+    {
+      id: "accordion-curriculum",
+      name: "Course Curriculum",
+      description: "Course outline with modules and lessons",
+      content: {
+        mode: "curriculum" as const,
+        sectionTitle: "Course Curriculum",
+        sectionSubtitle: "3 modules · 12 lessons · 2.5 hours",
+        iconStyle: "chevron" as const,
+        allowMultipleOpen: true,
+        showExpandAll: true,
+        defaultExpandFirst: true,
+        faqItems: [],
+        showNumbering: false,
+        modules: [
+          {
+            id: "mod-1",
+            title: "Module 1: Getting Started",
+            description: "Learn the fundamentals",
+            lessons: [
+              { id: "l1-1", title: "Welcome & Introduction", duration: "5:00", isCompleted: true },
+              { id: "l1-2", title: "Setting Up Your Environment", duration: "12:00", isCompleted: true },
+              { id: "l1-3", title: "Your First Project", duration: "15:00", isCompleted: false },
+            ],
+          },
+          {
+            id: "mod-2",
+            title: "Module 2: Core Concepts",
+            description: "Deep dive into the essentials",
+            lessons: [
+              { id: "l2-1", title: "Understanding the Basics", duration: "18:00", isLocked: false },
+              { id: "l2-2", title: "Advanced Techniques", duration: "22:00", isLocked: false },
+              { id: "l2-3", title: "Best Practices", duration: "14:00", isLocked: false },
+            ],
+          },
+          {
+            id: "mod-3",
+            title: "Module 3: Advanced Topics",
+            description: "Take your skills to the next level",
+            lessons: [
+              { id: "l3-1", title: "Performance Optimization", duration: "20:00", isLocked: true },
+              { id: "l3-2", title: "Scaling Your Project", duration: "25:00", isLocked: true },
+              { id: "l3-3", title: "Final Project", duration: "30:00", isLocked: true },
+            ],
+          },
+        ],
+        showLessonCount: true,
+        showTotalDuration: true,
+        customItems: [],
+        enableStyling: false,
+      },
+    },
+    // Custom Templates
+    {
+      id: "accordion-specs",
+      name: "Product Specifications",
+      description: "Technical specs in collapsible categories",
+      content: {
+        mode: "custom" as const,
+        sectionTitle: "Specifications",
+        sectionSubtitle: "",
+        iconStyle: "plus-minus" as const,
+        allowMultipleOpen: true,
+        showExpandAll: false,
+        defaultExpandFirst: false,
+        faqItems: [],
+        showNumbering: false,
+        modules: [],
+        showLessonCount: false,
+        showTotalDuration: false,
+        customItems: [
+          {
+            id: "spec-1",
+            title: "Dimensions & Weight",
+            content:
+              "<ul><li>Height: 5.78 inches</li><li>Width: 2.82 inches</li><li>Depth: 0.31 inches</li><li>Weight: 6.14 ounces</li></ul>",
+          },
+          {
+            id: "spec-2",
+            title: "Display",
+            content:
+              "<ul><li>6.1-inch Super Retina XDR display</li><li>2532x1170 resolution at 460 ppi</li><li>HDR display with True Tone</li></ul>",
+          },
+          {
+            id: "spec-3",
+            title: "Battery & Charging",
+            content:
+              "<ul><li>Up to 20 hours video playback</li><li>Fast-charge capable</li><li>Wireless charging</li></ul>",
+          },
+        ],
+        enableStyling: true,
+        showBorder: true,
+        borderWidth: "thin" as const,
+        borderRadius: "small" as const,
+      },
+    },
+    {
+      id: "accordion-docs",
+      name: "Documentation Sections",
+      description: "Help documentation with expandable sections",
+      content: {
+        mode: "custom" as const,
+        sectionTitle: "Documentation",
+        sectionSubtitle: "Learn how to use our platform",
+        iconStyle: "chevron" as const,
+        allowMultipleOpen: false,
+        showExpandAll: true,
+        defaultExpandFirst: true,
+        faqItems: [],
+        showNumbering: false,
+        modules: [],
+        showLessonCount: false,
+        showTotalDuration: false,
+        customItems: [
+          {
+            id: "doc-1",
+            title: "Getting Started",
+            content:
+              "<p>Welcome to our platform! This guide will walk you through the initial setup process.</p><ol><li>Create your account</li><li>Complete your profile</li><li>Start your first project</li></ol>",
+          },
+          {
+            id: "doc-2",
+            title: "Account Settings",
+            content:
+              "<p>Manage your account preferences, security settings, and notification options from the Settings page.</p>",
+          },
+          {
+            id: "doc-3",
+            title: "Troubleshooting",
+            content:
+              "<p>Having issues? Check our common solutions:</p><ul><li>Clear your browser cache</li><li>Disable browser extensions</li><li>Contact support if issues persist</li></ul>",
+          },
+        ],
+        enableStyling: false,
+      },
+    },
+  ],
 };
 
 /**

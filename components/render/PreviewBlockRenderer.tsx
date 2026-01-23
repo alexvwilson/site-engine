@@ -28,6 +28,7 @@ import { EmbedBlock } from "./blocks/EmbedBlock";
 import { ProductGridBlock } from "./blocks/ProductGridBlock";
 import { CardsBlock } from "./blocks/CardsBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
+import { AccordionBlock } from "./blocks/AccordionBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -287,6 +288,13 @@ export function PreviewBlockRenderer({
           </div>
         );
       }
+      case "accordion":
+        return (
+          <AccordionBlock
+            content={getTypedContent("accordion", content)}
+            theme={theme}
+          />
+        );
       default:
         return (
           <div className="p-8 text-center text-muted-foreground">

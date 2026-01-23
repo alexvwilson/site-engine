@@ -18,6 +18,7 @@ import { SocialLinksEditor } from "../blocks/SocialLinksEditor";
 import { ProductGridEditor } from "../blocks/ProductGridEditor";
 import { CardsEditor } from "../blocks/CardsEditor";
 import { MediaEditor } from "../blocks/MediaEditor";
+import { AccordionEditor } from "../blocks/AccordionEditor";
 import { BlogFeaturedEditor } from "../BlogFeaturedEditor";
 import { BlogGridEditor } from "../BlogGridEditor";
 import { BlogEditor } from "../blocks/BlogEditor";
@@ -194,6 +195,13 @@ export function ContentTab({
         <MediaEditor
           {...editorProps}
           content={content as Parameters<typeof MediaEditor>[0]["content"]}
+        />
+      );
+    case "accordion":
+      return (
+        <AccordionEditor
+          {...editorProps}
+          content={content as Parameters<typeof AccordionEditor>[0]["content"]}
         />
       );
     default:

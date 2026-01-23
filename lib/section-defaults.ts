@@ -6,6 +6,8 @@ import type {
   TextColorMode,
   FeatureCardItem,
   HeroLayout,
+  AccordionMode,
+  AccordionIconStyle,
 } from "./section-types";
 
 /**
@@ -666,6 +668,67 @@ console.log(greeting);
     embedSourceType: "embed",
 
     // ===== Styling (shared, disabled by default) =====
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    textSize: "normal",
+  },
+
+  accordion: {
+    // Mode determines which fields are active
+    mode: "faq" as AccordionMode,
+
+    // Section header (all modes)
+    sectionTitle: "",
+    sectionSubtitle: "",
+
+    // Behavior settings (all modes)
+    iconStyle: "chevron" as AccordionIconStyle,
+    allowMultipleOpen: false,
+    showExpandAll: true,
+    defaultExpandFirst: true,
+
+    // FAQ mode defaults
+    faqItems: [
+      {
+        id: "faq-1",
+        title: "What is your return policy?",
+        content:
+          "<p>We offer a 30-day money-back guarantee on all purchases. If you're not satisfied, simply contact our support team for a full refund.</p>",
+      },
+      {
+        id: "faq-2",
+        title: "How long does shipping take?",
+        content:
+          "<p>Standard shipping takes 5-7 business days. Express shipping options are available at checkout for faster delivery.</p>",
+      },
+      {
+        id: "faq-3",
+        title: "Do you offer customer support?",
+        content:
+          "<p>Yes! Our support team is available Monday through Friday, 9am-5pm EST. You can reach us via email or live chat.</p>",
+      },
+    ],
+    showNumbering: false,
+
+    // Curriculum mode defaults
+    modules: [],
+    showLessonCount: true,
+    showTotalDuration: true,
+
+    // Custom mode defaults
+    customItems: [],
+
+    // Styling (disabled by default)
     enableStyling: false,
     textColorMode: "auto",
     showBorder: false,

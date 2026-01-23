@@ -840,6 +840,83 @@ export interface CardsContent extends SectionStyling {
   showItemDescriptions?: boolean;
 }
 
+// =============================================================================
+// Accordion Primitive - FAQ, Curriculum, Collapsible Content
+// =============================================================================
+
+/**
+ * Mode type for Accordion primitive
+ * - faq: Question/answer pairs
+ * - curriculum: Nested modules with lessons (for course outlines)
+ * - custom: Generic collapsible sections
+ */
+export type AccordionMode = "faq" | "curriculum" | "custom";
+
+/**
+ * Icon style for accordion expand/collapse indicator
+ */
+export type AccordionIconStyle = "chevron" | "plus-minus";
+
+/**
+ * Basic accordion item (FAQ and Custom modes)
+ */
+export interface AccordionItem {
+  id: string;
+  title: string;
+  content: string; // HTML from TipTap
+}
+
+/**
+ * Lesson within a curriculum module
+ */
+export interface CurriculumLesson {
+  id: string;
+  title: string;
+  duration?: string; // "5:30" or "15 min"
+  isLocked?: boolean; // Visual indicator only
+  isCompleted?: boolean; // Visual indicator only
+}
+
+/**
+ * Module containing lessons (Curriculum mode)
+ */
+export interface CurriculumModule {
+  id: string;
+  title: string;
+  description?: string;
+  lessons: CurriculumLesson[];
+}
+
+/**
+ * Unified Accordion content interface
+ * Supports FAQ, curriculum, and custom collapsible modes
+ */
+export interface AccordionContent extends SectionStyling {
+  mode: AccordionMode;
+
+  // Section header (all modes)
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  // Behavior settings (all modes)
+  iconStyle: AccordionIconStyle;
+  allowMultipleOpen: boolean;
+  showExpandAll: boolean;
+  defaultExpandFirst: boolean;
+
+  // FAQ mode
+  faqItems: AccordionItem[];
+  showNumbering: boolean;
+
+  // Curriculum mode
+  modules: CurriculumModule[];
+  showLessonCount: boolean;
+  showTotalDuration: boolean;
+
+  // Custom mode
+  customItems: AccordionItem[];
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -865,7 +942,8 @@ export type SectionContent =
   | ProductGridContent
   | ArticleContent
   | CardsContent
-  | MediaContent;
+  | MediaContent
+  | AccordionContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -894,6 +972,7 @@ export interface ContentTypeMap {
   article: ArticleContent;
   cards: CardsContent;
   media: MediaContent;
+  accordion: AccordionContent;
 }
 
 /**
@@ -996,6 +1075,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Social Links",
     description: "Display social media links with icons",
     icon: "share-2",
+    category: "utility",
+  },
+  {
+    type: "accordion",
+    label: "Accordion",
+    description: "Collapsible FAQ, curriculum, or content sections",
+    icon: "list-collapse",
     category: "utility",
   },
   {

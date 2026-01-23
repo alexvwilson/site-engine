@@ -490,33 +490,6 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 85. Accordion Primitive (NEW)
-
-**Problem:** No collapsible section block for FAQ, curriculum outlines, or expandable content.
-
-**Modes:**
-- `faq` - Question/answer pairs
-- `curriculum` - Course outline with modules/lessons (nested levels)
-- `custom` - Generic collapsible sections
-
-**Features:**
-- Expand/collapse animation (smooth height transition)
-- "Expand All" / "Collapse All" toggle
-- Icon styles (chevron, plus/minus)
-- Optional numbering
-- Nested levels (curriculum mode)
-- Keyboard accessible
-- Duration display and lesson count (curriculum mode)
-- Lock/checkmark icons for content gating display
-
-**Use Cases:** FAQ pages, course curriculum previews, product specifications, documentation.
-
-**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 2)
-
-**Complexity:** Medium
-
----
-
 ### 86. Pricing Primitive (NEW)
 
 **Problem:** No block for displaying pricing tiers, plans, or service packages.
@@ -647,6 +620,37 @@ Headstringweb.com (Platform)
 ---
 
 ## Completed Features
+
+### 85. Accordion Primitive ✅ 2026-01-23
+
+**Problem:** No collapsible section block for FAQ, curriculum outlines, or expandable content.
+
+**Solution Implemented:**
+- [x] Created unified Accordion primitive with mode-based architecture ("faq" | "curriculum" | "custom")
+- [x] FAQ mode: Question/answer pairs with optional numbering
+- [x] Curriculum mode: Nested modules with lessons, duration display, lock/complete icons
+- [x] Custom mode: Generic collapsible sections
+- [x] Expand/collapse animations via Radix UI Accordion
+- [x] "Expand All" / "Collapse All" toggle
+- [x] Icon styles (chevron, plus/minus)
+- [x] Keyboard accessible (Radix UI built-in)
+- [x] Full SectionStyling support
+- [x] 6 curated templates (FAQ Simple, FAQ Styled, FAQ Numbered, Course Curriculum, Product Specs, Documentation)
+
+**Files Created:**
+- `components/render/blocks/AccordionBlock.tsx` - Unified renderer (~400 lines)
+- `components/editor/blocks/AccordionEditor.tsx` - Unified editor (~1000 lines)
+
+**Files Modified:**
+- `lib/section-types.ts` - Added AccordionContent, AccordionMode, AccordionItem, CurriculumModule, CurriculumLesson
+- `lib/drizzle/schema/sections.ts` - Added "accordion" to BLOCK_TYPES
+- `lib/section-defaults.ts` - Added accordion defaults
+- `lib/section-templates.ts` - Added 6 accordion templates
+- `components/render/BlockRenderer.tsx`, `PreviewBlockRenderer.tsx`, `ContentTab.tsx`, `BlockIcon.tsx`
+
+**Task Document:** `ai_docs/tasks/082_accordion_primitive.md`
+
+---
 
 ### 80. Primitive Consolidation: Blog ✅ 2026-01-21
 
@@ -2478,7 +2482,7 @@ Then you can configure border width, corners, and color.
 
 ---
 
-**Last Updated:** 2026-01-23 (Added #85-88: Course Platform Phase 0 primitives from roadmap)
+**Last Updated:** 2026-01-23 (Completed #85 Accordion Primitive)
 
 ---
 

@@ -24,6 +24,7 @@ import {
   AlignLeft,
   Layers,
   Rss,
+  ListCollapse,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -57,6 +58,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   article: BookOpen,
   cards: Layers,
   media: Images,
+  accordion: ListCollapse,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {
