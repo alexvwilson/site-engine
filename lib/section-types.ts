@@ -994,6 +994,99 @@ export interface PricingContent extends SectionStyling {
   tiers: PricingTier[];
 }
 
+// =============================================================================
+// Showcase Primitive - Stats Counters & File Downloads
+// =============================================================================
+
+/**
+ * Mode type for Showcase primitive
+ * - stats: Animated number counters for social proof
+ * - downloads: File download list/grid
+ */
+export type ShowcaseMode = "stats" | "downloads";
+
+/**
+ * Animation speed for stats count-up
+ */
+export type ShowcaseAnimationSpeed = "fast" | "medium" | "slow";
+
+/**
+ * Layout columns for stats display
+ */
+export type ShowcaseLayout = 2 | 3 | 4 | "auto";
+
+/**
+ * Layout type for downloads display
+ */
+export type DownloadLayout = "list" | "grid";
+
+/**
+ * File type for download items (determines icon)
+ */
+export type DownloadFileType =
+  | "pdf"
+  | "doc"
+  | "xls"
+  | "zip"
+  | "img"
+  | "video"
+  | "audio"
+  | "other";
+
+/**
+ * Individual stat item with animated counter
+ */
+export interface StatItem {
+  id: string;
+  value: number; // Target number to count to
+  prefix?: string; // Before number: "$", "#"
+  suffix?: string; // After number: "+", "K", "M", "%"
+  label: string; // Description: "Happy Clients"
+  icon?: string; // Lucide icon name (optional)
+}
+
+/**
+ * Individual download item
+ */
+export interface DownloadItem {
+  id: string;
+  title: string;
+  description?: string;
+  fileUrl: string;
+  fileType: DownloadFileType;
+  fileSize?: string; // "2.5 MB"
+  buttonText?: string; // Default: "Download"
+  openInNewWindow?: boolean;
+  documentId?: string; // Links to documents table
+}
+
+/**
+ * Unified Showcase content interface
+ * Supports stats counters and file downloads
+ */
+export interface ShowcaseContent extends SectionStyling {
+  mode: ShowcaseMode;
+
+  // Section header (all modes)
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  // Stats mode
+  stats: StatItem[];
+  statsLayout: ShowcaseLayout;
+  animationSpeed: ShowcaseAnimationSpeed;
+  animateOnScroll: boolean;
+  showStatIcons: boolean;
+
+  // Downloads mode
+  downloads: DownloadItem[];
+  downloadLayout: DownloadLayout;
+  downloadColumns?: 2 | 3;
+  showFileSize: boolean;
+  showFileType: boolean;
+  defaultButtonText: string;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -1021,7 +1114,8 @@ export type SectionContent =
   | CardsContent
   | MediaContent
   | AccordionContent
-  | PricingContent;
+  | PricingContent
+  | ShowcaseContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -1052,6 +1146,7 @@ export interface ContentTypeMap {
   media: MediaContent;
   accordion: AccordionContent;
   pricing: PricingContent;
+  showcase: ShowcaseContent;
 }
 
 /**
@@ -1169,6 +1264,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     description: "Pricing tiers, comparison tables, and subscription toggles",
     icon: "credit-card",
     category: "cards",
+  },
+  {
+    type: "showcase",
+    label: "Showcase",
+    description: "Stats counters with animation and file downloads",
+    icon: "trophy",
+    category: "utility",
   },
   {
     type: "footer",

@@ -11,6 +11,11 @@ import type {
   PricingMode,
   PricingCurrency,
   PricingPeriod,
+  ShowcaseMode,
+  ShowcaseAnimationSpeed,
+  ShowcaseLayout,
+  DownloadLayout,
+  DownloadFileType,
 } from "./section-types";
 
 /**
@@ -836,6 +841,86 @@ console.log(greeting);
         buttonVariant: "secondary",
       },
     ],
+
+    // Styling defaults
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    textSize: "normal",
+  },
+
+  showcase: {
+    mode: "stats" as ShowcaseMode,
+
+    // Section header
+    sectionTitle: "",
+    sectionSubtitle: "",
+
+    // Stats mode defaults
+    stats: [
+      {
+        id: "stat-1",
+        value: 500,
+        suffix: "+",
+        label: "Happy Clients",
+      },
+      {
+        id: "stat-2",
+        value: 10,
+        suffix: "+",
+        label: "Years Experience",
+      },
+      {
+        id: "stat-3",
+        value: 50,
+        suffix: "K",
+        label: "Projects Completed",
+      },
+      {
+        id: "stat-4",
+        value: 99,
+        suffix: "%",
+        label: "Satisfaction Rate",
+      },
+    ],
+    statsLayout: 4 as ShowcaseLayout,
+    animationSpeed: "medium" as ShowcaseAnimationSpeed,
+    animateOnScroll: true,
+    showStatIcons: false,
+
+    // Downloads mode defaults
+    downloads: [
+      {
+        id: "dl-1",
+        title: "Getting Started Guide",
+        description: "Everything you need to know to get started",
+        fileUrl: "#",
+        fileType: "pdf" as DownloadFileType,
+        fileSize: "2.5 MB",
+      },
+      {
+        id: "dl-2",
+        title: "Resource Pack",
+        description: "Templates and assets for your project",
+        fileUrl: "#",
+        fileType: "zip" as DownloadFileType,
+        fileSize: "15 MB",
+      },
+    ],
+    downloadLayout: "list" as DownloadLayout,
+    downloadColumns: 2,
+    showFileSize: true,
+    showFileType: true,
+    defaultButtonText: "Download",
 
     // Styling defaults
     enableStyling: false,

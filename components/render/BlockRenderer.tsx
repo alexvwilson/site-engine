@@ -25,6 +25,7 @@ import { MediaBlock } from "./blocks/MediaBlock";
 import { BlogBlock } from "./blocks/BlogBlock";
 import { AccordionBlock } from "./blocks/AccordionBlock";
 import PricingBlock from "./blocks/PricingBlock";
+import { ShowcaseBlock } from "./blocks/ShowcaseBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -249,6 +250,10 @@ export async function BlockRenderer({
           theme={theme}
           basePath={basePath}
         />
+      );
+    case "showcase":
+      return (
+        <ShowcaseBlock content={getTypedContent("showcase", content)} />
       );
     default:
       return (

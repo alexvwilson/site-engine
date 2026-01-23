@@ -516,35 +516,6 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 87. Showcase Primitive (NEW)
-
-**Problem:** No block for animated stats/counters or file download lists.
-
-**Modes:**
-- `stats` - Animated number counters for social proof
-- `downloads` - File download list/grid
-
-**Stats Mode Features:**
-- Animated count-up on scroll into view
-- Multiple stats in a row (2-4 columns)
-- Icons or custom labels
-- Prefix/suffix support ("+", "K", "%", "$")
-
-**Downloads Mode Features:**
-- File list with type icons (PDF, ZIP, DOC, etc.)
-- Download buttons
-- File size display
-- Optional descriptions
-- List or grid layout
-
-**Use Cases:** Social proof sections, lead magnet downloads, resource libraries, portfolio stats.
-
-**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 5)
-
-**Complexity:** Medium (stats), Low (downloads)
-
----
-
 ### 88. Calendar Primitive (NEW)
 
 **Problem:** No block for displaying upcoming events, webinars, or scheduling.
@@ -653,6 +624,41 @@ Headstringweb.com (Platform)
 - `components/render/BlockRenderer.tsx`, `PreviewBlockRenderer.tsx`, `ContentTab.tsx`, `BlockIcon.tsx`
 
 **Task Document:** `ai_docs/tasks/082_accordion_primitive.md`
+
+---
+
+### 87. Showcase Primitive ✅ 2026-01-23
+
+**Problem:** No block for animated stats/counters or file download lists.
+
+**Solution Implemented:**
+- [x] Created unified Showcase primitive with mode-based architecture ("stats" | "downloads")
+- [x] Stats mode: Animated count-up numbers on scroll into view
+- [x] Stats mode: Multiple stats in a row (2/3/4/auto columns)
+- [x] Stats mode: Lucide icon support, prefix/suffix ("+", "K", "%", "$")
+- [x] Stats mode: Configurable animation speed (fast/medium/slow)
+- [x] Downloads mode: File list or grid layout
+- [x] Downloads mode: Document picker integration with site documents
+- [x] Downloads mode: Manual URL entry support
+- [x] Downloads mode: File type icons (PDF, ZIP, DOC, XLS, IMG, Video, Audio, Other)
+- [x] Downloads mode: File size display, custom button text
+- [x] Full SectionStyling support
+- [x] 6 curated templates (Stats Simple, Stats with Icons, Stats Styled, Downloads List, Downloads Grid, Resource Library)
+- [x] Drag-drop reordering for stats and downloads
+
+**Files Created:**
+- `components/render/blocks/ShowcaseBlock.tsx` - Unified renderer with Intersection Observer animation (~500 lines)
+- `components/editor/blocks/ShowcaseEditor.tsx` - Unified editor with document picker (~1000 lines)
+- `lib/file-icons.tsx` - File type icon utility with color-coded icons
+
+**Files Modified:**
+- `lib/section-types.ts` - Added ShowcaseContent, ShowcaseMode, StatItem, DownloadItem, etc.
+- `lib/drizzle/schema/sections.ts` - Added "showcase" to BLOCK_TYPES
+- `lib/section-defaults.ts` - Added showcase defaults
+- `lib/section-templates.ts` - Added 6 showcase templates
+- `components/render/BlockRenderer.tsx`, `PreviewBlockRenderer.tsx`, `ContentTab.tsx`, `BlockIcon.tsx`
+
+**Task Document:** `ai_docs/tasks/084_showcase_primitive.md`
 
 ---
 

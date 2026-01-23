@@ -30,6 +30,7 @@ import { CardsBlock } from "./blocks/CardsBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { AccordionBlock } from "./blocks/AccordionBlock";
 import PricingBlock from "./blocks/PricingBlock";
+import { ShowcaseBlock } from "./blocks/ShowcaseBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -302,6 +303,10 @@ export function PreviewBlockRenderer({
             content={getTypedContent("pricing", content)}
             theme={theme}
           />
+        );
+      case "showcase":
+        return (
+          <ShowcaseBlock content={getTypedContent("showcase", content)} />
         );
       default:
         return (

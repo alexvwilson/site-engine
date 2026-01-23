@@ -26,6 +26,7 @@ import {
   Rss,
   ListCollapse,
   CreditCard,
+  Trophy,
 } from "lucide-react";
 import type { BlockType } from "@/lib/drizzle/schema/sections";
 import { cn } from "@/lib/utils";
@@ -61,6 +62,7 @@ const iconMap: Record<BlockType, React.ComponentType<{ className?: string }>> = 
   media: Images,
   accordion: ListCollapse,
   pricing: CreditCard,
+  showcase: Trophy,
 };
 
 export function BlockIcon({ blockType, className }: BlockIconProps) {
