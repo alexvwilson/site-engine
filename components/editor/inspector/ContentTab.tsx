@@ -19,6 +19,7 @@ import { ProductGridEditor } from "../blocks/ProductGridEditor";
 import { CardsEditor } from "../blocks/CardsEditor";
 import { MediaEditor } from "../blocks/MediaEditor";
 import { AccordionEditor } from "../blocks/AccordionEditor";
+import PricingEditor from "../blocks/PricingEditor";
 import { BlogFeaturedEditor } from "../BlogFeaturedEditor";
 import { BlogGridEditor } from "../BlogGridEditor";
 import { BlogEditor } from "../blocks/BlogEditor";
@@ -202,6 +203,13 @@ export function ContentTab({
         <AccordionEditor
           {...editorProps}
           content={content as Parameters<typeof AccordionEditor>[0]["content"]}
+        />
+      );
+    case "pricing":
+      return (
+        <PricingEditor
+          {...editorProps}
+          content={content as Parameters<typeof PricingEditor>[0]["content"]}
         />
       );
     default:

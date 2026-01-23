@@ -8,6 +8,9 @@ import type {
   HeroLayout,
   AccordionMode,
   AccordionIconStyle,
+  PricingMode,
+  PricingCurrency,
+  PricingPeriod,
 } from "./section-types";
 
 /**
@@ -729,6 +732,112 @@ console.log(greeting);
     customItems: [],
 
     // Styling (disabled by default)
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    textSize: "normal",
+  },
+
+  pricing: {
+    mode: "simple" as PricingMode,
+
+    // Section header
+    sectionTitle: "Choose Your Plan",
+    sectionSubtitle: "Select the perfect plan for your needs",
+
+    // Currency & period
+    currency: "$" as PricingCurrency,
+    period: "monthly" as PricingPeriod,
+    showPeriod: true,
+
+    // Toggle mode
+    defaultPeriod: "monthly",
+    toggleLabels: { monthly: "Monthly", annual: "Annually" },
+
+    // Layout
+    columns: 3,
+    gap: "medium",
+    equalHeight: true,
+
+    // Card styling
+    showCardBackground: true,
+    cardBorderRadius: "medium",
+
+    // Comparison features (for comparison mode)
+    comparisonFeatures: [],
+
+    // Default tiers (3 tiers)
+    tiers: [
+      {
+        id: "tier-1",
+        name: "Starter",
+        description: "Perfect for getting started",
+        price: "0",
+        priceMonthly: "0",
+        priceAnnual: "0",
+        features: [
+          { id: "f1-1", text: "Up to 3 projects", status: "included" },
+          { id: "f1-2", text: "Basic analytics", status: "included" },
+          { id: "f1-3", text: "Email support", status: "included" },
+          { id: "f1-4", text: "API access", status: "excluded" },
+          { id: "f1-5", text: "Custom domain", status: "excluded" },
+        ],
+        buttonText: "Get Started",
+        buttonUrl: "#",
+        buttonVariant: "outline",
+      },
+      {
+        id: "tier-2",
+        name: "Professional",
+        description: "For growing teams",
+        price: "29",
+        priceMonthly: "29",
+        priceAnnual: "290",
+        annualSavings: "Save $58",
+        isPopular: true,
+        popularLabel: "Most Popular",
+        features: [
+          { id: "f2-1", text: "Unlimited projects", status: "included" },
+          { id: "f2-2", text: "Advanced analytics", status: "included" },
+          { id: "f2-3", text: "Priority support", status: "included" },
+          { id: "f2-4", text: "API access", status: "included" },
+          { id: "f2-5", text: "Custom domain", status: "excluded" },
+        ],
+        buttonText: "Start Free Trial",
+        buttonUrl: "#",
+        buttonVariant: "primary",
+      },
+      {
+        id: "tier-3",
+        name: "Enterprise",
+        description: "For large organizations",
+        price: "99",
+        priceMonthly: "99",
+        priceAnnual: "990",
+        annualSavings: "Save $198",
+        features: [
+          { id: "f3-1", text: "Unlimited everything", status: "included" },
+          { id: "f3-2", text: "White-label solution", status: "included" },
+          { id: "f3-3", text: "24/7 phone support", status: "included" },
+          { id: "f3-4", text: "API access", status: "included" },
+          { id: "f3-5", text: "Custom domain", status: "included" },
+        ],
+        buttonText: "Contact Sales",
+        buttonUrl: "#",
+        buttonVariant: "secondary",
+      },
+    ],
+
+    // Styling defaults
     enableStyling: false,
     textColorMode: "auto",
     showBorder: false,

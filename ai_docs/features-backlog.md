@@ -490,23 +490,27 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 86. Pricing Primitive (NEW)
+### 86. Pricing Primitive ✅ 2026-01-23
 
 **Problem:** No block for displaying pricing tiers, plans, or service packages.
 
-**Features:**
-- 2-4 pricing columns
+**Solution Implemented:**
+- 3 modes: Simple (basic cards), Toggle (monthly/annual switch), Comparison (feature matrix table)
+- 2-4 pricing columns with responsive layout
 - Monthly/annual toggle with savings badge
-- Feature checklist with check/x icons
-- Highlighted "popular" tier
-- CTA buttons per tier (links to external checkout or contact)
-- Currency formatting
+- Feature checklist with check/x/limited icons
+- Highlighted "popular" tier with customizable badge
+- CTA buttons per tier with primary/secondary/outline styles
+- Currency formatting ($, €, £, ¥, custom)
 - Custom price label support ("Contact us", "Free")
-- Feature tooltips for explanations
+- Drag-drop reordering for tiers and features
+- 6 templates: SaaS, Course, Services, Simple, Comparison, Contact
 
-**Use Cases:** Course pricing, SaaS pricing pages, service packages, membership tiers.
+**Files Created:**
+- `components/render/blocks/PricingBlock.tsx`
+- `components/editor/blocks/PricingEditor.tsx`
 
-**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 3)
+**Task Document:** `ai_docs/tasks/083_pricing_primitive.md`
 
 **Complexity:** Medium
 

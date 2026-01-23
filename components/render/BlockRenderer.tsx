@@ -24,6 +24,7 @@ import { CardsBlock } from "./blocks/CardsBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { BlogBlock } from "./blocks/BlogBlock";
 import { AccordionBlock } from "./blocks/AccordionBlock";
+import PricingBlock from "./blocks/PricingBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -239,6 +240,14 @@ export async function BlockRenderer({
         <AccordionBlock
           content={getTypedContent("accordion", content)}
           theme={theme}
+        />
+      );
+    case "pricing":
+      return (
+        <PricingBlock
+          content={getTypedContent("pricing", content)}
+          theme={theme}
+          basePath={basePath}
         />
       );
     default:

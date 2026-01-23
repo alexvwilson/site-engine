@@ -36,6 +36,7 @@ export const BLOCK_TYPES = [
   "cards",
   "media",
   "accordion",
+  "pricing",
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];

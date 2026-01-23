@@ -917,6 +917,83 @@ export interface AccordionContent extends SectionStyling {
   customItems: AccordionItem[];
 }
 
+// ============================================
+// PRICING PRIMITIVE
+// ============================================
+
+export type PricingMode = "simple" | "toggle" | "comparison";
+export type PricingPeriod = "monthly" | "annual" | "one-time" | "custom";
+export type PricingCurrency = "$" | "€" | "£" | "¥" | "custom";
+export type PricingFeatureStatus = "included" | "excluded" | "limited";
+
+export interface PricingFeature {
+  id: string;
+  text: string;
+  status: PricingFeatureStatus;
+  tooltip?: string;
+}
+
+export interface PricingTier {
+  id: string;
+  name: string;
+  description?: string;
+
+  // Pricing - supports "29.99", "1,299", "Contact us", "Free"
+  price: string;
+  originalPrice?: string;
+  priceMonthly?: string;
+  priceAnnual?: string;
+  annualSavings?: string;
+
+  // Display
+  isPopular?: boolean;
+  popularLabel?: string;
+
+  // Features list
+  features: PricingFeature[];
+
+  // CTA button
+  buttonText: string;
+  buttonUrl: string;
+  buttonVariant?: "primary" | "secondary" | "outline";
+}
+
+export interface PricingContent extends SectionStyling {
+  mode: PricingMode;
+
+  // Section header
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  // Currency & period
+  currency?: PricingCurrency;
+  customCurrency?: string;
+  period?: PricingPeriod;
+  customPeriod?: string;
+  showPeriod?: boolean;
+
+  // Toggle mode options
+  defaultPeriod?: "monthly" | "annual";
+  toggleLabels?: { monthly: string; annual: string };
+
+  // Layout
+  columns?: 2 | 3 | 4 | "auto";
+  gap?: "small" | "medium" | "large";
+  equalHeight?: boolean;
+
+  // Card styling
+  showCardBackground?: boolean;
+  cardBackgroundColor?: string;
+  cardBorderRadius?: "none" | "small" | "medium" | "large";
+  popularHighlightColor?: string;
+
+  // Comparison mode: unified features list for table header
+  comparisonFeatures?: string[];
+
+  // Tiers
+  tiers: PricingTier[];
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -943,7 +1020,8 @@ export type SectionContent =
   | ArticleContent
   | CardsContent
   | MediaContent
-  | AccordionContent;
+  | AccordionContent
+  | PricingContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -973,6 +1051,7 @@ export interface ContentTypeMap {
   cards: CardsContent;
   media: MediaContent;
   accordion: AccordionContent;
+  pricing: PricingContent;
 }
 
 /**
@@ -1083,6 +1162,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     description: "Collapsible FAQ, curriculum, or content sections",
     icon: "list-collapse",
     category: "utility",
+  },
+  {
+    type: "pricing",
+    label: "Pricing",
+    description: "Pricing tiers, comparison tables, and subscription toggles",
+    icon: "credit-card",
+    category: "cards",
   },
   {
     type: "footer",

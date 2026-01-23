@@ -29,6 +29,7 @@ import { ProductGridBlock } from "./blocks/ProductGridBlock";
 import { CardsBlock } from "./blocks/CardsBlock";
 import { MediaBlock } from "./blocks/MediaBlock";
 import { AccordionBlock } from "./blocks/AccordionBlock";
+import PricingBlock from "./blocks/PricingBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -292,6 +293,13 @@ export function PreviewBlockRenderer({
         return (
           <AccordionBlock
             content={getTypedContent("accordion", content)}
+            theme={theme}
+          />
+        );
+      case "pricing":
+        return (
+          <PricingBlock
+            content={getTypedContent("pricing", content)}
             theme={theme}
           />
         );
