@@ -422,22 +422,37 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 32. Media Player Blocks (Exploratory)
+### 32. Media Primitive Extension: Video/Audio Modes
 
-**Problem:** Users want to showcase audio/video content beyond YouTube/Spotify embeds.
+**Problem:** Users want to showcase audio/video content beyond YouTube/Spotify embeds. The existing embed block supports YouTube, Vimeo, Spotify, SoundCloud but lacks native player features.
 
-**Current State:** Embed block supports YouTube, Vimeo, Spotify, SoundCloud.
+**Approach:** Extend the existing Media primitive with `video` and `audio` modes (currently: `single`, `gallery`, `embed`).
 
-**To Explore:**
-- Custom audio player with playlist support
-- Self-hosted audio files (requires storage solution)
-- Integration with music distributors
-- Video player with custom controls
+**Video Mode Features:**
+- Custom video player UI (play/pause, progress bar, volume, fullscreen)
+- Playback speed control (0.5x, 1x, 1.25x, 1.5x, 2x)
+- Chapter markers/timestamps (clickable list)
+- Poster image (thumbnail before play)
+- Autoplay, loop, muted options
+- Responsive aspect ratios
+
+**Audio Mode Features:**
+- Custom styled audio player
+- Track title, artist, cover image display
+- Playlist support (multiple tracks)
+- Download button option
+- Duration display
+
+**Implementation Notes:**
+- HTML5 `<video>` and `<audio>` with custom controls, or use Plyr/Video.js library
+- Storage: Supabase Storage for self-hosted, or support external URLs (Bunny, Mux, etc.)
 
 **Storage Considerations:**
 - Vercel Free: No file storage
 - Supabase Free: 1GB storage, 2GB bandwidth
 - Supabase Pro ($25/mo): 100GB storage
+
+**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 1)
 
 **Complexity:** High (storage infrastructure + custom player)
 
@@ -472,6 +487,162 @@ interface CardsContent extends SectionStyling {
 - Import from backup
 
 **Complexity:** Medium
+
+---
+
+### 85. Accordion Primitive (NEW)
+
+**Problem:** No collapsible section block for FAQ, curriculum outlines, or expandable content.
+
+**Modes:**
+- `faq` - Question/answer pairs
+- `curriculum` - Course outline with modules/lessons (nested levels)
+- `custom` - Generic collapsible sections
+
+**Features:**
+- Expand/collapse animation (smooth height transition)
+- "Expand All" / "Collapse All" toggle
+- Icon styles (chevron, plus/minus)
+- Optional numbering
+- Nested levels (curriculum mode)
+- Keyboard accessible
+- Duration display and lesson count (curriculum mode)
+- Lock/checkmark icons for content gating display
+
+**Use Cases:** FAQ pages, course curriculum previews, product specifications, documentation.
+
+**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 2)
+
+**Complexity:** Medium
+
+---
+
+### 86. Pricing Primitive (NEW)
+
+**Problem:** No block for displaying pricing tiers, plans, or service packages.
+
+**Features:**
+- 2-4 pricing columns
+- Monthly/annual toggle with savings badge
+- Feature checklist with check/x icons
+- Highlighted "popular" tier
+- CTA buttons per tier (links to external checkout or contact)
+- Currency formatting
+- Custom price label support ("Contact us", "Free")
+- Feature tooltips for explanations
+
+**Use Cases:** Course pricing, SaaS pricing pages, service packages, membership tiers.
+
+**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 3)
+
+**Complexity:** Medium
+
+---
+
+### 87. Showcase Primitive (NEW)
+
+**Problem:** No block for animated stats/counters or file download lists.
+
+**Modes:**
+- `stats` - Animated number counters for social proof
+- `downloads` - File download list/grid
+
+**Stats Mode Features:**
+- Animated count-up on scroll into view
+- Multiple stats in a row (2-4 columns)
+- Icons or custom labels
+- Prefix/suffix support ("+", "K", "%", "$")
+
+**Downloads Mode Features:**
+- File list with type icons (PDF, ZIP, DOC, etc.)
+- Download buttons
+- File size display
+- Optional descriptions
+- List or grid layout
+
+**Use Cases:** Social proof sections, lead magnet downloads, resource libraries, portfolio stats.
+
+**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 5)
+
+**Complexity:** Medium (stats), Low (downloads)
+
+---
+
+### 88. Calendar Primitive (NEW)
+
+**Problem:** No block for displaying upcoming events, webinars, or scheduling.
+
+**Modes:**
+- `list` - Upcoming events list
+- `countdown` - Countdown timer to a specific event
+- `embed` - Calendly, Cal.com, or other scheduling embed
+
+**Features:**
+- List view of upcoming events with date/time
+- Countdown timer with days/hours/minutes
+- "Add to Calendar" buttons (Google, iCal, Outlook)
+- Timezone display/conversion
+- Virtual vs. in-person indicators
+- Recurrence support (once, weekly, monthly)
+
+**Use Cases:** Event landing pages, webinar announcements, office hours scheduling, course start dates.
+
+**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 4)
+
+**Complexity:** Medium
+
+---
+
+## Future Exploration
+
+### Course/Training Platform Capabilities
+
+**Status:** Exploratory - Not committed. Content blocks above (Phase 0) may be implemented independently.
+
+**Overview:** Site Engine could evolve from a website builder into a platform that enables users to create and sell online courses, memberships, and training programs (Kajabi/Teachable model).
+
+**Architecture Vision:**
+```
+Headstringweb.com (Platform)
+├── Site Owners (course creators)
+│   └── Sites
+│       ├── Pages → Sections (current)
+│       ├── Courses
+│       │   └── Modules → Lessons
+│       └── Students (site-scoped)
+│           └── Enrollments, Progress, Payments
+```
+
+**Phase 1: Student Accounts (Foundation)**
+- Students table scoped to sites
+- Course, module, lesson database schema
+- Student authentication (magic link or email/password)
+- Student dashboard with enrolled courses
+- Enrollment and progress tracking
+
+**Phase 2: Payments (Stripe)**
+- Stripe Connect or direct API keys
+- One-time course purchases
+- Checkout flow integration
+- Payment/enrollment webhooks
+
+**Phase 3: Advanced Features**
+- Recurring subscriptions for memberships
+- Drip content (time-based unlocking)
+- Quizzes/assessments with scoring
+- Completion certificates (PDF generation)
+- Community features (comments, forums)
+
+**Open Questions:**
+1. Student auth strategy: Separate table vs. Supabase auth with roles?
+2. Video hosting: Self-hosted (Supabase Storage), Bunny Stream, Mux, or Cloudflare Stream?
+3. Stripe approach: Direct keys or Stripe Connect?
+4. Pricing model: Per-site fee, per-student fee, or transaction percentage?
+5. Scope: Full LMS or "website builder with course pages" (lighter)?
+
+**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Full detailed roadmap)
+
+**Complexity:** Very High (multi-phase, 6+ months)
 
 ---
 
@@ -2307,10 +2478,11 @@ Then you can configure border width, corners, and color.
 
 ---
 
-**Last Updated:** 2026-01-09 (Completed #67: OG Image Support for Social Sharing)
+**Last Updated:** 2026-01-23 (Added #85-88: Course Platform Phase 0 primitives from roadmap)
 
 ---
 
 ## Related Documents
 
 - [Blog System Planning](./blog-system-planning.md) - Detailed planning for the blog module
+- [Course Platform Roadmap](./refs/course-platform-roadmap.md) - Exploratory roadmap for course/LMS capabilities
