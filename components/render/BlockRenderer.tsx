@@ -26,6 +26,7 @@ import { BlogBlock } from "./blocks/BlogBlock";
 import { AccordionBlock } from "./blocks/AccordionBlock";
 import PricingBlock from "./blocks/PricingBlock";
 import { ShowcaseBlock } from "./blocks/ShowcaseBlock";
+import { CalendarBlock } from "./blocks/CalendarBlock";
 
 interface BlockRendererProps {
   section: Section;
@@ -254,6 +255,10 @@ export async function BlockRenderer({
     case "showcase":
       return (
         <ShowcaseBlock content={getTypedContent("showcase", content)} />
+      );
+    case "calendar":
+      return (
+        <CalendarBlock content={getTypedContent("calendar", content)} />
       );
     default:
       return (

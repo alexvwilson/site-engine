@@ -21,6 +21,7 @@ import { MediaEditor } from "../blocks/MediaEditor";
 import { AccordionEditor } from "../blocks/AccordionEditor";
 import PricingEditor from "../blocks/PricingEditor";
 import { ShowcaseEditor } from "../blocks/ShowcaseEditor";
+import { CalendarEditor } from "../blocks/CalendarEditor";
 import { BlogFeaturedEditor } from "../BlogFeaturedEditor";
 import { BlogGridEditor } from "../BlogGridEditor";
 import { BlogEditor } from "../blocks/BlogEditor";
@@ -218,6 +219,13 @@ export function ContentTab({
         <ShowcaseEditor
           {...editorProps}
           content={content as Parameters<typeof ShowcaseEditor>[0]["content"]}
+        />
+      );
+    case "calendar":
+      return (
+        <CalendarEditor
+          {...editorProps}
+          content={content as Parameters<typeof CalendarEditor>[0]["content"]}
         />
       );
     default:

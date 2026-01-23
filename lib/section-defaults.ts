@@ -16,6 +16,11 @@ import type {
   ShowcaseLayout,
   DownloadLayout,
   DownloadFileType,
+  CalendarMode,
+  CalendarEventType,
+  CalendarEventCardStyle,
+  CalendarEmbedPlatform,
+  CountdownUnit,
 } from "./section-types";
 
 /**
@@ -921,6 +926,83 @@ console.log(greeting);
     showFileSize: true,
     showFileType: true,
     defaultButtonText: "Download",
+
+    // Styling defaults
+    enableStyling: false,
+    textColorMode: "auto",
+    showBorder: false,
+    borderWidth: "medium",
+    borderRadius: "medium",
+    borderColor: "",
+    boxBackgroundColor: "",
+    boxBackgroundOpacity: 100,
+    useThemeBackground: true,
+    backgroundImage: "",
+    overlayColor: "#000000",
+    overlayOpacity: 0,
+    textSize: "normal",
+  },
+
+  // ============================================================================
+  // CALENDAR DEFAULTS
+  // ============================================================================
+  calendar: {
+    mode: "list" as CalendarMode,
+
+    // Section header
+    sectionTitle: "",
+    sectionSubtitle: "",
+
+    // List mode defaults
+    events: [
+      {
+        id: "event-1",
+        title: "Upcoming Webinar",
+        description: "Join us for an informative session",
+        startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0],
+        startTime: "14:00",
+        endTime: "15:00",
+        timezone: "America/New_York",
+        eventType: "virtual" as CalendarEventType,
+        location: "https://zoom.us/j/example",
+      },
+    ],
+    showAddToCalendar: true,
+    showTimezone: true,
+    eventCardStyle: "detailed" as CalendarEventCardStyle,
+
+    // Countdown mode defaults
+    countdownTitle: "Coming Soon",
+    countdownSubtitle: "",
+    targetDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
+    targetTime: "12:00",
+    targetTimezone: "America/New_York",
+    showUnits: ["days", "hours", "minutes", "seconds"] as CountdownUnit[],
+    smallestUnit: "seconds" as CountdownUnit,
+    unitLabels: {
+      days: "Days",
+      hours: "Hours",
+      minutes: "Minutes",
+      seconds: "Seconds",
+    },
+    completionMessage: "Event Started!",
+    showEventDetails: false,
+    countdownEventId: "",
+    showButton: false,
+    buttonText: "Learn More",
+    buttonUrl: "",
+    animateOnScroll: true,
+
+    // Embed mode defaults
+    embedPlatform: "calendly" as CalendarEmbedPlatform,
+    embedUrl: "",
+    embedHeight: "630",
+    embedHideCookieBanner: false,
+    embedHideEventDetails: false,
 
     // Styling defaults
     enableStyling: false,

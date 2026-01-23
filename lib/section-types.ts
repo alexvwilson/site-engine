@@ -1087,6 +1087,77 @@ export interface ShowcaseContent extends SectionStyling {
   defaultButtonText: string;
 }
 
+// ============================================
+// CALENDAR PRIMITIVE
+// ============================================
+
+export type CalendarMode = "list" | "countdown" | "embed";
+export type CalendarEventType = "virtual" | "in-person";
+export type CalendarEmbedPlatform = "calendly" | "cal.com" | "custom";
+export type CountdownUnit = "days" | "hours" | "minutes" | "seconds";
+export type CalendarEventCardStyle = "simple" | "detailed";
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  startDate: string; // ISO date string (YYYY-MM-DD)
+  startTime?: string; // HH:MM format, optional for all-day events
+  endDate?: string;
+  endTime?: string;
+  timezone: string; // IANA timezone (e.g., "America/New_York")
+  eventType: CalendarEventType;
+  location?: string; // Address or meeting link
+  recurrence?: string; // Display label like "Every Monday"
+}
+
+/**
+ * Unified Calendar content interface
+ * Supports event lists, countdown timers, and scheduling embeds
+ */
+export interface CalendarContent extends SectionStyling {
+  mode: CalendarMode;
+
+  // Section header (all modes)
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+
+  // List mode
+  events: CalendarEvent[];
+  showAddToCalendar: boolean;
+  showTimezone: boolean;
+  eventCardStyle: CalendarEventCardStyle;
+
+  // Countdown mode
+  countdownTitle: string;
+  countdownSubtitle?: string;
+  targetDate: string; // ISO date string (YYYY-MM-DD)
+  targetTime: string; // HH:MM format
+  targetTimezone: string;
+  showUnits: CountdownUnit[];
+  smallestUnit: CountdownUnit; // Which unit to count down to
+  unitLabels: {
+    days: string;
+    hours: string;
+    minutes: string;
+    seconds: string;
+  };
+  completionMessage: string;
+  showEventDetails: boolean; // Show event details below countdown
+  countdownEventId?: string; // Link to specific event for details
+  showButton: boolean;
+  buttonText?: string;
+  buttonUrl?: string;
+  animateOnScroll: boolean;
+
+  // Embed mode
+  embedPlatform: CalendarEmbedPlatform;
+  embedUrl: string;
+  embedHeight: string; // Height in pixels
+  embedHideCookieBanner: boolean;
+  embedHideEventDetails: boolean;
+}
+
 /**
  * Union type of all possible section content types
  */
@@ -1115,7 +1186,8 @@ export type SectionContent =
   | MediaContent
   | AccordionContent
   | PricingContent
-  | ShowcaseContent;
+  | ShowcaseContent
+  | CalendarContent;
 
 /**
  * Maps block type to its corresponding content interface
@@ -1147,6 +1219,7 @@ export interface ContentTypeMap {
   accordion: AccordionContent;
   pricing: PricingContent;
   showcase: ShowcaseContent;
+  calendar: CalendarContent;
 }
 
 /**
@@ -1270,6 +1343,13 @@ export const BLOCK_TYPE_INFO: BlockTypeInfo[] = [
     label: "Showcase",
     description: "Stats counters with animation and file downloads",
     icon: "trophy",
+    category: "utility",
+  },
+  {
+    type: "calendar",
+    label: "Calendar",
+    description: "Events list, countdown timer, or scheduling embed",
+    icon: "calendar",
     category: "utility",
   },
   {

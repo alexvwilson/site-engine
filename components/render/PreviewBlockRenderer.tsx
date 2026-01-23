@@ -31,6 +31,7 @@ import { MediaBlock } from "./blocks/MediaBlock";
 import { AccordionBlock } from "./blocks/AccordionBlock";
 import PricingBlock from "./blocks/PricingBlock";
 import { ShowcaseBlock } from "./blocks/ShowcaseBlock";
+import { CalendarBlock } from "./blocks/CalendarBlock";
 
 interface PreviewBlockRendererProps {
   section: Section;
@@ -307,6 +308,10 @@ export function PreviewBlockRenderer({
       case "showcase":
         return (
           <ShowcaseBlock content={getTypedContent("showcase", content)} />
+        );
+      case "calendar":
+        return (
+          <CalendarBlock content={getTypedContent("calendar", content)} />
         );
       default:
         return (

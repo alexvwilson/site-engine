@@ -516,26 +516,36 @@ interface CardsContent extends SectionStyling {
 
 ---
 
-### 88. Calendar Primitive (NEW)
+### 88. Calendar Primitive ✅ 2026-01-23
 
 **Problem:** No block for displaying upcoming events, webinars, or scheduling.
 
-**Modes:**
-- `list` - Upcoming events list
-- `countdown` - Countdown timer to a specific event
-- `embed` - Calendly, Cal.com, or other scheduling embed
+**Solution Implemented:**
+- **List mode**: Upcoming events with drag-drop reordering, date/time pickers, timezone selection
+- **Countdown mode**: Real-time ticking countdown (updates every second), configurable target date/time, completion message
+- **Embed mode**: Calendly and Cal.com scheduling widget embeds with custom URL input
 
-**Features:**
-- List view of upcoming events with date/time
-- Countdown timer with days/hours/minutes
-- "Add to Calendar" buttons (Google, iCal, Outlook)
-- Timezone display/conversion
-- Virtual vs. in-person indicators
-- Recurrence support (once, weekly, monthly)
+**Features Implemented:**
+- "Add to Calendar" dropdown (Google Calendar, Outlook Web, ICS download)
+- Timezone display with 16 common timezone presets
+- Virtual vs. in-person event type indicators with location/meeting link fields
+- Simple and detailed event card styles
+- Section title/subtitle support
+- StylingControls integration for custom backgrounds, borders, etc.
+- 6 templates: Events List Simple/Detailed, Webinar/Launch Countdown, Calendly/Cal.com Booking
 
-**Use Cases:** Event landing pages, webinar announcements, office hours scheduling, course start dates.
+**Files Created/Modified:**
+- `components/render/blocks/CalendarBlock.tsx` - Full renderer (~650 lines)
+- `components/editor/blocks/CalendarEditor.tsx` - Full editor (~900 lines)
+- `lib/section-types.ts` - CalendarContent interface and types
+- `lib/section-defaults.ts` - Calendar defaults
+- `lib/section-templates.ts` - 6 calendar templates
+- `components/editor/BlockIcon.tsx` - Calendar icon
+- `components/render/BlockRenderer.tsx` - Calendar case
+- `components/render/PreviewBlockRenderer.tsx` - Calendar case
+- `components/editor/inspector/ContentTab.tsx` - CalendarEditor case
 
-**Related Document:** `ai_docs/refs/course-platform-roadmap.md` (Phase 0, Section 4)
+**Task Document:** `ai_docs/tasks/085_calendar_primitive.md`
 
 **Complexity:** Medium
 
