@@ -253,6 +253,13 @@
       "when": 1769032620630,
       "tag": "0035_ordinary_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1769211472689,
+      "tag": "0036_wakeful_marvel_zombies",
+      "breakpoints": true
     }
   ]
 }

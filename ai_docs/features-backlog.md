@@ -40,18 +40,35 @@ _No P0 items currently_
 
 ## P2 - Medium Priority
 
-### 51. Admin Landing Page Content Management
+### 51. Admin Landing Page Content Management ✅ 2026-01-23
 
 **Problem:** Landing page content (FAQ, features, etc.) is hardcoded in components. When users submit questions via the contact form, there's no easy way to update the FAQ or other landing page content without code changes.
 
-**Solution:**
-- Admin-only content management for landing page sections
-- Editable FAQ entries (add/edit/delete/reorder)
-- Editable features list
-- Possibly editable testimonials/social proof
-- Store in database, render dynamically
+**Solution Implemented:**
+- [x] New `landing_faqs` and `landing_features` database tables
+- [x] Admin-only content management at `/admin/dashboard`
+- [x] FAQManager: Add/edit/delete/reorder FAQ items with drag-drop
+- [x] FeatureManager: Add/edit/delete/reorder features with icon picker (10 Lucide icons)
+- [x] Toggle active/inactive to show/hide items on landing page
+- [x] FAQSection and FeaturesSection now fetch from database
+- [x] Empty state handling (sections hide when no active items)
+- [x] Seed script to populate initial content from hardcoded values
 
-**Complexity:** Medium
+**Files Created:**
+- `lib/drizzle/schema/landing-content.ts` - Database tables
+- `lib/queries/landing-content.ts` - Query functions
+- `app/actions/landing-content.ts` - Server actions (10 CRUD operations)
+- `lib/feature-icons.ts` - Icon mapping utility
+- `components/admin/FAQManager.tsx` - FAQ management UI
+- `components/admin/FeatureManager.tsx` - Feature management UI
+- `scripts/seed-landing-content.ts` - Initial data seed
+
+**Files Modified:**
+- `components/landing/FAQSection.tsx` - Now async, fetches from DB
+- `components/landing/FeaturesSection.tsx` - Now async, fetches from DB
+- `app/(protected)/admin/dashboard/page.tsx` - Added content management section
+
+**Task Document:** `ai_docs/tasks/086_admin_landing_page_cms.md`
 
 ---
 

@@ -1,32 +1,14 @@
-import { Sparkles, Layout, Eye, Rocket } from "lucide-react";
+import { getActiveFeatures } from "@/lib/queries/landing-content";
+import { getFeatureIcon } from "@/lib/feature-icons";
+import type { LucideIcon } from "lucide-react";
 
-export default function FeaturesSection() {
-  const features = [
-    {
-      icon: Sparkles,
-      title: "AI Theme Generation",
-      description:
-        "Describe your brand in words and let AI create a unique, cohesive theme with colors, typography, and component styles.",
-    },
-    {
-      icon: Layout,
-      title: "Visual Page Editor",
-      description:
-        "Drag-and-drop sections, edit content inline, and see changes instantly. No coding required.",
-    },
-    {
-      icon: Eye,
-      title: "Instant Preview",
-      description:
-        "Preview your pages on desktop, tablet, and mobile before publishing. What you see is what your visitors get.",
-    },
-    {
-      icon: Rocket,
-      title: "One-Click Publishing",
-      description:
-        "When you're ready, publish to your custom domain with a single click. Your changes go live instantly.",
-    },
-  ];
+export default async function FeaturesSection() {
+  const features = await getActiveFeatures();
+
+  // Hide section if no features
+  if (features.length === 0) {
+    return null;
+  }
 
   return (
     <section className="bg-background py-16 md:py-20">
@@ -43,7 +25,13 @@ export default function FeaturesSection() {
 
         <div className="grid gap-8 md:grid-cols-2">
           {features.map((feature, index) => (
-            <FeatureCard key={feature.title} {...feature} index={index} />
+            <FeatureCard
+              key={feature.id}
+              icon={getFeatureIcon(feature.icon_name)}
+              title={feature.title}
+              description={feature.description}
+              index={index}
+            />
           ))}
         </div>
       </div>
@@ -57,7 +45,7 @@ function FeatureCard({
   description,
   index,
 }: {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   title: string;
   description: string;
   index: number;

@@ -61,6 +61,12 @@ export * from "./contact-submissions";
  */
 export * from "./landing-contacts";
 
+/**
+ * Landing Content tables - Admin-managed content for landing page
+ * FAQ items and features displayed on the public landing page
+ */
+export * from "./landing-content";
+
 // ============================================================================
 // Media Management
 // ============================================================================

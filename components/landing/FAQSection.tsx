@@ -5,40 +5,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { getActiveFaqs } from "@/lib/queries/landing-content";
 
-const FAQSection = () => {
-  const faqs = [
-    {
-      question: "How does AI theme generation work?",
-      answer:
-        "Simply describe your brand, target audience, and style preferences in plain language. Our AI analyzes your input and generates a complete theme including color palette, typography, and component styles that match your vision.",
-    },
-    {
-      question: "Can I use my own domain?",
-      answer:
-        "Yes! You can connect your custom domain to any published site. We handle SSL certificates automatically, so your site is secure from day one.",
-    },
-    {
-      question: "Do I need coding experience?",
-      answer:
-        "Not at all. Headstring Web is designed for content managers and creators who want full control without writing code. Everything is visual - drag sections, click to edit text, and see changes in real-time.",
-    },
-    {
-      question: "What types of pages can I create?",
-      answer:
-        "You can create any type of page using our 9 block types: Hero, Text, Image, Gallery, Features, CTA, Testimonials, Contact, and Footer sections. Combine them in any order to build landing pages, about pages, portfolios, and more.",
-    },
-    {
-      question: "Can I preview before publishing?",
-      answer:
-        "Absolutely. Our preview mode lets you see exactly how your page will look on desktop, tablet, and mobile devices before you publish. No surprises for your visitors.",
-    },
-    {
-      question: "Is my content secure?",
-      answer:
-        "Yes. All content is stored securely with enterprise-grade encryption. Your sites and data are backed up regularly, and you maintain full ownership of everything you create.",
-    },
-  ];
+export default async function FAQSection() {
+  const faqs = await getActiveFaqs();
+
+  // Hide section if no FAQs
+  if (faqs.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -56,8 +31,8 @@ const FAQSection = () => {
         </div>
 
         <Accordion type="single" collapsible className="w-full">
-          {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`} className="mb-4">
+          {faqs.map((faq) => (
+            <AccordionItem key={faq.id} value={faq.id} className="mb-4">
               <AccordionTrigger className="text-left text-lg font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors">
                 {faq.question}
               </AccordionTrigger>
@@ -82,6 +57,4 @@ const FAQSection = () => {
       </div>
     </section>
   );
-};
-
-export default FAQSection;
+}

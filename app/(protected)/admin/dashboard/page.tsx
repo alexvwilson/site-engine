@@ -5,23 +5,28 @@ import {
   getUsageTrends,
   getSystemHealth,
 } from "@/lib/admin";
+import { getAllFaqs, getAllFeatures } from "@/lib/queries/landing-content";
 import { SystemMetricsCards } from "@/components/admin/SystemMetricsCards";
 import { JobStatisticsChart } from "@/components/admin/JobStatisticsChart";
 import { UsageTrendsChart } from "@/components/admin/UsageTrendsChart";
 import { TodaysActivityCard } from "@/components/admin/TodaysActivityCard";
 import { UserSearchList } from "@/components/admin/UserSearchList";
+import { FAQManager } from "@/components/admin/FAQManager";
+import { FeatureManager } from "@/components/admin/FeatureManager";
 
 export default async function AdminDashboard() {
   // Enforce admin access (redirects non-admin to /unauthorized)
   await requireAdminAccess();
 
-  // Fetch all metrics in parallel for fast page load
-  const [systemMetrics, jobStats, usageTrends, systemHealth] =
+  // Fetch all data in parallel for fast page load
+  const [systemMetrics, jobStats, usageTrends, systemHealth, allFaqs, allFeatures] =
     await Promise.all([
       getSystemMetrics(),
       getJobStatistics(30),
       getUsageTrends(30),
       getSystemHealth(),
+      getAllFaqs(),
+      getAllFeatures(),
     ]);
 
   return (
@@ -49,6 +54,19 @@ export default async function AdminDashboard() {
 
         {/* User Search and List */}
         <UserSearchList />
+
+        {/* Landing Page Content Management */}
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Landing Page Content</h2>
+          <p className="text-muted-foreground mb-6">
+            Manage FAQ questions and feature highlights displayed on the public
+            landing page.
+          </p>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <FAQManager initialFaqs={allFaqs} />
+            <FeatureManager initialFeatures={allFeatures} />
+          </div>
+        </div>
       </div>
     </div>
   );
