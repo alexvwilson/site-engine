@@ -145,6 +145,53 @@ export function getBoxBackgroundColor(
 }
 
 // =============================================================================
+// THEME SCOPE STYLES
+// =============================================================================
+
+interface ColorPaletteSubset {
+  primary: string;
+  background: string;
+  foreground: string;
+  muted: string;
+  mutedForeground: string;
+  border: string;
+}
+
+/**
+ * Generate CSS that scopes theme color variables to a specific RichText section.
+ * This prevents the admin app's @theme inline CSS variables (which reference
+ * the admin's --foreground/--background) from overriding the site theme's colors.
+ *
+ * Sets --color-foreground, --color-background, etc. directly on the section element
+ * using the site theme's actual hex values. Also includes a .site-dark override
+ * for user_choice color mode support.
+ */
+export function generateThemeScopeStyles(
+  instanceId: string,
+  lightColors: ColorPaletteSubset,
+  darkColors: ColorPaletteSubset
+): string {
+  return `
+    [data-rt="${instanceId}"] {
+      --color-foreground: ${lightColors.foreground};
+      --color-background: ${lightColors.background};
+      --color-primary: ${lightColors.primary};
+      --color-muted: ${lightColors.muted};
+      --color-muted-foreground: ${lightColors.mutedForeground};
+      --color-border: ${lightColors.border};
+    }
+    .site-dark [data-rt="${instanceId}"] {
+      --color-foreground: ${darkColors.foreground};
+      --color-background: ${darkColors.background};
+      --color-primary: ${darkColors.primary};
+      --color-muted: ${darkColors.muted};
+      --color-muted-foreground: ${darkColors.mutedForeground};
+      --color-border: ${darkColors.border};
+    }
+  `;
+}
+
+// =============================================================================
 // PROSE STYLE GENERATORS
 // =============================================================================
 

@@ -13,6 +13,7 @@ import {
   getRichTextColors,
   getBoxBackgroundColor,
   buildRichTextStyles,
+  generateThemeScopeStyles,
 } from "@/lib/richtext-utils";
 import {
   hexToRgba,
@@ -20,9 +21,13 @@ import {
   BORDER_RADII,
   CONTENT_WIDTHS,
 } from "@/lib/styling-utils";
+import { generateDefaultDarkPalette } from "@/lib/theme-utils";
 
 // Import highlight.js theme for syntax highlighting (markdown mode)
 import "highlight.js/styles/github.css";
+
+// Counter for generating unique instance IDs (avoids cross-block CSS conflicts)
+let instanceCounter = 0;
 
 interface RichTextBlockProps {
   content: RichTextContent;
@@ -49,7 +54,15 @@ export function RichTextBlock({
 
   const enableStyling = content.enableStyling ?? false;
   const textSize = content.textSize ?? "normal";
-  const prefix = `richtext-${mode}`;
+
+  // Generate unique prefix per instance to avoid CSS conflicts between blocks
+  const instanceId = `rt${++instanceCounter}`;
+  const prefix = `${instanceId}-${mode}`;
+
+  // Generate scoped theme CSS variables to prevent admin app's @theme inline
+  // from overriding site theme colors (fixes light text on light background)
+  const darkColors = theme.darkColors || generateDefaultDarkPalette(theme.colors);
+  const themeScopeStyles = generateThemeScopeStyles(instanceId, theme.colors, darkColors);
 
   // ============================================================================
   // PLAIN MODE (styling disabled)
@@ -68,9 +81,10 @@ export function RichTextBlock({
     return (
       <section
         className="py-12 px-6"
+        data-rt={instanceId}
         style={{ backgroundColor: "var(--color-background)" }}
       >
-        <style dangerouslySetInnerHTML={{ __html: styles }} />
+        <style dangerouslySetInnerHTML={{ __html: themeScopeStyles + styles }} />
         <div className="max-w-3xl mx-auto">
           {mode === "markdown" ? (
             <div className={`${prefix} max-w-none`}>
@@ -155,11 +169,11 @@ export function RichTextBlock({
   });
 
   return (
-    <section className="relative py-12 px-6" style={sectionStyles}>
+    <section className="relative py-12 px-6" data-rt={instanceId} style={sectionStyles}>
       {/* Overlay layer */}
       <div className="absolute inset-0" style={{ backgroundColor: overlayRgba }} />
 
-      <style dangerouslySetInnerHTML={{ __html: styles }} />
+      <style dangerouslySetInnerHTML={{ __html: themeScopeStyles + styles }} />
 
       {/* Content container */}
       <div
