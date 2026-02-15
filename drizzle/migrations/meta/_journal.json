@@ -260,6 +260,13 @@
       "when": 1769211472689,
       "tag": "0036_wakeful_marvel_zombies",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1771193707513,
+      "tag": "0037_abnormal_kinsey_walden",
+      "breakpoints": true
     }
   ]
 }

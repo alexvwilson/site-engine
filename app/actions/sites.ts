@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/drizzle/db";
-import { sites, type ColorMode, COLOR_MODES, type BrandPersonality, BRAND_PERSONALITIES, type BlogImageFit, BLOG_IMAGE_FIT_OPTIONS } from "@/lib/drizzle/schema/sites";
+import { sites, type ColorMode, COLOR_MODES, type BrandPersonality, BRAND_PERSONALITIES, type BlogImageFit, BLOG_IMAGE_FIT_OPTIONS, type HeadScript } from "@/lib/drizzle/schema/sites";
 import { requireUserId } from "@/lib/auth";
 import { eq, and, ne } from "drizzle-orm";
 import type { HeaderContent, FooterContent, SocialLink, SocialIconStyle } from "@/lib/section-types";
@@ -246,6 +246,7 @@ export interface UpdateSiteSettingsData {
   ogImageUrl?: string | null;
   socialLinks?: SocialLink[];
   socialIconStyle?: SocialIconStyle;
+  headScripts?: HeadScript[] | null;
 }
 
 /**
@@ -373,6 +374,9 @@ export async function updateSiteSettings(
     if (SOCIAL_ICON_STYLES.includes(data.socialIconStyle)) {
       updateData.social_icon_style = data.socialIconStyle;
     }
+  }
+  if (data.headScripts !== undefined) {
+    updateData.head_scripts = data.headScripts;
   }
 
   await db.update(sites).set(updateData).where(eq(sites.id, siteId));

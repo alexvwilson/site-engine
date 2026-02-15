@@ -20,6 +20,11 @@ export type DomainSslStatus = (typeof DOMAIN_SSL_STATUSES)[number];
 
 export const SOCIAL_ICON_STYLES = ["brand", "monochrome", "primary"] as const;
 
+export interface HeadScript {
+  label: string;
+  content: string;
+}
+
 export const BLOG_IMAGE_FIT_OPTIONS = ["cover", "contain", "fill"] as const;
 export type BlogImageFit = (typeof BLOG_IMAGE_FIT_OPTIONS)[number];
 
@@ -86,6 +91,8 @@ export const sites = pgTable(
     social_links: jsonb("social_links").$type<SocialLink[]>().default([]),
     // Icon style for social links (brand colors, monochrome, or theme primary)
     social_icon_style: text("social_icon_style", { enum: SOCIAL_ICON_STYLES }).default("brand"),
+    // Custom head scripts (meta tags, analytics, tracking pixels, etc.)
+    head_scripts: jsonb("head_scripts").$type<HeadScript[]>(),
     // Custom domain verification fields
     domain_verification_status: text("domain_verification_status", {
       enum: DOMAIN_VERIFICATION_STATUSES,

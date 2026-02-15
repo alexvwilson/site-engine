@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon, Share2, FileText } from "lucide-react";
+import { ExternalLink, Loader2, Globe, Search, Link2, Palette, LayoutTemplate, Construction, BookOpen, Mail, CheckCircle, Clock, Shield, Trash2, RefreshCw, Image as ImageIcon, Share2, FileText, Code, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +31,7 @@ import {
   removeCustomDomain,
   checkDomainFeatureAvailable,
 } from "@/app/actions/domains";
-import type { Site, ColorMode, BrandPersonality, BlogImageFit } from "@/lib/drizzle/schema/sites";
+import type { Site, ColorMode, BrandPersonality, BlogImageFit, HeadScript } from "@/lib/drizzle/schema/sites";
 import { Badge } from "@/components/ui/badge";
 import { DnsInstructionsCard } from "@/components/sites/DnsInstructionsCard";
 import { formatDnsInstructions, type DnsInstruction } from "@/lib/domain-utils";
@@ -124,6 +124,11 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     (site.social_icon_style as SocialIconStyle) ?? "brand"
   );
 
+  // Head scripts (meta tags, analytics, tracking pixels)
+  const [headScripts, setHeadScripts] = useState<HeadScript[]>(
+    (site.head_scripts as HeadScript[]) ?? []
+  );
+
   // Custom domain management (separate from main form)
   const [domainInput, setDomainInput] = useState("");
   const [domainLoading, setDomainLoading] = useState(false);
@@ -158,6 +163,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
   const initialFooter = site.footer_content ?? sectionDefaults.footer;
   const initialSocialLinks = (site.social_links as SocialLink[]) ?? [];
   const initialSocialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
+  const initialHeadScripts = (site.head_scripts as HeadScript[]) ?? [];
 
   const hasChanges =
     slug !== site.slug ||
@@ -181,7 +187,8 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     !deepEqual(headerContent, initialHeader) ||
     !deepEqual(footerContent, initialFooter) ||
     !deepEqual(socialLinks, initialSocialLinks) ||
-    socialIconStyle !== initialSocialIconStyle;
+    socialIconStyle !== initialSocialIconStyle ||
+    !deepEqual(headScripts, initialHeadScripts);
 
   // Validate slug format
   const slugError =
@@ -215,6 +222,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
     setFooterContent(site.footer_content ?? sectionDefaults.footer);
     setSocialLinks((site.social_links as SocialLink[]) ?? []);
     setSocialIconStyle((site.social_icon_style as SocialIconStyle) ?? "brand");
+    setHeadScripts((site.head_scripts as HeadScript[]) ?? []);
     setDomainInput("");
   }, [site]);
 
@@ -254,6 +262,7 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
       footerContent: !deepEqual(footerContent, initialFooter) ? footerContent : undefined,
       socialLinks: !deepEqual(socialLinks, initialSocialLinks) ? socialLinks : undefined,
       socialIconStyle: socialIconStyle !== initialSocialIconStyle ? socialIconStyle : undefined,
+      headScripts: !deepEqual(headScripts, initialHeadScripts) ? headScripts : undefined,
     });
     setLoading(false);
 
@@ -1158,6 +1167,82 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
                 </div>
               </div>
             </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Head Scripts */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Code className="h-5 w-5" />
+            Head Scripts
+          </CardTitle>
+          <CardDescription>
+            Add custom meta tags, analytics scripts, or tracking pixels to your published site.
+            Common uses: Google Search Console verification, Google Analytics (GA4), Facebook Pixel.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {headScripts.map((script, index) => (
+            <div key={index} className="space-y-2 p-4 border rounded-lg">
+              <div className="flex items-center justify-between gap-2">
+                <Input
+                  placeholder="Label (e.g., Google Search Console)"
+                  value={script.label}
+                  onChange={(e) => {
+                    const updated = [...headScripts];
+                    updated[index] = { ...updated[index], label: e.target.value };
+                    setHeadScripts(updated);
+                  }}
+                  disabled={loading}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setHeadScripts(headScripts.filter((_, i) => i !== index));
+                  }}
+                  disabled={loading}
+                  className="text-destructive hover:text-destructive shrink-0"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <Textarea
+                placeholder={'<meta name="google-site-verification" content="..." />'}
+                value={script.content}
+                onChange={(e) => {
+                  const updated = [...headScripts];
+                  updated[index] = { ...updated[index], content: e.target.value };
+                  setHeadScripts(updated);
+                }}
+                disabled={loading}
+                rows={3}
+                className="font-mono text-sm"
+              />
+            </div>
+          ))}
+
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setHeadScripts([...headScripts, { label: "", content: "" }]);
+            }}
+            disabled={loading}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Script
+          </Button>
+
+          {headScripts.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              No head scripts configured. Add scripts to inject custom tags into your published site&apos;s {'<head>'}.
+            </p>
           )}
         </CardContent>
       </Card>

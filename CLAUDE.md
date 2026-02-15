@@ -102,7 +102,7 @@ npm run trigger:deploy:prod   # Deploy Trigger.dev tasks to production
 **Core Tables:**
 
 - **users** - User profiles (synced with Supabase auth), roles (member/admin)
-- **sites** - User-created websites with name, slug, status (draft/published), custom domain settings
+- **sites** - User-created websites with name, slug, status (draft/published), custom domain settings, head scripts (custom meta tags/analytics)
 - **pages** - Pages within sites, with slug, SEO metadata, is_home flag
 - **sections** - Content sections on pages with block_type and JSONB content
 

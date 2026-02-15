@@ -1,0 +1,1 @@
+ALTER TABLE "sites" ADD COLUMN "head_scripts" jsonb;
