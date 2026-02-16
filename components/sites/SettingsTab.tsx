@@ -961,10 +961,9 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               value={blogMetaTitle}
               onChange={(e) => setBlogMetaTitle(e.target.value)}
               disabled={loading}
-              maxLength={60}
             />
-            <p className="text-sm text-muted-foreground">
-              The title shown in search results for your main blog page (max 60 characters).
+            <p className={`text-sm ${blogMetaTitle.length > 60 ? "text-yellow-500" : "text-muted-foreground"}`}>
+              {blogMetaTitle.length > 0 ? `${blogMetaTitle.length}/60 characters` : "The title shown in search results for your main blog page (recommended max 60 characters)."}
             </p>
           </div>
 
@@ -977,10 +976,9 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               onChange={(e) => setBlogMetaDescription(e.target.value)}
               disabled={loading}
               rows={3}
-              maxLength={160}
             />
-            <p className="text-sm text-muted-foreground">
-              A brief summary of your blog shown in search results (max 160 characters).
+            <p className={`text-sm ${blogMetaDescription.length > 160 ? "text-yellow-500" : "text-muted-foreground"}`}>
+              {blogMetaDescription.length > 0 ? `${blogMetaDescription.length}/160 characters` : "A brief summary of your blog shown in search results (recommended max 160 characters)."}
             </p>
           </div>
         </CardContent>
@@ -1099,11 +1097,9 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               onChange={(e) => setMetaDescription(e.target.value)}
               disabled={loading}
               rows={3}
-              maxLength={160}
             />
-            <p className="text-sm text-muted-foreground">
-              A brief summary shown in search results (max 160 characters).
-              Defaults to your site description if empty.
+            <p className={`text-sm ${metaDescription.length > 160 ? "text-yellow-500" : "text-muted-foreground"}`}>
+              {metaDescription.length > 0 ? `${metaDescription.length}/160 characters` : "A brief summary shown in search results (recommended max 160 characters)."} Defaults to your site description if empty.
             </p>
           </div>
 
