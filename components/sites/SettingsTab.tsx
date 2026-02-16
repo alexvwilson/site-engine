@@ -1084,11 +1084,9 @@ export function SettingsTab({ site, categories = [], activeTheme }: SettingsTabP
               value={metaTitle}
               onChange={(e) => setMetaTitle(e.target.value)}
               disabled={loading}
-              maxLength={60}
             />
-            <p className="text-sm text-muted-foreground">
-              The title that appears in search results and browser tabs (max 60
-              characters). Defaults to your site name if empty.
+            <p className={`text-sm ${metaTitle.length > 60 ? "text-yellow-500" : "text-muted-foreground"}`}>
+              {metaTitle.length > 0 ? `${metaTitle.length}/60 characters` : "The title that appears in search results and browser tabs (recommended max 60 characters)."} Defaults to your site name if empty.
             </p>
           </div>
 
