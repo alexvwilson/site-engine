@@ -1,6 +1,8 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import { Extension } from "@tiptap/core";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -153,6 +155,48 @@ function normalizeContent(content: string): string {
   return paragraphs.join("");
 }
 
+/**
+ * TipTap extension that auto-converts pasted markdown to HTML.
+ * Detects when plain-text markdown is pasted (e.g. from AI tools)
+ * and converts it to proper HTML with headings, lists, etc.
+ */
+const MarkdownPaste = Extension.create({
+  name: "markdownPaste",
+
+  addProseMirrorPlugins() {
+    const tiptapEditor = this.editor;
+    return [
+      new Plugin({
+        key: new PluginKey("markdownPaste"),
+        props: {
+          handlePaste: (_view, event) => {
+            const clipboardText = event.clipboardData?.getData("text/plain") || "";
+            const clipboardHtml = event.clipboardData?.getData("text/html") || "";
+
+            // Only auto-convert when pasted content is plain text (no rich HTML)
+            // Rich HTML from browsers/apps will have formatting tags
+            const hasRichFormatting = clipboardHtml &&
+              /<(h[1-6]|strong|em|ul|ol|li|blockquote|pre|code|table)[>\s]/i.test(clipboardHtml);
+
+            if (clipboardText && !hasRichFormatting && detectMarkdown(clipboardText)) {
+              const html = convertMarkdownToHtml(clipboardText);
+
+              // If editor is empty, replace all content; otherwise insert at cursor
+              if (tiptapEditor.isEmpty || tiptapEditor.getText().trim() === "") {
+                tiptapEditor.commands.setContent(html);
+              } else {
+                tiptapEditor.commands.insertContent(html);
+              }
+              return true;
+            }
+            return false;
+          },
+        },
+      }),
+    ];
+  },
+});
+
 export function TiptapEditor({
   value,
   onChange,
@@ -188,6 +232,7 @@ export function TiptapEditor({
       Placeholder.configure({
         placeholder,
       }),
+      MarkdownPaste,
     ],
     content: normalizedValue,
     editable: !disabled,
