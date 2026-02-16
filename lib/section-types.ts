@@ -782,6 +782,7 @@ export interface TestimonialCardItem {
   author: string;
   role: string;
   avatar?: string;
+  avatarAlt?: string;
 }
 
 /**
@@ -791,6 +792,7 @@ export interface TestimonialCardItem {
 export interface ProductCardItem {
   id: string;
   image?: string;
+  imageAlt?: string;
   title?: string;
   description?: string;
   links: ProductLink[];

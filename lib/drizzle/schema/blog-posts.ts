@@ -37,6 +37,7 @@ export const blogPosts = pgTable(
     excerpt: text("excerpt"),
     content: jsonb("content").$type<{ html: string }>(),
     featured_image: text("featured_image"),
+    featured_image_alt: text("featured_image_alt"),
     status: text("status", { enum: POST_STATUSES }).notNull().default("draft"),
     published_at: timestamp("published_at", { withTimezone: true }),
     meta_title: text("meta_title"),

@@ -45,6 +45,7 @@ export interface ImageFile {
   createdAt: string;
   size: number;
   albumId: string | null;
+  altText: string | null;
 }
 
 export interface ListImagesResult {
@@ -272,6 +273,7 @@ export async function listSiteImages(
     createdAt: img.created_at.toISOString(),
     size: img.file_size ?? 0,
     albumId: img.album_id,
+    altText: img.alt_text,
   }));
 
   return { success: true, images: imageFiles };
@@ -300,6 +302,28 @@ export async function updateImageAlbum(
   } catch (error) {
     console.error("Update image album error:", error);
     return { success: false, error: "Failed to update image album" };
+  }
+}
+
+/**
+ * Update the alt text for an image.
+ */
+export async function updateImageAltText(
+  imageId: string,
+  altText: string | null
+): Promise<UpdateAlbumResult> {
+  await requireUserId();
+
+  try {
+    await db
+      .update(images)
+      .set({ alt_text: altText })
+      .where(eq(images.id, imageId));
+
+    return { success: true };
+  } catch (error) {
+    console.error("Update image alt text error:", error);
+    return { success: false, error: "Failed to update image alt text" };
   }
 }
 

@@ -51,7 +51,7 @@ export function PublicPostCard({
         >
           <Image
             src={post.featured_image}
-            alt={post.title}
+            alt={post.featured_image_alt || post.title}
             fill
             className={`transition-transform duration-300 group-hover:scale-105 ${
               imageFit === "cover"

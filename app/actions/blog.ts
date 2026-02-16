@@ -151,6 +151,7 @@ export interface UpdatePostData {
   excerpt?: string;
   content?: { html: string };
   featured_image?: string | null;
+  featured_image_alt?: string | null;
   category_id?: string | null;
   page_id?: string | null;
   meta_title?: string | null;
@@ -205,6 +206,9 @@ export async function updatePost(
   }
   if (data.featured_image !== undefined) {
     updateData.featured_image = data.featured_image;
+  }
+  if (data.featured_image_alt !== undefined) {
+    updateData.featured_image_alt = data.featured_image_alt;
   }
   if (data.category_id !== undefined) {
     updateData.category_id = data.category_id;

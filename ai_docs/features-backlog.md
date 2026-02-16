@@ -38,6 +38,60 @@ _No P0 items currently_
 
 ---
 
+### 89. Image Alt Text Support ✅ 2026-02-15
+
+**Problem:** Images lacked proper alt text fields in several areas of the editor. Gallery/media blocks had alt text available, but blog post images (featured images), Cards block images (testimonial avatars, product images), and the images database table had no alt text support.
+
+**Solution Implemented:**
+- [x] Added `alt_text` column to `images` table for reusable alt text per uploaded image
+- [x] Added `featured_image_alt` column to `blog_posts` table
+- [x] Added `avatarAlt` to `TestimonialCardItem` and `imageAlt` to `ProductCardItem` types
+- [x] Added alt text input in blog PostEditor (appears when featured image is set)
+- [x] Added alt text input in CardsEditor for testimonial avatars and product images
+- [x] Added `updateImageAltText` server action for updating image-level alt text
+- [x] Updated all blog renderers (BlogBlock, BlogFeaturedBlock, BlogGridBlock, PublicPostCard, blog detail page) to use `featured_image_alt` with fallback to post title
+- [x] Updated CardsBlock renderer to use `avatarAlt`/`imageAlt` with fallbacks
+- [x] ImageLibrary uses stored alt text for image alt attributes
+
+**Already had alt text support (no changes needed):**
+- Media block (single + gallery), Hero Primitive, legacy Image block, Article inline images
+
+**Deferred:** Pre-filling alt text from image library into block editors when selecting (requires ImageUpload interface refactor)
+
+**Task Document:** `ai_docs/tasks/087_image_alt_text_support.md`
+
+---
+
+### 90. Light/Dark Mode Image Variants
+
+**Problem:** Currently blocks and pages use the same images regardless of whether the site is in light or dark mode. Some designs benefit from different image variants per color scheme (e.g., a dark logo on light backgrounds, a light logo on dark backgrounds, or different hero images per mode).
+
+**Solution:**
+- Add optional `darkModeImageUrl` (or similar) field alongside existing image fields
+- In the editor, show a secondary image picker when light/dark variants are enabled
+- In published site renderers, use CSS `prefers-color-scheme` media queries or the site's theme mode to swap images
+- Apply to: Hero images, Media block, Cards block images, Header logo, Blog featured images
+- Keep it optional — if no dark variant is set, the default image is used for both modes
+
+**Complexity:** Medium-High (schema changes across multiple block types, renderer updates, editor UI additions)
+
+---
+
+### 91. Rich Text Alignment Options
+
+**Problem:** Text blocks (RichText, Heading) lack alignment controls. Users cannot center, right-align, or justify text, which limits layout flexibility — especially for headings, CTAs, and content sections that need centered or right-aligned text.
+
+**Solution:**
+- Add text alignment toolbar buttons (left, center, right, justify) to the RichText editor toolbar
+- Add alignment option to the Heading block inspector
+- Store alignment as part of the block content (e.g., `textAlign: "left" | "center" | "right" | "justify"`)
+- Apply alignment in both the editor preview and published site renderers
+- TipTap has built-in `TextAlign` extension — integrate it into the existing editor setup
+
+**Complexity:** Low-Medium (TipTap has native support, mainly UI + renderer updates)
+
+---
+
 ## P2 - Medium Priority
 
 ### 51. Admin Landing Page Content Management ✅ 2026-01-23

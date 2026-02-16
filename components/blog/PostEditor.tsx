@@ -57,6 +57,7 @@ export function PostEditor({ post, siteId, categories, pages }: PostEditorProps)
   const [excerpt, setExcerpt] = useState(post.excerpt || "");
   const [content, setContent] = useState(post.content?.html || "");
   const [featuredImage, setFeaturedImage] = useState(post.featured_image || "");
+  const [featuredImageAlt, setFeaturedImageAlt] = useState(post.featured_image_alt || "");
   const [categoryId, setCategoryId] = useState<string | null>(
     post.category_id ?? null
   );
@@ -80,6 +81,7 @@ export function PostEditor({ post, siteId, categories, pages }: PostEditorProps)
       excerpt,
       content: { html: content },
       featured_image: featuredImage || null,
+      featured_image_alt: featuredImageAlt || null,
       category_id: categoryId,
       page_id: pageId,
       meta_title: metaTitle || null,
@@ -93,7 +95,7 @@ export function PostEditor({ post, siteId, categories, pages }: PostEditorProps)
       toast.error(result.error || "Failed to save post");
     }
     return result.success;
-  }, [post.id, title, slug, excerpt, content, featuredImage, categoryId, pageId, metaTitle, metaDescription]);
+  }, [post.id, title, slug, excerpt, content, featuredImage, featuredImageAlt, categoryId, pageId, metaTitle, metaDescription]);
 
   const handlePublish = async () => {
     setIsPublishing(true);
@@ -260,12 +262,22 @@ export function PostEditor({ post, siteId, categories, pages }: PostEditorProps)
                   Featured Image
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-3">
                 <ImageUpload
                   value={featuredImage}
                   onChange={setFeaturedImage}
                   siteId={siteId}
                 />
+                {featuredImage && (
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Alt Text</Label>
+                    <Input
+                      value={featuredImageAlt}
+                      onChange={(e) => setFeaturedImageAlt(e.target.value)}
+                      placeholder="Describe this image for accessibility"
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 

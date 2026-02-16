@@ -88,7 +88,7 @@ export function ImageLibrary({ siteId, onSelect }: ImageLibraryProps): React.Rea
             >
               <Image
                 src={image.url}
-                alt={image.name}
+                alt={image.altText || image.name}
                 fill
                 sizes="(max-width: 768px) 33vw, 100px"
                 className="object-cover"

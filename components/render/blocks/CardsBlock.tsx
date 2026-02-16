@@ -221,7 +221,7 @@ function TestimonialCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={item.avatar}
-            alt={item.author}
+            alt={item.avatarAlt || item.author}
             className="w-12 h-12 rounded-full object-cover"
             style={{ transform: `scale(${textScale})` }}
           />
@@ -298,7 +298,7 @@ function ProductCard({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={item.image}
-        alt={item.title ?? "Product"}
+        alt={item.imageAlt || item.title || "Product"}
         className="w-full h-full object-cover"
       />
     </div>
@@ -636,7 +636,7 @@ function FlexCardsRenderer({
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={item.avatar}
-                          alt={item.author}
+                          alt={item.avatarAlt || item.author}
                           className="w-12 h-12 rounded-full object-cover"
                         />
                       ) : (

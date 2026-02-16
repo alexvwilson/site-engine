@@ -376,6 +376,17 @@ function SortableTestimonialCard({
           disabled={disabled}
           placeholder="Drag & drop an avatar"
         />
+        {item.avatar && (
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground">Avatar Alt Text</Label>
+            <Input
+              value={item.avatarAlt ?? ""}
+              onChange={(e) => onUpdate("avatarAlt", e.target.value)}
+              placeholder="Describe this avatar image"
+              disabled={disabled}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -731,6 +742,18 @@ function ProductItemEditorDialog({
               onChange={(url) => setEditItem({ ...editItem, image: url })}
               siteId={siteId}
             />
+            {editItem.image && (
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Image Alt Text</Label>
+                <Input
+                  value={editItem.imageAlt ?? ""}
+                  onChange={(e) =>
+                    setEditItem({ ...editItem, imageAlt: e.target.value })
+                  }
+                  placeholder="Describe this image"
+                />
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">

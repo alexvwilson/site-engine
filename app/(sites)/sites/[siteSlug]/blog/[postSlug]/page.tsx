@@ -236,7 +236,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
                 >
                   <Image
                     src={post.featured_image}
-                    alt={post.title}
+                    alt={post.featured_image_alt || post.title}
                     fill
                     className={
                       blogImageFit === "cover"

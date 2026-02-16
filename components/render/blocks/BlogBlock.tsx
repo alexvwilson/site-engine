@@ -41,6 +41,7 @@ interface PostWithCategory {
   excerpt: string | null;
   content: { html: string } | null;
   featured_image: string | null;
+  featured_image_alt: string | null;
   published_at: Date | null;
   authorName: string | null;
   categoryName: string | null;
@@ -230,7 +231,7 @@ function SplitLayout({
         <div className="grid gap-8 md:grid-cols-2 items-center">
           <BlogPostImage
             src={post.featured_image}
-            alt={post.title}
+            alt={post.featured_image_alt || post.title}
             className="aspect-video"
             linked
             url={postUrl}
@@ -290,7 +291,7 @@ function StackedLayout({
 
         <BlogPostImage
           src={post.featured_image}
-          alt={post.title}
+          alt={post.featured_image_alt || post.title}
           className="aspect-video w-full mb-8"
           linked
           url={postUrl}
@@ -635,7 +636,7 @@ function ListLayout({
           >
             <BlogPostImage
               src={post.featured_image}
-              alt={post.title}
+              alt={post.featured_image_alt || post.title}
               className="w-48 md:w-64 aspect-video shrink-0"
               imageFit={settings.imageFit}
               imageBackgroundMode={settings.imageBackgroundMode}
@@ -724,7 +725,7 @@ function MagazineLayout({
       >
         <BlogPostImage
           src={featured.featured_image}
-          alt={featured.title}
+          alt={featured.featured_image_alt || featured.title}
           className="aspect-[4/3] w-full"
           imageFit={settings.imageFit}
           imageBackgroundMode={settings.imageBackgroundMode}
@@ -794,7 +795,7 @@ function MagazineLayout({
             >
               <BlogPostImage
                 src={post.featured_image}
-                alt={post.title}
+                alt={post.featured_image_alt || post.title}
                 className="w-32 aspect-video shrink-0"
                 imageFit={settings.imageFit}
                 imageBackgroundMode={settings.imageBackgroundMode}
@@ -862,7 +863,7 @@ function PostCard({
     >
       <BlogPostImage
         src={post.featured_image}
-        alt={post.title}
+        alt={post.featured_image_alt || post.title}
         className="aspect-video w-full"
         imageFit={settings.imageFit}
         imageBackgroundMode={settings.imageBackgroundMode}

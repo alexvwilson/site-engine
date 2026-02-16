@@ -26,6 +26,7 @@ export const images = pgTable(
     filename: text("filename").notNull(),
     file_size: integer("file_size"),
     mime_type: text("mime_type"),
+    alt_text: text("alt_text"),
     created_at: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
