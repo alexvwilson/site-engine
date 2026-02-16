@@ -553,8 +553,22 @@ export function TiptapEditor({
         </div>
       )}
 
-      {/* Editor List Styles - ensures bullets/numbers show in editor */}
+      {/* Editor Styles - headings, lists, blockquotes */}
       <style dangerouslySetInnerHTML={{ __html: `
+        .ProseMirror h2 {
+          font-size: 1.5em;
+          font-weight: 700;
+          line-height: 1.3;
+          margin: 1.25rem 0 0.5rem 0;
+          border-bottom: 1px solid hsl(var(--border));
+          padding-bottom: 0.25rem;
+        }
+        .ProseMirror h3 {
+          font-size: 1.25em;
+          font-weight: 600;
+          line-height: 1.4;
+          margin: 1rem 0 0.5rem 0;
+        }
         .ProseMirror ul {
           list-style-type: disc;
           padding-left: 1.5rem;
@@ -570,6 +584,13 @@ export function TiptapEditor({
         }
         .ProseMirror li p {
           margin: 0;
+        }
+        .ProseMirror blockquote {
+          border-left: 3px solid hsl(var(--border));
+          padding-left: 1rem;
+          font-style: italic;
+          margin: 0.75rem 0;
+          opacity: 0.85;
         }
       `}} />
 
