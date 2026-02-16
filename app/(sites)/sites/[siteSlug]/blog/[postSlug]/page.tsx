@@ -109,6 +109,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
   const socialLinks = (site.social_links as SocialLink[]) ?? [];
   const socialIconStyle = (site.social_icon_style as SocialIconStyle) ?? "brand";
   const blogImageFit = (site.blog_image_fit as ImageFit) ?? "cover";
+  const blogLabel = site.blog_title || "Blog";
 
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
@@ -173,7 +174,7 @@ export default async function PublishedPostPage({ params }: PageProps) {
                 style={{ color: "var(--theme-primary)" }}
               >
                 <ArrowLeft className="w-4 h-4" />
-                Back to Blog
+                Back to {blogLabel}
               </Link>
 
               {/* Post Header */}

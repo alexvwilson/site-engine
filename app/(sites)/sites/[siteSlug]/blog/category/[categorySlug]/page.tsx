@@ -131,6 +131,7 @@ export default async function CategoryArchivePage({ params }: PageProps) {
             totalCount={totalCount}
             postsPerPage={POSTS_PER_PAGE}
             imageFit={blogImageFit}
+            blogTitle={site.blog_title}
           />
         </main>
         {siteFooter && <FooterBlock content={siteFooter} theme={theme} basePath={basePath} socialLinks={socialLinks} socialIconStyle={socialIconStyle} />}

@@ -22,6 +22,7 @@ interface CategoryListingPageProps {
   totalCount: number;
   postsPerPage?: number;
   imageFit?: ImageFit;
+  blogTitle?: string | null;
 }
 
 export function CategoryListingPage({
@@ -33,6 +34,7 @@ export function CategoryListingPage({
   totalCount,
   postsPerPage = 9,
   imageFit = "cover",
+  blogTitle,
 }: CategoryListingPageProps) {
   const [posts, setPosts] = useState<PostWithAuthor[]>(initialPosts);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +73,7 @@ export function CategoryListingPage({
             style={{ color: "var(--theme-primary)" }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Blog
+            Back to {blogTitle || "Blog"}
           </Link>
 
           <div className="min-h-[40vh] flex items-center justify-center">
